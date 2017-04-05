@@ -1,5 +1,6 @@
+dist: trusty
+sudo: false
 language: php
-jdk: oraclejdk8
 
 addons:
   sonarqube:
