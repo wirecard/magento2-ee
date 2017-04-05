@@ -1,9 +1,0 @@
-# IntelliJ project files
-.idea/
-
-# dependency directories
-vendor
-
-# Coverage and linting reports
-clover.xml
-.sonar
