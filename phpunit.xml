@@ -1,2 +1,8 @@
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
+    <testsuites>
+        <testsuite name="Wirecard\\Magento2EE">
+            <directory suffix="UTest.php">./test</directory>
+            <directory suffix="ITest.php">./test</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>
