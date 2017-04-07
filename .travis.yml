@@ -1,4 +1,18 @@
+dist: trusty
+sudo: false
 language: php
+
+cache:
+  directories:
+    - $HOME/.sonar/cache
+
+addons:
+  sonarqube:
+    organization: "wirecard"
+    token:
+      secure: "BlSEqQSC0DrjJsarQU2obCgOAcFLFTT9mNr/m3X/3+nkC9woXrZIQch9SzSX5RM8r21CNuweieI4I/D4s4wvGIvmTZ1rSoUrfp5U5JtYDnQPUP5jWR+31looGmiiAA8vGaTZZv/f4u7k/jedglDNrA8/Mm7IU8M9KCBO4HQJqZYGc72VhXHl8ynGyfwndngLSnBj2fjbECjFrPVwoayAgjMsyXnvXZUam7zTUp6KOX1U7FdY4mDAHmypF0dPGAMM1UCNh0Tvc9wjpkzlBlY6CkYvLYAzjLeRPaeukCnLLHpvPmoS1C6KGhx+bfuAZQ1ygk5FDsyA10LAVTtPnOAjQo4IF7U9oLNvZzOSeR7X57WWkA9PJuAHL3+RSH3ceCUktsAVX1pyb9VlIjEXcQSF45Mmb4Eg0bw26BAClJaZbSjHt3VYTpHpnZiNh1ae104wAg3et9KyzfNOl0J4KqXftt7RmRgNTHEOxLBbJNzEKddwcrRhJLvW1yfoEIAel336pHuEbXRXqI+WNgVW7iqppKIoCpy0R6SgGfjZ6R9UXagtjIO3X6pnW5Jn/4ajAdOHzhJtGDnjksDXMjp7wGxuGUqA6vLfxFPt90F+HDHUsceVXriUJ30vrH3lDuKVPT/QI4EC2nY9vjfSzbSJIJYROy0CNG7TJwpVG7RPtS+ZaQY="
+    github_token:
+      secure: "KiseHEaorVQweiTsOhYkJE6YX8WLfhT1QF5FyO9TffoMOgx2THVf69M9yGGrYVYz9DJy9hT/F9UrPyQ8x7nI/OH2RV3SDJogXy6hFYvrkyckGXD5Lh9vd3zJ0UiFisQpRsZheBT4hEl283w/JeJb1aFqOtdKHAp3p7bUpMGnKEvX6BYQrRFDTofgTk/3coFvIZlVm/NVP3YpU/YyDA9nr/PiQO8fGS37BS98T+UDbq1fuS8bertPU7Cy8+tSk2pjQ45oNGmoTfeHlAwXYSi58MAOpBdRc78wbN/TwyYdPLUTIzE7BlrY88H5hmzElvkJiQxbiAhUN1KFCCqEsrKZSGXxVAR/Yo4TLLcNIZHsSK++Kj2BMfgQRGKR2OIols/bkGKk5m26J8I/Nw2byWyKEyPDrUemsxb9KeM0zwqDk5Ow9Ui9fUeAf7RZ3Do+U8p5SAdwn6hN/5WH80fYeYFuCZ9LoXphK72gab82XfVK9ckYzkzVS/yH6KaDX5lVJoSYy0D1V62OjamYMLLW3M6UMNC6D8Q5h/hC6V35W03G3klSG+9ZPWe8orNRdI44mgXs3K8AxgHPGmuEg6Rjevi3egy2kQKZY+EzQsue9HC2mbR573G79cN4BndvhO6getJYsm5KBOFtyUVE+w3M0ENwQZhP65JP2PT5WFlSbcNKITY="
 
 env:
   global:
@@ -11,3 +25,4 @@ php:
 
 script:
   - composer debugEnvVar
+  - sonar-scanner
