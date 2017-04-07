@@ -18,7 +18,8 @@
   },
   "type": "magento2-module",
   "scripts": {
-    "test": "phpunit --colors=always"
+    "test": "phpunit --colors=always",
+    "debugEnvVar": "php debugEnvVar.php"
   },
   "autoload": {
     "psr-4": {
