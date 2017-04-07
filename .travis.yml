@@ -14,4 +14,4 @@ install:
   - composer show
 
 script:
-  - composer test
+  - composer debugEnvVar
