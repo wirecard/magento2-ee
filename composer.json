@@ -22,7 +22,7 @@
       "Wirecard\\ElasticEngine\\": "src"
     },
     "files": [
-      "registration.php"k
+      "registration.php"
     ]
   },
   "autoload-dev": {
