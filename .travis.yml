@@ -23,6 +23,10 @@ php:
 - 7
 - 7.1
 
+install:
+  - travis_retry composer update $COMPOSER_ARGS
+  - composer show
+
 script:
-  - php debugEnvVar.php
+  - composer test
   - sonar-scanner
