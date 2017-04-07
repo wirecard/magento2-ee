@@ -2,15 +2,10 @@
   "name": "wirecard/magento2-ee",
   "description": "Magento2 plugin for Elastic Engine",
   "license": "GPL-3.0",
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://repo.magento.com/"
-    }
-  ],
+  "minimum-stability": "beta",
   "require": {
     "php": ">=5.6",
-    "magento/module-payment": "*",
+    "magento/community-edition": "2.1.*",
     "roave/security-advisories": "dev-master"
   },
   "require-dev": {
