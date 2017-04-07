@@ -1,5 +1,5 @@
 <?php
-$composerAuthEnv = getenv('COMPOSER_AUTH');
-var_dump($composerAuthEnv);
-$authData = json_decode($composerAuthEnv, true);
+$dummyVarEnv = getenv('DUMMY_VAR');
+var_dump($dummyVarEnv);
+$authData = json_decode($dummyVarEnv, true);
 var_dump($authData);
