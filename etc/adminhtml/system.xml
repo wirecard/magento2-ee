@@ -32,7 +32,7 @@
 */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Magento_Config/etc/system_file.xsd">
     <system>
         <tab id="wirecard_elasticengine" translate="label" sortOrder="10">
             <label>Wirecard Elastic Engine</label>
@@ -42,8 +42,33 @@
             <label>Wirecard Elastic Engine</label>
             <tab>sales</tab>
             <resource>Magento_Sales::config_sales</resource>
-            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>General</label>
+            <group id="terms" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Information regarding Wirecard Shop Plugins</label>
+                <comment>
+                    <![CDATA[
+                        <b>Terms of use</b>
+                        <br/><br/>
+                        The plugins offered are provided free of charge by Wirecard Central Eastern Europe GmbH (abbreviated to Wirecard CEE) and are explicitly not part of the Wirecard CEE range of products and services.
+                        <br/><br/>
+                        They have been tested and approved for full functionality in the standard configuration (status on delivery) of the corresponding shop system. They are under General Public License Version 2 (GPLv2) and can be used, developed and passed on to third parties under the same terms.
+                        <br/><br/>
+                        However, Wirecard CEE does not provide any guarantee or accept any liability for any errors occurring when used in an enhanced, customized shop system configuration.
+                        <br/><br/>
+                        Operation in an enhanced, customized configuration is at your own risk and requires a comprehensive test phase by the user of the plugin.
+                        <br/><br/>
+                        Customers use the plugins at their own risk. Wirecard CEE does not guarantee their full functionality neither does Wirecard CEE assume liability for any disadvantages related to the use of the plugins. Additionally, Wirecard CEE does not guarantee the full functionality for customized shop systems or installed plugins of other vendors of plugins within the same shop system.
+                        <br/><br/>
+                        Customers are responsible for testing the plugin's functionality before starting productive operation. By installing the plugin into the shop system the customer agrees to these terms of use. Please do not use the plugin if you do not agree to these terms of use! Uninstalling the plugin may result in the loss of data.
+                        <br/><br/>
+                        <b>Legal notice</b>
+                        <br/><br/>
+                        Wirecard CEE will only be made liable for specifications and functions as described within this documentation. No warranty whatsoever can be granted on any alterations and/or new implementations as well as resulting diverging usage not supported or described within this documentation.
+                    ]]>
+                </comment>
+                <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"></field>
+            </group>
+            <group id="credentials" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Credentials</label>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Base Url</label>
                     <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
@@ -54,7 +79,14 @@
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Http Password</label>
                 </field>
-                <field id="default_currency" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="button_test_credentials" translate="label" type="button" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test Credentials</label>
+                    <frontend_model>Wirecard\ElasticEngine\Block\System\Config\Form\TestCredentialsButton</frontend_model>
+                </field>
+            </group>
+            <group id="settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Settings</label>
+                <field id="default_currency" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Currency</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
                 </field>
