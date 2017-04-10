@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Shop System Plugins - Terms of Use
+*
+* The plugins offered are provided free of charge by Wirecard Central Eastern Europe GmbH
+* (abbreviated to Wirecard CEE) and are explicitly not part of the Wirecard CEE range of
+* products and services.
+*
+* They have been tested and approved for full functionality in the standard configuration
+* (status on delivery) of the corresponding shop system. They are under General Public
+* License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+* the same terms.
+*
+* However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
+* occurring when used in an enhanced, customized shop system configuration.
+*
+* Operation in an enhanced, customized configuration is at your own risk and requires a
+* comprehensive test phase by the user of the plugin.
+*
+* Customers use the plugins at their own risk. Wirecard CEE does not guarantee their full
+* functionality neither does Wirecard CEE assume liability for any disadvantages related to
+* the use of the plugins. Additionally, Wirecard CEE does not guarantee the full functionality
+* for customized shop systems or installed plugins of other vendors of plugins within the same
+* shop system.
+*
+* Customers are responsible for testing the plugin's functionality before starting productive
+* operation.
+*
+* By installing the plugin into the shop system the customer agrees to these terms of use.
+* Please do not use the plugin if you do not agree to these terms of use!
+*/
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/system_file.xsd">
+    <system>
+        <tab id="wirecard_elasticengine" translate="label" sortOrder="10">
+            <label>Wirecard Elastic Engine</label>
+        </tab>
+        <section id="wirecard_elasticengine" translate="label" type="text" sortOrder="2999" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>seperator-top</class>
+            <label>Wirecard Elastic Engine</label>
+            <tab>sales</tab>
+            <resource>Magento_Sales::config_sales</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Base Url</label>
+                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                </field>
+                <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Http User</label>
+                </field>
+                <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Http Password</label>
+                </field>
+                <field id="default_currency" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Currency</label>
+                    <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
+                </field>
+            </group>
+        </section>
+        <section id="payment">
+            <group id="wirecard_elasticengine_paypal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Wirecard Elastic Engine PayPal</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="merchant_account_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Merchant Account Id</label>
+                </field>
+                <field id="secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Secret Key</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
