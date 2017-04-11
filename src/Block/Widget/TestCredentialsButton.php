@@ -30,14 +30,26 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Block\System\Config\Form;
+namespace Wirecard\ElasticEngine\Block\Widget;
 
+use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Button;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class TestCredentialsButton extends Field
 {
+    /**
+     * TestCredentialsButton constructor.
+     * @param Context $context
+     * @param array $data
+     */
+    public function __construct(Context $context, array $data = [])
+    {
+        parent::__construct($context, $data);
+        $this->setTemplate('Wirecard_ElasticEngine::system/config/form/test_credentials_button.phtml');
+    }
+
     /**
      * Remove scope label
      *
@@ -51,18 +63,39 @@ class TestCredentialsButton extends Field
     }
 
     /**
-     * Generate collect button html
+     * Return element html
      *
+     * @param AbstractElement $element
+     * @return string
+     */
+    protected function _getElementHtml(AbstractElement $element)
+    {
+        return $this->_toHtml();
+    }
+
+    /**
+     * Return ajax url for collect button
+     *
+     * @return string
+     */
+    public function getAjaxUrl()
+    {
+        return $this->getUrl('wirecard_elasticengine/test/credentials');
+    }
+
+    /**
      * @return string
      */
     public function getButtonHtml()
     {
-        $button = $this->getLayout()->createBlock(Button::class)->setData(
-            [
+        /**
+         * @var $button Button
+         */
+        $button = $this->getLayout()->createBlock(Button::class)
+            ->setData([
                 'id' => 'button_test_credentials',
                 'label' => __('Test Credentials'),
-            ]
-        );
+            ]);
 
         return $button->toHtml();
     }
