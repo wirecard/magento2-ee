@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc10117be6418012492ffed878037e41",
+    "content-hash": "84e394f2463603f78024c57d41cd9d2d",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -5107,12 +5107,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "stability-flags": {
-        "wirecard/payment-sdk-php": 20,
-        "roave/security-advisories": 20
+        "wirecard/payment-sdk-php": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.6"
