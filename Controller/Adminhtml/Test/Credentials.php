@@ -33,9 +33,27 @@
 namespace Wirecard\ElasticEngine\Controller\Adminhtml\Test;
 
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\Result\JsonFactory;
 
 class Credentials extends Action
 {
+    /**
+     * @var JsonFactory
+     */
+    protected $resultJsonFactory;
+
+    /**
+     * Credentials constructor.
+     * @param Context $context
+     * @param JsonFactory $resultJsonFactory
+     */
+    public function __construct(Context $context, JsonFactory $resultJsonFactory)
+    {
+        $this->resultJsonFactory = $resultJsonFactory;
+        parent::__construct($context);
+    }
+
     /**
      * @return string
      */
@@ -43,8 +61,8 @@ class Credentials extends Action
     {
         $this->messageManager->addSuccessMessage(__('Successfully connected.'));
 
-        $data = $this->getRequest()->getParams();
-        return json_encode($data);
+        $result = $this->resultJsonFactory->create();
+        return $result->setData(['data' => $this->getRequest()->getParams()]);
     }
 
     /**
