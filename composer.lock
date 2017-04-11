@@ -2122,12 +2122,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "4853b9fc4dfccf3e8216bafcbb1ac7a5c9ffc1b3"
+                "reference": "dedc13732b59e31f847b5bb3b3137ee35a11c4c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/4853b9fc4dfccf3e8216bafcbb1ac7a5c9ffc1b3",
-                "reference": "4853b9fc4dfccf3e8216bafcbb1ac7a5c9ffc1b3",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/dedc13732b59e31f847b5bb3b3137ee35a11c4c2",
+                "reference": "dedc13732b59e31f847b5bb3b3137ee35a11c4c2",
                 "shasum": ""
             },
             "require": {
@@ -2153,7 +2153,7 @@
                 "GPL-3.0"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2017-04-11 08:01:24"
+            "time": "2017-04-11 12:00:23"
         },
         {
             "name": "zendframework/zend-code",

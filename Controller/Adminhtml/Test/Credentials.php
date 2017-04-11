@@ -35,6 +35,8 @@ namespace Wirecard\ElasticEngine\Controller\Adminhtml\Test;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\TransactionService;
 
 class Credentials extends Action
 {
@@ -59,10 +61,18 @@ class Credentials extends Action
      */
     public function execute()
     {
-        $this->messageManager->addSuccessMessage(__('Successfully connected.'));
+        $data = $this->getRequest()->getParams();
+
+        $config = new Config($data['baseUrl'], $data['httpUser'], $data['httpPass']);
+        $transactionService = new TransactionService($config);
+
+        $message = __('Please check your credentials.');
+        if ($valid = $transactionService->checkCredentials()) {
+            $message = __('Credentials correct.');
+        }
 
         $result = $this->resultJsonFactory->create();
-        return $result->setData(['data' => $this->getRequest()->getParams()]);
+        return $result->setData(['valid' => $valid, 'message' => $message]);
     }
 
     /**
