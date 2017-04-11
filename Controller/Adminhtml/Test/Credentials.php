@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Controller\Adminhtml\Test;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
@@ -57,7 +58,7 @@ class Credentials extends Action
     }
 
     /**
-     * @return string
+     * @return Json
      */
     public function execute()
     {
