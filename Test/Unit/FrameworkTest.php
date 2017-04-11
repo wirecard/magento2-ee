@@ -9,10 +9,6 @@ class FrameworkTest extends TestCase
 {
     public function testFramework()
     {
-
         $this->assertFalse(false);
     }
-
-
-
 }

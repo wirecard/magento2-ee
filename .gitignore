@@ -5,3 +5,5 @@
 vendor
 
 clover.xml
+
+.php_cs.cache
