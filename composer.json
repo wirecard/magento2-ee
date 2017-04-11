@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Wirecard\\ElasticEngine\\": "src"
+      "Wirecard\\ElasticEngine\\": ""
     },
     "files": [
       "registration.php"
