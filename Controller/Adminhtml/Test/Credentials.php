@@ -39,8 +39,14 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
+
+
+
 class Credentials extends Action
 {
+
+
+
     /**
      * @var JsonFactory
      */

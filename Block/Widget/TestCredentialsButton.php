@@ -32,6 +32,9 @@
 
 namespace Wirecard\ElasticEngine\Block\Widget;
 
+
+
+
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Button;
 use Magento\Config\Block\System\Config\Form\Field;
@@ -49,6 +52,9 @@ class TestCredentialsButton extends Field
         parent::__construct($context, $data);
         $this->setTemplate('Wirecard_ElasticEngine::system/config/form/test_credentials_button.phtml');
     }
+
+
+
 
     /**
      * Remove scope label

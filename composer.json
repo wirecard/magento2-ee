@@ -17,8 +17,8 @@
   "type": "magento2-module",
   "scripts": {
     "upload-coverage": "coveralls -v",
-    "cs-check": "php-cs-fixer fix --diff .",
-    "cs-fix": "php-cs-fixer fix .",
+    "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
+    "cs-fix": "php-cs-fixer fix",
     "test": "phpunit --colors=always",
     "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
   },
