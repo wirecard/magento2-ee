@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "edcdbb62ece2b3b78afcfa3aa084c864",
+    "content-hash": "bc10117be6418012492ffed878037e41",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -402,16 +402,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "dev-master",
+            "version": "6.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "b517bd912afa5aa1033ce434d7138641fd6c31ab"
+                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b517bd912afa5aa1033ce434d7138641fd6c31ab",
-                "reference": "b517bd912afa5aa1033ce434d7138641fd6c31ab",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8d6c6cc55186db87b7dc5009827429ba4e9dc006",
+                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006",
                 "shasum": ""
             },
             "require": {
@@ -423,9 +423,6 @@
                 "ext-curl": "*",
                 "phpunit/phpunit": "^4.0",
                 "psr/log": "^1.0"
-            },
-            "suggest": {
-                "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
             "extra": {
@@ -463,20 +460,20 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-04-07 20:03:48"
+            "time": "2017-02-28T22:50:30+00:00"
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "dev-master",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "73815f322dc2d2aa711f8af41f87d3e9d9246bae"
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/73815f322dc2d2aa711f8af41f87d3e9d9246bae",
-                "reference": "73815f322dc2d2aa711f8af41f87d3e9d9246bae",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
                 "shasum": ""
             },
             "require": {
@@ -514,11 +511,11 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2017-03-28 16:54:57"
+            "time": "2016-12-20T10:07:11+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "dev-master",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
@@ -579,7 +576,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20 17:10:46"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -1434,7 +1431,7 @@
         },
         {
             "name": "psr/http-message",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
@@ -1480,7 +1477,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -1666,24 +1663,24 @@
         },
         {
             "name": "robrichards/xmlseclibs",
-            "version": "2.0.x-dev",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robrichards/xmlseclibs.git",
-                "reference": "1369dd1cbf54d29f07cc6eec50839c9d4efc3920"
+                "reference": "53bb1e9cae490a8f93af41bd9df6ea897161ca05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/1369dd1cbf54d29f07cc6eec50839c9d4efc3920",
-                "reference": "1369dd1cbf54d29f07cc6eec50839c9d4efc3920",
+                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/53bb1e9cae490a8f93af41bd9df6ea897161ca05",
+                "reference": "53bb1e9cae490a8f93af41bd9df6ea897161ca05",
                 "shasum": ""
             },
             "require": {
                 "php": ">= 5.3"
             },
             "suggest": {
-                "ext-mcrypt": "MCrypt extension",
-                "ext-openssl": "OpenSSL extension"
+                "ext/mcrypt": "MCrypt extension",
+                "ext/openssl": "OpenSSL extension"
             },
             "type": "library",
             "autoload": {
@@ -1703,7 +1700,7 @@
                 "xml",
                 "xmldsig"
             ],
-            "time": "2016-09-23 14:14:15"
+            "time": "2016-09-08T13:15:00+00:00"
         },
         {
             "name": "seld/cli-prompt",
@@ -2256,16 +2253,16 @@
         },
         {
             "name": "wirecard/payment-sdk-php",
-            "version": "dev-ccard-cancel-fix",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "4fb9b6f4cd9749d18f06eb77194bb00e60e6fd6a"
+                "reference": "2ede6719ec619f3e3cb3444aab5143869ae2f737"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/4fb9b6f4cd9749d18f06eb77194bb00e60e6fd6a",
-                "reference": "4fb9b6f4cd9749d18f06eb77194bb00e60e6fd6a",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/2ede6719ec619f3e3cb3444aab5143869ae2f737",
+                "reference": "2ede6719ec619f3e3cb3444aab5143869ae2f737",
                 "shasum": ""
             },
             "require": {
@@ -2292,7 +2289,7 @@
                 "GPL-3.0"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2017-04-11 06:44:31"
+            "time": "2017-04-11 06:52:11"
         },
         {
             "name": "zendframework/zend-code",
@@ -5110,9 +5107,10 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "stability-flags": {
-        "wirecard/payment-sdk-php": 20
+        "wirecard/payment-sdk-php": 20,
+        "roave/security-advisories": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
