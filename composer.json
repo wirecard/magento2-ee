@@ -11,12 +11,16 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7",
-    "magento/community-edition": "2.1.*"
+    "magento/community-edition": "2.1.*",
+    "squizlabs/php_codesniffer": "^2.8"
   },
   "type": "magento2-module",
   "scripts": {
+    "upload-coverage": "coveralls -v",
+    "cs-check": "phpcs",
+    "cs-fix": "phpcbf",
     "test": "phpunit --colors=always",
-    "debugEnvVar": "php debugEnvVar.php"
+    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
   },
   "autoload": {
     "psr-4": {
@@ -28,7 +32,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "WirecardTest\\ElasticEngine\\": "test"
+      "WirecardTest\\ElasticEngine\\": "Test"
     }
   }
 }
