@@ -36,6 +36,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
@@ -66,7 +67,7 @@ class Credentials extends Action
         $data = $this->getRequest()->getParams();
 
         $config = new Config($data['baseUrl'], $data['httpUser'], $data['httpPass']);
-        $transactionService = new TransactionService($config);
+        $transactionService = new TransactionService($config, $this->_objectManager->get(LoggerInterface::class));
 
         $message = __('Please check your credentials.');
         if ($valid = $transactionService->checkCredentials()) {

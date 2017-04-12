@@ -62,27 +62,30 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
      */
     private $json;
 
+    /**
+     * @var Request
+     */
+    private $request;
+
     public function setUp()
     {
         $this->objectManager = new ObjectManager($this);
 
         $context = $this->getMock(Context::class, [
             'getRequest',
-            'getAuthorization'
+            'getAuthorization',
+            'getObjectManager'
         ], [], '', false);
 
         $authorization = $this->getMock(Authorization::class, ['isAllowed'], [], '', false);
         $authorization->method('isAllowed')->willReturn(true);
         $context->method('getAuthorization')->willReturn($authorization);
 
-        $request = $this->getMock(Request::class, ['getParams'], [], '', false);
-        $request->method('getParams')->willReturn([
-            'baseUrl' => 'http://localhost',
-            'httpUser' => 'user',
-            'httpPass' => 'pass'
-        ]);
-        $context->method('getRequest')->willReturn($request);
+        $this->request = $this->getMock(Request::class, ['getParams'], [], '', false);
+        $context->method('getRequest')->willReturn($this->request);
 
+        $objectManager = $this->getMock(\Magento\Framework\App\ObjectManager::class, ['get'], [], '', false);
+        $context->method('getObjectManager')->willReturn($objectManager);
 
         $this->json = $this->getMock(Json::class, ['setData'], [], '', false);
         $this->resultJsonFactory = $this->getMock(JsonFactory::class, ['create'], [], '', false);
@@ -100,9 +103,37 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($this->resultJsonFactory, 'resultJsonFactory', $this->instance);
     }
 
-    public function testExecute()
+    public function testExecuteProvider()
     {
+        return [
+            ['https://api-test.wirecard.com'],
+            ['http://localhost']
+        ];
+    }
+
+    /**
+     * @dataProvider testExecuteProvider
+     * @param string $url
+     */
+    public function testExecute($url)
+    {
+        $this->request->method('getParams')->willReturn([
+            'baseUrl' => $url,
+            'httpUser' => '70000-APITEST-AP',
+            'httpPass' => 'qD2wzQ_hrc!8'
+        ]);
         $this->json->expects($this->once())->method('setData');
         $this->instance->execute();
+    }
+
+    public function testIsAllowed()
+    {
+        $helper = function () {
+            return $this->_isAllowed();
+        };
+
+        $bound = $helper->bindTo($this->instance, $this->instance);
+
+        $this->assertTrue($bound());
     }
 }
