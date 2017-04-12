@@ -3,22 +3,28 @@
   "description": "Magento2 plugin for Elastic Engine",
   "license": "GPL-3.0",
   "minimum-stability": "beta",
+  "prefer-stable": true,
   "require": {
     "php": ">=5.6",
-    "magento/module-payment": "100.1.*"
+    "magento/module-payment": "100.1.*",
+    "wirecard/payment-sdk-php": "dev-master"
   },
   "require-dev": {
-    "phpunit/phpunit": "^5.7",
-    "magento/community-edition": "2.1.*"
+    "phpunit/phpunit": "5.3.5",
+    "magento/community-edition": "2.1.*",
+    "friendsofphp/php-cs-fixer": "^2.2"
   },
   "type": "magento2-module",
   "scripts": {
+    "upload-coverage": "coveralls -v",
+    "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
+    "cs-fix": "php-cs-fixer fix .",
     "test": "phpunit --colors=always",
-    "debugEnvVar": "php debugEnvVar.php"
+    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
   },
   "autoload": {
     "psr-4": {
-      "Wirecard\\ElasticEngine\\": "src"
+      "Wirecard\\ElasticEngine\\": ""
     },
     "files": [
       "registration.php"
@@ -26,7 +32,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "WirecardTest\\ElasticEngine\\": "test"
+      "WirecardTest\\ElasticEngine\\": "Test"
     }
   }
 }

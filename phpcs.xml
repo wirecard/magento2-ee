@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="Wirecard PHP SDK Coding Standard">
+    <description>Wirecard PHP SDK Coding Standard</description>
+
+    <rule ref="PSR2">
+
+    </rule>
+
+    <!-- Paths to check -->
+    <file>.</file>
+    <exclude-pattern>./vendor/*</exclude-pattern>
+</ruleset>
