@@ -41,6 +41,7 @@ use Wirecard\PaymentSdk\TransactionService;
 
 class Credentials extends Action
 {
+
     /**
      * @var JsonFactory
      */

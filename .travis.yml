@@ -23,9 +23,14 @@ php:
 - 7
 
 install:
+  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
 
 script:
-  - composer test
+  - composer test-coverage
   - sonar-scanner
+  - composer cs-check
+
+after_script:
+  - composer upload-coverage

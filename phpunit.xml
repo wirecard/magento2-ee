@@ -1,8 +1,23 @@
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         colors="true"
+         bootstrap="./vendor/autoload.php"
+>
     <testsuites>
-        <testsuite name="Wirecard\\Magento2EE">
-            <directory suffix="UTest.php">./test</directory>
-            <directory suffix="ITest.php">./test</directory>
+        <testsuite name="unit-tests">
+            <directory suffix="Test.php">./Test/Unit</directory>
+            <directory suffix="Test.php">./Test/Intigration</directory>
+        </testsuite>
+        <testsuite name="system-tests">
+            <directory suffix="Test.php">./Test/System</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./Block/*</directory>
+            <directory suffix=".php">./Controller/*</directory>
+            <directory suffix=".php">./Model/*</directory>
+        </whitelist>
+    </filter>
 </phpunit>

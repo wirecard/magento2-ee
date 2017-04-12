@@ -3,3 +3,7 @@
 
 # dependency directories
 vendor
+
+clover.xml
+
+.php_cs.cache
