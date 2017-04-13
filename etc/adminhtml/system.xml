@@ -65,7 +65,7 @@
                         Wirecard CEE will only be made liable for specifications and functions as described within this documentation. No warranty whatsoever can be granted on any alterations and/or new implementations as well as resulting diverging usage not supported or described within this documentation.
                     ]]>
                 </comment>
-                <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"></field>
+                <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"/>
             </group>
             <group id="credentials" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Credentials</label>
@@ -99,7 +99,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account Id</label>
+                    <label>Merchant Account ID</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Key</label>
