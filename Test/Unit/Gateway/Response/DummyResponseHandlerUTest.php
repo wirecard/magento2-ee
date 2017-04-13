@@ -30,22 +30,21 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Validator;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Response;
 
-use Magento\Payment\Gateway\Validator\AbstractValidator;
-use Magento\Payment\Gateway\Validator\ResultInterface;
-use Magento\Payment\Gateway\Validator\ValidatorInterface;
+use Wirecard\ElasticEngine\Gateway\Response\DummyResponseHandler;
 
-class ResponseValidator implements ValidatorInterface
+class DummyResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Performs domain-related validation for business object
-     *
-     * @param array $validationSubject
-     * @return ResultInterface
-     */
-    public function validate(array $validationSubject)
+    public function testDummy()
     {
-        return new ResponseValidationResult();
+        $handler = new DummyResponseHandler();
+        $response = [
+            'sth' => 'test'
+        ];
+
+        $handler->handle([], $response);
+
+        $this->assertEquals(['sth' => 'test'], $response);
     }
 }

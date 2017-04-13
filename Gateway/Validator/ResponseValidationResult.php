@@ -32,20 +32,28 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Validator;
 
-use Magento\Payment\Gateway\Validator\AbstractValidator;
+use Magento\Framework\Phrase;
 use Magento\Payment\Gateway\Validator\ResultInterface;
-use Magento\Payment\Gateway\Validator\ValidatorInterface;
 
-class ResponseValidator implements ValidatorInterface
+class ResponseValidationResult implements ResultInterface
 {
     /**
-     * Performs domain-related validation for business object
+     * Returns validation result
      *
-     * @param array $validationSubject
-     * @return ResultInterface
+     * @return bool
      */
-    public function validate(array $validationSubject)
+    public function isValid()
     {
-        return new ResponseValidationResult();
+        return true;
+    }
+
+    /**
+     * Returns list of fails description
+     *
+     * @return Phrase[]
+     */
+    public function getFailsDescription()
+    {
+        return null;
     }
 }
