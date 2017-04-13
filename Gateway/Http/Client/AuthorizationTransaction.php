@@ -32,21 +32,30 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
+use Magento\Payment\Gateway\Http\ClientInterface;
+use Magento\Payment\Gateway\Http\TransferInterface;
+
 /**
- * Class TransactionSale
+ * Class AuthorizationTransaction
+ * @package Wirecard\ElasticEngine\Gateway\Http\Client
  */
-class AuthorizationTransaction extends AbstractTransaction
+class AuthorizationTransaction implements ClientInterface
 {
     /**
-     * @inheritdoc
+     * Places request to gateway. Returns result as ENV array
+     *
+     * @param TransferInterface $transferObject
+     * @return array
+     * @throws \Magento\Payment\Gateway\Http\ClientException
+     * @throws \Magento\Payment\Gateway\Http\ConverterException
      */
-    protected function process(array $data)
+    public function placeRequest(TransferInterface $transferObject)
     {
         // Implementation draft:
-        // 1. Create a Payment SDK request object based on $data
+        // 1. Create a Payment SDK request object based on $transferObject
         // 2. Call the TransactionService of the Payment SDK
         // ?? Where do we get the config from? //
 
-        return $this->adapter->sale($data);
+        return [];
     }
 }
