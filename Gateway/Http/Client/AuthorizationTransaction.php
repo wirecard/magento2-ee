@@ -35,13 +35,18 @@ namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 /**
  * Class TransactionSale
  */
-class TransactionSale extends AbstractTransaction
+class AuthorizationTransaction extends AbstractTransaction
 {
     /**
      * @inheritdoc
      */
     protected function process(array $data)
     {
+        // Implementation draft:
+        // 1. Create a Payment SDK request object based on $data
+        // 2. Call the TransactionService of the Payment SDK
+        // ?? Where do we get the config from? //
+
         return $this->adapter->sale($data);
     }
 }
