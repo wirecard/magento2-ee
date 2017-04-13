@@ -33,8 +33,8 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Braintree\Gateway\Config\Config;
-use Magento\Braintree\Observer\DataAssignObserver;
 use Magento\Braintree\Gateway\Helper\SubjectReader;
+use Magento\Braintree\Observer\DataAssignObserver;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Helper\Formatter;
 

@@ -32,8 +32,8 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Braintree\Gateway\Helper\SubjectReader;
+use Magento\Payment\Gateway\Request\BuilderInterface;
 
 /**
  * Class AddressDataBuilder
