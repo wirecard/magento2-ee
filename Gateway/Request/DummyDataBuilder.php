@@ -34,16 +34,18 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
 
-/**
- * Payment Data Builder
- */
-class PaymentDataBuilder implements BuilderInterface
+class DummyDataBuilder implements BuilderInterface
 {
+
     /**
-     * @inheritdoc
+     * Builds ENV request
+     *
+     * @param array $buildSubject
+     * @return array
      */
     public function build(array $buildSubject)
     {
-        return [];
+        // We will decide later, whether specific mapping is necessary.
+        return $buildSubject;
     }
 }
