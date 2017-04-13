@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="PaypalFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PaypalValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PaypalValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PaypalCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PaypalConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">Magento\Payment\Gateway\Config\Config</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PaypalCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">Magento\Payment\Gateway\Config\Config</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">PaypalAuthorizeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">PaypalAuthorizeRequest</argument>
+            <argument name="transferFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\Client\TransactionSale</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\DummyResponseHandler</argument>
+            <argument name="validator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\ResponseValidator</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalAuthorizeRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="payment" xsi:type="string">Wirecard\ElasticEngine\Gateway\Request\PaymentDataBuilder</item>
+                <item name="address" xsi:type="string">Wirecard\ElasticEngine\Gateway\Request\AddressDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>
