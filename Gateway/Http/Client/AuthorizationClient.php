@@ -30,21 +30,46 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Validator;
+namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
-use Magento\Payment\Gateway\Validator\ResultInterface;
-use Magento\Payment\Gateway\Validator\ValidatorInterface;
+use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Http\ClientInterface;
+use Magento\Payment\Gateway\Http\TransferInterface;
 
-class ResponseValidator implements ValidatorInterface
+/**
+ * Class AuthorizationTransaction
+ * @package Wirecard\ElasticEngine\Gateway\Http\Client
+ */
+class AuthorizationClient implements ClientInterface
 {
     /**
-     * Performs domain-related validation for business object
-     *
-     * @param array $validationSubject
-     * @return ResultInterface
+     * @var ConfigInterface
      */
-    public function validate(array $validationSubject)
+    private $config;
+
+    /**
+     * AuthorizationClient constructor.
+     * @param ConfigInterface $config
+     */
+    public function __construct(ConfigInterface $config)
     {
-        return new ResponseValidationResult();
+        $this->config = $config;
+    }
+
+    /**
+     * Places request to gateway. Returns result as ENV array
+     *
+     * @param TransferInterface $transferObject
+     * @return array
+     * @throws \Magento\Payment\Gateway\Http\ClientException
+     * @throws \Magento\Payment\Gateway\Http\ConverterException
+     */
+    public function placeRequest(TransferInterface $transferObject)
+    {
+        // Implementation draft:
+        // 1. Create a Payment SDK request object based on $transferObject
+        // 2. Call the TransactionService of the Payment SDK
+
+        return [];
     }
 }

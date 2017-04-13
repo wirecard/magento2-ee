@@ -30,21 +30,22 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Validator;
+namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Payment\Gateway\Validator\ResultInterface;
-use Magento\Payment\Gateway\Validator\ValidatorInterface;
+use Magento\Payment\Gateway\Request\BuilderInterface;
 
-class ResponseValidator implements ValidatorInterface
+class DummyDataBuilder implements BuilderInterface
 {
+
     /**
-     * Performs domain-related validation for business object
+     * Builds ENV request
      *
-     * @param array $validationSubject
-     * @return ResultInterface
+     * @param array $buildSubject
+     * @return array
      */
-    public function validate(array $validationSubject)
+    public function build(array $buildSubject)
     {
-        return new ResponseValidationResult();
+        // We will decide later, whether any specific mapping is necessary.
+        return $buildSubject;
     }
 }

@@ -30,20 +30,24 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Request;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Http;
 
-use Magento\Payment\Gateway\Request\BuilderInterface;
+use Magento\Payment\Gateway\Http\TransferBuilder;
+use Magento\Payment\Gateway\Http\TransferInterface;
+use Wirecard\ElasticEngine\Gateway\Http\TransferFactory;
 
-/**
- * Payment Data Builder
- */
-class PaymentDataBuilder implements BuilderInterface
+class TransferFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @inheritdoc
-     */
-    public function build(array $buildSubject)
+    public function testCreate()
     {
-        return [];
+        $transferBuilder = $this->getMock(TransferBuilder::class);
+        $dummyTransfer = $this->getMock(TransferInterface::class);
+        $transferBuilder->method('setBody')->willReturn($transferBuilder);
+        $transferBuilder->method('build')->willReturn($dummyTransfer);
+        $factory = new TransferFactory($transferBuilder);
+
+        $result = $factory->create([]);
+
+        $this->assertEquals($dummyTransfer, $result);
     }
 }

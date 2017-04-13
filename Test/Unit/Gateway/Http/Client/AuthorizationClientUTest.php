@@ -30,21 +30,22 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Validator;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Http\Client;
 
-use Magento\Payment\Gateway\Validator\ResultInterface;
-use Magento\Payment\Gateway\Validator\ValidatorInterface;
+use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Http\TransferInterface;
+use Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient;
 
-class ResponseValidator implements ValidatorInterface
+class AuthorizationClientUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Performs domain-related validation for business object
-     *
-     * @param array $validationSubject
-     * @return ResultInterface
-     */
-    public function validate(array $validationSubject)
+    public function testPlaceRequest()
     {
-        return new ResponseValidationResult();
+        $config = $this->getMock(ConfigInterface::class);
+        $client = new AuthorizationClient($config);
+        $transfer = $this->getMock(TransferInterface::class);
+
+        $result = $client->placeRequest($transfer);
+
+        $this->assertEquals([], $result);
     }
 }

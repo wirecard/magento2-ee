@@ -30,18 +30,30 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Http\Client;
+namespace Wirecard\ElasticEngine\Gateway\Validator;
 
-/**
- * Class TransactionSale
- */
-class TransactionSale extends AbstractTransaction
+use Magento\Framework\Phrase;
+use Magento\Payment\Gateway\Validator\ResultInterface;
+
+class ResponseValidationResult implements ResultInterface
 {
     /**
-     * @inheritdoc
+     * Returns validation result
+     *
+     * @return bool
      */
-    protected function process(array $data)
+    public function isValid()
     {
-        return $this->adapter->sale($data);
+        return true;
+    }
+
+    /**
+     * Returns list of fails description
+     *
+     * @return Phrase[]
+     */
+    public function getFailsDescription()
+    {
+        return null;
     }
 }

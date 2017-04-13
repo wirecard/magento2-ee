@@ -30,21 +30,21 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Validator;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use Magento\Payment\Gateway\Validator\ResultInterface;
-use Magento\Payment\Gateway\Validator\ValidatorInterface;
+use Wirecard\ElasticEngine\Gateway\Request\DummyDataBuilder;
 
-class ResponseValidator implements ValidatorInterface
+class DummyDataBuilderUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Performs domain-related validation for business object
-     *
-     * @param array $validationSubject
-     * @return ResultInterface
-     */
-    public function validate(array $validationSubject)
+    public function testBuild()
     {
-        return new ResponseValidationResult();
+        $builder = new DummyDataBuilder();
+        $buildSubject = [
+            'nr' => 42
+        ];
+
+        $result = $builder->build($buildSubject);
+
+        $this->assertEquals($buildSubject, $result);
     }
 }

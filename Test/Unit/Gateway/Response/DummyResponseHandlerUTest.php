@@ -30,20 +30,21 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Request;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Response;
 
-use Magento\Payment\Gateway\Request\BuilderInterface;
+use Wirecard\ElasticEngine\Gateway\Response\DummyResponseHandler;
 
-/**
- * Class AddressDataBuilder
- */
-class AddressDataBuilder implements BuilderInterface
+class DummyResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @inheritdoc
-     */
-    public function build(array $buildSubject)
+    public function testDummy()
     {
-        return [];
+        $handler = new DummyResponseHandler();
+        $response = [
+            'sth' => 'test'
+        ];
+
+        $handler->handle([], $response);
+
+        $this->assertEquals(['sth' => 'test'], $response);
     }
 }
