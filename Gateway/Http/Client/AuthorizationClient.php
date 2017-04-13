@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
+use Magento\Payment\Gateway\Config\Config;
 use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 
@@ -41,6 +42,20 @@ use Magento\Payment\Gateway\Http\TransferInterface;
  */
 class AuthorizationClient implements ClientInterface
 {
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * AuthorizationClient constructor.
+     * @param Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * Places request to gateway. Returns result as ENV array
      *
@@ -54,7 +69,6 @@ class AuthorizationClient implements ClientInterface
         // Implementation draft:
         // 1. Create a Payment SDK request object based on $transferObject
         // 2. Call the TransactionService of the Payment SDK
-        // ?? Where do we get the config from? //
 
         return [];
     }
