@@ -32,7 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
-use Magento\Payment\Gateway\Config\Config;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 
@@ -43,15 +43,15 @@ use Magento\Payment\Gateway\Http\TransferInterface;
 class AuthorizationClient implements ClientInterface
 {
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
 
     /**
      * AuthorizationClient constructor.
-     * @param Config $config
+     * @param ConfigInterface $config
      */
-    public function __construct(Config $config)
+    public function __construct(ConfigInterface $config)
     {
         $this->config = $config;
     }

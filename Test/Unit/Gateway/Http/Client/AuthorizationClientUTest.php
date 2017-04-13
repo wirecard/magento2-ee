@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Http\Client;
 
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient;
 
@@ -39,7 +40,8 @@ class AuthorizationClientUTest extends \PHPUnit_Framework_TestCase
 {
     public function testPlaceRequest()
     {
-        $client = new AuthorizationClient();
+        $config = $this->getMock(ConfigInterface::class);
+        $client = new AuthorizationClient($config);
         $transfer = $this->getMock(TransferInterface::class);
 
         $result = $client->placeRequest($transfer);
