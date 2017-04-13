@@ -36,7 +36,6 @@ use Wirecard\ElasticEngine\Gateway\Validator\ResponseValidator;
 
 class ResponseValidatorUTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testEmptyArrayIsValid()
     {
         $validator = new ResponseValidator();

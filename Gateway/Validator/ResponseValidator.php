@@ -32,7 +32,6 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Validator;
 
-use Magento\Payment\Gateway\Validator\AbstractValidator;
 use Magento\Payment\Gateway\Validator\ResultInterface;
 use Magento\Payment\Gateway\Validator\ValidatorInterface;
 

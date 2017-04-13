@@ -36,7 +36,6 @@ use Wirecard\ElasticEngine\Gateway\Request\DummyDataBuilder;
 
 class DummyDataBuilderUTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testBuild()
     {
         $builder = new DummyDataBuilder();
