@@ -30,22 +30,22 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Request;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use Magento\Payment\Gateway\Request\BuilderInterface;
+use Wirecard\ElasticEngine\Gateway\Request\DummyDataBuilder;
 
-class DummyDataBuilder implements BuilderInterface
+class DummyDataBuilderUTest extends \PHPUnit_Framework_TestCase
 {
 
-    /**
-     * Builds ENV request
-     *
-     * @param array $buildSubject
-     * @return array
-     */
-    public function build(array $buildSubject)
+    public function testBuild()
     {
-        // We will decide later, whether any specific mapping is necessary.
-        return $buildSubject;
+        $builder = new DummyDataBuilder();
+        $buildSubject = [
+            'nr' => 42
+        ];
+
+        $result = $builder->build($buildSubject);
+
+        $this->assertEquals($buildSubject, $result);
     }
 }
