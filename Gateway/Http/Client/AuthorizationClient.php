@@ -39,7 +39,7 @@ use Magento\Payment\Gateway\Http\TransferInterface;
  * Class AuthorizationTransaction
  * @package Wirecard\ElasticEngine\Gateway\Http\Client
  */
-class AuthorizationTransaction implements ClientInterface
+class AuthorizationClient implements ClientInterface
 {
     /**
      * Places request to gateway. Returns result as ENV array

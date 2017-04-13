@@ -45,7 +45,7 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\DummyDataBuilder</argument>
             <argument name="transferFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\TransferFactory</argument>
-            <argument name="client" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\Client\TransactionSale</argument>
+            <argument name="client" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\DummyResponseHandler</argument>
             <argument name="validator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\ResponseValidator</argument>
         </arguments>
