@@ -35,6 +35,11 @@ namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
+use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Class AuthorizationTransaction
@@ -45,15 +50,29 @@ class AuthorizationClient implements ClientInterface
     /**
      * @var ConfigInterface
      */
-    private $config;
+    private $eeConfig;
+
+    /**
+     * @var ConfigInterface
+     */
+    private $paypalConfig;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * AuthorizationClient constructor.
-     * @param ConfigInterface $config
+     * @param ConfigInterface $eeConfig
+     * @param ConfigInterface $paypalConfig
+     * @param LoggerInterface $logger
      */
-    public function __construct(ConfigInterface $config)
+    public function __construct(ConfigInterface $eeConfig, ConfigInterface $paypalConfig, LoggerInterface $logger)
     {
-        $this->config = $config;
+        $this->eeConfig = $eeConfig;
+        $this->paypalConfig = $paypalConfig;
+        $this->logger = $logger;
     }
 
     /**
@@ -66,10 +85,21 @@ class AuthorizationClient implements ClientInterface
      */
     public function placeRequest(TransferInterface $transferObject)
     {
-        // Implementation draft:
-        // 1. Create a Payment SDK request object based on $transferObject
-        // 2. Call the TransactionService of the Payment SDK
+        $txConfig = new Config($this->eeConfig['base_url'], $this->eeConfig['http_user'], $this->eeConfig['http_pass']);
+        $transactionService = new TransactionService($txConfig, $this->logger);
+        $tx = $this->createTransaction($transferObject->getBody());
+        $response = $transactionService->reserve($tx);
+        $this->logger->warning($response->getRawData());
+
+        if ($response instanceof SuccessResponse){
+            return [];
+        }
 
         return [];
+    }
+
+    private function createTransaction($data)
+    {
+        return new PayPalTransaction();
     }
 }
