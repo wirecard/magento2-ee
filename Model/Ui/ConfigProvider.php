@@ -36,6 +36,8 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 
 class ConfigProvider implements ConfigProviderInterface
 {
+    const CODE = 'wirecard_elasticengine_paypal';
+
     /**
      * Retrieve assoc array of checkout configuration
      *

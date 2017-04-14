@@ -37,45 +37,30 @@
                name="payment[method]"
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
-        <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
-        <!-- ko if: getLogoUrl() -->
-        <img data-bind="attr: {'src': getLogoUrl()}, title: getTitle(), alt: getTitle()" width="65" />
-        <!-- /ko -->
+        <label class="label" data-bind="attr: {'for': getCode()}">
+            <span data-bind="text: getTitle()"></span>
+        </label>
     </div>
+
     <div class="payment-method-content">
         <!-- ko foreach: getRegion('messages') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
-
-        <div class="payment-method-note">
-            <!-- ko i18n: getInstructions() --><!-- /ko -->
-        </div>
-
         <div class="payment-method-billing-address">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
-        <div class="checkout-agreements-block">
-            <!-- ko foreach: $parent.getRegion('before-place-order') -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-            <!--/ko-->
-        </div>
-
-        <iframe width="0" height="0" data-bind="attr: {id: getCode() + '-iframe'}" frameborder="0" name="wirecard_checkoutseamless_iframe" style="display:none;width:100%;"></iframe>
 
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: placeWirecardOrder,
-                        attr: {title: $t('Order with obligation to pay'), id: getCode() + '-button'},
-                        css: {disabled: !isPlaceOrderActionAllowed()},
-                        enable: (getCode() == isChecked())
-                        "
-                        disabled>
-                    <span data-bind="text: $t('Order with obligation to pay')"></span>
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')}
+                        ">
+                    <span data-bind="i18n: 'Place Order'"></span>
                 </button>
             </div>
         </div>

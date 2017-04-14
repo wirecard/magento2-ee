@@ -37,7 +37,18 @@ define(
         'use strict';
         return Component.extend({
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-default'
+                template: 'Wirecard_ElasticEngine/payment/method-default',
+                transactionResult: ''
+            },
+
+            getCode: function() {
+                return 'wirecard_elasticengine_paypal';
+            },
+
+            getData: function() {
+                return {
+                    'method': this.item.method
+                };
             }
         });
     }
