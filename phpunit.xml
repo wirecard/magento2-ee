@@ -9,14 +9,12 @@
             <directory suffix="Test.php">./Test/Unit</directory>
             <directory suffix="Test.php">./Test/Integration</directory>
         </testsuite>
-        <testsuite name="system-tests">
-            <directory suffix="Test.php">./Test/System</directory>
-        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./Block/*</directory>
             <directory suffix=".php">./Controller/*</directory>
+            <directory suffix=".php">./Gateway/*</directory>
             <directory suffix=".php">./Model/*</directory>
         </whitelist>
     </filter>
