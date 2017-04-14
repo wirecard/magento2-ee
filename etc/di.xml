@@ -11,6 +11,8 @@
             <argument name="commandPool" xsi:type="object">PaypalCommandPool</argument>
         </arguments>
     </virtualType>
+
+    <!-- Value handlers and config -->
     <virtualType name="PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -23,11 +25,27 @@
             <argument name="configInterface" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="WirecardElasticEngineConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">wirecard_elasticengine</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="WirecardPaypalConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CODE</argument>
         </arguments>
     </virtualType>
+
+    <!-- Logger -->
+    <virtualType name="WirecardElasticEngineLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Magento\Framework\Logger\Handler\System</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Validator -->
     <virtualType name="PaypalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
@@ -40,10 +58,12 @@
             <argument name="config" xsi:type="object">Magento\Payment\Gateway\Config\Config</argument>
         </arguments>
     </virtualType>
+
+    <!-- Commands -->
     <virtualType name="PaypalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">PaypalAuthorizeCommand</item>
+                <item name="reserve" xsi:type="string">PaypalAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -58,7 +78,9 @@
     </virtualType>
     <virtualType name="AuthorizationClient" type="Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient">
         <arguments>
-            <argument name="config" xsi:type="object">Magento\Payment\Gateway\Config\Config</argument>
+            <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
+            <argument name="paypalConfig" xsi:type="object">WirecardPaypalConfig</argument>
+            <argument name="logger" xsi:type="object">WirecardElasticEngineLogger</argument>
         </arguments>
     </virtualType>
 </config>

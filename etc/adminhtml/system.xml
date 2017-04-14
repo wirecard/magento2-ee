@@ -104,6 +104,11 @@
                 <field id="secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Key</label>
                 </field>
+                <field id="payment_action" translate="label" type="select" sortOrder="40" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Payment Action</label>
+                    <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
+                </field>
             </group>
         </section>
     </system>
