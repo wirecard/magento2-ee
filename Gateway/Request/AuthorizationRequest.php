@@ -32,11 +32,25 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 
-class DummyDataBuilder implements BuilderInterface
+class AuthorizationRequest implements BuilderInterface
 {
-
+    const PAYMENT='payment';
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+    /**
+     * @param ConfigInterface $config
+     */
+    public function __construct(
+        ConfigInterface $config
+    ) {
+        $this->config = $config;
+    }
     /**
      * Builds ENV request
      *
@@ -45,7 +59,18 @@ class DummyDataBuilder implements BuilderInterface
      */
     public function build(array $buildSubject)
     {
-        // We will decide later, whether any specific mapping is necessary.
-        return $buildSubject;
+        if (!isset($buildSubject[self::PAYMENT])
+            || !$buildSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
+        ) {
+            throw new \InvalidArgumentException('Payment data object should be provided.');
+        }
+        /** @var PaymentDataObjectInterface $payment */
+        $payment = $buildSubject['payment'];
+        $order = $payment->getOrder();
+
+        return [
+            'AMOUNT' => $order->getGrandTotalAmount(),
+            'CURRENCY' => $order->getCurrencyCode()
+        ];
     }
 }
