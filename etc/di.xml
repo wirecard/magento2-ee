@@ -63,7 +63,7 @@
     <virtualType name="PaypalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="reserve" xsi:type="string">PaypalAuthorizeCommand</item>
+                <item name="authorize" xsi:type="string">PaypalAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
