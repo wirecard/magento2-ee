@@ -36,15 +36,6 @@
         </arguments>
     </virtualType>
 
-    <!-- Logger -->
-    <virtualType name="WirecardElasticEngineLogger" type="Magento\Framework\Logger\Monolog">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Magento\Framework\Logger\Handler\System</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
     <!-- Validator -->
     <virtualType name="PaypalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
@@ -80,7 +71,6 @@
         <arguments>
             <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
             <argument name="paypalConfig" xsi:type="object">WirecardPaypalConfig</argument>
-            <argument name="logger" xsi:type="object">WirecardElasticEngineLogger</argument>
         </arguments>
     </virtualType>
 </config>

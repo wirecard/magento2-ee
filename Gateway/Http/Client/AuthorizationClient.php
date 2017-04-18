@@ -37,6 +37,8 @@ use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\TransactionService;
@@ -85,11 +87,22 @@ class AuthorizationClient implements ClientInterface
      */
     public function placeRequest(TransferInterface $transferObject)
     {
+        $this->logger->debug('Wirecard/magento2-ee: AuthorizationClient->placeRequest() called.');
+        $this->logger->debug(json_encode($transferObject->getBody()));
+
         $txConfig = new Config($this->eeConfig['base_url'], $this->eeConfig['http_user'], $this->eeConfig['http_pass']);
+        $paypalSdkConfig = new PaymentMethodConfig(
+            PayPalTransaction::NAME,
+            $this->paypalConfig->getValue('merchant_account_id'),
+            $this->paypalConfig->getValue('secret')
+        );
+        $txConfig->add($paypalSdkConfig);
         $transactionService = new TransactionService($txConfig, $this->logger);
-        $tx = $this->createTransaction($transferObject->getBody());
+
+        $tx = $this->createTransaction($transferObject);
+
         $response = $transactionService->reserve($tx);
-        $this->logger->warning($response->getRawData());
+        $this->logger->debug($response->getRawData());
 
         if ($response instanceof SuccessResponse){
             return [];
@@ -98,8 +111,17 @@ class AuthorizationClient implements ClientInterface
         return [];
     }
 
-    private function createTransaction($data)
+    /**
+     * @param TransferInterface $transferObject
+     * @return PayPalTransaction
+     */
+    private function createTransaction($transferObject)
     {
-        return new PayPalTransaction();
+        $this->logger->debug(json_decode($transferObject->getBody()));
+        $amount = new Amount($transferObject->getBody()->{'amount'}, 'EUR');
+        $tx = new PayPalTransaction();
+        $tx->setAmount($amount);
+
+        return $tx;
     }
 }
