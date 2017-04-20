@@ -30,45 +30,28 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Response;
+namespace Wirecard\ElasticEngine\Controller\Frontend;
 
 use Magento\Checkout\Model\Session;
-use Magento\Payment\Gateway\Response\HandlerInterface;
-use Psr\Log\LoggerInterface;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\ResultFactory;
 
-class DummyResponseHandler implements HandlerInterface
+class Redirect extends Action
 {
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    
-    /**
-     * @var Session
-     */
     private $session;
 
-    /**
-     * DummyResponseHandler constructor.
-     * @param LoggerInterface $logger
-     * @param Session $session
-     */
-    function __construct(LoggerInterface $logger, Session $session)
+    public function __construct(Context $context, Session $session)
     {
-        $this->logger = $logger;
+        parent::__construct($context);
         $this->session = $session;
     }
 
-    /**
-     * Handles response
-     *
-     * @param array $handlingSubject
-     * @param array $response
-     * @return void
-     */
-    public function handle(array $handlingSubject, array $response)
+    public function execute()
     {
-        $this->session->setRedirectUrl($response['redirect_url']);
+        $redirectUrl = $this->session->getRedirectUrl();
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result->setJsonData('{"redirect-url": "'.$redirectUrl.'"}');
+        return $result;
     }
 }

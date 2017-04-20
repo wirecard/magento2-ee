@@ -138,7 +138,7 @@ class AuthorizationClient implements ClientInterface
      */
     private function createTransaction($data)
     {
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecardelasticengine');
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
         $tx = new PayPalTransaction();
 
@@ -147,7 +147,7 @@ class AuthorizationClient implements ClientInterface
             $data['CURRENCY']
         ));
 
-        $tx->setRedirect(new Redirect($wdBaseUrl.'checkout/back', $wdBaseUrl.'checkout/cancel'));
+        $tx->setRedirect(new Redirect($wdBaseUrl.'frontend/back', $wdBaseUrl.'frontend/cancel'));
         $tx->setNotificationUrl($wdBaseUrl.'notify');
 
         return $tx;
