@@ -35,21 +35,39 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 
+/**
+ * Class Redirect
+ * @package Wirecard\ElasticEngine\Controller\Frontend
+ */
 class Redirect extends Action
 {
+    /**
+     * @var Session
+     */
     private $session;
 
+    /**
+     * Redirect constructor.
+     * @param Context $context
+     * @param Session $session
+     */
     public function __construct(Context $context, Session $session)
     {
         parent::__construct($context);
         $this->session = $session;
     }
 
+    /**
+     * @return \Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $redirectUrl = $this->session->getRedirectUrl();
+
+        /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $result->setJsonData('{"redirect-url": "'.$redirectUrl.'"}');
         return $result;
