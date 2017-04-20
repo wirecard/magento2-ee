@@ -32,6 +32,8 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
+use Magento\Framework\App\ProductMetadata;
+use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Http\ClientInterface;
@@ -72,22 +74,39 @@ class AuthorizationClient implements ClientInterface
     private $urlBuilder;
 
     /**
+     * @var ProductMetadata
+     */
+    private $productMetadata;
+
+    /**
+     * @var ModuleListInterface
+     */
+    private $moduleList;
+
+    /**
      * AuthorizationClient constructor.
      * @param ConfigInterface $eeConfig
      * @param ConfigInterface $paypalConfig
      * @param LoggerInterface $logger
      * @param UrlInterface $urlBuilder
+     * @param ProductMetadata $productMetadata
+     * @param ModuleListInterface $moduleList
      */
     public function __construct(
         ConfigInterface $eeConfig,
         ConfigInterface $paypalConfig,
         LoggerInterface $logger,
-        UrlInterface $urlBuilder)
+        UrlInterface $urlBuilder,
+        ProductMetadata $productMetadata,
+        ModuleListInterface $moduleList
+    )
     {
         $this->eeConfig = $eeConfig;
         $this->paypalConfig = $paypalConfig;
         $this->logger = $logger;
         $this->urlBuilder = $urlBuilder;
+        $this->productMetadata = $productMetadata;
+        $this->moduleList = $moduleList;
     }
 
     /**
@@ -112,6 +131,8 @@ class AuthorizationClient implements ClientInterface
             $this->paypalConfig->getValue('secret')
         );
         $txConfig->add($paypalSdkConfig);
+
+
 
         $transactionService = new TransactionService($txConfig, $this->logger);
 
