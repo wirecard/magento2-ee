@@ -125,4 +125,11 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="PaymentSdkConfigFactory" type="Wirecard\ElasticEngine\Gateway\Http\PaymentSdkConfigFactory">
+        <arguments>
+            <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
+        </arguments>
+    </virtualType>
+
 </config>
