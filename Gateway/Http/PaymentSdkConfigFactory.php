@@ -45,7 +45,6 @@ use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
  */
 class PaymentSdkConfigFactory implements ConfigFactoryInterface
 {
-    const MODULE_NAME = 'Wirecard_ElasticEngine';
 
     /**
      * @var ConfigInterface
@@ -55,18 +54,17 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     /**
      * @var ConfigInterface
      */
-    private $method;
-
-    /**
-     * @var ProductMetadata
-     */
-    private $productMetadata;
+    private $methodConfig;
 
     /**
      * @var ModuleListInterface
      */
     private $moduleList;
 
+    /**
+     * @var ProductMetadata
+     */
+    private $productMetadata;
     /**
      * PaymentSDKConfigFactory constructor.
      * @param ConfigInterface $eeConfig
@@ -82,9 +80,9 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     )
     {
         $this->eeConfig = $eeConfig;
-        $this->method = $methodConfig;
-        $this->productMetadata = $productMetadata;
+        $this->methodConfig = $methodConfig;
         $this->moduleList = $moduleList;
+        $this->productMetadata = $productMetadata;
     }
 
     /**
@@ -100,17 +98,23 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $this->eeConfig->getValue('credentials/http_pass')
         );
 
-        $config->setShopInfo($this->productMetadata->getName(), $this->productMetadata->getVersion());
-        $config->setPluginInfo(self::MODULE_NAME, $this->moduleList->getOne(self::MODULE_NAME)['setup_version']);
-
         if ($paymentCode !== null) {
-            $methodConfig = new PaymentMethodConfig(
+            $methodSdkConfig = new PaymentMethodConfig(
                 $paymentCode,
-                $this->method->getValue('merchant_account_id'),
-                $this->method->getValue('secret')
+                $this->methodConfig->getValue('merchant_account_id'),
+                $this->methodConfig->getValue('secret')
             );
-            $config->add($methodConfig);
+            $config->add($methodSdkConfig);
         }
+
+        $config->setShopInfo(
+            $this->productMetadata->getName().' '.$this->productMetadata->getEdition().' Edition',
+            $this->productMetadata->getVersion()
+        );
+        $config->setPluginInfo(
+            'Wirecard_ElasticEngine',
+            $this->moduleList->getOne('Wirecard_ElasticEngine')['setup_version']
+        );
 
         return $config;
     }

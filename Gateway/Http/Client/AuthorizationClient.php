@@ -35,6 +35,7 @@ namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
@@ -54,16 +55,6 @@ use Wirecard\PaymentSdk\TransactionService;
 class AuthorizationClient implements ClientInterface
 {
     /**
-     * @var ConfigInterface
-     */
-    private $eeConfig;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $paypalConfig;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -74,39 +65,24 @@ class AuthorizationClient implements ClientInterface
     private $urlBuilder;
 
     /**
-     * @var ProductMetadata
+     * @var ConfigFactoryInterface
      */
-    private $productMetadata;
-
-    /**
-     * @var ModuleListInterface
-     */
-    private $moduleList;
-
+    private $paymentSdkConfigFactory;
     /**
      * AuthorizationClient constructor.
-     * @param ConfigInterface $eeConfig
-     * @param ConfigInterface $paypalConfig
      * @param LoggerInterface $logger
      * @param UrlInterface $urlBuilder
-     * @param ProductMetadata $productMetadata
-     * @param ModuleListInterface $moduleList
+     * @param ConfigFactoryInterface $paymentSdkConfigFactory
      */
     public function __construct(
-        ConfigInterface $eeConfig,
-        ConfigInterface $paypalConfig,
         LoggerInterface $logger,
         UrlInterface $urlBuilder,
-        ProductMetadata $productMetadata,
-        ModuleListInterface $moduleList
+        ConfigFactoryInterface $paymentSdkConfigFactory
     )
     {
-        $this->eeConfig = $eeConfig;
-        $this->paypalConfig = $paypalConfig;
         $this->logger = $logger;
         $this->urlBuilder = $urlBuilder;
-        $this->productMetadata = $productMetadata;
-        $this->moduleList = $moduleList;
+        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
     }
 
     /**
@@ -119,20 +95,8 @@ class AuthorizationClient implements ClientInterface
      */
     public function placeRequest(TransferInterface $transferObject)
     {
-        $txConfig = new Config(
-            $this->eeConfig->getValue('credentials/base_url'),
-                $this->eeConfig->getValue('credentials/http_user'),
-                $this->eeConfig->getValue('credentials/http_pass')
-        );
-
-        $paypalSdkConfig = new PaymentMethodConfig(
-            PayPalTransaction::NAME,
-            $this->paypalConfig->getValue('merchant_account_id'),
-            $this->paypalConfig->getValue('secret')
-        );
-        $txConfig->add($paypalSdkConfig);
-
-
+        /** @var Config $txConfig */
+        $txConfig = $this->paymentSdkConfigFactory->create('paypal');
 
         $transactionService = new TransactionService($txConfig, $this->logger);
 

@@ -120,8 +120,7 @@
 
     <virtualType name="AuthorizationClient" type="Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient">
         <arguments>
-            <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
-            <argument name="paypalConfig" xsi:type="object">WirecardPaypalConfig</argument>
+            <argument name="paymentSdkConfigFactory" xsi:type="object">PaymentSdkConfigFactory</argument>
         </arguments>
     </virtualType>
 
@@ -129,6 +128,8 @@
         <arguments>
             <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
             <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
+            <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
+            <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
         </arguments>
     </virtualType>
 
