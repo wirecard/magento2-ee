@@ -120,6 +120,13 @@
 
     <virtualType name="AuthorizationClient" type="Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient">
         <arguments>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Wirecard paymentSDK objects -->
+    <virtualType name="TransactionServiceFactory" type="Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory">
+        <arguments>
             <argument name="paymentSdkConfigFactory" xsi:type="object">PaymentSdkConfigFactory</argument>
         </arguments>
     </virtualType>

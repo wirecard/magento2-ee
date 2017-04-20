@@ -33,11 +33,10 @@
 namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
 use Magento\Framework\UrlInterface;
-use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
@@ -61,25 +60,25 @@ class AuthorizationClient implements ClientInterface
     private $urlBuilder;
 
     /**
-     * @var ConfigFactoryInterface
+     * @var TransactionServiceFactory
      */
-    private $paymentSdkConfigFactory;
+    private $transactionServiceFactory;
 
     /**
      * AuthorizationClient constructor.
      * @param LoggerInterface $logger
      * @param UrlInterface $urlBuilder
-     * @param ConfigFactoryInterface $paymentSdkConfigFactory
+     * @param TransactionServiceFactory $transactionServiceFactory
      */
     public function __construct(
         LoggerInterface $logger,
         UrlInterface $urlBuilder,
-        ConfigFactoryInterface $paymentSdkConfigFactory
+        TransactionServiceFactory $transactionServiceFactory
     )
     {
         $this->logger = $logger;
         $this->urlBuilder = $urlBuilder;
-        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
+        $this->transactionServiceFactory = $transactionServiceFactory;
     }
 
     /**
@@ -92,11 +91,8 @@ class AuthorizationClient implements ClientInterface
      */
     public function placeRequest(TransferInterface $transferObject)
     {
-        /** @var Config $txConfig */
-        $txConfig = $this->paymentSdkConfigFactory->create(PayPalTransaction::NAME);
-
-        $transactionService = new TransactionService($txConfig, $this->logger);
-
+        /** @var TransactionService $transactionService */
+        $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
         $tx = $this->createTransaction($transferObject->getBody());
 
         try {
@@ -122,12 +118,7 @@ class AuthorizationClient implements ClientInterface
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
         $tx = new PayPalTransaction();
-
-        $tx->setAmount(new Amount(
-            $data['AMOUNT'],
-            $data['CURRENCY']
-        ));
-
+        $tx->setAmount(new Amount($data['AMOUNT'], $data['CURRENCY']));
         $tx->setRedirect(new Redirect($wdBaseUrl . 'frontend/back', $wdBaseUrl . 'frontend/cancel'));
         $tx->setNotificationUrl($wdBaseUrl . 'notify');
 
