@@ -32,20 +32,43 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Http\Client;
 
-use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient;
+use Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\TransactionService;
 
 class AuthorizationClientUTest extends \PHPUnit_Framework_TestCase
 {
     public function testPlaceRequest()
     {
-        $config = $this->getMock(ConfigInterface::class);
-        $client = new AuthorizationClient($config);
+        $logger = $this->getMock(LoggerInterface::class);
+        $urlBuilder = $this->getMock(UrlInterface::class);
+        $transactionService = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()->getMock();
+        $interactionResponse = $this->getMockBuilder(InteractionResponse::class)
+            ->disableOriginalConstructor()->getMock();
+        $interactionResponse->method('getRedirectUrl')->willReturn('http://redir.ect');
+        $transactionService->method('reserve')->willReturn($interactionResponse);
+
+        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceFactory->method('create')->willReturn($transactionService);
+
         $transfer = $this->getMock(TransferInterface::class);
+
+        $transfer->method('getBody')->willReturn(['AMOUNT' => '1.0', 'CURRENCY' => 'EUR']);
+
+        /** @var LoggerInterface $logger */
+        /** @var UrlInterface $urlBuilder */
+        /** @var TransactionServiceFactory $transactionServiceFactory */
+        $client = new AuthorizationClient($logger, $urlBuilder, $transactionServiceFactory);
 
         $result = $client->placeRequest($transfer);
 
-        $this->assertEquals([], $result);
+        $expected = array('redirect_url' => 'http://redir.ect');
+        $this->assertEquals($expected, $result);
     }
 }

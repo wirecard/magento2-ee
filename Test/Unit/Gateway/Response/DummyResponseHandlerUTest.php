@@ -32,19 +32,37 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Response;
 
+use Magento\Checkout\Model\Session;
+use PHPUnit_Framework_MockObject_MockObject;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Response\DummyResponseHandler;
 
 class DummyResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
+    private $logger;
+    private $session;
+
+    public function setUp()
+    {
+        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setRedirectUrl'])
+            ->getMock();
+    }
+
     public function testDummy()
     {
-        $handler = new DummyResponseHandler();
+        $sessionMock = $this->session;
+        $handler = new DummyResponseHandler($this->logger, $sessionMock);
+
+
         $response = [
-            'sth' => 'test'
+            'redirect_url' => 'http://redir.ect'
         ];
 
+        /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://redir.ect');
         $handler->handle([], $response);
-
-        $this->assertEquals(['sth' => 'test'], $response);
     }
 }

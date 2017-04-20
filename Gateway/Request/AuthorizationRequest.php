@@ -32,25 +32,13 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 
 class AuthorizationRequest implements BuilderInterface
 {
     const PAYMENT='payment';
-    /**
-     * @var ConfigInterface
-     */
-    private $config;
-    /**
-     * @param ConfigInterface $config
-     */
-    public function __construct(
-        ConfigInterface $config
-    ) {
-        $this->config = $config;
-    }
+
     /**
      * Builds ENV request
      *
@@ -65,7 +53,7 @@ class AuthorizationRequest implements BuilderInterface
             throw new \InvalidArgumentException('Payment data object should be provided.');
         }
         /** @var PaymentDataObjectInterface $payment */
-        $payment = $buildSubject['payment'];
+        $payment = $buildSubject[self::PAYMENT];
         $order = $payment->getOrder();
 
         return [

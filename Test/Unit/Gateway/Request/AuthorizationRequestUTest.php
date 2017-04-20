@@ -32,19 +32,28 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use Wirecard\ElasticEngine\Gateway\Request\DummyDataBuilder;
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Wirecard\ElasticEngine\Gateway\Request\AuthorizationRequest;
 
-class DummyDataBuilderUTest extends \PHPUnit_Framework_TestCase
+class AuthorizationRequestUTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuild()
     {
-        $builder = new DummyDataBuilder();
+        $builder = new AuthorizationRequest();
+
+        $order = $this->getMock(OrderAdapterInterface::class);
+        $order->method('getGrandTotalAmount')->willReturn('42.20');
+        $order->method('getCurrencyCode')->willReturn('EUR');
+        $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
+        $paymentDO->method('getOrder')->willReturn($order);
         $buildSubject = [
-            'nr' => 42
+            'nr' => 42,
+            'payment' => $paymentDO
         ];
 
         $result = $builder->build($buildSubject);
 
-        $this->assertEquals($buildSubject, $result);
+        $this->assertEquals(['AMOUNT' => '42.20', 'CURRENCY' => 'EUR'], $result);
     }
 }
