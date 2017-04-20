@@ -51,7 +51,7 @@ define(
             },
             afterPlaceOrder: function () {
                 $.get("/wirecard_elasticengine/frontend/redirect", function (data) {
-                    window.location.href(data["redirect-url"]);
+                    window.location.replace(data["redirect-url"]);
                 });
             }
         });
