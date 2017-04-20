@@ -32,16 +32,12 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
-use Magento\Framework\App\ProductMetadata;
-use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigFactoryInterface;
-use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
@@ -68,6 +64,7 @@ class AuthorizationClient implements ClientInterface
      * @var ConfigFactoryInterface
      */
     private $paymentSdkConfigFactory;
+
     /**
      * AuthorizationClient constructor.
      * @param LoggerInterface $logger
@@ -96,7 +93,9 @@ class AuthorizationClient implements ClientInterface
     public function placeRequest(TransferInterface $transferObject)
     {
         /** @var Config $txConfig */
-        $txConfig = $this->paymentSdkConfigFactory->create('paypal');
+        $txConfig = $this->paymentSdkConfigFactory->create(PayPalTransaction::NAME);
+
+        $this->logger->debug('Wirecard_ElasticEngine: config created.');
 
         $transactionService = new TransactionService($txConfig, $this->logger);
 

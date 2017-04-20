@@ -65,6 +65,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
      * @var ProductMetadata
      */
     private $productMetadata;
+
     /**
      * PaymentSDKConfigFactory constructor.
      * @param ConfigInterface $eeConfig
