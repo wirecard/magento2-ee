@@ -95,8 +95,6 @@ class AuthorizationClient implements ClientInterface
         /** @var Config $txConfig */
         $txConfig = $this->paymentSdkConfigFactory->create(PayPalTransaction::NAME);
 
-        $this->logger->debug('Wirecard_ElasticEngine: config created.');
-
         $transactionService = new TransactionService($txConfig, $this->logger);
 
         $tx = $this->createTransaction($transferObject->getBody());
