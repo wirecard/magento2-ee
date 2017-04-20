@@ -101,8 +101,7 @@ class AuthorizationClient implements ClientInterface
 
         try {
             $response = $transactionService->reserve($tx);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
             $response = null;
         }
@@ -129,8 +128,8 @@ class AuthorizationClient implements ClientInterface
             $data['CURRENCY']
         ));
 
-        $tx->setRedirect(new Redirect($wdBaseUrl.'frontend/back', $wdBaseUrl.'frontend/cancel'));
-        $tx->setNotificationUrl($wdBaseUrl.'notify');
+        $tx->setRedirect(new Redirect($wdBaseUrl . 'frontend/back', $wdBaseUrl . 'frontend/cancel'));
+        $tx->setNotificationUrl($wdBaseUrl . 'notify');
 
         return $tx;
     }

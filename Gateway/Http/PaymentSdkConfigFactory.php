@@ -109,7 +109,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         }
 
         $config->setShopInfo(
-            $this->productMetadata->getName().' '.$this->productMetadata->getEdition().' Edition',
+            $this->productMetadata->getName() . ' ' . $this->productMetadata->getEdition() . ' Edition',
             $this->productMetadata->getVersion()
         );
         $config->setPluginInfo(
