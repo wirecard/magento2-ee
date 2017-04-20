@@ -38,37 +38,105 @@ use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient;
 use Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\TransactionService;
 
 class AuthorizationClientUTest extends \PHPUnit_Framework_TestCase
 {
-    public function testPlaceRequest()
+    const RESERVE = 'reserve';
+    const FACTORY_CREATE = 'create';
+    const GET_BODY = 'getBody';
+    private $logger;
+
+    private $urlBuilder;
+
+    private $transactionService;
+
+    private $responseArray;
+
+    public function setUp()
     {
-        $logger = $this->getMock(LoggerInterface::class);
-        $urlBuilder = $this->getMock(UrlInterface::class);
-        $transactionService = $this->getMockBuilder(TransactionService::class)
+        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->urlBuilder = $this->getMock(UrlInterface::class);
+        $this->transactionService = $this->getMockBuilder(TransactionService::class)
             ->disableOriginalConstructor()->getMock();
+
+        $this->responseArray = ['AMOUNT' => '1.0', 'CURRENCY' => 'EUR'];
+    }
+
+    public function testPlaceRequestWithRedirect()
+    {
         $interactionResponse = $this->getMockBuilder(InteractionResponse::class)
             ->disableOriginalConstructor()->getMock();
         $interactionResponse->method('getRedirectUrl')->willReturn('http://redir.ect');
-        $transactionService->method('reserve')->willReturn($interactionResponse);
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $transactionServiceMock */
+        $transactionServiceMock = $this->transactionService;
+        $transactionServiceMock->method(self::RESERVE)->willReturn($interactionResponse);
 
         $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionServiceFactory->method('create')->willReturn($transactionService);
+        $transactionServiceFactory->method(self::FACTORY_CREATE)->willReturn($this->transactionService);
 
         $transfer = $this->getMock(TransferInterface::class);
 
-        $transfer->method('getBody')->willReturn(['AMOUNT' => '1.0', 'CURRENCY' => 'EUR']);
+        $transfer->method(self::GET_BODY)->willReturn($this->responseArray);
 
-        /** @var LoggerInterface $logger */
-        /** @var UrlInterface $urlBuilder */
         /** @var TransactionServiceFactory $transactionServiceFactory */
-        $client = new AuthorizationClient($logger, $urlBuilder, $transactionServiceFactory);
+        $client = new AuthorizationClient($this->logger, $this->urlBuilder, $transactionServiceFactory);
 
         $result = $client->placeRequest($transfer);
 
         $expected = array('redirect_url' => 'http://redir.ect');
         $this->assertEquals($expected, $result);
+    }
+
+    public function testPlaceRequestWithoutRedirect()
+    {
+        $response = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $transactionServiceMock */
+        $transactionServiceMock = $this->transactionService;
+        $transactionServiceMock->method(self::RESERVE)->willReturn($response);
+
+        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceFactory->method(self::FACTORY_CREATE)->willReturn($this->transactionService);
+
+        $transfer = $this->getMock(TransferInterface::class);
+
+        $transfer->method(self::GET_BODY)->willReturn($this->responseArray);
+
+        /** @var TransactionServiceFactory $transactionServiceFactory */
+        $client = new AuthorizationClient($this->logger, $this->urlBuilder, $transactionServiceFactory);
+
+        $result = $client->placeRequest($transfer);
+
+        $expected = array();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testPlaceRequestReturnsException()
+    {
+        /** @var \PHPUnit_Framework_MockObject_MockObject $transactionServiceMock */
+        $transactionServiceMock = $this->transactionService;
+        $transactionServiceMock->method(self::RESERVE)->willThrowException(new \Exception('message'));
+
+        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceFactory->method(self::FACTORY_CREATE)->willReturn($this->transactionService);
+
+        $transfer = $this->getMock(TransferInterface::class);
+
+        $transfer->method(self::GET_BODY)->willReturn($this->responseArray);
+
+        $expectedLogger = $this->getMock(LoggerInterface::class);
+        $expectedLogger->expects($this->Once())->method('error')->with('message');
+
+        /** @var TransactionServiceFactory $transactionServiceFactory */
+        $client = new AuthorizationClient($expectedLogger, $this->urlBuilder, $transactionServiceFactory);
+
+        $client->placeRequest($transfer);
     }
 }

@@ -30,40 +30,46 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
+namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
-use Magento\Payment\Gateway\Data\OrderAdapterInterface;
-use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Wirecard\ElasticEngine\Gateway\Request\AuthorizationRequest;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultFactory;
+use Wirecard\ElasticEngine\Controller\Frontend\Redirect;
 
-class AuthorizationRequestUTest extends \PHPUnit_Framework_TestCase
+class RedirectUTest extends \PHPUnit_Framework_TestCase
 {
-    public function testBuild()
+    public function testGetRedirect()
     {
-        $builder = new AuthorizationRequest();
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getRedirectUrl'])
+            ->getMock();
+        $session->method('getRedirectUrl')->willReturn('http://redir.ect');
+        $resultFactory = $this->getMOckBuilder(ResultFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+        $json = $this->getMockBuilder(Json::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setJsonData'])
+            ->getMock();
+        $resultFactory->method('create')->willReturn($json);
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getResultFactory'])
+            ->getMock();
+        $context->method('getResultFactory')->willReturn($resultFactory);
 
-        $order = $this->getMock(OrderAdapterInterface::class);
-        $order->method('getGrandTotalAmount')->willReturn('42.20');
-        $order->method('getCurrencyCode')->willReturn('EUR');
-        $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
-        $paymentDO->method('getOrder')->willReturn($order);
-        $buildSubject = [
-            'nr' => 42,
-            'payment' => $paymentDO
-        ];
+        /**
+         * @var Context $context
+         * @var Session $session
+         */
+        $redirect = new Redirect($context, $session);
 
-        $result = $builder->build($buildSubject);
+        $result = $redirect->execute();
 
-        $this->assertEquals(['AMOUNT' => '42.20', 'CURRENCY' => 'EUR'], $result);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testBuildThrowsException()
-    {
-        $builder = new AuthorizationRequest();
-        $buildSubject = [];
-        $builder->build($buildSubject);
+        $this->assertEquals($json, $result);
     }
 }
