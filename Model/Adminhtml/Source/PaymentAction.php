@@ -36,6 +36,9 @@ use Magento\Framework\Option\ArrayInterface;
 
 class PaymentAction implements ArrayInterface
 {
+    const AUTHORIZE='authorize';
+    const AUTHORIZE_CAPTURE='authorize_capture';
+
     /**
      * {@inheritdoc}
      */
@@ -43,11 +46,11 @@ class PaymentAction implements ArrayInterface
     {
         return [
             [
-                'value' => 'reserve',
+                'value' => self::AUTHORIZE,
                 'label' => __('Authorize')
             ],
             [
-                'value' => 'pay',
+                'value' => self::AUTHORIZE_CAPTURE,
                 'label' => __('Capture')
             ]
         ];
