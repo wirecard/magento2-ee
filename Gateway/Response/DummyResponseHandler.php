@@ -32,10 +32,33 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Response;
 
+use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Response\HandlerInterface;
+use Psr\Log\LoggerInterface;
 
 class DummyResponseHandler implements HandlerInterface
 {
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    
+    /**
+     * @var Session
+     */
+    private $session;
+
+    /**
+     * DummyResponseHandler constructor.
+     * @param LoggerInterface $logger
+     * @param Session $session
+     */
+    function __construct(LoggerInterface $logger, Session $session)
+    {
+        $this->logger = $logger;
+        $this->session = $session;
+    }
 
     /**
      * Handles response
@@ -46,6 +69,6 @@ class DummyResponseHandler implements HandlerInterface
      */
     public function handle(array $handlingSubject, array $response)
     {
-        // nothing to do - only dummy implementation
+        $this->session->setRedirectUrl($response['redirect_url']);
     }
 }

@@ -31,24 +31,28 @@
 
 define(
     [
+        'jquery',
         'Magento_Checkout/js/view/payment/default'
     ],
-    function (Component) {
+    function ($, Component) {
         'use strict';
         return Component.extend({
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-default',
-                transactionResult: ''
+                template: 'Wirecard_ElasticEngine/payment/method-default'
             },
-
-            getCode: function() {
+            getCode: function () {
                 return 'wirecard_elasticengine_paypal';
             },
 
-            getData: function() {
+            getData: function () {
                 return {
                     'method': this.item.method
                 };
+            },
+            afterPlaceOrder: function () {
+                $.get("/wirecard_elasticengine/frontend/redirect", function (data) {
+                    window.location.replace(data["redirect-url"]);
+                });
             }
         });
     }

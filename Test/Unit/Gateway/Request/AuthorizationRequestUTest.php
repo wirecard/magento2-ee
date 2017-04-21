@@ -30,35 +30,40 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Request;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Payment\Gateway\Request\BuilderInterface;
+use Wirecard\ElasticEngine\Gateway\Request\AuthorizationRequest;
 
-class AuthorizationRequest implements BuilderInterface
+class AuthorizationRequestUTest extends \PHPUnit_Framework_TestCase
 {
-    const PAYMENT='payment';
+    public function testBuild()
+    {
+        $builder = new AuthorizationRequest();
+
+        $order = $this->getMock(OrderAdapterInterface::class);
+        $order->method('getGrandTotalAmount')->willReturn('42.20');
+        $order->method('getCurrencyCode')->willReturn('EUR');
+        $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
+        $paymentDO->method('getOrder')->willReturn($order);
+        $buildSubject = [
+            'nr' => 42,
+            'payment' => $paymentDO
+        ];
+
+        $result = $builder->build($buildSubject);
+
+        $this->assertEquals(['AMOUNT' => '42.20', 'CURRENCY' => 'EUR'], $result);
+    }
 
     /**
-     * Builds ENV request
-     *
-     * @param array $buildSubject
-     * @return array
+     * @expectedException \InvalidArgumentException
      */
-    public function build(array $buildSubject)
+    public function testBuildThrowsException()
     {
-        if (!isset($buildSubject[self::PAYMENT])
-            || !$buildSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
-        ) {
-            throw new \InvalidArgumentException('Payment data object should be provided.');
-        }
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $buildSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-
-        return [
-            'AMOUNT' => $order->getGrandTotalAmount(),
-            'CURRENCY' => $order->getCurrencyCode()
-        ];
+        $builder = new AuthorizationRequest();
+        $buildSubject = [];
+        $builder->build($buildSubject);
     }
 }

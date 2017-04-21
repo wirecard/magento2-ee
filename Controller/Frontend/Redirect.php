@@ -30,35 +30,46 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Request;
+namespace Wirecard\ElasticEngine\Controller\Frontend;
 
-use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Payment\Gateway\Request\BuilderInterface;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultFactory;
 
-class AuthorizationRequest implements BuilderInterface
+/**
+ * Class Redirect
+ * @package Wirecard\ElasticEngine\Controller\Frontend
+ */
+class Redirect extends Action
 {
-    const PAYMENT='payment';
+    /**
+     * @var Session
+     */
+    private $session;
 
     /**
-     * Builds ENV request
-     *
-     * @param array $buildSubject
-     * @return array
+     * Redirect constructor.
+     * @param Context $context
+     * @param Session $session
      */
-    public function build(array $buildSubject)
+    public function __construct(Context $context, Session $session)
     {
-        if (!isset($buildSubject[self::PAYMENT])
-            || !$buildSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
-        ) {
-            throw new \InvalidArgumentException('Payment data object should be provided.');
-        }
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $buildSubject[self::PAYMENT];
-        $order = $payment->getOrder();
+        parent::__construct($context);
+        $this->session = $session;
+    }
 
-        return [
-            'AMOUNT' => $order->getGrandTotalAmount(),
-            'CURRENCY' => $order->getCurrencyCode()
-        ];
+    /**
+     * @return \Magento\Framework\Controller\ResultInterface
+     */
+    public function execute()
+    {
+        $redirectUrl = $this->session->getRedirectUrl();
+
+        /** @var Json $result */
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result->setJsonData('{"redirect-url": "'.$redirectUrl.'"}');
+        return $result;
     }
 }

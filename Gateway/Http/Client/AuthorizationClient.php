@@ -33,12 +33,10 @@
 namespace Wirecard\ElasticEngine\Gateway\Http\Client;
 
 use Magento\Framework\UrlInterface;
-use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
@@ -52,16 +50,6 @@ use Wirecard\PaymentSdk\TransactionService;
 class AuthorizationClient implements ClientInterface
 {
     /**
-     * @var ConfigInterface
-     */
-    private $eeConfig;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $paypalConfig;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -72,22 +60,25 @@ class AuthorizationClient implements ClientInterface
     private $urlBuilder;
 
     /**
+     * @var TransactionServiceFactory
+     */
+    private $transactionServiceFactory;
+
+    /**
      * AuthorizationClient constructor.
-     * @param ConfigInterface $eeConfig
-     * @param ConfigInterface $paypalConfig
      * @param LoggerInterface $logger
      * @param UrlInterface $urlBuilder
+     * @param TransactionServiceFactory $transactionServiceFactory
      */
     public function __construct(
-        ConfigInterface $eeConfig,
-        ConfigInterface $paypalConfig,
         LoggerInterface $logger,
-        UrlInterface $urlBuilder)
+        UrlInterface $urlBuilder,
+        TransactionServiceFactory $transactionServiceFactory
+    )
     {
-        $this->eeConfig = $eeConfig;
-        $this->paypalConfig = $paypalConfig;
         $this->logger = $logger;
         $this->urlBuilder = $urlBuilder;
+        $this->transactionServiceFactory = $transactionServiceFactory;
     }
 
     /**
@@ -100,27 +91,13 @@ class AuthorizationClient implements ClientInterface
      */
     public function placeRequest(TransferInterface $transferObject)
     {
-        $txConfig = new Config(
-            $this->eeConfig->getValue('credentials/base_url'),
-                $this->eeConfig->getValue('credentials/http_user'),
-                $this->eeConfig->getValue('credentials/http_pass')
-        );
-
-        $paypalSdkConfig = new PaymentMethodConfig(
-            PayPalTransaction::NAME,
-            $this->paypalConfig->getValue('merchant_account_id'),
-            $this->paypalConfig->getValue('secret')
-        );
-        $txConfig->add($paypalSdkConfig);
-
-        $transactionService = new TransactionService($txConfig, $this->logger);
-
+        /** @var TransactionService $transactionService */
+        $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
         $tx = $this->createTransaction($transferObject->getBody());
 
         try {
             $response = $transactionService->reserve($tx);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
             $response = null;
         }
@@ -138,17 +115,12 @@ class AuthorizationClient implements ClientInterface
      */
     private function createTransaction($data)
     {
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecardelasticengine');
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
         $tx = new PayPalTransaction();
-
-        $tx->setAmount(new Amount(
-            $data['AMOUNT'],
-            $data['CURRENCY']
-        ));
-
-        $tx->setRedirect(new Redirect($wdBaseUrl.'checkout/back', $wdBaseUrl.'checkout/cancel'));
-        $tx->setNotificationUrl($wdBaseUrl.'notify');
+        $tx->setAmount(new Amount($data['AMOUNT'], $data['CURRENCY']));
+        $tx->setRedirect(new Redirect($wdBaseUrl . 'frontend/back', $wdBaseUrl . 'frontend/cancel'));
+        $tx->setNotificationUrl($wdBaseUrl . 'notify');
 
         return $tx;
     }

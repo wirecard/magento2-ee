@@ -30,21 +30,46 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
+namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
-use Wirecard\ElasticEngine\Gateway\Request\DummyDataBuilder;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultFactory;
+use Wirecard\ElasticEngine\Controller\Frontend\Redirect;
 
-class DummyDataBuilderUTest extends \PHPUnit_Framework_TestCase
+class RedirectUTest extends \PHPUnit_Framework_TestCase
 {
-    public function testBuild()
+    public function testGetRedirect()
     {
-        $builder = new DummyDataBuilder();
-        $buildSubject = [
-            'nr' => 42
-        ];
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getRedirectUrl'])
+            ->getMock();
+        $session->method('getRedirectUrl')->willReturn('http://redir.ect');
+        $resultFactory = $this->getMOckBuilder(ResultFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+        $json = $this->getMockBuilder(Json::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setJsonData'])
+            ->getMock();
+        $resultFactory->method('create')->willReturn($json);
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getResultFactory'])
+            ->getMock();
+        $context->method('getResultFactory')->willReturn($resultFactory);
 
-        $result = $builder->build($buildSubject);
+        /**
+         * @var Context $context
+         * @var Session $session
+         */
+        $redirect = new Redirect($context, $session);
 
-        $this->assertEquals($buildSubject, $result);
+        $result = $redirect->execute();
+
+        $this->assertEquals($json, $result);
     }
 }
