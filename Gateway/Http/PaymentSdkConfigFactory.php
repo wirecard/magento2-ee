@@ -78,8 +78,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         ConfigInterface $methodConfig,
         ProductMetadata $productMetadata,
         ModuleListInterface $moduleList
-    )
-    {
+    ) {
         $this->eeConfig = $eeConfig;
         $this->methodConfig = $methodConfig;
         $this->moduleList = $moduleList;
