@@ -104,10 +104,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteCreatesTransactionService()
     {
-        $commandSubject = ['command'];
         $testTransactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
         $testTransactionServiceFactory->method(self::METHOD_CREATE)->willReturn($this->transactionService);
+
+        // Test if the transactionService is created with the correct values
         $testTransactionServiceFactory->expects($this->Once())->method(self::METHOD_CREATE)
             ->with($this->equalTo(PayPalTransaction::NAME));
 
@@ -119,7 +120,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->handler
         );
 
-        $command->execute($commandSubject);
+        $command->execute([]);
     }
 
     public function testExecuteReservesReservableTransaction()
@@ -128,6 +129,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($this->response);
 
+        // Test if transactionService->process(...) is called with the correct parameters
         $transactionServiceMock->expects($this->Once())->method(self::METHOD_PROCESS)->with(
             $this->equalTo($this->getMock(PayPalTransaction::class)), $this->equalTo(Operation::RESERVE)
         );
@@ -165,6 +167,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $transactionServiceFactoryMock->method(self::METHOD_CREATE)->willReturn($transactionServiceMock);
 
+        // Test if the logger gets the exception message
         $loggerMock = $this->getMock(LoggerInterface::class);
         $loggerMock->expects($this->exactly(1))->method('error')->with($this->equalTo($exception->getMessage()));
 
@@ -188,6 +191,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($exception);
 
+        // Test if transactionService->process(...) is called with the correct parameters
         $transactionServiceMock->expects($this->exactly(1))->method(self::METHOD_PROCESS)->with(
             $this->isInstanceOf(Transaction::class), $this->equalTo(Operation::PAY)
         );
