@@ -30,24 +30,32 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Http;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Service;
 
-use Magento\Payment\Gateway\Http\TransferBuilder;
-use Magento\Payment\Gateway\Http\TransferInterface;
-use Wirecard\ElasticEngine\Gateway\Http\TransferFactory;
+use Magento\Payment\Gateway\ConfigFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\TransactionService;
 
-class TransferFactoryUTest extends \PHPUnit_Framework_TestCase
+class TransactionServiceFactoryUTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $transferBuilder = $this->getMock(TransferBuilder::class);
-        $dummyTransfer = $this->getMock(TransferInterface::class);
-        $transferBuilder->method('setBody')->willReturn($transferBuilder);
-        $transferBuilder->method('build')->willReturn($dummyTransfer);
-        $factory = new TransferFactory($transferBuilder);
+        $logger = $this->getMock(LoggerInterface::class);
+        $paymentSdkConfigFactory = $this->getMock(ConfigFactoryInterface::class);
+        $config = new Config('a', 'b', 'c');
 
-        $result = $factory->create([]);
+        $paymentSdkConfigFactory->method('create')->willReturn($config);
+        /**
+         * @var $logger LoggerInterface
+         * @var $paymentSdkConfigFactory ConfigFactoryInterface
+         */
+        $transactionServiceFactory = new TransactionServiceFactory($logger, $paymentSdkConfigFactory);
+        $transactionServiceFromFactory = $transactionServiceFactory->create('paypal');
 
-        $this->assertEquals($dummyTransfer, $result);
+        $transactionService = new TransactionService($config, $logger);
+
+        $this->assertEquals($transactionService, $transactionServiceFromFactory);
     }
 }
