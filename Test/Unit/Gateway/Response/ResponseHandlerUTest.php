@@ -30,45 +30,38 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Response;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Response;
 
 use Magento\Checkout\Model\Session;
-use Magento\Payment\Gateway\Response\HandlerInterface;
+use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Response\ResponseHandler;
 
-class DummyResponseHandler implements HandlerInterface
+class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @var LoggerInterface
-     */
     private $logger;
-
-    /**
-     * @var Session
-     */
     private $session;
 
-    /**
-     * DummyResponseHandler constructor.
-     * @param LoggerInterface $logger
-     * @param Session $session
-     */
-    public function __construct(LoggerInterface $logger, Session $session)
+    public function setUp()
     {
-        $this->logger = $logger;
-        $this->session = $session;
+        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setRedirectUrl'])
+            ->getMock();
     }
 
-    /**
-     * Handles response
-     *
-     * @param array $handlingSubject
-     * @param array $response
-     * @return void
-     */
-    public function handle(array $handlingSubject, array $response)
+    public function testDummy()
     {
-        $this->session->setRedirectUrl($response['redirect_url']);
+        $sessionMock = $this->session;
+        $handler = new ResponseHandler($this->logger, $sessionMock);
+
+        $response = [
+            'redirect_url' => 'http://redir.ect'
+        ];
+
+        /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://redir.ect');
+        $handler->handle([], $response);
     }
 }
