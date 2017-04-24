@@ -92,29 +92,12 @@
         </arguments>
     </virtualType>
     
-    <!-- Authorize command -->
-    <virtualType name="PaypalInitializeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <!-- Initialize command -->
+    <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\WirecardCommand">
         <arguments>
-            <argument name="requestBuilder" xsi:type="object">AuthorizationRequest</argument>
-            <argument name="transferFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\TransferFactory</argument>
-            <argument name="client" xsi:type="object">AuthorizationClient</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="validator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\ResponseValidator</argument>
-        </arguments>
-    </virtualType>
-
-    <!-- Authorization Request -->
-    <virtualType name="AuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
-        <arguments>
-            <argument name="builders" xsi:type="array">
-                <item name="transaction" xsi:type="string">Wirecard\ElasticEngine\Gateway\Request\AuthorizationRequest</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="AuthorizationClient" type="Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient">
-        <arguments>
+            <argument name="transactionFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Transaction\TransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
         </arguments>
     </virtualType>
 

@@ -30,15 +30,31 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Response;
+namespace Wirecard\ElasticEngine\Gateway;
 
-use Magento\Checkout\Model\Session;
+use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory;
+use Wirecard\ElasticEngine\Gateway\Transaction\TransactionFactory;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
-class ResponseHandler implements HandlerInterface
+class WirecardCommand implements CommandInterface
 {
+    /**
+     * @var
+     */
+    private $transactionFactory;
+
+    /**
+     * @var TransactionServiceFactory
+     */
+    private $transactionServiceFactory;
+
+    /**
+     * @var HandlerInterface
+     */
+    private $handler;
 
     /**
      * @var LoggerInterface
@@ -46,35 +62,38 @@ class ResponseHandler implements HandlerInterface
     private $logger;
 
     /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * ResponseHandler constructor.
+     * WirecardCommand constructor.
+     * @param $transactionFactory
+     * @param TransactionServiceFactory $transactionServiceFactory
      * @param LoggerInterface $logger
-     * @param Session $session
+     * @param HandlerInterface $handler
      */
-    public function __construct(LoggerInterface $logger, Session $session)
-    {
+    public function __construct(
+        TransactionFactory $transactionFactory,
+        TransactionServiceFactory $transactionServiceFactory,
+        LoggerInterface $logger,
+        HandlerInterface $handler
+    ) {
+        $this->transactionFactory = $transactionFactory;
+        $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;
-        $this->session = $session;
+        $this->handler = $handler;
     }
 
-    /**
-     * Handles response
-     *
-     * @param array $handlingSubject
-     * @param array $response
-     * @return void
-     */
-    public function handle(array $handlingSubject, array $response)
+    public function execute(array $commandSubject)
     {
-        $sdkResponse = $response['paymentSDK-php'];
+        $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
+        $transaction = $this->transactionFactory->create($commandSubject);
 
-        if($sdkResponse instanceof InteractionResponse){
-            $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
+        try {
+            $response = $transactionService->reserve($transaction);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+            $response = null;
         }
 
+        if ($this->handler) {
+            $this->handler->handle($commandSubject, ['paymentSDK-php' => $response]);
+        }
     }
 }

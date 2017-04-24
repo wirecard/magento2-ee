@@ -30,51 +30,47 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Response;
+namespace Wirecard\ElasticEngine\Gateway\Transaction;
 
-use Magento\Checkout\Model\Session;
-use Magento\Payment\Gateway\Response\HandlerInterface;
-use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
-class ResponseHandler implements HandlerInterface
+class TransactionFactory
 {
+    const PAYMENT='payment';
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * ResponseHandler constructor.
-     * @param LoggerInterface $logger
-     * @param Session $session
-     */
-    public function __construct(LoggerInterface $logger, Session $session)
+    public function __construct(UrlInterface $urlBuilder)
     {
-        $this->logger = $logger;
-        $this->session = $session;
+        $this->urlBuilder = $urlBuilder;
     }
 
     /**
-     * Handles response
-     *
-     * @param array $handlingSubject
-     * @param array $response
-     * @return void
+     * @param array $commandSubject
+     * @return PayPalTransaction
      */
-    public function handle(array $handlingSubject, array $response)
+    public function create($commandSubject)
     {
-        $sdkResponse = $response['paymentSDK-php'];
 
-        if($sdkResponse instanceof InteractionResponse){
-            $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
+        if (!isset($commandSubject[self::PAYMENT])
+            || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
+        ) {
+            throw new \InvalidArgumentException('Payment data object should be provided.');
         }
+        /** @var PaymentDataObjectInterface $payment */
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
 
+        $transaction = new PayPalTransaction();
+        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $transaction->setAmount($amount);
+
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $transaction->setRedirect(new Redirect($wdBaseUrl . 'frontend/back', $wdBaseUrl . 'frontend/cancel'));
+        $transaction->setNotificationUrl($wdBaseUrl . 'notify');
+
+        return $transaction;
     }
 }
