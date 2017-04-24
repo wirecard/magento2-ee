@@ -89,20 +89,16 @@ class WirecardCommand implements CommandInterface
         $transaction = $this->transactionFactory->create($commandSubject);
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
-        if ($transaction instanceof Reservable) {
-            try {
-                $response = $transactionService->reserve($transaction);
-            } catch (\Exception $exception) {
-                $this->logger->error($exception->getMessage());
-                $response = null;
-            }
-        } else {
-            try {
-                $response = $transactionService->pay($transaction);
-            } catch (\Exception $exception) {
-                $this->logger->error($exception->getMessage());
-                $response = null;
-            }
+        $action = 'pay';
+        if($transaction instanceof Reservable) {
+            $action = 'reserve';
+        }
+
+        try {
+            $response = $transactionService->$action($transaction);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+            $response = null;
         }
 
         if ($this->handler) {
