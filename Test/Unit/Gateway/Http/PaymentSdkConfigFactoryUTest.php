@@ -39,7 +39,6 @@ use Wirecard\ElasticEngine\Gateway\Http\PaymentSdkConfigFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 
-
 class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 {
     const GET_VALUE = 'getValue';

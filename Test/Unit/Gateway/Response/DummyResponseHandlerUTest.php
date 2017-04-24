@@ -56,7 +56,6 @@ class DummyResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $sessionMock = $this->session;
         $handler = new DummyResponseHandler($this->logger, $sessionMock);
 
-
         $response = [
             'redirect_url' => 'http://redir.ect'
         ];

@@ -39,7 +39,8 @@ class TransactionServiceFactory
      * @param $methodCode
      * @return TransactionService
      */
-    public function create($methodCode) {
+    public function create($methodCode)
+    {
         $txConfig = $this->paymentSdkConfigFactory->create($methodCode);
         return new TransactionService($txConfig, $this->logger);
     }

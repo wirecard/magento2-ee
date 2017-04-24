@@ -43,7 +43,7 @@ class DummyResponseHandler implements HandlerInterface
      * @var LoggerInterface
      */
     private $logger;
-    
+
     /**
      * @var Session
      */
@@ -54,7 +54,7 @@ class DummyResponseHandler implements HandlerInterface
      * @param LoggerInterface $logger
      * @param Session $session
      */
-    function __construct(LoggerInterface $logger, Session $session)
+    public function __construct(LoggerInterface $logger, Session $session)
     {
         $this->logger = $logger;
         $this->session = $session;
