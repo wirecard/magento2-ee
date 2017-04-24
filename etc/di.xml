@@ -88,10 +88,11 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="authorize" xsi:type="string">PaypalAuthorizeCommand</item>
+                <item name="initialize" xsi:type="string">PaypalAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
-
+    
     <!-- Authorize command -->
     <virtualType name="PaypalAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
         <arguments>
