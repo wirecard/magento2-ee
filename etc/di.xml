@@ -87,14 +87,13 @@
     <virtualType name="PaypalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">PaypalAuthorizeCommand</item>
-                <item name="initialize" xsi:type="string">PaypalAuthorizeCommand</item>
+                <item name="initialize" xsi:type="string">PaypalInitializeCommand</item>
             </argument>
         </arguments>
     </virtualType>
     
     <!-- Authorize command -->
-    <virtualType name="PaypalAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <virtualType name="PaypalInitializeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">AuthorizationRequest</argument>
             <argument name="transferFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\TransferFactory</argument>

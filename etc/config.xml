@@ -48,12 +48,12 @@
             <wirecard_elasticengine_paypal>
                 <title>Wirecard PayPal</title>
                 <active>1</active>
-                <can_authorize>1</can_authorize>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
                 <can_capture>0</can_capture>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
-                <can_initialize>1</can_initialize>
                 <model>PaypalFacade</model>
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
