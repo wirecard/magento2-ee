@@ -112,12 +112,6 @@
         </arguments>
     </virtualType>
 
-    <type name="Wirecard\ElasticEngine\Gateway\Request\AuthorizationRequest">
-        <arguments>
-            <argument name="config" xsi:type="object">WirecardPaypalConfig</argument>
-        </arguments>
-    </type>
-
     <virtualType name="AuthorizationClient" type="Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
