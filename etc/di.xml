@@ -93,7 +93,7 @@
     </virtualType>
     
     <!-- Initialize command -->
-    <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\WirecardCommand">
+    <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">PaypalTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>

@@ -30,7 +30,7 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway;
+namespace Wirecard\ElasticEngine\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;

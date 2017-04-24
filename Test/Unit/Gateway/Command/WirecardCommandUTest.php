@@ -30,14 +30,13 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-
-namespace Wirecard\ElasticEngine\Test\Unit\Gateway;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Command;
 
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Command\WirecardCommand;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-use Wirecard\ElasticEngine\Gateway\WirecardCommand;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
