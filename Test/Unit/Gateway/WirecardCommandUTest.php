@@ -255,5 +255,4 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         );
         $command->execute([self::COMMAND_PARAMETER]);
     }
-
 }

@@ -32,7 +32,6 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
@@ -66,7 +65,6 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->payment->method('getOrder')->willReturn($this->order);
 
         $this->commandSubject = ['payment' => $this->payment];
-
     }
 
     /**
