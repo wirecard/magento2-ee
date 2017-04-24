@@ -95,20 +95,26 @@
     <!-- Initialize command -->
     <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\WirecardCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Transaction\TransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">PaypalTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
         </arguments>
     </virtualType>
 
     <!-- Wirecard paymentSDK objects -->
-    <virtualType name="TransactionServiceFactory" type="Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory">
+    <virtualType name="PaypalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\TransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\PayPalTransaction</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TransactionServiceFactory" type="Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory">
         <arguments>
             <argument name="paymentSdkConfigFactory" xsi:type="object">PaymentSdkConfigFactory</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="PaymentSdkConfigFactory" type="Wirecard\ElasticEngine\Gateway\Http\PaymentSdkConfigFactory">
+    <virtualType name="PaymentSdkConfigFactory" type="Wirecard\ElasticEngine\Gateway\Config\PaymentSdkConfigFactory">
         <arguments>
             <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
             <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>

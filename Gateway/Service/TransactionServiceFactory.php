@@ -30,36 +30,46 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Http;
+namespace Wirecard\ElasticEngine\Gateway\Service;
 
-use Magento\Payment\Gateway\Http\TransferBuilder;
-use Magento\Payment\Gateway\Http\TransferFactoryInterface;
-use Magento\Payment\Gateway\Http\TransferInterface;
+use Magento\Payment\Gateway\ConfigFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\TransactionService;
 
-class TransferFactory implements TransferFactoryInterface
+/**
+ * Class TransactionServiceFactory
+ * @package Wirecard\ElasticEngine\Gateway\Service
+ */
+class TransactionServiceFactory
 {
     /**
-     * @var TransferBuilder
+     * @var ConfigFactoryInterface
      */
-    private $transferBuilder;
+    private $paymentSdkConfigFactory;
+
     /**
-     * @param TransferBuilder $transferBuilder
+     * @var LoggerInterface
      */
-    public function __construct(
-        TransferBuilder $transferBuilder
-    ) {
-        $this->transferBuilder = $transferBuilder;
-    }
+    private $logger;
+
     /**
-     * Builds gateway transfer object
-     *
-     * @param array $request
-     * @return TransferInterface
+     * TransactionServiceFactory constructor.
+     * @param LoggerInterface $logger
+     * @param ConfigFactoryInterface $paymentSdkConfigFactory
      */
-    public function create(array $request)
+    public function __construct(LoggerInterface $logger, ConfigFactoryInterface $paymentSdkConfigFactory)
     {
-        return $this->transferBuilder
-            ->setBody($request)
-            ->build();
+        $this->logger = $logger;
+        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
+    }
+
+    /**
+     * @param $methodCode
+     * @return TransactionService
+     */
+    public function create($methodCode)
+    {
+        $txConfig = $this->paymentSdkConfigFactory->create($methodCode);
+        return new TransactionService($txConfig, $this->logger);
     }
 }

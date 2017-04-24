@@ -35,10 +35,14 @@ namespace Wirecard\ElasticEngine\Gateway;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
-use Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory;
-use Wirecard\ElasticEngine\Gateway\Transaction\TransactionFactory;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Transaction\Reservable;
 
+/**
+ * Class WirecardCommand
+ * @package Wirecard\ElasticEngine\Gateway
+ */
 class WirecardCommand implements CommandInterface
 {
     /**
@@ -82,14 +86,23 @@ class WirecardCommand implements CommandInterface
 
     public function execute(array $commandSubject)
     {
-        $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
         $transaction = $this->transactionFactory->create($commandSubject);
+        $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
-        try {
-            $response = $transactionService->reserve($transaction);
-        } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage());
-            $response = null;
+        if ($transaction instanceof Reservable) {
+            try {
+                $response = $transactionService->reserve($transaction);
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
+                $response = null;
+            }
+        } else {
+            try {
+                $response = $transactionService->pay($transaction);
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
+                $response = null;
+            }
         }
 
         if ($this->handler) {

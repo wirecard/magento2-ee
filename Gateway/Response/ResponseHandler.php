@@ -37,6 +37,10 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 
+/**
+ * Class ResponseHandler
+ * @package Wirecard\ElasticEngine\Gateway\Response
+ */
 class ResponseHandler implements HandlerInterface
 {
 
@@ -72,9 +76,8 @@ class ResponseHandler implements HandlerInterface
     {
         $sdkResponse = $response['paymentSDK-php'];
 
-        if($sdkResponse instanceof InteractionResponse){
+        if ($sdkResponse instanceof InteractionResponse) {
             $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
         }
-
     }
 }

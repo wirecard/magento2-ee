@@ -30,47 +30,63 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Transaction;
+namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
+/**
+ * Class TransactionFactory
+ * @package Wirecard\ElasticEngine\Gateway\Request
+ */
 class TransactionFactory
 {
     const PAYMENT='payment';
 
-    public function __construct(UrlInterface $urlBuilder)
+    /**
+     * @var Transaction
+     */
+    private $transaction;
+
+    /**
+     * TransactionFactory constructor.
+     * @param UrlInterface $urlBuilder
+     * @param Transaction $transaction
+     */
+    public function __construct(UrlInterface $urlBuilder, Transaction $transaction)
     {
         $this->urlBuilder = $urlBuilder;
+        $this->transaction = $transaction;
     }
 
     /**
      * @param array $commandSubject
-     * @return PayPalTransaction
+     * @return Transaction
+     * @throws \InvalidArgumentException
      */
     public function create($commandSubject)
     {
-
         if (!isset($commandSubject[self::PAYMENT])
             || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
         ) {
             throw new \InvalidArgumentException('Payment data object should be provided.');
         }
+
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
 
-        $transaction = new PayPalTransaction();
         $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
-        $transaction->setAmount($amount);
+        $this->transaction->setAmount($amount);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $transaction->setRedirect(new Redirect($wdBaseUrl . 'frontend/back', $wdBaseUrl . 'frontend/cancel'));
-        $transaction->setNotificationUrl($wdBaseUrl . 'notify');
 
-        return $transaction;
+        $this->transaction->setRedirect(new Redirect($wdBaseUrl . 'frontend/back', $wdBaseUrl . 'frontend/cancel'));
+        $this->transaction->setNotificationUrl($wdBaseUrl . 'notify');
+
+        return $this->transaction;
     }
 }
