@@ -91,7 +91,7 @@ class WirecardCommand implements CommandInterface
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
         $operation = Operation::PAY;
-        if($transaction instanceof Reservable) {
+        if ($transaction instanceof Reservable) {
             $operation = Operation::RESERVE;
         }
 
