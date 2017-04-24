@@ -37,6 +37,7 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Reservable;
 
 /**
@@ -89,13 +90,13 @@ class WirecardCommand implements CommandInterface
         $transaction = $this->transactionFactory->create($commandSubject);
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
-        $action = 'pay';
+        $operation = Operation::PAY;
         if($transaction instanceof Reservable) {
-            $action = 'reserve';
+            $operation = Operation::RESERVE;
         }
 
         try {
-            $response = $transactionService->$action($transaction);
+            $response = $transactionService->process($transaction, $operation);
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
             $response = null;

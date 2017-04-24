@@ -39,6 +39,7 @@ use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\TransactionService;
@@ -47,8 +48,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 {
     const METHOD_CREATE='create';
     const COMMAND_PARAMETER='commandSubject';
-    const METHOD_RESERVE='reserve';
-    const METHOD_PAY='pay';
+    const METHOD_PROCESS='process';
+
     /**
      * @var TransactionFactory
      */
@@ -85,7 +86,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->transactionService = $this->getMockBuilder(TransactionService::class)
             ->disableOriginalConstructor()->getMock();
-        $this->transactionService->method(self::METHOD_RESERVE)->willReturn($this->response);
+        $this->transactionService->method(self::METHOD_PROCESS)->willReturn($this->response);
 
         $transaction = $this->getMock(PayPalTransaction::class);
 
@@ -125,9 +126,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
     {
         $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionServiceMock->method(self::METHOD_RESERVE)->willReturn($this->response);
+        $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($this->response);
 
-        $transactionServiceMock->expects($this->Once())->method(self::METHOD_RESERVE);
+        $transactionServiceMock->expects($this->Once())->method(self::METHOD_PROCESS)->with(
+            $this->equalTo($this->getMock(PayPalTransaction::class)), $this->equalTo(Operation::RESERVE)
+        );
 
         $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
@@ -150,7 +153,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
         $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionServiceMock->method(self::METHOD_RESERVE)->willThrowException($exception);
+        $transactionServiceMock->method(self::METHOD_PROCESS)->willThrowException($exception);
 
         $transaction = $this->getMock(PayPalTransaction::class);
 
@@ -183,9 +186,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
         $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionServiceMock->method(self::METHOD_PAY)->willReturn($exception);
+        $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($exception);
 
-        $transactionServiceMock->expects($this->exactly(1))->method(self::METHOD_PAY);
+        $transactionServiceMock->expects($this->exactly(1))->method(self::METHOD_PROCESS)->with(
+            $this->isInstanceOf(Transaction::class), $this->equalTo(Operation::PAY)
+        );
 
         $testTransactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
