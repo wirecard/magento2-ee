@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Command;
 
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Command\WirecardCommand;
@@ -80,6 +81,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
      */
     private $response;
 
+    /**
+     * @var ConfigInterface
+     */
+    private $methodConfig;
+
     public function setUp()
     {
         $this->response = $this->getMockBuilder(SuccessResponse::class)
@@ -100,6 +106,9 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
         $this->logger = $this->getMock(LoggerInterface::class);
         $this->handler = $this->getMock(HandlerInterface::class);
+
+        $this->methodConfig = $this->getMock(ConfigInterface::class);
+        $this->methodConfig->method('getValue')->willReturn('authorize');
     }
 
     public function testExecuteCreatesTransactionService()
@@ -117,7 +126,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->transactionFactory,
             $testTransactionServiceFactory,
             $this->logger,
-            $this->handler
+            $this->handler,
+            $this->methodConfig
         );
 
         $command->execute([]);
@@ -143,7 +153,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->transactionFactory,
             $transactionServiceFactoryMock,
             $this->logger,
-            $this->handler
+            $this->handler,
+            $this->methodConfig
         );
 
         $command->execute([self::COMMAND_PARAMETER]);
@@ -176,7 +187,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->transactionFactory,
             $transactionServiceFactoryMock,
             $loggerMock,
-            $this->handler
+            $this->handler,
+            $this->methodConfig
         );
 
         $command->execute([self::COMMAND_PARAMETER]);
@@ -211,7 +223,38 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $transactionFactoryMock,
             $testTransactionServiceFactory,
             $this->logger,
-            $this->handler
+            $this->handler,
+            $this->methodConfig
+        );
+
+        $command->execute([self::COMMAND_PARAMETER]);
+    }
+
+    public function testExecutePaysReservableTransactionForConfigCapture()
+    {
+        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($this->response);
+
+        // Test if transactionService->process(...) is called with the correct parameters
+        $transactionServiceMock->expects($this->Once())->method(self::METHOD_PROCESS)->with(
+            $this->equalTo($this->getMock(PayPalTransaction::class)), $this->equalTo(Operation::PAY)
+        );
+
+        $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceFactoryMock->method(self::METHOD_CREATE)->willReturn($transactionServiceMock);
+
+        $methodConfigMock = $this->getMock(ConfigInterface::class);
+        $methodConfigMock->method('getValue')->willReturn('authorize_capture');
+
+        /** @var TransactionServiceFactory $transactionServiceFactoryMock */
+        $command = new WirecardCommand(
+            $this->transactionFactory,
+            $transactionServiceFactoryMock,
+            $this->logger,
+            $this->handler,
+            $methodConfigMock
         );
 
         $command->execute([self::COMMAND_PARAMETER]);
@@ -228,7 +271,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->transactionFactory,
             $this->transactionServiceFactory,
             $this->logger,
-            $handlerMock
+            $handlerMock,
+            $this->methodConfig
         );
         $command->execute([self::COMMAND_PARAMETER]);
     }

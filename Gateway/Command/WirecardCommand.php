@@ -33,6 +33,7 @@
 namespace Wirecard\ElasticEngine\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
@@ -67,22 +68,30 @@ class WirecardCommand implements CommandInterface
     private $logger;
 
     /**
+     * @var ConfigInterface
+     */
+    private $methodConfig;
+
+    /**
      * WirecardCommand constructor.
-     * @param $transactionFactory
+     * @param TransactionFactory $transactionFactory
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param LoggerInterface $logger
      * @param HandlerInterface $handler
+     * @param ConfigInterface $methodConfig
      */
     public function __construct(
         TransactionFactory $transactionFactory,
         TransactionServiceFactory $transactionServiceFactory,
         LoggerInterface $logger,
-        HandlerInterface $handler
+        HandlerInterface $handler,
+        ConfigInterface $methodConfig
     ) {
         $this->transactionFactory = $transactionFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;
         $this->handler = $handler;
+        $this->methodConfig = $methodConfig;
     }
 
     /**
@@ -95,7 +104,7 @@ class WirecardCommand implements CommandInterface
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
         $operation = Operation::PAY;
-        if ($transaction instanceof Reservable) {
+        if ($transaction instanceof Reservable && $this->methodConfig->getValue('payment_action') === 'authorize') {
             $operation = Operation::RESERVE;
         }
 

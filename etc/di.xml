@@ -44,7 +44,7 @@
         </arguments>
     </virtualType>
 
-    <!-- Value handlers and config -->
+    <!-- Value handlers -->
     <virtualType name="PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -57,6 +57,8 @@
             <argument name="configInterface" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
+
+    <!-- Configs -->
     <virtualType name="WirecardElasticEngineConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="string">wirecard_elasticengine</argument>
@@ -92,12 +94,12 @@
         </arguments>
     </virtualType>
     
-    <!-- Initialize command -->
     <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">PaypalTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
 
