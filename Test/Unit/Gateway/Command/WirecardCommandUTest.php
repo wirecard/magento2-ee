@@ -38,6 +38,7 @@ use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Command\WirecardCommand;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -88,23 +89,26 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        // Transaction mocks
         $this->response = $this->getMockBuilder(SuccessResponse::class)
             ->disableOriginalConstructor()->getMock();
-        $this->transactionService = $this->getMockBuilder(TransactionService::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->transactionService->method(self::METHOD_PROCESS)->willReturn($this->response);
-
-        $transaction = $this->getMock(PayPalTransaction::class);
 
         $this->transactionFactory = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $this->transactionFactory->method(self::METHOD_CREATE)->willReturn($transaction);
+        $this->transactionFactory->method(self::METHOD_CREATE)
+            ->willReturn($this->getMock(PayPalTransaction::class));
+
+        // TransactionService mocks
+        $this->transactionService = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->transactionService->method(self::METHOD_PROCESS)->willReturn($this->response);
 
         $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
         $this->transactionServiceFactory->method(self::METHOD_CREATE)->willReturn($this->transactionService);
 
         $this->logger = $this->getMock(LoggerInterface::class);
+
         $this->handler = $this->getMock(HandlerInterface::class);
 
         $this->methodConfig = $this->getMock(ConfigInterface::class);
@@ -133,46 +137,79 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         $command->execute([]);
     }
 
-    public function testExecuteReservesReservableTransaction()
+    public function transactionDataProvider()
     {
-        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
+        return [
+            [ Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY],
+            [ Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY],
+            [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE ],
+            [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY ]
+        ];
+    }
+
+    /**
+     * @dataProvider transactionDataProvider
+     * @param $transactionClass
+     * @param $configuredAction
+     * @param $expectedOperation
+     */
+    public function testExecuteUsesCorrectOperation($transactionClass, $configuredAction, $expectedOperation)
+    {
+        // Transaction mocks
+        $transactionFactoryMock = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($this->response);
+        $transactionFactoryMock->method(self::METHOD_CREATE)->willReturn($this->getMock($transactionClass));
+
+        // TransactionService mocks
+        /** @var \PHPUnit_Framework_MockObject_MockObject $transactionServiceMock */
+        $transactionServiceMock = $this->transactionService;
 
         // Test if transactionService->process(...) is called with the correct parameters
         $transactionServiceMock->expects($this->Once())->method(self::METHOD_PROCESS)->with(
-            $this->equalTo($this->getMock(PayPalTransaction::class)), $this->equalTo(Operation::RESERVE)
+            $this->equalTo($this->getMock($transactionClass)), $this->equalTo($expectedOperation)
         );
 
         $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
         $transactionServiceFactoryMock->method(self::METHOD_CREATE)->willReturn($transactionServiceMock);
 
-        /** @var TransactionServiceFactory $transactionServiceFactoryMock */
+        // Payment method config mocks
+        $methodConfigMock = $this->getMock(ConfigInterface::class);
+        $methodConfigMock->method('getValue')->willReturn($configuredAction);
+
+        /**
+         * @var TransactionFactory $transactionFactoryMock
+         * @var TransactionServiceFactory $transactionServiceFactoryMock
+         */
         $command = new WirecardCommand(
-            $this->transactionFactory,
+            $transactionFactoryMock,
             $transactionServiceFactoryMock,
             $this->logger,
             $this->handler,
-            $this->methodConfig
+            $methodConfigMock
         );
 
         $command->execute([self::COMMAND_PARAMETER]);
     }
 
-    public function testExecuteLogsExceptionForReservableTransaction()
+    /**
+     * @dataProvider transactionDataProvider
+     * @param $transactionClass
+     */
+    public function testExecuteLogsException($transactionClass)
     {
-        $exception = new \Exception('Testing the exception');
-
-        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
-            ->disableOriginalConstructor()->getMock();
-        $transactionServiceMock->method(self::METHOD_PROCESS)->willThrowException($exception);
-
-        $transaction = $this->getMock(PayPalTransaction::class);
-
+        // Transaction mocks
         $transactionFactoryMock = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionFactoryMock->method(self::METHOD_CREATE)->willReturn($transaction);
+        $transactionFactoryMock->method(self::METHOD_CREATE)->willReturn($this->getMock($transactionClass));
+
+        $exception = new \Exception('Testing the exception');
+
+        // TransactionService mocks
+        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceMock->method(self::METHOD_PROCESS)
+            ->willThrowException($exception);
 
         $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
@@ -180,81 +217,18 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
         // Test if the logger gets the exception message
         $loggerMock = $this->getMock(LoggerInterface::class);
-        $loggerMock->expects($this->exactly(1))->method('error')->with($this->equalTo($exception->getMessage()));
+        $loggerMock->expects($this->Once())->method('error')->with($this->equalTo($exception->getMessage()));
 
-        /** @var TransactionServiceFactory $transactionServiceFactoryMock */
+        /**
+         * @var TransactionFactory $transactionFactoryMock
+         * @var TransactionServiceFactory $transactionServiceFactoryMock
+         */
         $command = new WirecardCommand(
-            $this->transactionFactory,
+            $transactionFactoryMock,
             $transactionServiceFactoryMock,
             $loggerMock,
             $this->handler,
             $this->methodConfig
-        );
-
-        $command->execute([self::COMMAND_PARAMETER]);
-    }
-
-    public function testExecutePaysNonreservableTransaction()
-    {
-        $exception = new \Exception('Testing the exception');
-
-        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
-            ->disableOriginalConstructor()->getMock();
-        $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($exception);
-
-        // Test if transactionService->process(...) is called with the correct parameters
-        $transactionServiceMock->expects($this->exactly(1))->method(self::METHOD_PROCESS)->with(
-            $this->isInstanceOf(Transaction::class), $this->equalTo(Operation::PAY)
-        );
-
-        $testTransactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
-            ->disableOriginalConstructor()->getMock();
-        $testTransactionServiceFactory->method(self::METHOD_CREATE)->willReturn($transactionServiceMock);
-
-        $transactionFactoryMock = $this->getMockBuilder(TransactionFactory::class)
-                ->disableOriginalConstructor()->getMock();
-        $transactionFactoryMock->method(self::METHOD_CREATE)->willReturn($this->getMock(Transaction::class));
-
-        /**
-         * @var TransactionServiceFactory $testTransactionServiceFactory
-         * @var TransactionFactory $transactionFactoryMock
-         */
-        $command = new WirecardCommand(
-            $transactionFactoryMock,
-            $testTransactionServiceFactory,
-            $this->logger,
-            $this->handler,
-            $this->methodConfig
-        );
-
-        $command->execute([self::COMMAND_PARAMETER]);
-    }
-
-    public function testExecutePaysReservableTransactionForConfigCapture()
-    {
-        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
-            ->disableOriginalConstructor()->getMock();
-        $transactionServiceMock->method(self::METHOD_PROCESS)->willReturn($this->response);
-
-        // Test if transactionService->process(...) is called with the correct parameters
-        $transactionServiceMock->expects($this->Once())->method(self::METHOD_PROCESS)->with(
-            $this->equalTo($this->getMock(PayPalTransaction::class)), $this->equalTo(Operation::PAY)
-        );
-
-        $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
-            ->disableOriginalConstructor()->getMock();
-        $transactionServiceFactoryMock->method(self::METHOD_CREATE)->willReturn($transactionServiceMock);
-
-        $methodConfigMock = $this->getMock(ConfigInterface::class);
-        $methodConfigMock->method('getValue')->willReturn('authorize_capture');
-
-        /** @var TransactionServiceFactory $transactionServiceFactoryMock */
-        $command = new WirecardCommand(
-            $this->transactionFactory,
-            $transactionServiceFactoryMock,
-            $this->logger,
-            $this->handler,
-            $methodConfigMock
         );
 
         $command->execute([self::COMMAND_PARAMETER]);
