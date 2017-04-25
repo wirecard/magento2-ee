@@ -69,7 +69,7 @@ class Redirect extends Action
 
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $result->setJsonData('{"redirect-url": "' . $redirectUrl . '"}');
+        $result->setJsonData(json_encode(['redirect-url' => $redirectUrl]));
         return $result;
     }
 }
