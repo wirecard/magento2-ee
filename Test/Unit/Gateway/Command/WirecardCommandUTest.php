@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Command;
 
+use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
@@ -49,7 +50,6 @@ use Wirecard\PaymentSdk\TransactionService;
 class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 {
     const METHOD_CREATE='create';
-    const COMMAND_PARAMETER='commandSubject';
     const METHOD_PROCESS='process';
 
     /**
@@ -87,6 +87,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
      */
     private $methodConfig;
 
+    /**
+     * @var array
+     */
+    private $commandSubject;
+
     public function setUp()
     {
         // Transaction mocks
@@ -113,6 +118,9 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
         $this->methodConfig = $this->getMock(ConfigInterface::class);
         $this->methodConfig->method('getValue')->willReturn('authorize');
+
+        $stateObject = $this->getMock(DataObject::class);
+        $this->commandSubject = ['stateObject' => $stateObject];
     }
 
     public function testExecuteCreatesTransactionService()
@@ -134,7 +142,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->methodConfig
         );
 
-        $command->execute([]);
+        $command->execute($this->commandSubject);
     }
 
     public function transactionDataProvider()
@@ -189,7 +197,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $methodConfigMock
         );
 
-        $command->execute([self::COMMAND_PARAMETER]);
+        $command->execute($this->commandSubject);
     }
 
     /**
@@ -231,7 +239,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->methodConfig
         );
 
-        $command->execute([self::COMMAND_PARAMETER]);
+        $command->execute($this->commandSubject);
     }
 
     public function testExecuteCallsHandler()
@@ -239,7 +247,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         $handlerMock = $this->getMock(HandlerInterface::class);
 
         $handlerMock->expects($this->Once())->method('handle')
-            ->with($this->equalTo([self::COMMAND_PARAMETER]), $this->equalTo(['paymentSDK-php' => $this->response]));
+            ->with($this->equalTo($this->commandSubject), $this->equalTo(['paymentSDK-php' => $this->response]));
 
         $command = new WirecardCommand(
             $this->transactionFactory,
@@ -248,6 +256,21 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $handlerMock,
             $this->methodConfig
         );
-        $command->execute([self::COMMAND_PARAMETER]);
+        $command->execute($this->commandSubject);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExecuteThrowsException()
+    {
+        $command = new WirecardCommand(
+            $this->transactionFactory,
+            $this->transactionServiceFactory,
+            $this->logger,
+            $this->handler,
+            $this->methodConfig
+        );
+        $command->execute([]);
     }
 }

@@ -32,12 +32,15 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Command;
 
+use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
+use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Reservable;
 
@@ -47,6 +50,8 @@ use Wirecard\PaymentSdk\Transaction\Reservable;
  */
 class WirecardCommand implements CommandInterface
 {
+    const STATEOBJECT='stateObject';
+
     /**
      * @var TransactionFactory
      */
@@ -96,15 +101,24 @@ class WirecardCommand implements CommandInterface
 
     /**
      * @param array $commandSubject
-     * @return void
+     * @return \Magento\Payment\Gateway\Command\ResultInterface|null|void
+     * @throws \InvalidArgumentException
      */
     public function execute(array $commandSubject)
     {
         $transaction = $this->transactionFactory->create($commandSubject);
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
+        if (!isset($commandSubject[self::STATEOBJECT])
+            || !($commandSubject[self::STATEOBJECT] instanceof DataObject)) {
+            throw new \InvalidArgumentException('State object should be provided.');
+        }
+        /** @var $stateObject DataObject */
+        $stateObject = $commandSubject[self::STATEOBJECT];
+        $stateObject->setData('state', Order::STATE_PENDING_PAYMENT);
+
         $operation = Operation::PAY;
-        if ($transaction instanceof Reservable && $this->methodConfig->getValue('payment_action') === 'authorize') {
+        if ($transaction instanceof Reservable && $this->methodConfig->getValue('payment_action') === PaymentAction::AUTHORIZE) {
             $operation = Operation::RESERVE;
         }
 
