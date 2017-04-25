@@ -47,7 +47,7 @@ use Wirecard\PaymentSdk\Transaction\Reservable;
 class WirecardCommand implements CommandInterface
 {
     /**
-     * @var
+     * @var TransactionFactory
      */
     private $transactionFactory;
 
