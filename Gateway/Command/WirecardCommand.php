@@ -101,7 +101,7 @@ class WirecardCommand implements CommandInterface
 
     /**
      * @param array $commandSubject
-     * @return \Magento\Payment\Gateway\Command\ResultInterface|null|void
+     * @return void
      * @throws \InvalidArgumentException
      */
     public function execute(array $commandSubject)
