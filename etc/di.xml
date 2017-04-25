@@ -44,7 +44,7 @@
         </arguments>
     </virtualType>
 
-    <!-- Value handlers and config -->
+    <!-- Value handlers -->
     <virtualType name="PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -57,6 +57,8 @@
             <argument name="configInterface" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
+
+    <!-- Configs -->
     <virtualType name="WirecardElasticEngineConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="string">wirecard_elasticengine</argument>
@@ -87,45 +89,34 @@
     <virtualType name="PaypalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">PaypalAuthorizeCommand</item>
+                <item name="initialize" xsi:type="string">PaypalInitializeCommand</item>
             </argument>
         </arguments>
     </virtualType>
-
-    <!-- Authorize command -->
-    <virtualType name="PaypalAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    
+    <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
-            <argument name="requestBuilder" xsi:type="object">AuthorizationRequest</argument>
-            <argument name="transferFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Http\TransferFactory</argument>
-            <argument name="client" xsi:type="object">AuthorizationClient</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="validator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\ResponseValidator</argument>
-        </arguments>
-    </virtualType>
-
-    <!-- Authorization Request -->
-    <virtualType name="AuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
-        <arguments>
-            <argument name="builders" xsi:type="array">
-                <item name="transaction" xsi:type="string">Wirecard\ElasticEngine\Gateway\Request\AuthorizationRequest</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="AuthorizationClient" type="Wirecard\ElasticEngine\Gateway\Http\Client\AuthorizationClient">
-        <arguments>
+            <argument name="transactionFactory" xsi:type="object">PaypalTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
 
     <!-- Wirecard paymentSDK objects -->
-    <virtualType name="TransactionServiceFactory" type="Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory">
+    <virtualType name="PaypalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\TransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\PayPalTransaction</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TransactionServiceFactory" type="Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory">
         <arguments>
             <argument name="paymentSdkConfigFactory" xsi:type="object">PaymentSdkConfigFactory</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="PaymentSdkConfigFactory" type="Wirecard\ElasticEngine\Gateway\Http\PaymentSdkConfigFactory">
+    <virtualType name="PaymentSdkConfigFactory" type="Wirecard\ElasticEngine\Gateway\Config\PaymentSdkConfigFactory">
         <arguments>
             <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
             <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>

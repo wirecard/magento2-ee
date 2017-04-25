@@ -30,12 +30,12 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Http;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Config;
 
 use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Wirecard\ElasticEngine\Gateway\Http\PaymentSdkConfigFactory;
+use Wirecard\ElasticEngine\Gateway\Config\PaymentSdkConfigFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 

@@ -30,36 +30,32 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Http;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Service;
 
-use Magento\Payment\Gateway\Http\TransferBuilder;
-use Magento\Payment\Gateway\Http\TransferFactoryInterface;
-use Magento\Payment\Gateway\Http\TransferInterface;
+use Magento\Payment\Gateway\ConfigFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\TransactionService;
 
-class TransferFactory implements TransferFactoryInterface
+class TransactionServiceFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var TransferBuilder
-     */
-    private $transferBuilder;
-    /**
-     * @param TransferBuilder $transferBuilder
-     */
-    public function __construct(
-        TransferBuilder $transferBuilder
-    ) {
-        $this->transferBuilder = $transferBuilder;
-    }
-    /**
-     * Builds gateway transfer object
-     *
-     * @param array $request
-     * @return TransferInterface
-     */
-    public function create(array $request)
+    public function testCreate()
     {
-        return $this->transferBuilder
-            ->setBody($request)
-            ->build();
+        $logger = $this->getMock(LoggerInterface::class);
+        $paymentSdkConfigFactory = $this->getMock(ConfigFactoryInterface::class);
+        $config = new Config('a', 'b', 'c');
+
+        $paymentSdkConfigFactory->method('create')->willReturn($config);
+        /**
+         * @var $logger LoggerInterface
+         * @var $paymentSdkConfigFactory ConfigFactoryInterface
+         */
+        $transactionServiceFactory = new TransactionServiceFactory($logger, $paymentSdkConfigFactory);
+        $transactionServiceFromFactory = $transactionServiceFactory->create('paypal');
+
+        $transactionService = new TransactionService($config, $logger);
+
+        $this->assertEquals($transactionService, $transactionServiceFromFactory);
     }
 }

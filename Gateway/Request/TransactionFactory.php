@@ -32,33 +32,69 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Payment\Gateway\Request\BuilderInterface;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
-class AuthorizationRequest implements BuilderInterface
+/**
+ * Class TransactionFactory
+ * @package Wirecard\ElasticEngine\Gateway\Request
+ */
+class TransactionFactory
 {
     const PAYMENT='payment';
 
     /**
-     * Builds ENV request
-     *
-     * @param array $buildSubject
-     * @return array
+     * @var UrlInterface
      */
-    public function build(array $buildSubject)
+    private $urlBuilder;
+
+    /**
+     * @var Transaction
+     */
+    private $transaction;
+
+    /**
+     * TransactionFactory constructor.
+     * @param UrlInterface $urlBuilder
+     * @param Transaction $transaction
+     */
+    public function __construct(UrlInterface $urlBuilder, Transaction $transaction)
     {
-        if (!isset($buildSubject[self::PAYMENT])
-            || !$buildSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
+        $this->urlBuilder = $urlBuilder;
+        $this->transaction = $transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     */
+    public function create($commandSubject)
+    {
+        if (!isset($commandSubject[self::PAYMENT])
+            || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
         ) {
             throw new \InvalidArgumentException('Payment data object should be provided.');
         }
+
         /** @var PaymentDataObjectInterface $payment */
-        $payment = $buildSubject[self::PAYMENT];
+        $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
 
-        return [
-            'AMOUNT' => $order->getGrandTotalAmount(),
-            'CURRENCY' => $order->getCurrencyCode()
-        ];
+        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $this->transaction->setAmount($amount);
+
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+
+        $this->transaction->setRedirect(new Redirect(
+            $wdBaseUrl . 'frontend/success',
+            $wdBaseUrl . 'frontend/cancel',
+            $wdBaseUrl . 'frontend/failure'));
+        $this->transaction->setNotificationUrl($wdBaseUrl . 'notify');
+
+        return $this->transaction;
     }
 }

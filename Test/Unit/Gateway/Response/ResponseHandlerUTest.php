@@ -36,6 +36,7 @@ use Magento\Checkout\Model\Session;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Response\ResponseHandler;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
 
 class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
@@ -56,12 +57,11 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $sessionMock = $this->session;
         $handler = new ResponseHandler($this->logger, $sessionMock);
 
-        $response = [
-            'redirect_url' => 'http://redir.ect'
-        ];
+        $response = $this->getMockBuilder(InteractionResponse::class)->disableOriginalConstructor()->getMock();
+        $response->method('getRedirectUrl')->willReturn('http://redir.ect');
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://redir.ect');
-        $handler->handle([], $response);
+        $handler->handle([], ['paymentSDK-php' => $response]);
     }
 }

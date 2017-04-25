@@ -35,7 +35,12 @@ namespace Wirecard\ElasticEngine\Gateway\Response;
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
 
+/**
+ * Class ResponseHandler
+ * @package Wirecard\ElasticEngine\Gateway\Response
+ */
 class ResponseHandler implements HandlerInterface
 {
 
@@ -69,6 +74,10 @@ class ResponseHandler implements HandlerInterface
      */
     public function handle(array $handlingSubject, array $response)
     {
-        $this->session->setRedirectUrl($response['redirect_url']);
+        $sdkResponse = $response['paymentSDK-php'];
+
+        if ($sdkResponse instanceof InteractionResponse) {
+            $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
+        }
     }
 }
