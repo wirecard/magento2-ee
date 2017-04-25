@@ -49,13 +49,20 @@ class Credentials extends Action
     protected $resultJsonFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Credentials constructor.
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
+     * @param LoggerInterface $logger
      */
-    public function __construct(Context $context, JsonFactory $resultJsonFactory)
+    public function __construct(Context $context, JsonFactory $resultJsonFactory, LoggerInterface $logger)
     {
         $this->resultJsonFactory = $resultJsonFactory;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
@@ -67,7 +74,7 @@ class Credentials extends Action
         $data = $this->getRequest()->getParams();
 
         $config = new Config($data['baseUrl'], $data['httpUser'], $data['httpPass']);
-        $transactionService = new TransactionService($config, $this->_objectManager->get(LoggerInterface::class));
+        $transactionService = new TransactionService($config, $this->logger);
 
         $message = __('Please check your credentials.');
         if ($valid = $transactionService->checkCredentials()) {
