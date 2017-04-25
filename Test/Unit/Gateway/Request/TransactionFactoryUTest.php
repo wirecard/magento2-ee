@@ -88,7 +88,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateSetsRedirect()
     {
         $transactionMock = $this->getMock(Transaction::class);
-        $redirect = new Redirect('http://magen.to/frontend/back', 'http://magen.to/frontend/cancel');
+        $redirect = new Redirect('http://magen.to/frontend/success', 'http://magen.to/frontend/cancel', 'http://magen.to/frontend/failure');
         $transactionMock->expects($this->Once())->method('setRedirect')->with($this->equalTo($redirect));
 
         $transactionFactory = new TransactionFactory($this->urlBuilder, $transactionMock);

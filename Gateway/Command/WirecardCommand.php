@@ -85,6 +85,10 @@ class WirecardCommand implements CommandInterface
         $this->handler = $handler;
     }
 
+    /**
+     * @param array $commandSubject
+     * @return void
+     */
     public function execute(array $commandSubject)
     {
         $transaction = $this->transactionFactory->create($commandSubject);

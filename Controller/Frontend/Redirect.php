@@ -50,6 +50,10 @@ class Redirect extends Action
     private $session;
 
     /**
+     * @var string
+     */
+    private $baseUrl;
+    /**
      * Redirect constructor.
      * @param Context $context
      * @param Session $session
@@ -58,6 +62,7 @@ class Redirect extends Action
     {
         parent::__construct($context);
         $this->session = $session;
+        $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
     }
 
     /**
@@ -65,11 +70,17 @@ class Redirect extends Action
      */
     public function execute()
     {
-        $redirectUrl = $this->session->getRedirectUrl();
+        if ($this->session->hasRedirectUrl()) {
+            $redirectUrl = $this->session->getRedirectUrl();
+            $this->session->unsRedirectUrl();
+        } else {
+            $redirectUrl = $this->baseUrl . 'frontend/failure';
+        }
 
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $result->setJsonData(json_encode(['redirect-url' => $redirectUrl]));
+
         return $result;
     }
 }

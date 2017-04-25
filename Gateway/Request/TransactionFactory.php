@@ -47,6 +47,11 @@ class TransactionFactory
     const PAYMENT='payment';
 
     /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
+
+    /**
      * @var Transaction
      */
     private $transaction;
@@ -84,7 +89,10 @@ class TransactionFactory
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
-        $this->transaction->setRedirect(new Redirect($wdBaseUrl . 'frontend/back', $wdBaseUrl . 'frontend/cancel'));
+        $this->transaction->setRedirect(new Redirect(
+            $wdBaseUrl . 'frontend/success',
+            $wdBaseUrl . 'frontend/cancel',
+            $wdBaseUrl . 'frontend/failure'));
         $this->transaction->setNotificationUrl($wdBaseUrl . 'notify');
 
         return $this->transaction;
