@@ -34,10 +34,12 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Config;
 
 use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Module\ModuleListInterface;
+use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\ElasticEngine\Gateway\Config\PaymentSdkConfigFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,6 +69,11 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     private $moduleList;
 
+    /**
+     * @var ConfigFactoryInterface
+     */
+    private $configFactory;
+
     public function setUp()
     {
         $this->eeConfig = $this->getMock(ConfigInterface::class);
@@ -92,42 +99,45 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->moduleList->method('getOne')
             ->with(self::WIRECARD_EE_MODULE_NAME)
             ->willReturn(['setup_version' => self::WIRECARD_EE_VERSION]);
+
+        $this->configFactory = new PaymentSdkConfigFactory(
+            $this->eeConfig,
+            $this->methodConfig,
+            $this->productMetadata,
+            $this->moduleList
+        );
     }
 
     public function testCreateWithEmptyPaymentCode()
     {
-        $configFactory = new PaymentSdkConfigFactory(
-            $this->eeConfig,
-            $this->methodConfig,
-            $this->productMetadata,
-            $this->moduleList
-        );
-        $configFromFactory = $configFactory->create();
-
-        $config = new Config(self::BASE_URL, 'user', 'pass');
-        $config->setShopInfo('Magento Community Edition', self::MAGENTO_VERSION);
-        $config->setPluginInfo(self::WIRECARD_EE_MODULE_NAME, self::WIRECARD_EE_VERSION);
-
-        $this->assertEquals($config, $configFromFactory);
+        $configFromFactory = $this->configFactory->create();
+        $this->assertInstanceOf(Config::class, $configFromFactory);
     }
 
     public function testCreateWithPaymentCode()
     {
-        $configFactory = new PaymentSdkConfigFactory(
-            $this->eeConfig,
-            $this->methodConfig,
-            $this->productMetadata,
-            $this->moduleList
+        /** @var $configFromFactory Config */
+        $configFromFactory = $this->configFactory->create(PayPalTransaction::NAME);
+        $this->assertInstanceOf(Config::class, $configFromFactory);
+
+        $paypalConfig = new PaymentMethodConfig(
+            PayPalTransaction::NAME,
+            'account_id_123',
+            'secret_key'
         );
-        $configFromFactory = $configFactory->create('paypal');
+        $this->assertEquals($paypalConfig, $configFromFactory->get(PayPalTransaction::NAME));
+    }
 
-        $config = new Config(self::BASE_URL, 'user', 'pass');
-        $config->setShopInfo('Magento Community Edition', self::MAGENTO_VERSION);
-        $config->setPluginInfo(self::WIRECARD_EE_MODULE_NAME, self::WIRECARD_EE_VERSION);
+    public function testCreateSetsShopInfo()
+    {
+        /** @var $configFromFactory Config */
+        $configFromFactory = $this->configFactory->create(PayPalTransaction::NAME);
 
-        $paypalConfig = new PaymentMethodConfig('paypal', 'account_id_123', 'secret_key');
-        $config->add($paypalConfig);
-
-        $this->assertEquals($config, $configFromFactory);
+        $this->assertEquals($configFromFactory->getShopHeader(), ['headers' => [
+            'shop-system-name' => 'Magento Community Edition',
+            'shop-system-version' => '2.1.0',
+            'plugin-name' => 'Wirecard_ElasticEngine',
+            'plugin-version' => '2.0.0'
+        ]]);
     }
 }
