@@ -30,29 +30,45 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Model\Adminhtml\Source;
+namespace Wirecard\ElasticEngine\Gateway\Response;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Checkout\Model\Session;
+use Magento\Payment\Gateway\Response\HandlerInterface;
+use Psr\Log\LoggerInterface;
 
-class PaymentAction implements ArrayInterface
+class ResponseHandler implements HandlerInterface
 {
-    const AUTHORIZE='authorize';
-    const AUTHORIZE_CAPTURE='authorize_capture';
 
     /**
-     * {@inheritdoc}
+     * @var LoggerInterface
      */
-    public function toOptionArray()
+    private $logger;
+
+    /**
+     * @var Session
+     */
+    private $session;
+
+    /**
+     * ResponseHandler constructor.
+     * @param LoggerInterface $logger
+     * @param Session $session
+     */
+    public function __construct(LoggerInterface $logger, Session $session)
     {
-        return [
-            [
-                'value' => self::AUTHORIZE,
-                'label' => __('Authorize')
-            ],
-            [
-                'value' => self::AUTHORIZE_CAPTURE,
-                'label' => __('Capture')
-            ]
-        ];
+        $this->logger = $logger;
+        $this->session = $session;
+    }
+
+    /**
+     * Handles response
+     *
+     * @param array $handlingSubject
+     * @param array $response
+     * @return void
+     */
+    public function handle(array $handlingSubject, array $response)
+    {
+        $this->session->setRedirectUrl($response['redirect_url']);
     }
 }

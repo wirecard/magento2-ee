@@ -74,8 +74,7 @@ class AuthorizationClient implements ClientInterface
         LoggerInterface $logger,
         UrlInterface $urlBuilder,
         TransactionServiceFactory $transactionServiceFactory
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->urlBuilder = $urlBuilder;
         $this->transactionServiceFactory = $transactionServiceFactory;

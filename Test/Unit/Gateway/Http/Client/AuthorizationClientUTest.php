@@ -87,7 +87,7 @@ class AuthorizationClientUTest extends \PHPUnit_Framework_TestCase
 
         $result = $client->placeRequest($transfer);
 
-        $expected = array('redirect_url' => 'http://redir.ect');
+        $expected = ['redirect_url' => 'http://redir.ect'];
         $this->assertEquals($expected, $result);
     }
 
@@ -113,7 +113,7 @@ class AuthorizationClientUTest extends \PHPUnit_Framework_TestCase
 
         $result = $client->placeRequest($transfer);
 
-        $expected = array();
+        $expected = [];
         $this->assertEquals($expected, $result);
     }
 

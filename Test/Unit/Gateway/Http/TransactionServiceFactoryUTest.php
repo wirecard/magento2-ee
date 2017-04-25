@@ -30,45 +30,32 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Response;
+namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Http;
 
-use Magento\Checkout\Model\Session;
-use Magento\Payment\Gateway\Response\HandlerInterface;
+use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Http\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\TransactionService;
 
-class DummyResponseHandler implements HandlerInterface
+class TransactionServiceFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * DummyResponseHandler constructor.
-     * @param LoggerInterface $logger
-     * @param Session $session
-     */
-    function __construct(LoggerInterface $logger, Session $session)
+    public function testCreate()
     {
-        $this->logger = $logger;
-        $this->session = $session;
-    }
+        $logger = $this->getMock(LoggerInterface::class);
+        $paymentSdkConfigFactory = $this->getMock(ConfigFactoryInterface::class);
+        $config = new Config('a', 'b', 'c');
 
-    /**
-     * Handles response
-     *
-     * @param array $handlingSubject
-     * @param array $response
-     * @return void
-     */
-    public function handle(array $handlingSubject, array $response)
-    {
-        $this->session->setRedirectUrl($response['redirect_url']);
+        $paymentSdkConfigFactory->method('create')->willReturn($config);
+        /**
+         * @var $logger LoggerInterface
+         * @var $paymentSdkConfigFactory ConfigFactoryInterface
+         */
+        $transactionServiceFactory = new TransactionServiceFactory($logger, $paymentSdkConfigFactory);
+        $transactionServiceFromFactory = $transactionServiceFactory->create('paypal');
+
+        $transactionService = new TransactionService($config, $logger);
+
+        $this->assertEquals($transactionService, $transactionServiceFromFactory);
     }
 }

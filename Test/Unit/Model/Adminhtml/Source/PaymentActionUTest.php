@@ -30,39 +30,27 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Response;
+namespace Wirecard\ElasticEngine\Test\Model\Adminhtml\Source;
 
-use Magento\Checkout\Model\Session;
-use PHPUnit_Framework_MockObject_MockObject;
-use Psr\Log\LoggerInterface;
-use Wirecard\ElasticEngine\Gateway\Response\DummyResponseHandler;
+use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 
-class DummyResponseHandlerUTest extends \PHPUnit_Framework_TestCase
+class PaymentActionUTest extends \PHPUnit_Framework_TestCase
 {
-    private $logger;
-    private $session;
-
-    public function setUp()
+    public function testToOptionArray()
     {
-        $this->logger = $this->getMock(LoggerInterface::class);
-        $this->session = $this->getMockBuilder(Session::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['setRedirectUrl'])
-            ->getMock();
-    }
+        $paymentAction = new PaymentAction();
 
-    public function testDummy()
-    {
-        $sessionMock = $this->session;
-        $handler = new DummyResponseHandler($this->logger, $sessionMock);
-
-
-        $response = [
-            'redirect_url' => 'http://redir.ect'
+        $actionArray = [
+            [
+                'value' => 'authorize',
+                'label' => 'Authorize'
+            ],
+            [
+                'value' => 'authorize_capture',
+                'label' => 'Capture'
+            ]
         ];
 
-        /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
-        $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://redir.ect');
-        $handler->handle([], $response);
+        $this->assertEquals($paymentAction->toOptionArray(), $actionArray);
     }
 }
