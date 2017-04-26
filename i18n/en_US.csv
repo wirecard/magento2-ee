@@ -12,4 +12,5 @@
 "Wirecard Elastic Engine PayPal","Wirecard Elastic Engine PayPal"
 "Enabled","Enabled"
 "Merchant Account Id","Merchant Account Id"
-"Secret Key","Secret Key"
+"Secret Key","Secret Key",
+"You have canceled the payment process.", "Payment canceled"

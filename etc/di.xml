@@ -93,7 +93,7 @@
             </argument>
         </arguments>
     </virtualType>
-    
+
     <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">PaypalTransactionFactory</argument>
@@ -124,5 +124,11 @@
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
         </arguments>
     </virtualType>
+
+    <type name="Wirecard\ElasticEngine\Controller\Frontend\Notify">
+        <arguments>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+        </arguments>
+    </type>
 
 </config>
