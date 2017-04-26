@@ -36,11 +36,20 @@ use Magento\Checkout\Model\Session;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Response\ResponseHandler;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Entity\StatusCollection;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 
 class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
+    const PAYMENT_SDK_PHP = 'paymentSDK-php';
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+
     private $session;
 
     public function setUp()
@@ -52,7 +61,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
             ->getMock();
     }
 
-    public function testDummy()
+    public function testHandlingReturnsRedirect()
     {
         $sessionMock = $this->session;
         $handler = new ResponseHandler($this->logger, $sessionMock);
@@ -62,6 +71,38 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://redir.ect');
-        $handler->handle([], ['paymentSDK-php' => $response]);
+        $handler->handle([], [self::PAYMENT_SDK_PHP => $response]);
+    }
+
+    public function testHandlingLogsFailure()
+    {
+        $loggerMock = $this->logger;
+        $handler = new ResponseHandler($loggerMock, $this->session);
+
+        $statusCollection = new StatusCollection();
+        $statusCollection->add(new Status('123', 'error_description', 'severity'));
+
+        $response = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
+        $response->method('getStatusCollection')->willReturn($statusCollection);
+
+        $loggerString ='Error occurred: error_description (123).';
+
+        /** @var $loggerMock PHPUnit_Framework_MockObject_MockObject */
+        $loggerMock->expects($this->once())->method('error')->with($loggerString);
+
+        $handler->handle([], [self::PAYMENT_SDK_PHP => $response]);
+    }
+
+    public function testHandlingLogsOther()
+    {
+        $loggerMock = $this->logger;
+        $handler = new ResponseHandler($loggerMock, $this->session);
+
+        $loggerString ='Unexpected result object for notifications.';
+
+        /** @var $loggerMock PHPUnit_Framework_MockObject_MockObject */
+        $loggerMock->expects($this->once())->method('warning')->with($loggerString);
+
+        $handler->handle([], [self::PAYMENT_SDK_PHP => null]);
     }
 }
