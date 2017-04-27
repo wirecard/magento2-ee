@@ -35,6 +35,8 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\CustomField;
+use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -87,13 +89,18 @@ class TransactionFactory
         $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
         $this->transaction->setAmount($amount);
 
+        $orderId = $order->getOrderIncrementId();
+        $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('orderId', $orderId));
+        $this->transaction->setCustomFields($customFields);
+
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
         $this->transaction->setRedirect(new Redirect(
             $wdBaseUrl . 'frontend/success',
             $wdBaseUrl . 'frontend/cancel',
             $wdBaseUrl . 'frontend/failure'));
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'notify');
+        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
 
         return $this->transaction;
     }

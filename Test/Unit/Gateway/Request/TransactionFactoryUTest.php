@@ -98,7 +98,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateSetsNotification()
     {
         $transactionMock = $this->getMock(Transaction::class);
-        $transactionMock->expects($this->Once())->method('setNotificationUrl')->with($this->equalTo('http://magen.to/notify'));
+        $transactionMock->expects($this->Once())->method('setNotificationUrl')->with($this->equalTo('http://magen.to/frontend/notify'));
 
         $transactionFactory = new TransactionFactory($this->urlBuilder, $transactionMock);
         $transactionFactory->create($this->commandSubject);
