@@ -37,6 +37,9 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 use Wirecard\ElasticEngine\Controller\Frontend\Cancel;
 
 class CancelTest extends \PHPUnit_Framework_TestCase
@@ -50,6 +53,11 @@ class CancelTest extends \PHPUnit_Framework_TestCase
      * @var Redirect|\PHPUnit_Framework_MockObject_MockObject
      */
     private $redirectResult;
+
+    /**
+     * @var OrderInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $order;
 
     /**
      * @var Cancel
@@ -78,6 +86,13 @@ class CancelTest extends \PHPUnit_Framework_TestCase
         $context->method('getMessageManager')->willReturn($this->messageManager);
 
         /**
+         * @var $orderRepository OrderRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $orderRepository = $this->getMock(OrderRepositoryInterface::class);
+        $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
+        $orderRepository->method('get')->willReturn($this->order);
+
+        /**
          * @var $checkoutSession Session|\PHPUnit_Framework_MockObject_MockObject
          */
         $checkoutSession = $this->getMockBuilder(Session::class)
@@ -85,12 +100,14 @@ class CancelTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $checkoutSession->expects($this->once())->method('restoreQuote');
+        $checkoutSession->expects($this->once())->method('getLastRealOrder')->willReturn($this->order);
 
-        $this->controller = new Cancel($context, $checkoutSession);
+        $this->controller = new Cancel($context, $checkoutSession, $orderRepository);
     }
 
     public function testExecute()
     {
+        $this->order->expects($this->once())->method('cancel');
         $this->redirectResult->expects($this->once())->method('setPath')->with('checkout/cart');
         $this->messageManager->expects($this->once())->method('addNoticeMessage')->with('You have canceled the payment process.');
         $result = $this->controller->execute();
