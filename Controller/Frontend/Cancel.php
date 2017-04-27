@@ -38,6 +38,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 class Cancel extends Action
 {
@@ -47,9 +48,21 @@ class Cancel extends Action
      */
     private $checkoutSession;
 
-    public function __construct(Context $context, Session $checkoutSession)
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
+     * Cancel constructor.
+     * @param Context $context
+     * @param Session $checkoutSession
+     * @param OrderRepositoryInterface $orderRepository
+     */
+    public function __construct(Context $context, Session $checkoutSession, OrderRepositoryInterface $orderRepository)
     {
         $this->checkoutSession = $checkoutSession;
+        $this->orderRepository = $orderRepository;
         parent::__construct($context);
     }
 
@@ -60,6 +73,9 @@ class Cancel extends Action
      */
     public function execute()
     {
+        $order = $this->checkoutSession->getLastRealOrder();
+        $order->cancel();
+        $this->orderRepository->save($order);
         $this->checkoutSession->restoreQuote();
         $this->messageManager->addNoticeMessage(__('You have canceled the payment process.'));
         /**
