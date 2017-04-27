@@ -39,6 +39,10 @@ use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Model\Order;
 
+/**
+ * Class Success
+ * @package Wirecard\ElasticEngine\Controller\Frontend
+ */
 class Success extends Action
 {
     /**
@@ -46,6 +50,11 @@ class Success extends Action
      */
     private $checkoutSession;
 
+    /**
+     * Success constructor.
+     * @param Context $context
+     * @param Session $checkoutSession
+     */
     public function __construct(Context $context, Session $checkoutSession)
     {
         $this->checkoutSession = $checkoutSession;

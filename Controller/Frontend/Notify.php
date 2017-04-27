@@ -67,6 +67,13 @@ class Notify extends Action
      */
     private $logger;
 
+    /**
+     * Notify constructor.
+     * @param Context $context
+     * @param TransactionServiceFactory $transactionServiceFactory
+     * @param OrderRepositoryInterface $orderRepository
+     * @param LoggerInterface $logger
+     */
     public function __construct(Context $context, TransactionServiceFactory $transactionServiceFactory, OrderRepositoryInterface $orderRepository, LoggerInterface $logger)
     {
         $this->transactionServiceFactory = $transactionServiceFactory;

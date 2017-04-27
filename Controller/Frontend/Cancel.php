@@ -40,6 +40,10 @@ use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
+/**
+ * Class Cancel
+ * @package Wirecard\ElasticEngine\Controller\Frontend
+ */
 class Cancel extends Action
 {
 
