@@ -37,8 +37,6 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\CustomField;
-use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -62,7 +60,6 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
-        $this->order->method('getOrderIncrementId')->willReturn(42);
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
@@ -102,17 +99,6 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transactionMock = $this->getMock(Transaction::class);
         $transactionMock->expects($this->Once())->method('setNotificationUrl')->with($this->equalTo('http://magen.to/frontend/notify'));
-
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $transactionMock);
-        $transactionFactory->create($this->commandSubject);
-    }
-
-    public function testCreateSetsCustomFieldWithOrderId()
-    {
-        $transactionMock = $this->getMock(Transaction::class);
-        $collection = new CustomFieldCollection();
-        $collection->add(new CustomField('orderId', 42));
-        $transactionMock->expects($this->once())->method('setCustomFields')->with($this->equalTo($collection));
 
         $transactionFactory = new TransactionFactory($this->urlBuilder, $transactionMock);
         $transactionFactory->create($this->commandSubject);
