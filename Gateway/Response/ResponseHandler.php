@@ -35,6 +35,8 @@ namespace Wirecard\ElasticEngine\Gateway\Response;
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 
 /**
@@ -78,6 +80,13 @@ class ResponseHandler implements HandlerInterface
 
         if ($sdkResponse instanceof InteractionResponse) {
             $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
+        } elseif ($sdkResponse instanceof FailureResponse) {
+            foreach ($sdkResponse->getStatusCollection() as $status) {
+                /** @var $status Status */
+                $this->logger->error(sprintf('Error occurred: %s (%s).', $status->getDescription(), $status->getCode()));
+            }
+        } else {
+            $this->logger->warning(sprintf('Unexpected result object for notifications.'));
         }
     }
 }
