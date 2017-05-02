@@ -86,12 +86,12 @@ class Success extends Action
             case 'pending':
                 if ($this->getRequest()->isPost()) {
                     $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
-                    $result = $transactionService->handleResponse($this->getRequest()->getPost());
+                    $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
                     if (!$result instanceof SuccessResponse) {
                         $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
                     }
                 } else {
-                    $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+                    $this->messageManager->addNoticeMessage(__('Invalid request to success redirect page.'));
                 }
             case Order::STATE_PROCESSING:
                 $resultRedirect->setPath('checkout/onepage/success', ['_secure' => true]);
