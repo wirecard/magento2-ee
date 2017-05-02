@@ -129,6 +129,9 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
         $session->method('getLastRealOrder')->willReturn($this->order);
 
         $this->transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
+        /**
+         * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
+         */
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
         $this->controller = new Success($context, $session, $transactionServiceFactory);

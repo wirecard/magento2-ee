@@ -84,24 +84,45 @@ class Success extends Action
         switch ($order->getStatus()) {
             case Order::STATE_PENDING_PAYMENT:
             case 'pending':
-                if ($this->getRequest()->isPost()) {
-                    $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
-                    $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
-                    if (!$result instanceof SuccessResponse) {
-                        $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
-                    }
-                } else {
-                    $this->messageManager->addNoticeMessage(__('Invalid request to success redirect page.'));
-                }
+                $this->determineStatusWithPayload();
+                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
+                break;
             case Order::STATE_PROCESSING:
-                $resultRedirect->setPath('checkout/onepage/success', ['_secure' => true]);
+                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
                 break;
             default:
                 $this->checkoutSession->restoreQuote();
                 $this->messageManager->addNoticeMessage(__('The payment process was not finished successful.'));
-                $resultRedirect->setPath('checkout/cart', ['_secure' => true]);
+                $this->setRedirectPath($resultRedirect, 'checkout/cart');
                 break;
         }
         return $resultRedirect;
+    }
+
+    /**
+     * @param RedirectResult $resultRedirect
+     * @param String $path
+     * @return RedirectResult
+     */
+    private function setRedirectPath(RedirectResult $resultRedirect, $path)
+    {
+        return $resultRedirect->setPath($path, ['_secure' => true]);
+    }
+
+    /**
+     * determine the transaction status from payload if notification was not yet delivered.
+     * we do not change the order state, because we can't validate the response.
+     */
+    private function determineStatusWithPayload()
+    {
+        if ($this->getRequest()->isPost()) {
+            $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
+            $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
+            if (!$result instanceof SuccessResponse) {
+                $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+            }
+        } else {
+            $this->messageManager->addNoticeMessage(__('Invalid request to success redirect page.'));
+        }
     }
 }
