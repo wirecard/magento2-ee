@@ -34,12 +34,16 @@ namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Wirecard\ElasticEngine\Controller\Frontend\Success;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\TransactionService;
 
 require_once __DIR__ . '/../../../Stubs/OrderAddressExtensionInterface.php';
 
@@ -49,6 +53,7 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
     const CHECKOUT_ONEPAGE_SUCCESS = 'checkout/onepage/success';
     const ADD_NOTICE_MESSAGE = 'addNoticeMessage';
     const SET_PATH = 'setPath';
+    const NO_FINAL_STATE = 'Final state of transaction could not be determined.';
 
     /**
      * @var OrderInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -61,9 +66,14 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
     private $redirectResult;
 
     /**
-     * @var ManagerInterface|\PHPUnit_Framework_MockObject_MockObject $messageManager
+     * @var ManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $messageManager;
+
+    /**
+     * @var TransactionService|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $transactionService;
 
     /**
      * @var Success
@@ -90,6 +100,13 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
         $this->messageManager = $this->getMock(ManagerInterface::class);
         $context->method('getMessageManager')->willReturn($this->messageManager);
 
+        $request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
+        $request->method('isPost')->willReturn(true);
+        $request->method('getPost')->willReturn(['pay' => 'load']);
+        $request->method('getContent')->willReturn('<xmlContent></xmlContent>');
+
+        $context->method('getRequest')->willReturn($request);
+
         /**
          * @var $session Session|\PHPUnit_Framework_MockObject_MockObject
          */
@@ -102,14 +119,28 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $session->method('getLastRealOrder')->willReturn($this->order);
-        $this->controller = new Success($context, $session);
+
+        $this->transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
+        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $transactionServiceFactory->method('create')->willReturn($this->transactionService);
+        $this->controller = new Success($context, $session, $transactionServiceFactory);
     }
 
     public function testExecuteWithStatusPendingPayment()
     {
         $this->order->method(self::GET_STATUS)->willReturn(Order::STATE_PENDING_PAYMENT);
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
-        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('Final state of transaction could not be determined.'));
+        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo(self::NO_FINAL_STATE));
+        $this->controller->execute();
+    }
+
+    public function testExecuteWithStatusPendingPaymentAndSuccessResponse()
+    {
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $this->transactionService->method('handleResponse')->willReturn($successResponse);
+        $this->order->method(self::GET_STATUS)->willReturn(Order::STATE_PENDING_PAYMENT);
+        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
+        $this->messageManager->expects($this->never())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo(self::NO_FINAL_STATE));
         $this->controller->execute();
     }
 
@@ -117,7 +148,7 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
     {
         $this->order->method(self::GET_STATUS)->willReturn('pending');
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
-        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('Final state of transaction could not be determined.'));
+        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo(self::NO_FINAL_STATE));
         $this->controller->execute();
     }
 

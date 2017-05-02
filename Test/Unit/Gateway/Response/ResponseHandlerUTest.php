@@ -33,6 +33,8 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Response;
 
 use Magento\Checkout\Model\Session;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Response\ResponseHandler;
@@ -59,6 +61,13 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(['setRedirectUrl'])
             ->getMock();
+
+        $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
+        $payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
+        $paymentDO->method('getPayment')->willReturn($payment);
+        $this->subject = [
+            'payment' => $paymentDO
+        ];
     }
 
     public function testHandlingReturnsRedirect()
@@ -71,7 +80,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://redir.ect');
-        $handler->handle([], [self::PAYMENT_SDK_PHP => $response]);
+        $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
     }
 
     public function testHandlingLogsFailure()
@@ -90,7 +99,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         /** @var $loggerMock PHPUnit_Framework_MockObject_MockObject */
         $loggerMock->expects($this->once())->method('error')->with($loggerString);
 
-        $handler->handle([], [self::PAYMENT_SDK_PHP => $response]);
+        $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
     }
 
     public function testHandlingLogsOther()
@@ -103,6 +112,6 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         /** @var $loggerMock PHPUnit_Framework_MockObject_MockObject */
         $loggerMock->expects($this->once())->method('warning')->with($loggerString);
 
-        $handler->handle([], [self::PAYMENT_SDK_PHP => null]);
+        $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => null]);
     }
 }

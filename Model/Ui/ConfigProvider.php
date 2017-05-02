@@ -33,10 +33,21 @@
 namespace Wirecard\ElasticEngine\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Framework\View\Asset\Repository;
 
 class ConfigProvider implements ConfigProviderInterface
 {
     const CODE = 'wirecard_elasticengine_paypal';
+
+    /**
+     * @var Repository
+     */
+    private $assetRepository;
+
+    public function __construct(Repository $assetRepo)
+    {
+        $this->assetRepository = $assetRepo;
+    }
 
     /**
      * Retrieve assoc array of checkout configuration
@@ -45,6 +56,22 @@ class ConfigProvider implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        return [];
+        return [
+            'payment' => [
+                self::CODE => [
+                    'logo_url' => $this->getLogoUrl(self::CODE),
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @param $code
+     * @return string
+     */
+    private function getLogoUrl($code)
+    {
+        $logoName = substr($code, strlen('wirecard_elasticengine_')) . '.png';
+        return $this->assetRepository->getUrlWithParams('Wirecard_ElasticEngine::images/' . $logoName, ['_secure' => true]);
     }
 }

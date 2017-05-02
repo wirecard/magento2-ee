@@ -38,10 +38,14 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Model\Order;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 /**
  * Class Success
  * @package Wirecard\ElasticEngine\Controller\Frontend
+ * @method \Magento\Framework\App\Request\Http getRequest()
  */
 class Success extends Action
 {
@@ -51,13 +55,19 @@ class Success extends Action
     private $checkoutSession;
 
     /**
+     * @var TransactionServiceFactory
+     */
+    private $transactionServiceFactory;
+
+    /**
      * Success constructor.
      * @param Context $context
      * @param Session $checkoutSession
      */
-    public function __construct(Context $context, Session $checkoutSession)
+    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory)
     {
         $this->checkoutSession = $checkoutSession;
+        $this->transactionServiceFactory = $transactionServiceFactory;
         parent::__construct($context);
     }
 
@@ -74,7 +84,15 @@ class Success extends Action
         switch ($order->getStatus()) {
             case Order::STATE_PENDING_PAYMENT:
             case 'pending':
-                $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+                if ($this->getRequest()->isPost()) {
+                    $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
+                    $result = $transactionService->handleResponse($this->getRequest()->getPost());
+                    if (!$result instanceof SuccessResponse) {
+                        $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+                    }
+                } else {
+                    $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+                }
             case Order::STATE_PROCESSING:
                 $resultRedirect->setPath('checkout/onepage/success', ['_secure' => true]);
                 break;

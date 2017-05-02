@@ -36,6 +36,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order\Payment;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Notify;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -47,8 +48,6 @@ use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
-
-require_once __DIR__ . '/../../../Stubs/OrderAddressExtensionInterface.php';
 
 class NotifyTest extends \PHPUnit_Framework_TestCase
 {
@@ -107,6 +106,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
          */
         $orderRepository = $this->getMock(OrderRepositoryInterface::class);
         $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(OrderInterface::class);
+        $payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
+        $this->order->method('getPayment')->willReturn($payment);
         $orderRepository->method('get')->willReturn($this->order);
 
         $this->logger = $this->getMock(LoggerInterface::class);
@@ -123,6 +124,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
     {
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method('getProviderTransactionId')->willReturn(1234);
         $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
         $this->order->expects($this->once())->method('setStatus')->with('processing');
