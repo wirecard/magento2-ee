@@ -131,4 +131,10 @@
         </arguments>
     </type>
 
+    <type name="Wirecard\ElasticEngine\Controller\Frontend\Success">
+        <arguments>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+        </arguments>
+    </type>
+
 </config>

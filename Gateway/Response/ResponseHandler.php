@@ -33,11 +33,15 @@
 namespace Wirecard\ElasticEngine\Gateway\Response;
 
 use Magento\Checkout\Model\Session;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Response\HandlerInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\Response\Response;
 
 /**
  * Class ResponseHandler
@@ -45,6 +49,7 @@ use Wirecard\PaymentSdk\Response\InteractionResponse;
  */
 class ResponseHandler implements HandlerInterface
 {
+    const TRANSACTION_ID = 'transactionId';
 
     /**
      * @var LoggerInterface
@@ -76,10 +81,22 @@ class ResponseHandler implements HandlerInterface
      */
     public function handle(array $handlingSubject, array $response)
     {
+        /** @var $sdkResponse Response */
         $sdkResponse = $response['paymentSDK-php'];
 
         if ($sdkResponse instanceof InteractionResponse) {
             $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
+
+            /** @var $paymentDO PaymentDataObjectInterface */
+            $paymentDO = SubjectReader::readPayment($handlingSubject);
+            /** @var $payment \Magento\Sales\Model\Order\Payment */
+            $payment = $paymentDO->getPayment();
+
+            $payment->setTransactionId($sdkResponse->getTransactionId());
+            $payment->setLastTransId($sdkResponse->getTransactionId());
+            $payment->setIsTransactionClosed(false);
+            $payment->setAdditionalInformation(self::TRANSACTION_ID, $sdkResponse->getTransactionId());
+            $payment->addTransaction(TransactionInterface::TYPE_ORDER);
         } elseif ($sdkResponse instanceof FailureResponse) {
             foreach ($sdkResponse->getStatusCollection() as $status) {
                 /** @var $status Status */

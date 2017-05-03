@@ -38,10 +38,14 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Model\Order;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 /**
  * Class Success
  * @package Wirecard\ElasticEngine\Controller\Frontend
+ * @method \Magento\Framework\App\Request\Http getRequest()
  */
 class Success extends Action
 {
@@ -51,13 +55,19 @@ class Success extends Action
     private $checkoutSession;
 
     /**
+     * @var TransactionServiceFactory
+     */
+    private $transactionServiceFactory;
+
+    /**
      * Success constructor.
      * @param Context $context
      * @param Session $checkoutSession
      */
-    public function __construct(Context $context, Session $checkoutSession)
+    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory)
     {
         $this->checkoutSession = $checkoutSession;
+        $this->transactionServiceFactory = $transactionServiceFactory;
         parent::__construct($context);
     }
 
@@ -74,16 +84,45 @@ class Success extends Action
         switch ($order->getStatus()) {
             case Order::STATE_PENDING_PAYMENT:
             case 'pending':
-                $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+                $this->determineStatusWithPayload();
+                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
+                break;
             case Order::STATE_PROCESSING:
-                $resultRedirect->setPath('checkout/onepage/success', ['_secure' => true]);
+                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
                 break;
             default:
                 $this->checkoutSession->restoreQuote();
                 $this->messageManager->addNoticeMessage(__('The payment process was not finished successful.'));
-                $resultRedirect->setPath('checkout/cart', ['_secure' => true]);
+                $this->setRedirectPath($resultRedirect, 'checkout/cart');
                 break;
         }
         return $resultRedirect;
+    }
+
+    /**
+     * @param RedirectResult $resultRedirect
+     * @param String $path
+     * @return RedirectResult
+     */
+    private function setRedirectPath(RedirectResult $resultRedirect, $path)
+    {
+        return $resultRedirect->setPath($path, ['_secure' => true]);
+    }
+
+    /**
+     * determine the transaction status from payload if notification was not yet delivered.
+     * we do not change the order state, because we can't validate the response.
+     */
+    private function determineStatusWithPayload()
+    {
+        if ($this->getRequest()->isPost()) {
+            $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
+            $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
+            if (!$result instanceof SuccessResponse) {
+                $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+            }
+        } else {
+            $this->messageManager->addNoticeMessage(__('Invalid request to success redirect page.'));
+        }
     }
 }
