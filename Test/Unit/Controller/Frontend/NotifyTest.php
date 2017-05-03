@@ -158,7 +158,22 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
             ->method(self::HANDLE_NOTIFICATION)
             ->willThrowException(new MalformedResponseException('Message'));
 
-        $this->logger->expects($this->once())->method('error')->with('Exception returned: Message');
+        $this->logger->expects($this->once())->method('error')->with('Response is malformed: Message');
+
+        $this->controller->execute();
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExecuteWithInvalidArgument()
+    {
+        $this->transactionService
+            ->expects($this->once())
+            ->method(self::HANDLE_NOTIFICATION)
+            ->willThrowException(new \InvalidArgumentException('Message'));
+
+        $this->logger->expects($this->once())->method('error')->with('Invalid argument set: Message');
 
         $this->controller->execute();
     }

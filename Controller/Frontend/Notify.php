@@ -92,6 +92,8 @@ class Notify extends Action
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @throws \InvalidArgumentException
+     * @throws MalformedResponseException
      */
     public function execute()
     {
@@ -102,8 +104,11 @@ class Notify extends Action
             $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
             //handle response
             $response = $transactionService->handleNotification($payload);
+        } catch (\InvalidArgumentException $e) {
+            $this->logger->error('Invalid argument set: ' . $e->getMessage());
+            throw $e;
         } catch (MalformedResponseException $e) {
-            $this->logger->error('Exception returned: ' . $e->getMessage());
+            $this->logger->error('Response is malformed: ' . $e->getMessage());
             throw $e;
         }
 
@@ -114,7 +119,11 @@ class Notify extends Action
         $order = $this->orderRepository->get($orderId);
         if ($response instanceof SuccessResponse) {
             $this->updateOrderState($order, Order::STATE_PROCESSING);
-            $this->updatePaymentTransactionIds($order->getPayment(), $response);
+            /**
+             * @var $payment Order\Payment
+             */
+            $payment = $order->getPayment();
+            $this->updatePaymentTransactionIds($payment, $response);
             $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
@@ -144,9 +153,9 @@ class Notify extends Action
     }
 
     /**
-     * @param OrderPaymentInterface $payment
+     * @param Order\Payment $payment
      * @param SuccessResponse $response
-     * @return OrderPaymentInterface
+     * @return Order\Payment
      */
     private function updatePaymentTransactionIds(Order\Payment $payment, SuccessResponse $response)
     {
