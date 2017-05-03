@@ -32,13 +32,22 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 
+use Magento\Framework\View\Asset\Repository;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 
 class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetConfigDummy()
     {
-        $prov = new ConfigProvider();
-        $this->assertEquals([], $prov->getConfig());
+        $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
+        $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+        $prov = new ConfigProvider($assetRepo);
+        $this->assertEquals([
+            'payment' => [
+                'wirecard_elasticengine_paypal' => [
+                    'logo_url' => '/logo/url.png'
+                ]
+            ]
+        ], $prov->getConfig());
     }
 }

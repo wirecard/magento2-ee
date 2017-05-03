@@ -40,6 +40,9 @@
         <label class="label" data-bind="attr: {'for': getCode()}">
             <span data-bind="text: getTitle()"></span>
         </label>
+        <!-- ko if: getLogoUrl() -->
+        <img data-bind="attr: {'src': getLogoUrl()}, title: getTitle(), alt: getTitle()" width="65" />
+        <!-- /ko -->
     </div>
 
     <div class="payment-method-content">

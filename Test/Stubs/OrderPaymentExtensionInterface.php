@@ -1,3 +1,4 @@
+<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -7,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -29,42 +30,8 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-define(
-    [
-        'jquery',
-        'Magento_Checkout/js/view/payment/default'
-    ],
-    function ($, Component) {
-        'use strict';
-        return Component.extend({
-            defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-default',
-                redirectAfterPlaceOrder: false
-            },
-            config: {
+namespace Magento\Sales\Api\Data;
 
-            },
-            initialize: function() {
-                this._super();
-                this.config = window.checkoutConfig.payment[this.getCode()];
-            },
-            getCode: function () {
-                return 'wirecard_elasticengine_paypal';
-            },
-
-            getData: function () {
-                return {
-                    'method': this.item.method
-                };
-            },
-            getLogoUrl: function() {
-                return this.config.logo_url;
-            },
-            afterPlaceOrder: function () {
-                $.get("/wirecard_elasticengine/frontend/redirect", function (data) {
-                    window.location.replace(data["redirect-url"]);
-                });
-            }
-        });
-    }
-);
+interface OrderPaymentExtensionInterface
+{
+}

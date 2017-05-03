@@ -35,6 +35,7 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
@@ -52,6 +53,8 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
  */
 class Notify extends Action
 {
+    const PROVIDER_TRANSACTION_ID = 'providerTransactionId';
+
     /**
      * @var TransactionServiceFactory
      */
@@ -87,18 +90,23 @@ class Notify extends Action
      * Dispatch request
      *
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @throws \InvalidArgumentException
+     * @throws MalformedResponseException
      */
     public function execute()
     {
         //get the raw request body
         $payload = $this->getRequest()->getContent();
-        $this->logger->debug($payload);
+        $this->logger->debug('Engine response: ' . $payload);
         try {
             $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
             //handle response
             $response = $transactionService->handleNotification($payload);
+        } catch (\InvalidArgumentException $e) {
+            $this->logger->error('Invalid argument set: ' . $e->getMessage());
+            throw $e;
         } catch (MalformedResponseException $e) {
-            $this->logger->error('Exception returned: ' . $e->getMessage());
+            $this->logger->error('Response is malformed: ' . $e->getMessage());
             throw $e;
         }
 
@@ -106,8 +114,15 @@ class Notify extends Action
 
         //retrieve order id from response
         $orderId = $response->getCustomFields()->get('orderId');
+        $order = $this->orderRepository->get($orderId);
         if ($response instanceof SuccessResponse) {
-            $this->updateOrderState($orderId, Order::STATE_PROCESSING);
+            $this->updateOrderState($order, Order::STATE_PROCESSING);
+            /**
+             * @var $payment Order\Payment
+             */
+            $payment = $order->getPayment();
+            $this->updatePaymentTransactionIds($payment, $response);
+            $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
                 /**
@@ -115,7 +130,7 @@ class Notify extends Action
                  */
                 $this->logger->error(sprintf('Error occured: %s (%s)', $status->getDescription(), $status->getCode()));
             }
-            $this->updateOrderState($orderId, Order::STATE_PAYMENT_REVIEW);
+            $this->updateOrderState($order, Order::STATE_PAYMENT_REVIEW);
         } else {
             $this->logger->warning(sprintf('Unexpected result object for notifications.'));
         }
@@ -124,15 +139,32 @@ class Notify extends Action
     /**
      * search for an order by id and update the state/status property
      *
-     * @param $orderId
+     * @param OrderInterface $order
      * @param $newState
-     * @return void
+     * @return OrderInterface
      */
-    private function updateOrderState($orderId, $newState)
+    private function updateOrderState(OrderInterface $order, $newState)
     {
-        $order = $this->orderRepository->get($orderId);
         $order->setStatus($newState);
         $order->setState($newState);
-        $this->orderRepository->save($order);
+        return $order;
+    }
+
+    /**
+     * @param Order\Payment $payment
+     * @param SuccessResponse $response
+     * @return Order\Payment
+     */
+    private function updatePaymentTransactionIds(Order\Payment $payment, SuccessResponse $response)
+    {
+        $payment->setTransactionId($response->getTransactionId());
+        $payment->setLastTransId($response->getTransactionId());
+        if ($response->getProviderTransactionId() !== null) {
+            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, [
+                self::PROVIDER_TRANSACTION_ID => $response->getProviderTransactionId(),
+            ]);
+        }
+        $payment->addTransaction($response->getTransactionType());
+        return $payment;
     }
 }
