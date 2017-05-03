@@ -114,7 +114,7 @@ class Notify extends Action
         $order = $this->orderRepository->get($orderId);
         if ($response instanceof SuccessResponse) {
             $this->updateOrderState($order, Order::STATE_PROCESSING);
-            $this->updatePaymentTransactionIds($order->getPayment(), $response->getTransactionId(), $response->getProviderTransactionId());
+            $this->updatePaymentTransactionIds($order->getPayment(), $response);
             $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
@@ -145,19 +145,19 @@ class Notify extends Action
 
     /**
      * @param OrderPaymentInterface $payment
-     * @param $transactionId
+     * @param SuccessResponse $response
      * @return OrderPaymentInterface
      */
-    private function updatePaymentTransactionIds(Order\Payment $payment, $transactionId, $providerTransactionId = null)
+    private function updatePaymentTransactionIds(Order\Payment $payment, SuccessResponse $response)
     {
-        $payment->setTransactionId($transactionId);
-        $payment->setLastTransId($transactionId);
-        if ($providerTransactionId !== null) {
+        $payment->setTransactionId($response->getTransactionId());
+        $payment->setLastTransId($response->getTransactionId());
+        if ($response->getProviderTransactionId() !== null) {
             $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, [
-                self::PROVIDER_TRANSACTION_ID => $providerTransactionId,
+                self::PROVIDER_TRANSACTION_ID => $response->getProviderTransactionId(),
             ]);
         }
-        $payment->addTransaction(TransactionInterface::TYPE_AUTH);
+        $payment->addTransaction($response->getTransactionType());
         return $payment;
     }
 }

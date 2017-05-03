@@ -96,7 +96,7 @@ class ResponseHandler implements HandlerInterface
             $payment->setLastTransId($sdkResponse->getTransactionId());
             $payment->setIsTransactionClosed(false);
             $payment->setAdditionalInformation(self::TRANSACTION_ID, $sdkResponse->getTransactionId());
-            $payment->addTransaction(TransactionInterface::TYPE_PAYMENT);
+            $payment->addTransaction(TransactionInterface::TYPE_ORDER);
         } elseif ($sdkResponse instanceof FailureResponse) {
             foreach ($sdkResponse->getStatusCollection() as $status) {
                 /** @var $status Status */
