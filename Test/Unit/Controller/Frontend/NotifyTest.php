@@ -74,6 +74,11 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
     private $order;
 
     /**
+     * @var Payment|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $payment;
+
+    /**
      * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $logger;
@@ -106,8 +111,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
          */
         $orderRepository = $this->getMock(OrderRepositoryInterface::class);
         $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(OrderInterface::class);
-        $payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
-        $this->order->method('getPayment')->willReturn($payment);
+        $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
+        $this->order->method('getPayment')->willReturn($this->payment);
         $orderRepository->method('get')->willReturn($this->order);
 
         $this->logger = $this->getMock(LoggerInterface::class);
@@ -185,6 +190,29 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $unexpectedResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
 
         $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($unexpectedResponse);
+        $this->controller->execute();
+    }
+
+    public function testExecuteWillUpdatePayment()
+    {
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method('getProviderTransactionId')->willReturn(1234);
+        $successResponse->method('getProviderTransactionReference')->willReturn(1234567);
+        $successResponse->method('getParentTransactionId')->willReturn(999);
+        $successResponse->method('getRequestId')->willReturn('1-2-3');
+
+        $this->transactionService->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
+
+        $this->payment->expects($this->once())->method('setParentTransactionId')->with(999);
+        $this->payment->expects($this->once())->method('setTransactionAdditionalInfo')->with(
+            'raw_details_info', [
+                'providerTransactionId' => 1234,
+                'providerTransactionReferenceId' => 1234567,
+                'requestId' => '1-2-3'
+                ]
+        );
+
         $this->controller->execute();
     }
 }

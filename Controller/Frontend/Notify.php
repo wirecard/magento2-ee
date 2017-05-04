@@ -34,7 +34,6 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -89,7 +88,6 @@ class Notify extends Action
     /**
      * Dispatch request
      *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
      * @throws \InvalidArgumentException
      * @throws MalformedResponseException
      */
@@ -159,11 +157,23 @@ class Notify extends Action
     {
         $payment->setTransactionId($response->getTransactionId());
         $payment->setLastTransId($response->getTransactionId());
+        $additional_info = [];
         if ($response->getProviderTransactionId() !== null) {
-            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, [
-                self::PROVIDER_TRANSACTION_ID => $response->getProviderTransactionId(),
-            ]);
+            $additional_info[self::PROVIDER_TRANSACTION_ID] = $response->getProviderTransactionId();
         }
+        if ($response->getRequestId() !== null) {
+            $additional_info['requestId'] = $response->getRequestId();
+        }
+        if ($response->getProviderTransactionReference() !== null) {
+            $additional_info['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
+        }
+        if ($additional_info !== []) {
+            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additional_info);
+        }
+        if ($response->getParentTransactionId() !== null) {
+            $payment->setParentTransactionId($response->getParentTransactionId());
+        }
+
         $payment->addTransaction($response->getTransactionType());
         return $payment;
     }
