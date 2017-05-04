@@ -157,18 +157,18 @@ class Notify extends Action
     {
         $payment->setTransactionId($response->getTransactionId());
         $payment->setLastTransId($response->getTransactionId());
-        $additional_info = [];
+        $additionalInfo = [];
         if ($response->getProviderTransactionId() !== null) {
-            $additional_info[self::PROVIDER_TRANSACTION_ID] = $response->getProviderTransactionId();
+            $additionalInfo[self::PROVIDER_TRANSACTION_ID] = $response->getProviderTransactionId();
         }
         if ($response->getRequestId() !== null) {
-            $additional_info['requestId'] = $response->getRequestId();
+            $additionalInfo['requestId'] = $response->getRequestId();
         }
         if ($response->getProviderTransactionReference() !== null) {
-            $additional_info['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
+            $additionalInfo['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
         }
-        if ($additional_info !== []) {
-            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additional_info);
+        if ($additionalInfo !== []) {
+            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additionalInfo);
         }
         if ($response->getParentTransactionId() !== null) {
             $payment->setParentTransactionId($response->getParentTransactionId());
