@@ -114,7 +114,12 @@ class Notify extends Action
         $orderId = $response->getCustomFields()->get('orderId');
         $order = $this->orderRepository->get($orderId);
         if ($response instanceof SuccessResponse) {
-            $this->updateOrderState($order, Order::STATE_PROCESSING);
+            if ($response->isValidSignature()) {
+                $this->updateOrderState($order, Order::STATE_PROCESSING);
+            } else {
+                $this->updateOrderState($order, Order::STATUS_FRAUD);
+            }
+
             /**
              * @var $payment Order\Payment
              */
@@ -128,7 +133,7 @@ class Notify extends Action
                  */
                 $this->logger->error(sprintf('Error occured: %s (%s)', $status->getDescription(), $status->getCode()));
             }
-            $this->updateOrderState($order, Order::STATE_PAYMENT_REVIEW);
+            $this->updateOrderState($order, Order::STATE_CANCELED);
         } else {
             $this->logger->warning(sprintf('Unexpected result object for notifications.'));
         }

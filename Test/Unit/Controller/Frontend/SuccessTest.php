@@ -160,7 +160,7 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithStatusPending()
     {
         $this->setIsPost(true);
-        $this->order->method(self::GET_STATUS)->willReturn('pending');
+        $this->order->method(self::GET_STATUS)->willReturn('pending_payment');
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
         $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo(self::NO_FINAL_STATE));
         $this->controller->execute();
@@ -169,7 +169,7 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithStatusPendingAndGetPayload()
     {
         $this->setIsPost(false);
-        $this->order->method(self::GET_STATUS)->willReturn('pending');
+        $this->order->method(self::GET_STATUS)->willReturn('pending_payment');
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
         $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('Invalid request to success redirect page.'));
         $this->controller->execute();
