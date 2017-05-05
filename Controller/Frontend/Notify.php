@@ -112,6 +112,10 @@ class Notify extends Action
 
         //retrieve order id from response
         $orderId = $response->getCustomFields()->get('orderId');
+
+        /**
+         * @var $order Order
+         */
         $order = $this->orderRepository->get($orderId);
         if ($response instanceof SuccessResponse) {
             if ($response->isValidSignature()) {
@@ -133,7 +137,9 @@ class Notify extends Action
                  */
                 $this->logger->error(sprintf('Error occured: %s (%s)', $status->getDescription(), $status->getCode()));
             }
-            $this->updateOrderState($order, Order::STATE_CANCELED);
+
+            $order->cancel();
+            $this->orderRepository->save($order);
         } else {
             $this->logger->warning(sprintf('Unexpected result object for notifications.'));
         }
