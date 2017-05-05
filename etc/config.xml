@@ -42,7 +42,7 @@
             </credentials>
             <settings>
                 <default_currency>EUR</default_currency>
-                <public_key><![CDATA[-----BEGIN CERTIFICATE-----
+                <public_key>-----BEGIN CERTIFICATE-----
                     MIIF5DCCBMygAwIBAgICLHQwDQYJKoZIhvcNAQELBQAwWzELMAkGA1UEBhMCREUx
                     ETAPBgNVBAoTCFdpcmVjYXJkMTkwNwYDVQQDFDB3aXJlY2FyZC1EUS1NVUMtaW50
                     ZXJuYWwtd2Vic2VydmljZS1pc3N1aW5nQ0FfMDIwHhcNMTcwMTEyMTM1OTI2WhcN
@@ -75,8 +75,7 @@
                     ICl3mpMsSaJZLyJdOHwvnpXs1m9kESwPD3DQ3RAQ/OGa0pPxAkHaauog4DhPvr/n
                     BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                     94KbmAAQ5D/FUqyQnSc4TpmYvJ+Iavag
-                    -----END CERTIFICATE-----]]>
-                </public_key>
+                    -----END CERTIFICATE-----</public_key>
             </settings>
         </wirecard_elasticengine>
         <payment>
