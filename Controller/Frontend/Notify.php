@@ -118,11 +118,13 @@ class Notify extends Action
          */
         $order = $this->orderRepository->get($orderId);
         if ($response instanceof SuccessResponse) {
-            if ($response->isValidSignature()) {
-                $this->updateOrderState($order, Order::STATE_PROCESSING);
-            } else {
-                $this->updateOrderState($order, Order::STATUS_FRAUD);
-                $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s', $orderId));
+            if ($order->getStatus() !== Order::STATE_COMPLETE) {
+                if ($response->isValidSignature()) {
+                    $this->updateOrderState($order, Order::STATE_PROCESSING);
+                } else {
+                    $this->updateOrderState($order, Order::STATUS_FRAUD);
+                    $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s', $orderId));
+                }
             }
 
             /**
