@@ -83,10 +83,10 @@ class Success extends Action
         $order = $this->checkoutSession->getLastRealOrder();
         switch ($order->getStatus()) {
             case Order::STATE_PENDING_PAYMENT:
-            case 'pending':
                 $this->determineStatusWithPayload();
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
                 break;
+            case Order::STATUS_FRAUD:
             case Order::STATE_PROCESSING:
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
                 break;

@@ -80,8 +80,9 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->eeConfig->method(self::GET_VALUE)->withConsecutive(
             ['credentials/base_url'],
             ['credentials/http_user'],
-            ['credentials/http_pass']
-        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass');
+            ['credentials/http_pass'],
+            ['settings/public_key']
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key');
 
         $this->methodConfig = $this->getMock(ConfigInterface::class);
         $this->methodConfig->method(self::GET_VALUE)->withConsecutive(

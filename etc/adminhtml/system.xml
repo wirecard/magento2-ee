@@ -89,6 +89,10 @@
                     <label>Default Currency</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
                 </field>
+                <field id="public_key" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Public Key</label>
+                    <comment>If a public certificate (format x.509 PEM) is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers</comment>
+                </field>
             </group>
         </section>
         <section id="payment">

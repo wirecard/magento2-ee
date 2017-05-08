@@ -36,6 +36,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Notify;
@@ -110,7 +111,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
          * @var $orderRepository OrderRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
          */
         $orderRepository = $this->getMock(OrderRepositoryInterface::class);
-        $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(OrderInterface::class);
+        $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
         $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
         $this->order->method('getPayment')->willReturn($this->payment);
         $orderRepository->method('get')->willReturn($this->order);
@@ -130,10 +131,24 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method('getProviderTransactionId')->willReturn(1234);
+        $successResponse->method('isValidSignature')->willReturn(true);
         $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
         $this->order->expects($this->once())->method('setStatus')->with('processing');
         $this->order->expects($this->once())->method('setState')->with('processing');
+        $this->controller->execute();
+    }
+
+    public function testExecuteWithFraudResponse()
+    {
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method('getProviderTransactionId')->willReturn(1234);
+        $successResponse->method('isValidSignature')->willReturn(false);
+        $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
+
+        $this->order->expects($this->once())->method('setStatus')->with('fraud');
+        $this->order->expects($this->once())->method('setState')->with('fraud');
         $this->controller->execute();
     }
 
@@ -148,8 +163,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $failureResponse->expects($this->once())->method('getStatusCollection')->willReturn($statusCollection);
 
         $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($failureResponse);
-        $this->order->expects($this->once())->method('setStatus')->with('payment_review');
-        $this->order->expects($this->once())->method('setState')->with('payment_review');
+        $this->order->expects($this->once())->method('cancel');
         $this->controller->execute();
     }
 

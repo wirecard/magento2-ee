@@ -97,6 +97,11 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $this->eeConfig->getValue('credentials/http_pass')
         );
 
+        $publicKey = $this->eeConfig->getValue('settings/public_key');
+        if ('' !== trim($publicKey)) {
+            $config->setPublicKey($publicKey);
+        }
+
         if ($paymentCode !== null) {
             $methodSdkConfig = new PaymentMethodConfig(
                 $paymentCode,
