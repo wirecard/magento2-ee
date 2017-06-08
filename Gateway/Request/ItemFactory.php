@@ -60,13 +60,14 @@ class ItemFactory
 
         $item = new Item(
             $magentoItemObj->getName(),
-            new Amount($magentoItemObj->getPrice(), $currency),
+            new Amount($magentoItemObj->getPriceInclTax(), $currency),
             $magentoItemObj->getQtyOrdered()
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxAmount(new Amount($magentoItemObj->getTaxAmount(), $currency));
-        $item->setTaxRate($magentoItemObj->getTaxPercent());
+
+        $taxAmount = $magentoItemObj->getTaxAmount()/$magentoItemObj->getQtyOrdered();
+        $item->setTaxAmount(new Amount($taxAmount, $currency));
 
         return $item;
     }
