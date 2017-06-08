@@ -695,16 +695,16 @@
         },
         {
             "name": "magento/community-edition",
-            "version": "2.1.6",
+            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/magento/magento2.git",
-                "reference": "b8b698beca72ddba29c7ad4e781cee78260ce523"
+                "reference": "702662831e85b4b553d5995f398972e176d601f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/magento/magento2/zipball/b8b698beca72ddba29c7ad4e781cee78260ce523",
-                "reference": "b8b698beca72ddba29c7ad4e781cee78260ce523",
+                "url": "https://api.github.com/repos/magento/magento2/zipball/702662831e85b4b553d5995f398972e176d601f8",
+                "reference": "702662831e85b4b553d5995f398972e176d601f8",
                 "shasum": ""
             },
             "require": {
@@ -770,7 +770,7 @@
                 "blueimp/jquery-file-upload": "5.6.14",
                 "components/jquery": "1.11.0",
                 "components/jqueryui": "1.10.4",
-                "magento/framework": "100.1.6",
+                "magento/framework": "100.1.7",
                 "magento/language-de_de": "100.1.1",
                 "magento/language-en_us": "100.1.1",
                 "magento/language-es_es": "100.1.1",
@@ -781,15 +781,15 @@
                 "magento/module-admin-notification": "100.1.2",
                 "magento/module-advanced-pricing-import-export": "100.1.2",
                 "magento/module-authorization": "100.1.2",
-                "magento/module-authorizenet": "100.1.4",
+                "magento/module-authorizenet": "100.1.5",
                 "magento/module-backend": "100.1.3",
                 "magento/module-backup": "100.1.2",
-                "magento/module-braintree": "100.1.5",
-                "magento/module-bundle": "100.1.2",
+                "magento/module-braintree": "100.1.6",
+                "magento/module-bundle": "100.1.3",
                 "magento/module-bundle-import-export": "100.1.3",
                 "magento/module-cache-invalidate": "100.1.3",
                 "magento/module-captcha": "100.1.3",
-                "magento/module-catalog": "101.0.6",
+                "magento/module-catalog": "101.0.7",
                 "magento/module-catalog-import-export": "100.1.4",
                 "magento/module-catalog-inventory": "100.1.5",
                 "magento/module-catalog-rule": "100.1.4",
@@ -797,18 +797,18 @@
                 "magento/module-catalog-search": "100.1.5",
                 "magento/module-catalog-url-rewrite": "100.1.3",
                 "magento/module-catalog-widget": "100.1.2",
-                "magento/module-checkout": "100.1.5",
+                "magento/module-checkout": "100.1.6",
                 "magento/module-checkout-agreements": "100.1.2",
-                "magento/module-cms": "101.0.4",
+                "magento/module-cms": "101.0.5",
                 "magento/module-cms-url-rewrite": "100.1.2",
                 "magento/module-config": "100.1.4",
                 "magento/module-configurable-import-export": "100.1.2",
-                "magento/module-configurable-product": "100.1.6",
+                "magento/module-configurable-product": "100.1.7",
                 "magento/module-contact": "100.1.3",
                 "magento/module-cookie": "100.1.2",
                 "magento/module-cron": "100.1.3",
                 "magento/module-currency-symbol": "100.1.2",
-                "magento/module-customer": "100.1.5",
+                "magento/module-customer": "100.1.6",
                 "magento/module-customer-import-export": "100.1.2",
                 "magento/module-deploy": "100.1.5",
                 "magento/module-developer": "100.1.3",
@@ -825,10 +825,10 @@
                 "magento/module-google-analytics": "100.1.2",
                 "magento/module-google-optimizer": "100.1.2",
                 "magento/module-grouped-import-export": "100.1.2",
-                "magento/module-grouped-product": "100.1.3",
+                "magento/module-grouped-product": "100.1.4",
                 "magento/module-import-export": "100.1.4",
                 "magento/module-indexer": "100.1.3",
-                "magento/module-integration": "100.1.3",
+                "magento/module-integration": "100.1.4",
                 "magento/module-layered-navigation": "100.1.2",
                 "magento/module-marketplace": "100.1.2",
                 "magento/module-media-storage": "100.1.2",
@@ -840,35 +840,35 @@
                 "magento/module-offline-shipping": "100.1.3",
                 "magento/module-page-cache": "100.1.3",
                 "magento/module-payment": "100.1.5",
-                "magento/module-paypal": "100.1.4",
+                "magento/module-paypal": "100.1.5",
                 "magento/module-persistent": "100.1.3",
                 "magento/module-product-alert": "100.1.3",
-                "magento/module-product-video": "100.1.4",
+                "magento/module-product-video": "100.1.5",
                 "magento/module-quote": "100.1.4",
                 "magento/module-reports": "100.1.3",
                 "magento/module-require-js": "100.1.3",
-                "magento/module-review": "100.1.2",
+                "magento/module-review": "100.1.3",
                 "magento/module-rss": "100.1.2",
-                "magento/module-rule": "100.1.3",
-                "magento/module-sales": "100.1.5",
+                "magento/module-rule": "100.1.4",
+                "magento/module-sales": "100.1.6",
                 "magento/module-sales-inventory": "100.1.1",
                 "magento/module-sales-rule": "100.1.3",
                 "magento/module-sales-sequence": "100.1.3",
                 "magento/module-sample-data": "100.1.3",
-                "magento/module-search": "100.1.2",
+                "magento/module-search": "100.1.3",
                 "magento/module-security": "100.1.3",
                 "magento/module-send-friend": "100.1.2",
                 "magento/module-shipping": "100.1.3",
                 "magento/module-sitemap": "100.1.3",
                 "magento/module-store": "100.1.5",
                 "magento/module-swagger": "100.1.2",
-                "magento/module-swatches": "100.1.5",
+                "magento/module-swatches": "100.1.6",
                 "magento/module-swatches-layered-navigation": "100.1.2",
                 "magento/module-tax": "100.1.2",
                 "magento/module-tax-import-export": "100.1.2",
-                "magento/module-theme": "100.1.4",
+                "magento/module-theme": "100.1.5",
                 "magento/module-translation": "100.1.3",
-                "magento/module-ui": "100.1.4",
+                "magento/module-ui": "100.1.5",
                 "magento/module-ups": "100.1.3",
                 "magento/module-url-rewrite": "100.1.2",
                 "magento/module-user": "100.1.3",
@@ -876,14 +876,14 @@
                 "magento/module-variable": "100.1.2",
                 "magento/module-vault": "100.2.1",
                 "magento/module-version": "100.1.2",
-                "magento/module-webapi": "100.1.2",
+                "magento/module-webapi": "100.1.3",
                 "magento/module-webapi-security": "100.1.2",
                 "magento/module-weee": "100.1.2",
-                "magento/module-widget": "100.1.2",
+                "magento/module-widget": "100.1.3",
                 "magento/module-wishlist": "100.1.4",
                 "magento/theme-adminhtml-backend": "100.1.2",
-                "magento/theme-frontend-blank": "100.1.4",
-                "magento/theme-frontend-luma": "100.1.5",
+                "magento/theme-frontend-blank": "100.1.5",
+                "magento/theme-frontend-luma": "100.1.6",
                 "tinymce/tinymce": "3.4.7",
                 "trentrichardson/jquery-timepicker-addon": "1.4.3",
                 "twbs/bootstrap": "3.1.0"
@@ -891,7 +891,7 @@
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.2",
                 "lusitanian/oauth": "~0.3 <=0.7.0",
-                "pdepend/pdepend": "2.2.2",
+                "pdepend/pdepend": "2.4.0",
                 "phpmd/phpmd": "@stable",
                 "phpunit/phpunit": "4.1.0",
                 "sebastian/phpcpd": "2.0.0",
@@ -935,7 +935,7 @@
                 "AFL-3.0"
             ],
             "description": "Magento 2 (Community Edition)",
-            "time": "2017-03-27T16:59:56+00:00"
+            "time": "2017-05-31T15:34:10+00:00"
         },
         {
             "name": "magento/composer",
@@ -1339,16 +1339,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.4",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf"
+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
-                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/34a7699e6f31b1ef4035ee36444407cecf9f56aa",
+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa",
                 "shasum": ""
             },
             "require": {
@@ -1427,7 +1427,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2016-10-04T00:57:04+00:00"
+            "time": "2017-06-05T06:31:10+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1821,16 +1821,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.20",
+            "version": "v2.8.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "7fc8e2b4118ff316550596357325dfd92a51f531"
+                "reference": "1377400fd641d7d1935981546aaef780ecd5bf6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/7fc8e2b4118ff316550596357325dfd92a51f531",
-                "reference": "7fc8e2b4118ff316550596357325dfd92a51f531",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/1377400fd641d7d1935981546aaef780ecd5bf6d",
+                "reference": "1377400fd641d7d1935981546aaef780ecd5bf6d",
                 "shasum": ""
             },
             "require": {
@@ -1877,20 +1877,20 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-26T16:56:54+00:00"
+            "time": "2017-06-02T07:47:27+00:00"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.2.8",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "040651db13cf061827a460cc10f6e36a445c45b4"
+                "reference": "c709670bf64721202ddbe4162846f250735842c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/040651db13cf061827a460cc10f6e36a445c45b4",
-                "reference": "040651db13cf061827a460cc10f6e36a445c45b4",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/c709670bf64721202ddbe4162846f250735842c0",
+                "reference": "c709670bf64721202ddbe4162846f250735842c0",
                 "shasum": ""
             },
             "require": {
@@ -1899,7 +1899,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -1926,20 +1926,20 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-05-28T14:08:56+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v3.2.8",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "9cf076f8f492f4b1ffac40aae9c2d287b4ca6930"
+                "reference": "baea7f66d30854ad32988c11a09d7ffd485810c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/9cf076f8f492f4b1ffac40aae9c2d287b4ca6930",
-                "reference": "9cf076f8f492f4b1ffac40aae9c2d287b4ca6930",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/baea7f66d30854ad32988c11a09d7ffd485810c4",
+                "reference": "baea7f66d30854ad32988c11a09d7ffd485810c4",
                 "shasum": ""
             },
             "require": {
@@ -1948,7 +1948,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -1975,20 +1975,20 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-06-01T21:01:25+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v2.8.20",
+            "version": "v2.8.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "aff35fb3dee799c84a7313c576b72208b046ef8d"
+                "reference": "d54232f5682fda2f8bbebff7c81b864646867ab9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/aff35fb3dee799c84a7313c576b72208b046ef8d",
-                "reference": "aff35fb3dee799c84a7313c576b72208b046ef8d",
+                "url": "https://api.github.com/repos/symfony/process/zipball/d54232f5682fda2f8bbebff7c81b864646867ab9",
+                "reference": "d54232f5682fda2f8bbebff7c81b864646867ab9",
                 "shasum": ""
             },
             "require": {
@@ -2024,7 +2024,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:07:15+00:00"
+            "time": "2017-05-08T01:19:21+00:00"
         },
         {
             "name": "tedivm/jshrink",
@@ -2122,15 +2122,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "80dfd7e0c978e79838c51f2109115ac4f20527f3"
+                "reference": "174bb7daf3dd0c99f94fc8919d3d6805abcbe496"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/80dfd7e0c978e79838c51f2109115ac4f20527f3",
-                "reference": "80dfd7e0c978e79838c51f2109115ac4f20527f3",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/174bb7daf3dd0c99f94fc8919d3d6805abcbe496",
+                "reference": "174bb7daf3dd0c99f94fc8919d3d6805abcbe496",
                 "shasum": ""
             },
             "require": {
+                "ext-intl": ">=1.0.0",
                 "guzzlehttp/guzzle": "^6.2",
                 "monolog/monolog": ">=1.16",
                 "myclabs/php-enum": "^1.5.0",
@@ -2153,7 +2154,7 @@
                 "GPL-3.0"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2017-05-03 13:48:11"
+            "time": "2017-06-08 11:33:59"
         },
         {
             "name": "zendframework/zend-code",
@@ -3834,21 +3835,23 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.2.3",
+            "version": "v2.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "8f33cf3da0da94b67b9cd696b2b9dda81c928f72"
+                "reference": "5191e01d0fa0f579eb709350306cd11ad6427ca6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/8f33cf3da0da94b67b9cd696b2b9dda81c928f72",
-                "reference": "8f33cf3da0da94b67b9cd696b2b9dda81c928f72",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/5191e01d0fa0f579eb709350306cd11ad6427ca6",
+                "reference": "5191e01d0fa0f579eb709350306cd11ad6427ca6",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "^1.2",
+                "ext-json": "*",
                 "ext-tokenizer": "*",
+                "gecko-packages/gecko-php-unit": "^2.0",
                 "php": "^5.3.6 || >=7.0 <7.2",
                 "sebastian/diff": "^1.4",
                 "symfony/console": "^2.4 || ^3.0",
@@ -3867,9 +3870,9 @@
                 "hhvm": "<3.18"
             },
             "require-dev": {
-                "gecko-packages/gecko-php-unit": "^2.0",
+                "johnkary/phpunit-speedtrap": "^1.0.1",
                 "justinrainbow/json-schema": "^5.0",
-                "phpunit/phpunit": "^4.5 || ^5.0",
+                "phpunit/phpunit": "^4.8.35 || ^5.4.3",
                 "satooshi/php-coveralls": "^1.0",
                 "symfony/phpunit-bridge": "^3.2.2"
             },
@@ -3907,7 +3910,46 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2017-04-25T20:39:28+00:00"
+            "time": "2017-05-24T21:55:27+00:00"
+        },
+        {
+            "name": "gecko-packages/gecko-php-unit",
+            "version": "v2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeckoPackages/GeckoPHPUnit.git",
+                "reference": "40a697ec261f3526e8196363b481b24383740c13"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeckoPackages/GeckoPHPUnit/zipball/40a697ec261f3526e8196363b481b24383740c13",
+                "reference": "40a697ec261f3526e8196363b481b24383740c13",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.6 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GeckoPackages\\PHPUnit\\": "src\\PHPUnit"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Additional PHPUnit tests.",
+            "homepage": "https://github.com/GeckoPackages",
+            "keywords": [
+                "extension",
+                "filesystem",
+                "phpunit"
+            ],
+            "time": "2016-11-22T11:01:27+00:00"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -4741,23 +4783,23 @@
         },
         {
             "name": "sebastian/diff",
-            "version": "1.4.1",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e"
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/13edfd8706462032c2f52b4b862974dd46b71c9e",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/7f066a26a962dbe58ddea9f72a4e82874a3975a4",
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
             },
             "type": "library",
             "extra": {
@@ -4789,7 +4831,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08T07:14:41+00:00"
+            "time": "2017-05-22T07:24:03+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -5145,16 +5187,16 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v3.2.8",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "8cbb4f23414e2a5e92690cf67680a979a461113c"
+                "reference": "ff48982d295bcac1fd861f934f041ebc73ae40f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/8cbb4f23414e2a5e92690cf67680a979a461113c",
-                "reference": "8cbb4f23414e2a5e92690cf67680a979a461113c",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/ff48982d295bcac1fd861f934f041ebc73ae40f0",
+                "reference": "ff48982d295bcac1fd861f934f041ebc73ae40f0",
                 "shasum": ""
             },
             "require": {
@@ -5163,7 +5205,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -5195,7 +5237,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-04-12T14:14:56+00:00"
         },
         {
             "name": "symfony/polyfill-php54",
@@ -5430,16 +5472,16 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v3.2.8",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "5a0105afb670dbd38f521105c444de1b8e10cfe3"
+                "reference": "602a15299dc01556013b07167d4f5d3a60e90d15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/5a0105afb670dbd38f521105c444de1b8e10cfe3",
-                "reference": "5a0105afb670dbd38f521105c444de1b8e10cfe3",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/602a15299dc01556013b07167d4f5d3a60e90d15",
+                "reference": "602a15299dc01556013b07167d4f5d3a60e90d15",
                 "shasum": ""
             },
             "require": {
@@ -5448,7 +5490,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -5475,20 +5517,20 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2017-04-12T14:14:56+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.8",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6"
+                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/acec26fcf7f3031e094e910b94b002fa53d4e4d6",
-                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/9752a30000a8ca9f4b34b5227d15d0101b96b063",
+                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063",
                 "shasum": ""
             },
             "require": {
@@ -5503,7 +5545,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -5530,7 +5572,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T14:55:58+00:00"
+            "time": "2017-06-02T22:05:06+00:00"
         },
         {
             "name": "webmozart/assert",
