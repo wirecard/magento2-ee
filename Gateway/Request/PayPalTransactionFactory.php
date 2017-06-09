@@ -34,12 +34,12 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-use Magento\Payment\Gateway\ConfigInterface;
 
 /**
  * Class PayPalTransactionFactory

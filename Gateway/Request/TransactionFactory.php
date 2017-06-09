@@ -113,7 +113,7 @@ class TransactionFactory
         $this->transaction->setCustomFields($customFields);
 
         $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(),0, 2));
+        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 

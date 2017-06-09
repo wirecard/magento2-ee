@@ -24,7 +24,7 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->address->method('getTelephone')->willReturn('00433165349753');
 
         $this->addressFactory = $this->getMockBuilder(AddressFactory::class)->getMock();
-        $this->addressFactory->method('create')->willReturn(new Address('','',''));
+        $this->addressFactory->method('create')->willReturn(new Address('', '', ''));
     }
 
     public function testCreate()
@@ -32,7 +32,7 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
         $accountHolderFactory = new AccountHolderFactory($this->addressFactory);
 
         $expected = new AccountHolder();
-        $expected->setAddress(new Address('','',''));
+        $expected->setAddress(new Address('', '', ''));
         $expected->setEmail('test@example.com');
         $expected->setFirstName('Joe');
         $expected->setLastName('Doe');

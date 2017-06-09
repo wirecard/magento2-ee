@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
@@ -42,7 +43,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory;
-use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -53,7 +53,7 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    CONST ORDER_ID = '1234567';
+    const ORDER_ID = '1234567';
 
     private $urlBuilder;
 
@@ -99,7 +99,6 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $address->method('getEmail')->willReturn('test@example.com');
         $address->method('getFirstname')->willReturn('Joe');
         $address->method('getLastname')->willReturn('Doe');
-
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();

@@ -25,7 +25,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
         $this->itemFactory = $this->getMockBuilder(ItemFactory::class)->getMock();
-        $this->itemFactory->method('create')->willReturn(new Item('',new Amount(0.0, 'EUR'),''));
+        $this->itemFactory->method('create')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
     }
 
     public function testCreate()
@@ -33,7 +33,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $basketFactory = new BasketFactory($this->itemFactory);
 
         $expected = new Basket();
-        $expected->add(new Item('',new Amount(0.0, 'EUR'),''));
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
 
         $this->assertEquals($expected, $basketFactory->create($this->order));
     }
