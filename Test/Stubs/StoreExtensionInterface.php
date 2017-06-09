@@ -30,43 +30,8 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Request;
+namespace Magento\Store\Api\Data;
 
-use Magento\Sales\Api\Data\OrderItemInterface;
-use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\Item;
-use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-
-/**
- * Class ItemFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
- */
-class ItemFactory
+interface StoreExtensionInterface
 {
-    /**
-     * @param OrderItemInterface $magentoItemObj
-     * @param string $currency
-     * @return Item
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function create($magentoItemObj, $currency)
-    {
-        if (!$magentoItemObj instanceof OrderItemInterface) {
-            throw new \InvalidArgumentException('Item data object should be provided.');
-        }
-
-        $item = new Item(
-            $magentoItemObj->getName(),
-            new Amount($magentoItemObj->getPriceInclTax(), $currency),
-            $magentoItemObj->getQtyOrdered()
-        );
-        $item->setDescription($magentoItemObj->getDescription());
-        $item->setArticleNumber($magentoItemObj->getSku());
-
-        $taxAmount = $magentoItemObj->getTaxAmount()/$magentoItemObj->getQtyOrdered();
-        $item->setTaxAmount(new Amount($taxAmount, $currency));
-
-        return $item;
-    }
 }
