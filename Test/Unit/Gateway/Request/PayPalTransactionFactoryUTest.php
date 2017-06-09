@@ -53,6 +53,8 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
+    CONST ORDER_ID = '1234567';
+
     private $urlBuilder;
 
     private $resolver;
@@ -101,7 +103,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->order->method('getOrderIncrementId')->willReturn('1234567');
+        $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
         $this->order->method('getBillingAddress')->willReturn($address);
         $this->order->method('getShippingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
@@ -131,7 +133,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
-        $expected->setDescriptor('My shop n 1234567');
+        $expected->setDescriptor('My shop n ' . self::ORDER_ID);
 
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
@@ -157,7 +159,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new PayPalTransaction();
         $expected->setAccountHolder(new AccountHolder());
         $expected->setShipping(new AccountHolder());
-        $expected->setOrderNumber('1234567');
+        $expected->setOrderNumber(self::ORDER_ID);
         $expected->setOrderDetail('test@example.com Joe Doe');
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
@@ -168,7 +170,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             'http://magen.to/frontend/failure'));
 
         $customFields = new CustomFieldCollection();
-        $customFields->add(new CustomField('orderId', '1234567'));
+        $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
