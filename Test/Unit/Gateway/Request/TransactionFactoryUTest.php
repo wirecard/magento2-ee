@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
@@ -45,6 +46,8 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
     private $urlBuilder;
 
+    private $resolver;
+
     private $payment;
 
     private $order;
@@ -55,6 +58,8 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
         $this->urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
+
+        $this->resolver = $this->getMockBuilder(ResolverInterface::class)->disableOriginalConstructor()->getMock();
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
@@ -72,7 +77,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateThrowsExceptionWithoutPayment()
     {
-        $transactionFactory = new TransactionFactory($this->urlBuilder, new PayPalTransaction());
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction());
         $transactionFactory->create([]);
     }
 
@@ -81,7 +86,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionMock = $this->getMock(Transaction::class);
         $transactionMock->expects($this->Once())->method('setAmount')->with($this->equalTo(new Amount('1.0', 'EUR')));
 
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $transactionMock);
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock);
         $transactionFactory->create($this->commandSubject);
     }
 
@@ -91,7 +96,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $redirect = new Redirect('http://magen.to/frontend/success', 'http://magen.to/frontend/cancel', 'http://magen.to/frontend/failure');
         $transactionMock->expects($this->Once())->method('setRedirect')->with($this->equalTo($redirect));
 
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $transactionMock);
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock);
         $transactionFactory->create($this->commandSubject);
     }
 
@@ -100,7 +105,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionMock = $this->getMock(Transaction::class);
         $transactionMock->expects($this->Once())->method('setNotificationUrl')->with($this->equalTo('http://magen.to/frontend/notify'));
 
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $transactionMock);
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock);
         $transactionFactory->create($this->commandSubject);
     }
 }

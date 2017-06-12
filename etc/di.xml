@@ -96,17 +96,33 @@
 
     <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">PaypalTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">PayPalTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
             <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
 
-    <!-- Wirecard paymentSDK objects -->
-    <virtualType name="PaypalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\TransactionFactory">
+    <!-- Wirecard paymentSDK transaction objects -->
+    <virtualType name="PayPalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\PayPalTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Wirecard paymentSDK objects -->
+    <virtualType name="BasketFactory" type="Wirecard\ElasticEngine\Gateway\Request\BasketFactory">
+        <arguments>
+            <argument name="itemFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\ItemFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="AccountHolderFactory" type="Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory">
+        <arguments>
+            <argument name="addressFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AddressFactory</argument>
         </arguments>
     </virtualType>
 

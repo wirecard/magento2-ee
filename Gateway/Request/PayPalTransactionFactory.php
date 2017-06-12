@@ -34,56 +34,69 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\CustomField;
-use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
-use Wirecard\PaymentSdk\Entity\Redirect;
+use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class TransactionFactory
+ * Class PayPalTransactionFactory
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
-class TransactionFactory
+class PayPalTransactionFactory extends TransactionFactory
 {
-    const PAYMENT = 'payment';
-
     /**
-     * @var UrlInterface
+     * @var BasketFactory
      */
-    protected $urlBuilder;
+    private $basketFactory;
 
     /**
-     * @var ResolverInterface
-     */
-    protected $resolver;
-
-    /**
-     * @var Transaction
+     * @var PayPalTransaction
      */
     protected $transaction;
 
     /**
-     * @var string
+     * @var AccountHolderFactory
      */
-    protected $orderId;
+    private $accountHolderFactory;
 
     /**
-     * TransactionFactory constructor.
+     * @var ConfigInterface
+     */
+    private $methodConfig;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * PayPalTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
+     * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
+     * @param BasketFactory $basketFactory
+     * @param AccountHolderFactory $accountHolderFactory
+     * @param ConfigInterface $methodConfig
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
-        Transaction $transaction
+        StoreManagerInterface $storeManager,
+        Transaction $transaction,
+        BasketFactory $basketFactory,
+        AccountHolderFactory $accountHolderFactory,
+        ConfigInterface $methodConfig
     ) {
-        $this->urlBuilder = $urlBuilder;
-        $this->resolver = $resolver;
-        $this->transaction = $transaction;
+        parent::__construct($urlBuilder, $resolver, $transaction);
+
+        $this->storeManager = $storeManager;
+        $this->basketFactory = $basketFactory;
+        $this->accountHolderFactory = $accountHolderFactory;
+        $this->methodConfig = $methodConfig;
     }
 
     /**
@@ -94,34 +107,33 @@ class TransactionFactory
      */
     public function create($commandSubject)
     {
-        if (!isset($commandSubject[self::PAYMENT])
-            || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
-        ) {
-            throw new \InvalidArgumentException('Payment data object should be provided.');
-        }
+        parent::create($commandSubject);
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
+        $billingAddress = $order->getBillingAddress();
 
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
-        $this->transaction->setAmount($amount);
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
+        $this->transaction->setOrderNumber($this->orderId);
+        $this->transaction->setOrderDetail(sprintf(
+            '%s %s %s',
+            $billingAddress->getEmail(),
+            $billingAddress->getFirstname(),
+            $billingAddress->getLastname()
+        ));
 
-        $this->orderId = $order->getOrderIncrementId();
-        $customFields = new CustomFieldCollection();
-        $customFields->add(new CustomField('orderId', $this->orderId));
-        $this->transaction->setCustomFields($customFields);
+        if ($this->methodConfig->getValue('send_shopping_basket')) {
+            $this->transaction->setBasket($this->basketFactory->create($order));
+        }
 
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-
-        $this->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/success',
-            $wdBaseUrl . 'frontend/cancel',
-            $wdBaseUrl . 'frontend/failure'));
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+        if ($this->methodConfig->getValue('send_descriptor')) {
+            $this->transaction->setDescriptor(sprintf('%s %s',
+                substr($this->storeManager->getStore()->getName(), 0, 9),
+                $this->orderId
+            ));
+        }
 
         return $this->transaction;
     }
