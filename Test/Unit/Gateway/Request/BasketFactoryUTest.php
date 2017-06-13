@@ -32,7 +32,6 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->itemFactory = $this->getMockBuilder(ItemFactory::class)->getMock();
         $this->itemFactory->method('create')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
 
-
         $shippingAddress = $this->getMockBuilder(Address::class)
             ->disableOriginalConstructor()
             ->setMethods(['getShippingInclTax', 'getShippingDescription', 'getShippingMethod', 'getShippingTaxAmount'])

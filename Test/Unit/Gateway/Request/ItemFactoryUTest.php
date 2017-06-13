@@ -23,7 +23,6 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->orderItem->method('getDescription')->willReturn('The brand new one plus 5');
         $this->orderItem->method('getSku')->willReturn('1815441151');
         $this->orderItem->method('getTaxAmount')->willReturn(20.00);
-
     }
 
     public function testCreate()
