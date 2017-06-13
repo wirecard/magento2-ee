@@ -32,8 +32,11 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
+use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
+use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 
 /**
@@ -48,12 +51,19 @@ class BasketFactory
     private $itemFactory;
 
     /**
-     * TransactionFactory constructor.
-     * @param ItemFactory $itemFactory
+     * @var Session
      */
-    public function __construct(ItemFactory $itemFactory)
+    private $checkoutSession;
+
+    /**
+     * BasketFactory constructor.
+     * @param ItemFactory $itemFactory
+     * @param Session $checkoutSession
+     */
+    public function __construct(ItemFactory $itemFactory, Session $checkoutSession)
     {
         $this->itemFactory = $itemFactory;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -74,6 +84,21 @@ class BasketFactory
         foreach ($items as $item) {
             $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
         }
+
+        $shippingAddress = $this->checkoutSession->getQuote()->getShippingAddress();
+
+        $shippingItem = new Item(
+            'Shipping',
+            new Amount($shippingAddress->getShippingInclTax(), $order->getCurrencyCode()),
+            1
+        );
+        $shippingItem->setDescription($shippingAddress->getShippingDescription());
+        $shippingItem->setArticleNumber($shippingAddress->getShippingMethod());
+        $shippingItem->setTaxAmount(
+            new Amount($shippingAddress->getShippingTaxAmount(),
+                $order->getCurrencyCode())
+        );
+        $basket->add($shippingItem);
 
         return $basket;
     }
