@@ -97,6 +97,27 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_shopping_basket>1</send_shopping_basket>
                 <send_descriptor>1</send_descriptor>
             </wirecard_elasticengine_paypal>
+            <wirecard_elasticengine_creditcard>
+                <title>Wirecard Credit Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>CreditCardFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>authorize</payment_action>
+                <merchant_account_id>53f2895a-e4de-4e82-a813-0d87a10e55e6</merchant_account_id>
+                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+                <three_d_merchant_account_id>508b8896-b37d-4614-845c-26bf8bf2c948</three_d_merchant_account_id>
+                <three_d_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</three_d_secret>
+                <ssl_max_limit>100.0</ssl_max_limit>
+                <three_d_min_limit>50.0</three_d_min_limit>
+                <show_meastro_separate>1</show_meastro_separate>
+            </wirecard_elasticengine_creditcard>
         </payment>
     </default>
 </config>
