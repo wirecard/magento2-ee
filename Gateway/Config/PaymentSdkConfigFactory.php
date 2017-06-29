@@ -37,7 +37,10 @@ use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 /**
  * Class PaymentSDKConfig
@@ -51,9 +54,9 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     private $eeConfig;
 
     /**
-     * @var ConfigInterface
+     * @var ConfigInterface[]
      */
-    private $methodConfig;
+    private $methodConfigs;
 
     /**
      * @var ModuleListInterface
@@ -68,18 +71,18 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     /**
      * PaymentSDKConfigFactory constructor.
      * @param ConfigInterface $eeConfig
-     * @param ConfigInterface $methodConfig
+     * @param ConfigInterface[] $methodConfigs
      * @param ProductMetadata $productMetadata
      * @param ModuleListInterface $moduleList
      */
     public function __construct(
         ConfigInterface $eeConfig,
-        ConfigInterface $methodConfig,
+        array $methodConfigs,
         ProductMetadata $productMetadata,
         ModuleListInterface $moduleList
     ) {
         $this->eeConfig = $eeConfig;
-        $this->methodConfig = $methodConfig;
+        $this->methodConfigs = $methodConfigs;
         $this->moduleList = $moduleList;
         $this->productMetadata = $productMetadata;
     }
@@ -102,11 +105,39 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $config->setPublicKey($publicKey);
         }
 
-        if ($paymentCode !== null) {
+        if ($paymentCode === CreditCardTransaction::NAME) {
+            $methodSdkConfig = new CreditCardConfig(
+                $this->methodConfigs[$paymentCode]->getValue('merchant_account_id'),
+                $this->methodConfigs[$paymentCode]->getValue('secret')
+            );
+
+            if ($this->methodConfigs[$paymentCode]->getValue('three_d_merchant_account_id') !== '') {
+                $methodSdkConfig->setThreeDCredentials(
+                    $this->methodConfigs[$paymentCode]->getValue('three_d_merchant_account_id'),
+                    $this->methodConfigs[$paymentCode]->getValue('three_d_secret')
+                );
+            }
+
+            if ($this->methodConfigs[$paymentCode]->getValue('ssl_max_limit') !== '') {
+                $methodSdkConfig->addSslMaxLimit(new Amount(
+                    $this->methodConfigs[$paymentCode]->getValue('ssl_max_limit'),
+                    $this->eeConfig->getValue('settings/default_currency')
+                ));
+            }
+
+            if ($this->methodConfigs[$paymentCode]->getValue('three_d_min_limit') !== '') {
+                $methodSdkConfig->addSslMaxLimit(new Amount(
+                    $this->methodConfigs[$paymentCode]->getValue('three_d_min_limit'),
+                    $this->eeConfig->getValue('settings/default_currency')
+                ));
+            }
+
+            $config->add($methodSdkConfig);
+        } elseif ($paymentCode !== null) {
             $methodSdkConfig = new PaymentMethodConfig(
                 $paymentCode,
-                $this->methodConfig->getValue('merchant_account_id'),
-                $this->methodConfig->getValue('secret')
+                $this->methodConfigs[$paymentCode]->getValue('merchant_account_id'),
+                $this->methodConfigs[$paymentCode]->getValue('secret')
             );
             $config->add($methodSdkConfig);
         }
