@@ -37,7 +37,8 @@ use Magento\Framework\View\Asset\Repository;
 
 class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'wirecard_elasticengine_paypal';
+    const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
+    const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
 
     /**
      * @var Repository
@@ -58,9 +59,17 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'payment' => [
-                self::CODE => [
-                    'logo_url' => $this->getLogoUrl(self::CODE),
-                ]
+                $this->getConfigForPaymentMethod(self::PAYPAL_CODE),
+                $this->getConfigForPaymentMethod(self::CREDITCARD_CODE),
+            ]
+        ];
+    }
+
+    private function getConfigForPaymentMethod($paymentMethodName)
+    {
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
             ]
         ];
     }
