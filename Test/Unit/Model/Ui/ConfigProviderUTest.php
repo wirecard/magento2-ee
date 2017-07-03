@@ -46,6 +46,9 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
                     'logo_url' => '/logo/url.png'
+                ],
+                'wirecard_elasticengine_creditcard' => [
+                    'logo_url' => '/logo/url.png'
                 ]
             ]
         ], $prov->getConfig());

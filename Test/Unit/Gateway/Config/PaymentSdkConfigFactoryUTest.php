@@ -103,7 +103,9 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->configFactory = new PaymentSdkConfigFactory(
             $this->eeConfig,
-            $this->methodConfig,
+            [
+                'paypal' => $this->methodConfig
+            ],
             $this->productMetadata,
             $this->moduleList
         );
