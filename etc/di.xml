@@ -88,11 +88,6 @@
             <argument name="pathPattern" xsi:type="string">%s/%s</argument>
         </arguments>
     </virtualType>
-    <virtualType name="WirecardElasticEngineConfigProvider" type="Wirecard\ElasticEngine\Model\Ui\ConfigProvider">
-        <arguments>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-        </arguments>
-    </virtualType>
     <virtualType name="WirecardPaypalConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::PAYPAL_CODE</argument>
@@ -217,4 +212,15 @@
         </arguments>
     </type>
 
+    <!-- Wirecard ui objects -->
+    <type name="Wirecard\ElasticEngine\Model\Ui\ConfigProvider">
+        <arguments>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+        </arguments>
+    </type>
+    <type name="Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader">
+        <arguments>
+            <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
+        </arguments>
+    </type>
 </config>
