@@ -88,7 +88,7 @@
             <argument name="pathPattern" xsi:type="string">%s/%s</argument>
         </arguments>
     </virtualType>
-    <virtualType name="ConfigProvider" type="Wirecard\ElasticEngine\Model\Ui\ConfigProvider">
+    <virtualType name="WirecardElasticEngineConfigProvider" type="Wirecard\ElasticEngine\Model\Ui\ConfigProvider">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
         </arguments>
