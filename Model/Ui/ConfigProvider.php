@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
+use Wirecard\PaymentSdk\TransactionService;
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -45,8 +46,18 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private $assetRepository;
 
-    public function __construct(Repository $assetRepo)
+    /**
+     * @var
+     */
+    private $transactionService;
+    /**
+     * ConfigProvider constructor.
+     * @param TransactionService $transactionService
+     * @param Repository $assetRepo
+     */
+    public function __construct(TransactionService $transactionService, Repository $assetRepo)
     {
+        $this->transactionService = $transactionService;
         $this->assetRepository = $assetRepo;
     }
 
@@ -60,7 +71,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => array_merge(
                     $this->getConfigForPaymentMethod(self::PAYPAL_CODE),
-                    $this->getConfigForPaymentMethod(self::CREDITCARD_CODE)
+                    $this->getConfigForCreditCard()
                 )
         ];
     }
@@ -70,6 +81,16 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
+            ]
+        ];
+    }
+
+    private function getConfigForCreditCard()
+    {
+        return [
+            self::CREDITCARD_CODE => [
+                'logo_url' => $this->getLogoUrl(self::CREDITCARD_CODE),
+                'seamless_request_data' => $this->transactionService->getDataForCreditCardUi()
             ]
         ];
     }

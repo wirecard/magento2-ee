@@ -46,7 +46,7 @@ define(
             },
             {
                 type: 'wirecard_elasticengine_creditcard',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
             }
         );
         return Component.extend({});
