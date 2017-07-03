@@ -41,21 +41,9 @@ define(
                 template: 'Wirecard_ElasticEngine/payment/method-default',
                 redirectAfterPlaceOrder: false
             },
-            config: {
-
-            },
             initialize: function() {
                 this._super();
                 this.config = window.checkoutConfig.payment[this.getCode()];
-            },
-            getCode: function () {
-                return 'wirecard_elasticengine_paypal';
-            },
-
-            getData: function () {
-                return {
-                    'method': this.item.method
-                };
             },
             getLogoUrl: function() {
                 return this.config.logo_url;

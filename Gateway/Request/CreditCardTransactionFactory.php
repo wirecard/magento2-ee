@@ -52,7 +52,7 @@ class CreditCardTransactionFactory extends TransactionFactory
     protected $transaction;
 
     /**
-     * PayPalTransactionFactory constructor.
+     * CreditCardTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
