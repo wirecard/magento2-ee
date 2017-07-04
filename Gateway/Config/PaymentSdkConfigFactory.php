@@ -105,14 +105,14 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $config->setPublicKey($publicKey);
         }
 
-        foreach($this->methodConfigs as $name => $config) {
+        foreach($this->methodConfigs as $name => $methodConfig) {
             if ($name === CreditCardTransaction::NAME) {
-                $methodSdkConfig = $this->getCreditCardConfig($config);
+                $methodSdkConfig = $this->getCreditCardConfig($methodConfig);
             } else {
                 $methodSdkConfig = new PaymentMethodConfig(
                     $name,
-                    $config->getValue('merchant_account_id'),
-                    $config->getValue('secret')
+                    $methodConfig->getValue('merchant_account_id'),
+                    $methodConfig->getValue('secret')
                 );
             }
 
