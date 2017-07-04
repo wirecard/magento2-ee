@@ -105,40 +105,17 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $config->setPublicKey($publicKey);
         }
 
-        if ($paymentCode === CreditCardTransaction::NAME) {
-            $methodSdkConfig = new CreditCardConfig(
-                $this->methodConfigs[$paymentCode]->getValue('merchant_account_id'),
-                $this->methodConfigs[$paymentCode]->getValue('secret')
-            );
-
-            if ($this->methodConfigs[$paymentCode]->getValue('three_d_merchant_account_id') !== '') {
-                $methodSdkConfig->setThreeDCredentials(
-                    $this->methodConfigs[$paymentCode]->getValue('three_d_merchant_account_id'),
-                    $this->methodConfigs[$paymentCode]->getValue('three_d_secret')
+        foreach($this->methodConfigs as $name => $config) {
+            if ($name === CreditCardTransaction::NAME) {
+                $methodSdkConfig = $this->getCreditCardConfig($config);
+            } else {
+                $methodSdkConfig = new PaymentMethodConfig(
+                    $name,
+                    $config->getValue('merchant_account_id'),
+                    $config->getValue('secret')
                 );
             }
 
-            if ($this->methodConfigs[$paymentCode]->getValue('ssl_max_limit') !== '') {
-                $methodSdkConfig->addSslMaxLimit(new Amount(
-                    $this->methodConfigs[$paymentCode]->getValue('ssl_max_limit'),
-                    $this->eeConfig->getValue('settings/default_currency')
-                ));
-            }
-
-            if ($this->methodConfigs[$paymentCode]->getValue('three_d_min_limit') !== '') {
-                $methodSdkConfig->addSslMaxLimit(new Amount(
-                    $this->methodConfigs[$paymentCode]->getValue('three_d_min_limit'),
-                    $this->eeConfig->getValue('settings/default_currency')
-                ));
-            }
-
-            $config->add($methodSdkConfig);
-        } elseif ($paymentCode !== null) {
-            $methodSdkConfig = new PaymentMethodConfig(
-                $paymentCode,
-                $this->methodConfigs[$paymentCode]->getValue('merchant_account_id'),
-                $this->methodConfigs[$paymentCode]->getValue('secret')
-            );
             $config->add($methodSdkConfig);
         }
 
@@ -152,5 +129,40 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         );
 
         return $config;
+    }
+
+    /**
+     * @param \Magento\Payment\Gateway\Config\Config $config
+     * @return CreditCardConfig
+     */
+    private function getCreditCardConfig($config)
+    {
+        $methodSdkConfig = new CreditCardConfig(
+            $config->getValue('merchant_account_id'),
+            $config->getValue('secret')
+        );
+
+        if ($config->getValue('three_d_merchant_account_id') !== '') {
+            $methodSdkConfig->setThreeDCredentials(
+                $config->getValue('three_d_merchant_account_id'),
+                $config->getValue('three_d_secret')
+            );
+        }
+
+        if ($config->getValue('ssl_max_limit') !== '') {
+            $methodSdkConfig->addSslMaxLimit(new Amount(
+                $config->getValue('ssl_max_limit'),
+                $this->eeConfig->getValue('settings/default_currency')
+            ));
+        }
+
+        if ($config->getValue('three_d_min_limit') !== '') {
+            $methodSdkConfig->addSslMaxLimit(new Amount(
+                $config->getValue('three_d_min_limit'),
+                $this->eeConfig->getValue('settings/default_currency')
+            ));
+        }
+
+        return $methodSdkConfig;
     }
 }

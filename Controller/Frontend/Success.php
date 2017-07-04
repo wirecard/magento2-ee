@@ -116,7 +116,7 @@ class Success extends Action
     private function determineStatusWithPayload()
     {
         if ($this->getRequest()->isPost()) {
-            $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
+            $transactionService = $this->transactionServiceFactory->create();
             $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
             if (!$result instanceof SuccessResponse) {
                 $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));

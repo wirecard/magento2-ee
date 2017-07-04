@@ -88,7 +88,7 @@ class ConfigProvider implements ConfigProviderInterface
 
     private function getConfigForCreditCard()
     {
-        $transactionService = $this->transactionServiceFactory->create(CreditCardTransaction::NAME);
+        $transactionService = $this->transactionServiceFactory->create();
         return [
             self::CREDITCARD_CODE => [
                 'logo_url' => $this->getLogoUrl(self::CREDITCARD_CODE),

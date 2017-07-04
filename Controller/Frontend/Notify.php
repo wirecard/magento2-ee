@@ -97,7 +97,7 @@ class Notify extends Action
         $payload = $this->getRequest()->getContent();
         $this->logger->debug('Engine response: ' . $payload);
         try {
-            $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
+            $transactionService = $this->transactionServiceFactory->create();
             //handle response
             $response = $transactionService->handleNotification($payload);
         } catch (\InvalidArgumentException $e) {

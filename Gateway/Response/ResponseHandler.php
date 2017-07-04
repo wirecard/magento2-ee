@@ -104,11 +104,11 @@ class ResponseHandler implements HandlerInterface
 
             $this->setTransaction($payment, $sdkResponse);
         } elseif ($sdkResponse instanceof FormInteractionResponse) {
-            $this->session->setFormMethod($response->getMethod());
-            $this->session->setFormUrl($response->getUrl());
+            $this->session->setFormMethod($sdkResponse->getMethod());
+            $this->session->setFormUrl($sdkResponse->getUrl());
 
             $formFields = [];
-            foreach ($response->getFormFields() as $key => $value) {
+            foreach ($sdkResponse->getFormFields() as $key => $value) {
                 $formFields[] = [
                     'key' => $key,
                     'value' => $value
