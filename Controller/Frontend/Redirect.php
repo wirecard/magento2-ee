@@ -44,6 +44,8 @@ use Magento\Framework\Controller\ResultFactory;
  */
 class Redirect extends Action
 {
+    const REDIRECT_URL = 'redirect-url';
+
     /**
      * @var Session
      */
@@ -70,16 +72,31 @@ class Redirect extends Action
      */
     public function execute()
     {
+        $data = [
+            self::REDIRECT_URL => null,
+            'form-url' => null,
+            'form-method' => null,
+            'form-fields' => null
+        ];
+
         if ($this->session->hasRedirectUrl()) {
-            $redirectUrl = $this->session->getRedirectUrl();
+            $data[self::REDIRECT_URL] = $this->session->getRedirectUrl();
             $this->session->unsRedirectUrl();
+        } elseif ($this->session->hasFormUrl()) {
+            $data['form-url'] = $this->session->getFormUrl();
+            $data['form-method'] = $this->session->getFormMethod();
+            $data['form-fields'] = $this->session->getFormFields();
+
+            $this->session->unsFormUrl();
+            $this->session->unsFormMethod();
+            $this->session->unsFormFields();
         } else {
-            $redirectUrl = $this->baseUrl . 'frontend/failure';
+            $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/failure';
         }
 
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $result->setData(['redirect-url' => $redirectUrl]);
+        $result->setData($data);
 
         return $result;
     }

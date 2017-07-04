@@ -38,7 +38,6 @@ define(
     function ($, Component, globalMessageList) {
         'use strict';
         return Component.extend({
-            tokenId: null,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-creditcard',
                 redirectAfterPlaceOrder: false
@@ -58,10 +57,8 @@ define(
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                this.tokenId = response.token_id;
-
-                //ToDo - Fix placeOrder triggering
-                this.placeOrder();
+                $('#creditcard_token_id').val(response.token_id);
+                $('#wirecard_elasticengine_creditcard_submit').click();
             },
             seamlessFormErrorHandler: function (response) {
                 if (response.loader_error) {
@@ -83,7 +80,7 @@ define(
                     'method': this.getCode(),
                     'po_number': null,
                     'additional_data': {
-                        'token_id': this.tokenId
+                        'token_id': $('#creditcard_token_id').val()
                     }
                 };
             },
@@ -92,13 +89,31 @@ define(
                     event.preventDefault();
                 }
 
-                if(!this.tokenId) {
+                if($('#creditcard_token_id').val() == '') {
                     this.seamlessFormSubmit();
 
                     return false;
                 }
 
                 return this._super();
+            },
+            afterPlaceOrder: function () {
+                $.get("/wirecard_elasticengine/frontend/redirect", function (data) {
+                    if (data['form-url']) {
+                        var form = $('<form />', {action: data['form-url'], method: data['form-method']});
+
+                        for (var i = 0; i < data['form-fields'].length; i++) {
+                            form.append($('<input />', {
+                                type: 'hidden',
+                                name: data['form-fields'][i]['key'],
+                                value: data['form-fields'][i]['value']
+                            }));
+                        }
+                        form.appendTo('body').submit();
+                    } else {
+                        window.location.replace(data['redirect-url']);
+                    }
+                });
             }
         });
     }
