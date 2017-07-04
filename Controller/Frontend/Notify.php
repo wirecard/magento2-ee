@@ -35,6 +35,7 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -121,7 +122,12 @@ class Notify extends Action
         //retrieve order id from response
         $orderId = $response->getCustomFields()->get('orderId');
 
-        $order = $this->getOrderByIncrementId($orderId);
+        try {
+            $order = $this->getOrderByIncrementId($orderId);
+        } catch (NoSuchEntityException $e) {
+            $this->logger->warning(sprintf('Order with orderID %s not found.', $orderId));
+            return;
+        }
 
         if ($response instanceof SuccessResponse) {
             if ($order->getStatus() !== Order::STATE_COMPLETE) {
@@ -188,7 +194,7 @@ class Notify extends Action
             $additionalInfo['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
         }
         if ($additionalInfo !== []) {
-            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, json_encode($additionalInfo));
+            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additionalInfo);
         }
         if ($response->getParentTransactionId() !== null) {
             $payment->setParentTransactionId($response->getParentTransactionId());
@@ -200,6 +206,7 @@ class Notify extends Action
 
     /**
      * @param $orderId
+     * @throws NoSuchEntityException
      * @return Order
      */
     private function getOrderByIncrementId($orderId)
@@ -209,6 +216,11 @@ class Notify extends Action
             $orderId
         )->create();
         $result = $this->orderRepository->getList($searchCriteria);
+
+        if (empty($result->getItems())) {
+            throw new NoSuchEntityException(__('No such order.'));
+        }
+
         $orders = $result->getItems();
 
         return reset($orders);
