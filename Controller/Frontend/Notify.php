@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Controller\Frontend;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -70,17 +71,24 @@ class Notify extends Action
     private $logger;
 
     /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * Notify constructor.
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
-    public function __construct(Context $context, TransactionServiceFactory $transactionServiceFactory, OrderRepositoryInterface $orderRepository, LoggerInterface $logger)
+    public function __construct(Context $context, TransactionServiceFactory $transactionServiceFactory, OrderRepositoryInterface $orderRepository, LoggerInterface $logger, SearchCriteriaBuilder $searchCriteriaBuilder)
     {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
 
         parent::__construct($context);
     }
@@ -113,10 +121,8 @@ class Notify extends Action
         //retrieve order id from response
         $orderId = $response->getCustomFields()->get('orderId');
 
-        /**
-         * @var $order Order
-         */
-        $order = $this->orderRepository->get($orderId);
+        $order = $this->getOrderByIncrementId($orderId);
+
         if ($response instanceof SuccessResponse) {
             if ($order->getStatus() !== Order::STATE_COMPLETE) {
                 if ($response->isValidSignature()) {
@@ -182,7 +188,7 @@ class Notify extends Action
             $additionalInfo['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
         }
         if ($additionalInfo !== []) {
-            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additionalInfo);
+            $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, json_encode($additionalInfo));
         }
         if ($response->getParentTransactionId() !== null) {
             $payment->setParentTransactionId($response->getParentTransactionId());
@@ -190,5 +196,21 @@ class Notify extends Action
 
         $payment->addTransaction($response->getTransactionType());
         return $payment;
+    }
+
+    /**
+     * @param $orderId
+     * @return Order
+     */
+    private function getOrderByIncrementId($orderId)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter(
+            OrderInterface::INCREMENT_ID,
+            $orderId
+        )->create();
+        $result = $this->orderRepository->getList($searchCriteria);
+        $orders = $result->getItems();
+
+        return reset($orders);
     }
 }
