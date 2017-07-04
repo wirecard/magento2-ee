@@ -92,7 +92,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             self::CREDITCARD_CODE => [
                 'logo_url' => $this->getLogoUrl(self::CREDITCARD_CODE),
-                'seamless_request_data' => $transactionService->getDataForCreditCardUi()
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi(), true)
             ]
         ];
     }

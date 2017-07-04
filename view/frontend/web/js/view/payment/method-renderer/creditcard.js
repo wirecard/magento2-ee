@@ -32,12 +32,13 @@
 define(
     [
         'jquery',
-        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
+        'Magento_Ui/js/model/messageList'
     ],
-    function ($, Component) {
+    function ($, Component, globalMessageList) {
         'use strict';
         return Component.extend({
-
+            tokenId: null,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-creditcard',
                 redirectAfterPlaceOrder: false
@@ -47,31 +48,51 @@ define(
                     requestData: this.config.seamless_request_data,
                     wrappingDivId: 'seamless-creditcard-form',
                     onSuccess: this.seamlessFormDummyHandler,
-                    onError: this.seamlessFormDummyHandler
+                    onError: this.seamlessFormErrorHandler
                 });
             },
             seamlessFormSubmit: function() {
                 WirecardPaymentPage.seamlessSubmitForm({
                     onSuccess: this.seamlessFormSubmitSuccessHandler,
-                    onError: this.seamlessFormSubmitErrorHandler
+                    onError: this.seamlessFormErrorHandler
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                $('#creditcard_token_id').val(response.token_id);
+                this.tokenId = response.token_id;
+
+                //ToDo - Fix placeOrder triggering
                 this.placeOrder();
             },
-            seamlessFormSubmitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({'message': response.status_description_1});
+            seamlessFormErrorHandler: function (response) {
+                if (response.loader_error) {
+                    globalMessageList.addErrorMessage({message: response.loader_error});
+                }
+
+                if (response.status_description_1) {
+                    globalMessageList.addErrorMessage({message: response.status_description_1});
+                }
             },
             seamlessFormDummyHandler: function (response) {
-
+                console.log(response);
+            },
+            /**
+             * Get payment method data
+             */
+            getData: function () {
+                return {
+                    'method': this.getCode(),
+                    'po_number': null,
+                    'additional_data': {
+                        'token_id': this.tokenId
+                    }
+                };
             },
             placeOrder: function (data, event) {
                 if (event) {
                     event.preventDefault();
                 }
 
-                if($('#creditcard_token_id').val() == '') {
+                if(!this.tokenId) {
                     this.seamlessFormSubmit();
 
                     return false;

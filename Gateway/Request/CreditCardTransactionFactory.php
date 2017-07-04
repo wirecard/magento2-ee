@@ -36,6 +36,7 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -78,9 +79,13 @@ class CreditCardTransactionFactory extends TransactionFactory
         parent::create($commandSubject);
 
         /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
+        $paymentDO = $commandSubject[self::PAYMENT];
+        $order = $paymentDO->getOrder();
+        $payment = $paymentDO->getPayment();
         $billingAddress = $order->getBillingAddress();
+
+        $this->transaction->setTokenId($payment->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
+        //ToDo - Add termUrl
 
         $this->transaction->setOrderNumber($this->orderId);
         $this->transaction->setOrderDetail(sprintf(
@@ -89,9 +94,6 @@ class CreditCardTransactionFactory extends TransactionFactory
             $billingAddress->getFirstname(),
             $billingAddress->getLastname()
         ));
-
-        //ToDo - Add termUrl
-        //ToDo - Add tokenId
 
         return $this->transaction;
     }
