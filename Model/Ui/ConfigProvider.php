@@ -71,8 +71,8 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
-                $this->getConfigForCreditCard() +
-                $this->getConfigForPaymentMethod(self::MAESTRO_CODE)
+                $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
+                $this->getConfigForCreditCard(self::MAESTRO_CODE)
         ];
     }
 
@@ -85,11 +85,11 @@ class ConfigProvider implements ConfigProviderInterface
         ];
     }
 
-    private function getConfigForCreditCard()
+    private function getConfigForCreditCard($paymentMethodName)
     {
         $transactionService = $this->transactionServiceFactory->create();
         return [
-            self::CREDITCARD_CODE => [
+            $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl(self::CREDITCARD_CODE),
                 'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi(), true)
             ]
