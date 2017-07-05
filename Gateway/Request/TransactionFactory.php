@@ -118,9 +118,9 @@ class TransactionFactory
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
         $this->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/success',
+            $wdBaseUrl . 'frontend/redirect',
             $wdBaseUrl . 'frontend/cancel',
-            $wdBaseUrl . 'frontend/failure'));
+            $wdBaseUrl . 'frontend/redirect'));
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
 
         return $this->transaction;

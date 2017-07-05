@@ -119,7 +119,7 @@ class ResponseHandler implements HandlerInterface
             $this->setTransaction($payment, $sdkResponse);
         } elseif ($sdkResponse instanceof SuccessResponse) {
             $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-            $this->session->setRedirectUrl($wdBaseUrl . 'frontend/success');
+            $this->session->setRedirectUrl($wdBaseUrl . 'frontend/redirect');
 
             $this->setTransaction($payment, $sdkResponse);
         } elseif ($sdkResponse instanceof FailureResponse) {

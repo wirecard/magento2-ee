@@ -40,7 +40,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
-use Wirecard\ElasticEngine\Controller\Frontend\Success;
+use Wirecard\ElasticEngine\Controller\Frontend\Redirect as RedirectController;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
@@ -48,7 +48,7 @@ use Zend\Stdlib\ParametersInterface;
 
 require_once __DIR__ . '/../../../Stubs/OrderAddressExtensionInterface.php';
 
-class SuccessTest extends \PHPUnit_Framework_TestCase
+class RedirectTest extends \PHPUnit_Framework_TestCase
 {
     const GET_STATUS = 'getStatus';
     const CHECKOUT_ONEPAGE_SUCCESS = 'checkout/onepage/success';
@@ -77,7 +77,7 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
     private $transactionService;
 
     /**
-     * @var Success
+     * @var RedirectController
      */
     private $controller;
 
@@ -134,7 +134,7 @@ class SuccessTest extends \PHPUnit_Framework_TestCase
          */
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
-        $this->controller = new Success($context, $session, $transactionServiceFactory);
+        $this->controller = new RedirectController($context, $session, $transactionServiceFactory);
     }
 
     public function testExecuteWithStatusPendingPayment()

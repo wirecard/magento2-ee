@@ -36,16 +36,18 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
- * Class Failure
+ * Class Redirect
  * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method Http getRequest()
  */
-class Failure extends Action
+class Redirect extends Action
 {
     /**
      * @var Session
@@ -53,31 +55,61 @@ class Failure extends Action
     private $checkoutSession;
 
     /**
-     * Failure constructor.
+     * @var TransactionServiceFactory
+     */
+    private $transactionServiceFactory;
+
+    /**
+     * Redirect constructor.
      * @param Context $context
      * @param Session $checkoutSession
+     * @param TransactionServiceFactory $transactionServiceFactory
      */
-    public function __construct(Context $context, Session $checkoutSession)
+    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory)
     {
         $this->checkoutSession = $checkoutSession;
+        $this->transactionServiceFactory = $transactionServiceFactory;
         parent::__construct($context);
     }
 
     /**
-     * Dispatch request
-     *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @return RedirectResult
      */
     public function execute()
     {
-        $this->checkoutSession->restoreQuote();
-        $this->messageManager->addNoticeMessage(__('An error occurred during payment process. Please try again.'));
         /**
-         * @var $result RedirectResult
+         * @var $resultRedirect RedirectResult
          */
-        $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $result->setPath('checkout/cart');
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
-        return $result;
+        if ($this->getRequest()->isPost()) {
+            $transactionService = $this->transactionServiceFactory->create();
+            $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
+
+            if ($result instanceof SuccessResponse) {
+                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
+            } elseif ($result instanceof FailureResponse) {
+                $this->checkoutSession->restoreQuote();
+                $this->messageManager->addNoticeMessage(__('An error occurred during payment process. Please try again.'));
+                $this->setRedirectPath($resultRedirect, 'checkout/cart');
+            } else {
+                $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+            }
+        } else {
+            $this->messageManager->addNoticeMessage(__('Invalid request to success redirect page.'));
+            $resultRedirect->setPath('');
+        }
+
+        return $resultRedirect;
+    }
+
+    /**
+     * @param RedirectResult $resultRedirect
+     * @param String $path
+     * @return RedirectResult
+     */
+    private function setRedirectPath(RedirectResult $resultRedirect, $path)
+    {
+        return $resultRedirect->setPath($path, ['_secure' => true]);
     }
 }

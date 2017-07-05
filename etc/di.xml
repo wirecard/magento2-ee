@@ -206,7 +206,7 @@
         </arguments>
     </type>
 
-    <type name="Wirecard\ElasticEngine\Controller\Frontend\Success">
+    <type name="Wirecard\ElasticEngine\Controller\Frontend\Redirect">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
         </arguments>

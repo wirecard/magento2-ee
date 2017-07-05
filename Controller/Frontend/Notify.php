@@ -45,7 +45,7 @@ use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+
 
 /**
  * Class Notify
