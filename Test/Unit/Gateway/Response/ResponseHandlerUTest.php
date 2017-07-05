@@ -49,6 +49,7 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
     const PAYMENT_SDK_PHP = 'paymentSDK-php';
+    const SET_REDIRECT_URL = 'setRedirectUrl';
 
     /**
      * @var LoggerInterface
@@ -67,7 +68,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $this->logger = $this->getMock(LoggerInterface::class);
         $this->session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
-            ->setMethods(['setRedirectUrl', 'setFormMethod', 'setFormUrl', 'setFormFields'])
+            ->setMethods([self::SET_REDIRECT_URL, 'setFormMethod', 'setFormUrl', 'setFormFields'])
             ->getMock();
 
         $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
@@ -90,7 +91,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $response->method('getRedirectUrl')->willReturn('http://redir.ect');
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
-        $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://redir.ect');
+        $sessionMock->expects($this->once())->method(self::SET_REDIRECT_URL)->with('http://redir.ect');
         $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
     }
 
@@ -102,12 +103,12 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $response = $this->getMockBuilder(FormInteractionResponse::class)->disableOriginalConstructor()->getMock();
         $response->method('getMethod')->willReturn('post');
         $response->method('getUrl')->willReturn('http://redirpost.ect');
-        $response->method('getFormFields')->willReturn(['key' => 'value']);
+        $response->method('getFormFields')->willReturn(['food' => 'burger']);
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method('setFormMethod')->with('post');
         $sessionMock->expects($this->once())->method('setFormUrl')->with('http://redirpost.ect');
-        $sessionMock->expects($this->once())->method('setFormFields')->with([['key' => 'key', 'value' => 'value']]);
+        $sessionMock->expects($this->once())->method('setFormFields')->with([['key' => 'food', 'value' => 'burger']]);
         $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
     }
 
@@ -119,7 +120,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
-        $sessionMock->expects($this->once())->method('setRedirectUrl')->with('http://magen.to/frontend/redirect');
+        $sessionMock->expects($this->once())->method(self::SET_REDIRECT_URL)->with('http://magen.to/frontend/redirect');
         $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
     }
 

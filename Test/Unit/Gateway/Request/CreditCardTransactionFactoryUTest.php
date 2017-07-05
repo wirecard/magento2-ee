@@ -49,6 +49,7 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
+    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
     const ORDER_ID = '1234567';
 
     private $urlBuilder;
@@ -56,10 +57,6 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $resolver;
 
     private $storeManager;
-
-    private $basketFactory;
-
-    private $accountHolderFactory;
 
     private $config;
 
@@ -118,13 +115,13 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new CreditCardTransaction();
         $expected->setTokenId('mypersonaltoken');
-        $expected->setTermUrl('http://magen.to/frontend/redirect');
+        $expected->setTermUrl(self::REDIRECT_URL);
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
+            self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            self::REDIRECT_URL));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));

@@ -11,6 +11,7 @@ use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 
 class CreditCardDataAssignObserverUTest extends \PHPUnit_Framework_TestCase
 {
+    CONST GET_DATA = 'getData';
     /**
      * @var Observer
      */
@@ -45,7 +46,7 @@ class CreditCardDataAssignObserverUTest extends \PHPUnit_Framework_TestCase
     {
         $dataAssign = new CreditCardDataAssignObserver();
 
-        $this->dataObject->method('getData')->willReturn(['token_id' => 'mytoken']);
+        $this->dataObject->method(self::GET_DATA)->willReturn(['token_id' => 'mytoken']);
         $this->infoObject->expects($this->once())->method('setAdditionalInformation')->with('token_id', 'mytoken');
         $dataAssign->execute($this->observer);
     }
@@ -54,7 +55,7 @@ class CreditCardDataAssignObserverUTest extends \PHPUnit_Framework_TestCase
     {
         $dataAssign = new CreditCardDataAssignObserver();
 
-        $this->dataObject->method('getData')->willReturn('');
+        $this->dataObject->method(self::GET_DATA)->willReturn('');
         $this->assertEquals(null, $dataAssign->execute($this->observer));
     }
 
@@ -62,7 +63,7 @@ class CreditCardDataAssignObserverUTest extends \PHPUnit_Framework_TestCase
     {
         $dataAssign = new CreditCardDataAssignObserver();
 
-        $this->dataObject->method('getData')->willReturn([]);
+        $this->dataObject->method(self::GET_DATA)->willReturn([]);
         $this->infoObject->expects($this->never())->method('setAdditionalInformation');
         $dataAssign->execute($this->observer);
     }

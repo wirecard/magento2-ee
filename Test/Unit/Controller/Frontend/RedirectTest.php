@@ -38,7 +38,6 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Sales\Api\Data\OrderInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Redirect as RedirectController;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -55,11 +54,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     const CHECKOUT_ONEPAGE_SUCCESS = 'checkout/onepage/success';
     const ADD_NOTICE_MESSAGE = 'addNoticeMessage';
     const SET_PATH = 'setPath';
-
-    /**
-     * @var OrderInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $order;
+    const HANDLE_RESPONSE = 'handleResponse';
 
     /**
      * @var Redirect|\PHPUnit_Framework_MockObject_MockObject
@@ -145,7 +140,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     {
         $this->setIsPost(true);
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
-        $this->transactionService->method('handleResponse')->willReturn($successResponse);
+        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($successResponse);
 
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
         $this->controller->execute();
@@ -155,7 +150,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     {
         $this->setIsPost(true);
         $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
-        $this->transactionService->method('handleResponse')->willReturn($failureResponse);
+        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($failureResponse);
 
         $this->session->expects($this->once())->method('restoreQuote');
         $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('An error occurred during payment process. Please try again.'));
@@ -167,7 +162,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     {
         $this->setIsPost(true);
         $interactionResponse = $this->getMockWithoutInvokingTheOriginalConstructor(InteractionResponse::class);
-        $this->transactionService->method('handleResponse')->willReturn($interactionResponse);
+        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($interactionResponse);
 
         $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('Final state of transaction could not be determined.'));
         $this->controller->execute();

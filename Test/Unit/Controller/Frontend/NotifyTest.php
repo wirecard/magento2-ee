@@ -57,6 +57,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 {
     const HANDLE_NOTIFICATION = 'handleNotification';
     const GET_CUSTOM_FIELDS = 'getCustomFields';
+    const GET_PROVIDER_TRANSACTION_ID = 'getProviderTransactionId';
+
     /**
      * @var Notify
      */
@@ -150,7 +152,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
-        $successResponse->method('getProviderTransactionId')->willReturn(1234);
+        $successResponse->method(self::GET_PROVIDER_TRANSACTION_ID)->willReturn(1234);
         $successResponse->method('isValidSignature')->willReturn(true);
         $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
@@ -165,7 +167,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
-        $successResponse->method('getProviderTransactionId')->willReturn(1234);
+        $successResponse->method(self::GET_PROVIDER_TRANSACTION_ID)->willReturn(1234);
         $successResponse->method('isValidSignature')->willReturn(false);
         $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
@@ -252,7 +254,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
-        $successResponse->method('getProviderTransactionId')->willReturn(1234);
+        $successResponse->method(self::GET_PROVIDER_TRANSACTION_ID)->willReturn(1234);
         $successResponse->method('getProviderTransactionReference')->willReturn(1234567);
         $successResponse->method('getParentTransactionId')->willReturn(999);
         $successResponse->method('getRequestId')->willReturn('1-2-3');
