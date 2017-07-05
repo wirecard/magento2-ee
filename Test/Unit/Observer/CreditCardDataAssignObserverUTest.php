@@ -11,7 +11,7 @@ use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 
 class CreditCardDataAssignObserverUTest extends \PHPUnit_Framework_TestCase
 {
-    CONST GET_DATA = 'getData';
+    const GET_DATA = 'getData';
     /**
      * @var Observer
      */
