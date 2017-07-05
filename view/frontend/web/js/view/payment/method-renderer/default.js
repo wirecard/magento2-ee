@@ -49,7 +49,7 @@ define(
                 return this.config.logo_url;
             },
             afterPlaceOrder: function () {
-                $.get("/wirecard_elasticengine/frontend/redirect", function (data) {
+                $.get("/wirecard_elasticengine/frontend/callback", function (data) {
                     window.location.replace(data["redirect-url"]);
                 });
             }

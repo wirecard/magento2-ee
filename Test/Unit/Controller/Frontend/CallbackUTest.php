@@ -40,9 +40,9 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Translate\InlineInterface;
 use Magento\Framework\UrlInterface;
-use Wirecard\ElasticEngine\Controller\Frontend\Redirect;
+use Wirecard\ElasticEngine\Controller\Frontend\Callback;
 
-class RedirectUTest extends \PHPUnit_Framework_TestCase
+class CallbackUTest extends \PHPUnit_Framework_TestCase
 {
     const HAS_REDIRECT_URL = 'hasRedirectUrl';
     const RESPONSE_JSON = 'representJson';
@@ -104,7 +104,7 @@ class RedirectUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('unsRedirectUrl');
 
         /** @var $sessionMock Session */
-        $redirect = new Redirect($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock);
         $redirect->execute();
     }
 
@@ -115,7 +115,7 @@ class RedirectUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(true);
 
         /** @var Session $sessionMock */
-        $redirect = new Redirect($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -135,7 +135,7 @@ class RedirectUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(false);
 
         /** @var Session $sessionMock */
-        $redirect = new Redirect($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */

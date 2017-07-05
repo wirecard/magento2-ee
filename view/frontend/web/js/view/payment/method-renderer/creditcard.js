@@ -33,11 +33,12 @@ define(
     [
         'jquery',
         'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
-        'Magento_Ui/js/model/messageList'
+        'mage/translate'
     ],
-    function ($, Component, globalMessageList) {
+    function ($, Component, $t) {
         'use strict';
         return Component.extend({
+            token_id: null,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-creditcard',
                 redirectAfterPlaceOrder: false
@@ -47,30 +48,30 @@ define(
                     requestData: this.config.seamless_request_data,
                     wrappingDivId: 'seamless-creditcard-form',
                     onSuccess: this.seamlessFormDummyHandler,
-                    onError: this.seamlessFormErrorHandler
+                    onError: this.seamlessFormInitErrorHandler.bind(this)
                 });
             },
             seamlessFormSubmit: function() {
                 WirecardPaymentPage.seamlessSubmitForm({
-                    onSuccess: this.seamlessFormSubmitSuccessHandler,
-                    onError: this.seamlessFormErrorHandler
+                    onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
+                    onError: this.seamlessFormSubmitErrorHandler.bind(this)
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                $('#creditcard_token_id').val(response.token_id);
-                $('#wirecard_elasticengine_creditcard_submit').click();
+                this.token_id = response.token_id;
+                this.placeOrder();
             },
-            seamlessFormErrorHandler: function (response) {
-                if (response.loader_error) {
-                    globalMessageList.addErrorMessage({message: response.loader_error});
-                }
+            seamlessFormInitErrorHandler: function (response) {
+                this.messageContainer.addErrorMessage({message: $t('An error occurred loading the credit card form. Please try again.')});
 
-                if (response.status_description_1) {
-                    globalMessageList.addErrorMessage({message: response.status_description_1});
-                }
+                console.error(response);
+            },
+            seamlessFormSubmitErrorHandler: function (response) {
+                this.messageContainer.addErrorMessage({message: $t('An error occurred submitting the credit card form.')});
+
+                console.error(response);
             },
             seamlessFormDummyHandler: function (response) {
-                console.log(response);
             },
             /**
              * Get payment method data
@@ -80,7 +81,7 @@ define(
                     'method': this.getCode(),
                     'po_number': null,
                     'additional_data': {
-                        'token_id': $('#creditcard_token_id').val()
+                        'token_id': this.token_id
                     }
                 };
             },
@@ -89,7 +90,7 @@ define(
                     event.preventDefault();
                 }
 
-                if($('#creditcard_token_id').val() == '') {
+                if(!this.token_id) {
                     this.seamlessFormSubmit();
 
                     return false;
@@ -98,7 +99,7 @@ define(
                 return this._super();
             },
             afterPlaceOrder: function () {
-                $.get("/wirecard_elasticengine/frontend/redirect", function (data) {
+                $.get("/wirecard_elasticengine/frontend/callback", function (data) {
                     if (data['form-url']) {
                         var form = $('<form />', {action: data['form-url'], method: data['form-method']});
 

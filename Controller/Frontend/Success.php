@@ -35,17 +35,17 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Model\Order;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 /**
  * Class Success
  * @package Wirecard\ElasticEngine\Controller\Frontend
- * @method \Magento\Framework\App\Request\Http getRequest()
+ * @method Http getRequest()
  */
 class Success extends Action
 {
@@ -63,6 +63,7 @@ class Success extends Action
      * Success constructor.
      * @param Context $context
      * @param Session $checkoutSession
+     * @param TransactionServiceFactory $transactionServiceFactory
      */
     public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory)
     {

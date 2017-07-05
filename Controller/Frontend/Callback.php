@@ -39,10 +39,10 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 
 /**
- * Class Redirect
+ * Class Callback
  * @package Wirecard\ElasticEngine\Controller\Frontend
  */
-class Redirect extends Action
+class Callback extends Action
 {
     const REDIRECT_URL = 'redirect-url';
 
@@ -56,7 +56,7 @@ class Redirect extends Action
      */
     private $baseUrl;
     /**
-     * Redirect constructor.
+     * Callback constructor.
      * @param Context $context
      * @param Session $session
      */
