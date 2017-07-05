@@ -40,6 +40,7 @@ class ConfigProvider implements ConfigProviderInterface
 {
     const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
     const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
+    const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
 
     /**
      * @var Repository
@@ -69,10 +70,9 @@ class ConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {
         return [
-            'payment' => array_merge(
-                    $this->getConfigForPaymentMethod(self::PAYPAL_CODE),
-                    $this->getConfigForCreditCard()
-                )
+            'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
+                $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
+                $this->getConfigForCreditCard(self::MAESTRO_CODE)
         ];
     }
 
@@ -85,11 +85,11 @@ class ConfigProvider implements ConfigProviderInterface
         ];
     }
 
-    private function getConfigForCreditCard()
+    private function getConfigForCreditCard($paymentMethodName)
     {
         $transactionService = $this->transactionServiceFactory->create();
         return [
-            self::CREDITCARD_CODE => [
+            $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl(self::CREDITCARD_CODE),
                 'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi(), true)
             ]

@@ -35,4 +35,7 @@
     <event name="payment_method_assign_data_wirecard_elasticengine_creditcard">
         <observer name="wirecard_elasticengine_creditcard_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_wirecard_elasticengine_maestro">
+        <observer name="wirecard_elasticengine_maestro_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver" />
+    </event>
 </config>

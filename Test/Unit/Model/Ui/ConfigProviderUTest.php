@@ -43,10 +43,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfigDummy()
     {
+        $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
+        $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+
         $seamlessRequestData = [
             'key' => 'value'
         ];
-
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
 
@@ -61,6 +63,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
          */
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
+
         $prov = new ConfigProvider($transactionServiceFactory, $assetRepo);
         $this->assertEquals([
             'payment' => [
@@ -68,6 +71,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'logo_url' => self::LOGO_URL_PATH
                 ],
                 'wirecard_elasticengine_creditcard' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'seamless_request_data' => $seamlessRequestData
+                ],
+                'wirecard_elasticengine_maestro' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $seamlessRequestData
                 ]
