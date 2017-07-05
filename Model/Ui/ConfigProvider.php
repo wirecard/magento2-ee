@@ -70,8 +70,7 @@ class ConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {
         return [
-            'payment' =>
-                $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
+            'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
                 $this->getConfigForCreditCard() +
                 $this->getConfigForPaymentMethod(self::MAESTRO_CODE)
         ];
