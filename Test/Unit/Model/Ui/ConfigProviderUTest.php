@@ -33,21 +33,34 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 
 use Magento\Framework\View\Asset\Repository;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
+use Wirecard\PaymentSdk\TransactionService;
 
 class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetConfigDummy()
     {
+        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
+        $transactionServiceFactory->method('create')->willReturn($transactionService);
+        $transactionService->method('getDataForCreditCardUi')->willReturn('{"test": 5}');
+
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
-        $prov = new ConfigProvider($assetRepo);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
                     'logo_url' => '/logo/url.png'
                 ],
                 'wirecard_elasticengine_creditcard' => [
+                    'logo_url' => '/logo/url.png',
+                    'seamless_request_data' => [
+                        'test' => 5
+                    ]
+                ],
+                'wirecard_elasticengine_maestro' => [
                     'logo_url' => '/logo/url.png'
                 ]
             ]
