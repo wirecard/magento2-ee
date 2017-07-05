@@ -39,7 +39,6 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Model\Order;
 use Wirecard\ElasticEngine\Controller\Frontend\Redirect as RedirectController;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\FailureResponse;

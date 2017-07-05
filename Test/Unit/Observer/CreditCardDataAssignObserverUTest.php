@@ -28,10 +28,8 @@ class CreditCardDataAssignObserverUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->observer = $this->getMockWithoutInvokingTheOriginalConstructor(Observer::class);
         $event = $this->getMockWithoutInvokingTheOriginalConstructor(Event::class);
-
 
         $this->dataObject = $this->getMockWithoutInvokingTheOriginalConstructor(DataObject::class);
         $this->infoObject = $this->getMockForAbstractClass(InfoInterface::class);

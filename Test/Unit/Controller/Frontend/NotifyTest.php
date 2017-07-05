@@ -36,7 +36,6 @@ use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderSearchResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -274,7 +273,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
     private function setDefaultOrder()
     {
-        $this->orderSearchResult->method('getItems')->willReturn(array($this->order));
+        $this->orderSearchResult->method('getItems')->willReturn([$this->order]);
         $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 }

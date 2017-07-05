@@ -35,24 +35,17 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
-use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\CreditCardTransactionFactory;
-use Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {

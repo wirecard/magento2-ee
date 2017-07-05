@@ -46,7 +46,6 @@ use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
-
 /**
  * Class Notify
  * @package Wirecard\ElasticEngine\Controller\Frontend

@@ -91,7 +91,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         )->willReturnOnConsecutiveCalls('account_id_123', 'secret_key');
 
         $methodConfigCreditCard = $this->getMock(ConfigInterface::class);
-        $methodConfigCreditCard->method(self::GET_VALUE)->willReturnCallback(function($key) {
+        $methodConfigCreditCard->method(self::GET_VALUE)->willReturnCallback(function ($key) {
             $map = [
                 'merchant_account_id' => 'account_ssl',
                 'secret' => 'secret_ssl',

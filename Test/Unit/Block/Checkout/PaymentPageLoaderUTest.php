@@ -33,8 +33,8 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Block\Checkout;
 
 use Magento\Framework\View\Element\Template\Context;
-use Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader;
 use Magento\Payment\Gateway\ConfigInterface;
+use Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader;
 
 class PaymentPageLoaderUTest extends \PHPUnit_Framework_TestCase
 {
