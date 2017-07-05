@@ -14,7 +14,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
     /**
      * @param Observer $observer
-     * @return void
+     * @return void|null
      */
     public function execute(Observer $observer)
     {

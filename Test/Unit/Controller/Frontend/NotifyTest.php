@@ -32,9 +32,13 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
+use Magento\Framework\Api\SearchCriteria;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderSearchResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
@@ -80,6 +84,16 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
     private $payment;
 
     /**
+     * @var OrderSearchResultInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $orderSearchResult;
+
+    /**
+     * @var OrderRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $orderRepository;
+
+    /**
      * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $logger;
@@ -107,27 +121,34 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
-        /**
-         * @var $orderRepository OrderRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
-         */
-        $orderRepository = $this->getMock(OrderRepositoryInterface::class);
+        $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
         $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
         $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
         $this->order->method('getPayment')->willReturn($this->payment);
-        $orderRepository->method('get')->willReturn($this->order);
+        $this->orderRepository->method('get')->willReturn($this->order);
 
         $this->logger = $this->getMock(LoggerInterface::class);
 
         $this->customFields = $this->getMock(CustomFieldCollection::class);
         $this->customFields->method('get')->with($this->equalTo('orderId'))->willReturn(42);
 
+        $this->orderSearchResult = $this->getMockForAbstractClass(OrderSearchResultInterface::class);
+
+        $searchCriteria = $this->getMockWithoutInvokingTheOriginalConstructor(SearchCriteria::class);
+
+        $searchCriteriaBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(SearchCriteriaBuilder::class);
+        $searchCriteriaBuilder->method('addFilter')->willReturn($searchCriteriaBuilder);
+        $searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
+
         $this->controller = new Notify(
             $context, $transactionServiceFactory,
-            $orderRepository, $this->logger);
+            $this->orderRepository, $this->logger, $searchCriteriaBuilder);
     }
 
     public function testExecuteWithSuccessResponse()
     {
+        $this->setDefaultOrder();
+
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method('getProviderTransactionId')->willReturn(1234);
@@ -141,6 +162,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteWithFraudResponse()
     {
+        $this->setDefaultOrder();
+
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method('getProviderTransactionId')->willReturn(1234);
@@ -152,8 +175,23 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->controller->execute();
     }
 
+    public function testExecuteWithInvalidOrderNumber()
+    {
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+
+        $this->orderSearchResult->method('getItems')->willReturn('');
+        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
+        $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
+
+        $this->logger->expects($this->once())->method('warning')->with('Order with orderID 42 not found.');
+        $this->controller->execute();
+    }
+
     public function testExecuteWithFailureResponse()
     {
+        $this->setDefaultOrder();
+
         $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
         $failureResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $statusCollection = $this->getMock(StatusCollection::class);
@@ -199,6 +237,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteWithUnexpecterResponseObject()
     {
+        $this->setDefaultOrder();
+
         //this Response will never happen on notificy call
         $unexpectedResponse = $this->getMockWithoutInvokingTheOriginalConstructor(InteractionResponse::class);
         $unexpectedResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
@@ -209,6 +249,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteWillUpdatePayment()
     {
+        $this->setDefaultOrder();
+
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method('getProviderTransactionId')->willReturn(1234);
@@ -228,5 +270,11 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->controller->execute();
+    }
+
+    private function setDefaultOrder()
+    {
+        $this->orderSearchResult->method('getItems')->willReturn(array($this->order));
+        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 }

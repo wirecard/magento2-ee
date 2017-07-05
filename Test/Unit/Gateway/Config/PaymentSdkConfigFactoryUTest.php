@@ -38,7 +38,10 @@ use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\ElasticEngine\Gateway\Config\PaymentSdkConfigFactory;
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
@@ -53,11 +56,6 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
      * @var ConfigInterface
      */
     private $eeConfig;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
 
     /**
      * @var ProductMetadata
@@ -81,14 +79,30 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             ['credentials/base_url'],
             ['credentials/http_user'],
             ['credentials/http_pass'],
-            ['settings/public_key']
-        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key');
+            ['settings/public_key'],
+            ['settings/default_currency'],
+            ['settings/default_currency']
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key', 'EUR', 'EUR');
 
-        $this->methodConfig = $this->getMock(ConfigInterface::class);
-        $this->methodConfig->method(self::GET_VALUE)->withConsecutive(
+        $methodConfigPayPal = $this->getMock(ConfigInterface::class);
+        $methodConfigPayPal->method(self::GET_VALUE)->withConsecutive(
             ['merchant_account_id'],
             ['secret']
         )->willReturnOnConsecutiveCalls('account_id_123', 'secret_key');
+
+        $methodConfigCreditCard = $this->getMock(ConfigInterface::class);
+        $methodConfigCreditCard->method(self::GET_VALUE)->willReturnCallback(function($key) {
+            $map = [
+                'merchant_account_id' => 'account_ssl',
+                'secret' => 'secret_ssl',
+                'three_d_merchant_account_id' => 'account_id_three',
+                'three_d_secret' => 'secret_three',
+                'ssl_max_limit' => 100.0,
+                'three_d_min_limit' => 50.0
+            ];
+
+            return $map[$key];
+        });
 
         $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)
             ->disableOriginalConstructor()->getMock();
@@ -104,23 +118,24 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->configFactory = new PaymentSdkConfigFactory(
             $this->eeConfig,
             [
-                'paypal' => $this->methodConfig
+                'paypal' => $methodConfigPayPal,
+                'creditcard' => $methodConfigCreditCard
             ],
             $this->productMetadata,
             $this->moduleList
         );
     }
 
-    public function testCreateWithEmptyPaymentCode()
+    public function testCreateReturnsConfig()
     {
         $configFromFactory = $this->configFactory->create();
         $this->assertInstanceOf(Config::class, $configFromFactory);
     }
 
-    public function testCreateWithPaymentCode()
+    public function testCreateAddsPayPal()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create(PayPalTransaction::NAME);
+        $configFromFactory = $this->configFactory->create();
         $this->assertInstanceOf(Config::class, $configFromFactory);
 
         $paypalConfig = new PaymentMethodConfig(
@@ -131,10 +146,26 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($paypalConfig, $configFromFactory->get(PayPalTransaction::NAME));
     }
 
+    public function testCreateAddsCreditCard()
+    {
+        /** @var $configFromFactory Config */
+        $configFromFactory = $this->configFactory->create();
+        $this->assertInstanceOf(Config::class, $configFromFactory);
+
+        $creditCardConfig = new CreditCardConfig(
+            'account_ssl',
+            'secret_ssl'
+        );
+        $creditCardConfig->addSslMaxLimit(new Amount(100.0, 'EUR'));
+        $creditCardConfig->addThreeDMinLimit(new Amount(50.0, 'EUR'));
+        $creditCardConfig->setThreeDCredentials('account_id_three', 'secret_three');
+        $this->assertEquals($creditCardConfig, $configFromFactory->get(CreditCardTransaction::NAME));
+    }
+
     public function testCreateSetsShopInfo()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create(PayPalTransaction::NAME);
+        $configFromFactory = $this->configFactory->create();
 
         $this->assertEquals($configFromFactory->getShopHeader(), ['headers' => [
             'shop-system-name' => 'Magento Community Edition',
