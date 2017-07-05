@@ -56,7 +56,7 @@
             <!--/ko-->
         </div>
 
-        <div id="seamless-creditcard-form" data-bind="afterRender: seamlessFormInit"></div>
+        <div data-bind="attr: {'id': getCode() + '_seamless_form'}, afterRender: seamlessFormInit"></div>
 
         <div class="actions-toolbar">
             <div class="primary">
