@@ -43,19 +43,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfigDummy()
     {
-        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
-        $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
-        $transactionServiceFactory->method('create')->willReturn($transactionService);
-        $seamlessRequestData = [
-            'key' => 'value'
-        ];
-        $transactionService->method('getDataForCreditCardUi')->willReturn($seamlessRequestData);
-
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
 
-
-
+        $seamlessRequestData = [
+            'key' => 'value'
+        ];
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
 
