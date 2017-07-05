@@ -105,7 +105,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $config->setPublicKey($publicKey);
         }
 
-        foreach($this->methodConfigs as $name => $methodConfig) {
+        foreach ($this->methodConfigs as $name => $methodConfig) {
             if ($name === CreditCardTransaction::NAME) {
                 $methodSdkConfig = $this->getCreditCardConfig($methodConfig);
             } else {
@@ -157,7 +157,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         }
 
         if ($config->getValue('three_d_min_limit') !== '') {
-            $methodSdkConfig->addSslMaxLimit(new Amount(
+            $methodSdkConfig->addThreeDMinLimit(new Amount(
                 $config->getValue('three_d_min_limit'),
                 $this->eeConfig->getValue('settings/default_currency')
             ));

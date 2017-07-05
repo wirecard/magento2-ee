@@ -30,35 +30,29 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Block\Checkout;
+namespace Wirecard\ElasticEngine\Test\Unit\Block\Checkout;
 
-use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 use Magento\Payment\Gateway\ConfigInterface;
+use Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader;
 
-class PaymentPageLoader extends Template
+class PaymentPageLoaderUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ConfigInterface
-     */
-    private $eeConfig;
-    /**
-     * Constructor
-     *
-     * @param Template\Context $context
-     * @param ConfigInterface $eeConfig,
-     * @param array $data
-     */
-    public function __construct(
-        Template\Context $context,
-        ConfigInterface $eeConfig,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-        $this->eeConfig = $eeConfig;
-    }
+    const BASE_URL = 'http://base.url';
 
-    public function getPaymentPageLoaderUrl()
+    public function testGetPaymentPageLoaderUrl()
     {
-        return $this->eeConfig->getValue('credentials/base_url') . '/engine/hpp/paymentPageLoader.js';
+        $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
+
+        $eeConfig = $this->getMock(ConfigInterface::class);
+        $eeConfig->method('getValue')->withConsecutive(
+            ['credentials/base_url'],
+            ['credentials/http_user'],
+            ['credentials/http_pass'],
+            ['settings/public_key']
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key');
+
+        $paymentPageLoader = new PaymentPageLoader($context, $eeConfig);
+        $this->assertEquals(self::BASE_URL . '/engine/hpp/paymentPageLoader.js', $paymentPageLoader->getPaymentPageLoaderUrl());
     }
 }

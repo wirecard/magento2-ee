@@ -35,7 +35,6 @@ namespace Wirecard\ElasticEngine\Model\Ui;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 class ConfigProvider implements ConfigProviderInterface
 {

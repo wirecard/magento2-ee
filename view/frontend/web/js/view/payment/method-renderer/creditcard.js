@@ -46,7 +46,7 @@ define(
             seamlessFormInit: function () {
                 WirecardPaymentPage.seamlessRenderForm({
                     requestData: this.config.seamless_request_data,
-                    wrappingDivId: 'seamless-creditcard-form',
+                    wrappingDivId: this.getCode() + '_seamless_form',
                     onSuccess: this.seamlessFormDummyHandler,
                     onError: this.seamlessFormInitErrorHandler.bind(this)
                 });

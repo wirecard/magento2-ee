@@ -3,7 +3,6 @@
 
 namespace Wirecard\ElasticEngine\Observer;
 
-
 use Magento\Framework\Event\Observer;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\PaymentInterface;
@@ -14,7 +13,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
     /**
      * @param Observer $observer
-     * @return void
+     * @return void|null
      */
     public function execute(Observer $observer)
     {
@@ -34,5 +33,4 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
             );
         }
     }
-
 }

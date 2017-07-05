@@ -96,8 +96,8 @@ class Redirect extends Action
                 $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
             }
         } else {
-            $this->messageManager->addNoticeMessage(__('Invalid request to success redirect page.'));
-            $resultRedirect->setPath('');
+            $this->checkoutSession->restoreQuote();
+            $this->setRedirectPath($resultRedirect, 'checkout/cart');
         }
 
         return $resultRedirect;

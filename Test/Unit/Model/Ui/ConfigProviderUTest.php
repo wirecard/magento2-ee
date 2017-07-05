@@ -39,29 +39,50 @@ use Wirecard\PaymentSdk\TransactionService;
 
 class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 {
+    const LOGO_URL_PATH = '/logo/url.png';
+
     public function testGetConfigDummy()
     {
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionServiceFactory->method('create')->willReturn($transactionService);
-        $transactionService->method('getDataForCreditCardUi')->willReturn('{"test": 5}');
+        $seamlessRequestData = [
+            'key' => 'value'
+        ];
+        $transactionService->method('getDataForCreditCardUi')->willReturn($seamlessRequestData);
 
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+
+
+
+        $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
+        $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
+
+        /**
+         * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $transactionServiceFactory->method('create')->willReturn($transactionService);
+
+        /**
+         * @var $assetRepo Repository|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
+        $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
+
         $prov = new ConfigProvider($transactionServiceFactory, $assetRepo);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
-                    'logo_url' => '/logo/url.png'
+                    'logo_url' => self::LOGO_URL_PATH
                 ],
                 'wirecard_elasticengine_creditcard' => [
-                    'logo_url' => '/logo/url.png',
-                    'seamless_request_data' => [
-                        'test' => 5
-                    ]
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'seamless_request_data' => $seamlessRequestData
                 ],
                 'wirecard_elasticengine_maestro' => [
-                    'logo_url' => '/logo/url.png'
+                    'logo_url' => self::LOGO_URL_PATH
                 ]
             ]
         ], $prov->getConfig());

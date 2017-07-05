@@ -45,6 +45,7 @@ use Wirecard\ElasticEngine\Controller\Frontend\Callback;
 class CallbackUTest extends \PHPUnit_Framework_TestCase
 {
     const HAS_REDIRECT_URL = 'hasRedirectUrl';
+    const HAS_FORM_URL = 'hasFormUrl';
     const RESPONSE_JSON = 'representJson';
 
     private $resultFactory;
@@ -86,9 +87,23 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
         $this->session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getRedirectUrl', self::HAS_REDIRECT_URL, 'unsRedirectUrl'])
+            ->setMethods([
+                'getRedirectUrl',
+                self::HAS_REDIRECT_URL,
+                'unsRedirectUrl',
+                'getFormUrl',
+                self::HAS_FORM_URL,
+                'unsFormUrl',
+                'getFormMethod',
+                'unsFormMethod',
+                'getFormFields',
+                'unsFormFields',
+            ])
             ->getMock();
         $this->session->method('getRedirectUrl')->willReturn('http://redir.ect');
+        $this->session->method('getFormUrl')->willReturn('http://formpost.ect');
+        $this->session->method('getFormMethod')->willReturn('post');
+        $this->session->method('getFormFields')->willReturn('myfieldsarray');
 
         $this->response = $this->getMockBuilder(Http::class)
             ->disableOriginalConstructor()
@@ -108,6 +123,40 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $redirect->execute();
     }
 
+    public function testGetFormUnsetsForm()
+    {
+        /** @var \PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock = $this->session;
+        $sessionMock->method(self::HAS_FORM_URL)->willReturn(true);
+        $sessionMock->expects($this->once())->method('unsFormUrl');
+        $sessionMock->expects($this->once())->method('unsFormMethod');
+        $sessionMock->expects($this->once())->method('unsFormFields');
+
+        /** @var $sessionMock Session */
+        $redirect = new Callback($this->context, $sessionMock);
+        $redirect->execute();
+    }
+
+    public function testGetFormWhenSet()
+    {
+        /** @var \PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock = $this->session;
+        $sessionMock->method(self::HAS_FORM_URL)->willReturn(true);
+
+        /** @var Session $sessionMock */
+        $redirect = new Callback($this->context, $sessionMock);
+        $result = $redirect->execute();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
+        $responseMock = $this->response;
+        $responseMock->expects($this->once())
+            ->method(self::RESPONSE_JSON)
+            ->with('{"redirect-url":null,"form-url":"http:\/\/formpost.ect","form-method":"post","form-fields":"myfieldsarray"}');
+
+        /** @var $responseMock ResponseInterface */
+        $result->renderResult($responseMock);
+    }
+
     public function testGetRedirectWhenSet()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject $sessionMock */
@@ -122,7 +171,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $responseMock = $this->response;
         $responseMock->expects($this->once())
             ->method(self::RESPONSE_JSON)
-            ->with('{"redirect-url":"http:\/\/redir.ect"}');
+            ->with('{"redirect-url":"http:\/\/redir.ect","form-url":null,"form-method":null,"form-fields":null}');
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);
@@ -142,7 +191,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $responseMock = $this->response;
         $responseMock->expects($this->once())
             ->method(self::RESPONSE_JSON)
-            ->with('{"redirect-url":"http:\/\/magen.to\/frontend\/failure"}');
+            ->with('{"redirect-url":"http:\/\/magen.to\/frontend\/redirect","form-url":null,"form-method":null,"form-fields":null}');
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);

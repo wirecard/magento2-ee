@@ -80,22 +80,11 @@ class CreditCardTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
-        $order = $paymentDO->getOrder();
-        $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect');
-
-        //ToDo - Add orderNumber, orderDetail to creditCardTransaction
-        /*$this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $billingAddress->getEmail(),
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        ));*/
 
         return $this->transaction;
     }
