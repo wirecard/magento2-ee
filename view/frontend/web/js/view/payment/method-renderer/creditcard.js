@@ -54,7 +54,8 @@ define(
             seamlessFormSubmit: function() {
                 WirecardPaymentPage.seamlessSubmitForm({
                     onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
-                    onError: this.seamlessFormSubmitErrorHandler.bind(this)
+                    onError: this.seamlessFormSubmitErrorHandler.bind(this),
+                    wrappingDivId: this.getCode() + '_seamless_form'
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
