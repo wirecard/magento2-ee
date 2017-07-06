@@ -90,7 +90,7 @@ class ConfigProvider implements ConfigProviderInterface
         $transactionService = $this->transactionServiceFactory->create();
         return [
             $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl(self::CREDITCARD_CODE),
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi(), true)
             ]
         ];
