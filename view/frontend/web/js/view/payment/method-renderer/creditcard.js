@@ -47,7 +47,7 @@ define(
                 WirecardPaymentPage.seamlessRenderForm({
                     requestData: this.config.seamless_request_data,
                     wrappingDivId: this.getCode() + '_seamless_form',
-                    onSuccess: this.seamlessFormDummyHandler,
+                    onSuccess: this.seamlessFormSizeHandler.bind(this),
                     onError: this.seamlessFormInitErrorHandler.bind(this)
                 });
             },
@@ -71,7 +71,19 @@ define(
 
                 console.error(response);
             },
-            seamlessFormDummyHandler: function (response) {
+            seamlessFormSizeHandler: function () {
+                window.addEventListener('resize', this.resizeIFrame.bind(this));
+                this.resizeIFrame();
+            },
+            resizeIFrame: function () {
+                var iframe = document.getElementById(this.getCode() + '_seamless_form').firstElementChild;
+                if (iframe.clientWidth > 768) {
+                    iframe.style.height = "267px";
+                } else if (iframe.clientWidth > 460) {
+                    iframe.style.height = "341px";
+                } else {
+                    iframe.style.height = "415px";
+                }
             },
             /**
              * Get payment method data
