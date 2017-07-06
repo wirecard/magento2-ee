@@ -98,6 +98,12 @@ define(
                     }
                 };
             },
+            selectPaymentMethod: function () {
+                this._super();
+                this.resizeIFrame();
+
+                return true;
+            },
             placeOrder: function (data, event) {
                 if (event) {
                     event.preventDefault();
