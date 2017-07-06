@@ -153,7 +153,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($failureResponse);
 
         $this->session->expects($this->once())->method('restoreQuote');
-        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('An error occurred during payment process. Please try again.'));
+        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('An error occurred during the payment process. Please try again.'));
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo('checkout/cart'), $this->isSecure());
         $this->controller->execute();
     }
