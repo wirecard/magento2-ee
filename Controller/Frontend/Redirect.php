@@ -90,7 +90,7 @@ class Redirect extends Action
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
             } elseif ($result instanceof FailureResponse) {
                 $this->checkoutSession->restoreQuote();
-                $this->messageManager->addNoticeMessage(__('An error occurred during payment process. Please try again.'));
+                $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
                 $this->setRedirectPath($resultRedirect, 'checkout/cart');
             } else {
                 $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
