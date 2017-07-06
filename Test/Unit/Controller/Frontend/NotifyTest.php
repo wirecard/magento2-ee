@@ -258,6 +258,9 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $successResponse->method('getProviderTransactionReference')->willReturn(1234567);
         $successResponse->method('getParentTransactionId')->willReturn(999);
         $successResponse->method('getRequestId')->willReturn('1-2-3');
+        $successResponse->method('getMaskedAccountNumber')->willReturn('5151***5485');
+        $successResponse->method('findElement')->willReturn('1515');
+        $successResponse->method('getCardholderAuthenticationStatus')->willReturn('Y');
 
         $this->transactionService->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
@@ -266,8 +269,11 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
             'raw_details_info', [
                 'providerTransactionId' => 1234,
                 'providerTransactionReferenceId' => 1234567,
-                'requestId' => '1-2-3'
-                ]
+                'requestId' => '1-2-3',
+                'maskedAccountNumber' => '5151***5485',
+                'authorizationCode' => '1515',
+                'cardholderAuthenticationStatus' => 'Y'
+            ]
         );
 
         $this->controller->execute();

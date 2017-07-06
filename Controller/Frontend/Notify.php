@@ -192,6 +192,20 @@ class Notify extends Action
         if ($response->getProviderTransactionReference() !== null) {
             $additionalInfo['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
         }
+
+        if ($response->getMaskedAccountNumber() !== null) {
+            $additionalInfo['maskedAccountNumber'] = $response->getMaskedAccountNumber();
+        }
+
+        try {
+            $additionalInfo['authorizationCode'] = $response->findElement('authorization-code');
+        } catch (MalformedResponseException $e) {
+        }
+
+        if ($response->getCardholderAuthenticationStatus() !== null) {
+            $additionalInfo['cardholderAuthenticationStatus'] = $response->getCardholderAuthenticationStatus();
+        }
+
         if ($additionalInfo !== []) {
             $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additionalInfo);
         }
