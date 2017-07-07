@@ -200,6 +200,7 @@ class Notify extends Action
         try {
             $additionalInfo['authorizationCode'] = $response->findElement('authorization-code');
         } catch (MalformedResponseException $e) {
+            //Is only triggered if it is not included. e.g. not a credit card transaction
         }
 
         if ($response->getCardholderAuthenticationStatus() !== null) {
