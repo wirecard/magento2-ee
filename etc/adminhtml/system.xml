@@ -161,7 +161,12 @@
                 </field>
                 <field id="three_d_min_limit" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Min Limit</label>
-                    <comment>The minimum order amount in your default currency to initialize 3D transactions.</comment>
+                    <comment>
+                        <![CDATA[
+                            The minimum order amount in your default currency to initialize 3D transactions.<br />
+                            <a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>
+                        ]]>
+                    </comment>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
@@ -202,7 +207,12 @@
                 </field>
                 <field id="three_d_min_limit" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Min Limit</label>
-                    <comment>The minimum order amount in your default currency to initialize 3D transactions.</comment>
+                    <comment>
+                        <![CDATA[
+                            The minimum order amount in your default currency to initialize 3D transactions.<br />
+                            <a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>
+                        ]]>
+                    </comment>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
