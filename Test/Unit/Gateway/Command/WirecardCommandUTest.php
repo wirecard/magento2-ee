@@ -130,8 +130,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         $testTransactionServiceFactory->method(self::METHOD_CREATE)->willReturn($this->transactionService);
 
         // Test if the transactionService is created with the correct values
-        $testTransactionServiceFactory->expects($this->Once())->method(self::METHOD_CREATE)
-            ->with($this->equalTo(PayPalTransaction::NAME));
+        $testTransactionServiceFactory->expects($this->Once())->method(self::METHOD_CREATE);
 
         /** @var TransactionServiceFactory $testTransactionServiceFactory */
         $command = new WirecardCommand(

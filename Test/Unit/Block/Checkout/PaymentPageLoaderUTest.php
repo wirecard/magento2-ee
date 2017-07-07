@@ -8,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
+ * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -30,45 +30,29 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Service;
+namespace Wirecard\ElasticEngine\Test\Unit\Block\Checkout;
 
-use Magento\Payment\Gateway\ConfigFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\TransactionService;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Payment\Gateway\ConfigInterface;
+use Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader;
 
-/**
- * Class TransactionServiceFactory
- * @package Wirecard\ElasticEngine\Gateway\Service
- */
-class TransactionServiceFactory
+class PaymentPageLoaderUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ConfigFactoryInterface
-     */
-    private $paymentSdkConfigFactory;
+    const BASE_URL = 'http://base.url';
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * TransactionServiceFactory constructor.
-     * @param LoggerInterface $logger
-     * @param ConfigFactoryInterface $paymentSdkConfigFactory
-     */
-    public function __construct(LoggerInterface $logger, ConfigFactoryInterface $paymentSdkConfigFactory)
+    public function testGetPaymentPageLoaderUrl()
     {
-        $this->logger = $logger;
-        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
-    }
+        $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
 
-    /**
-     * @return TransactionService
-     */
-    public function create()
-    {
-        $txConfig = $this->paymentSdkConfigFactory->create();
-        return new TransactionService($txConfig, $this->logger);
+        $eeConfig = $this->getMock(ConfigInterface::class);
+        $eeConfig->method('getValue')->withConsecutive(
+            ['credentials/base_url'],
+            ['credentials/http_user'],
+            ['credentials/http_pass'],
+            ['settings/public_key']
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key');
+
+        $paymentPageLoader = new PaymentPageLoader($context, $eeConfig);
+        $this->assertEquals(self::BASE_URL . '/engine/hpp/paymentPageLoader.js', $paymentPageLoader->getPaymentPageLoaderUrl());
     }
 }

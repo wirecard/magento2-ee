@@ -8,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
+ * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -30,45 +30,35 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Service;
+namespace Wirecard\ElasticEngine\Block\Checkout;
 
-use Magento\Payment\Gateway\ConfigFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\TransactionService;
+use Magento\Framework\View\Element\Template;
+use Magento\Payment\Gateway\ConfigInterface;
 
-/**
- * Class TransactionServiceFactory
- * @package Wirecard\ElasticEngine\Gateway\Service
- */
-class TransactionServiceFactory
+class PaymentPageLoader extends Template
 {
     /**
-     * @var ConfigFactoryInterface
+     * @var ConfigInterface
      */
-    private $paymentSdkConfigFactory;
-
+    private $eeConfig;
     /**
-     * @var LoggerInterface
+     * Constructor
+     *
+     * @param Template\Context $context
+     * @param ConfigInterface $eeConfig,
+     * @param array $data
      */
-    private $logger;
-
-    /**
-     * TransactionServiceFactory constructor.
-     * @param LoggerInterface $logger
-     * @param ConfigFactoryInterface $paymentSdkConfigFactory
-     */
-    public function __construct(LoggerInterface $logger, ConfigFactoryInterface $paymentSdkConfigFactory)
-    {
-        $this->logger = $logger;
-        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
+    public function __construct(
+        Template\Context $context,
+        ConfigInterface $eeConfig,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
+        $this->eeConfig = $eeConfig;
     }
 
-    /**
-     * @return TransactionService
-     */
-    public function create()
+    public function getPaymentPageLoaderUrl()
     {
-        $txConfig = $this->paymentSdkConfigFactory->create();
-        return new TransactionService($txConfig, $this->logger);
+        return $this->eeConfig->getValue('credentials/base_url') . '/engine/hpp/paymentPageLoader.js';
     }
 }

@@ -35,78 +35,69 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Request\Http;
-use Magento\Framework\Controller\Result\Redirect as RedirectResult;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
- * Class Redirect
+ * Class Callback
  * @package Wirecard\ElasticEngine\Controller\Frontend
- * @method Http getRequest()
  */
-class Redirect extends Action
+class Callback extends Action
 {
+    const REDIRECT_URL = 'redirect-url';
+
     /**
      * @var Session
      */
-    private $checkoutSession;
+    private $session;
 
     /**
-     * @var TransactionServiceFactory
+     * @var string
      */
-    private $transactionServiceFactory;
-
+    private $baseUrl;
     /**
-     * Redirect constructor.
+     * Callback constructor.
      * @param Context $context
-     * @param Session $checkoutSession
-     * @param TransactionServiceFactory $transactionServiceFactory
+     * @param Session $session
      */
-    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory)
+    public function __construct(Context $context, Session $session)
     {
-        $this->checkoutSession = $checkoutSession;
-        $this->transactionServiceFactory = $transactionServiceFactory;
         parent::__construct($context);
+        $this->session = $session;
+        $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
     }
 
     /**
-     * @return RedirectResult
+     * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
-        /**
-         * @var $resultRedirect RedirectResult
-         */
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+        $data = [
+            self::REDIRECT_URL => null,
+            'form-url' => null,
+            'form-method' => null,
+            'form-fields' => null
+        ];
 
-        if ($this->getRequest()->isPost()) {
-            $transactionService = $this->transactionServiceFactory->create();
-            $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
+        if ($this->session->hasRedirectUrl()) {
+            $data[self::REDIRECT_URL] = $this->session->getRedirectUrl();
+            $this->session->unsRedirectUrl();
+        } elseif ($this->session->hasFormUrl()) {
+            $data['form-url'] = $this->session->getFormUrl();
+            $data['form-method'] = $this->session->getFormMethod();
+            $data['form-fields'] = $this->session->getFormFields();
 
-            if ($result instanceof SuccessResponse) {
-                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
-            } else {
-                $this->checkoutSession->restoreQuote();
-                $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
-                $this->setRedirectPath($resultRedirect, 'checkout/cart');
-            }
+            $this->session->unsFormUrl();
+            $this->session->unsFormMethod();
+            $this->session->unsFormFields();
         } else {
-            $this->checkoutSession->restoreQuote();
-            $this->setRedirectPath($resultRedirect, 'checkout/cart');
+            $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
         }
 
-        return $resultRedirect;
-    }
+        /** @var Json $result */
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result->setData($data);
 
-    /**
-     * @param RedirectResult $resultRedirect
-     * @param String $path
-     * @return RedirectResult
-     */
-    private function setRedirectPath(RedirectResult $resultRedirect, $path)
-    {
-        return $resultRedirect->setPath($path, ['_secure' => true]);
+        return $result;
     }
 }

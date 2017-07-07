@@ -34,18 +34,31 @@ namespace Wirecard\ElasticEngine\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 
 class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'wirecard_elasticengine_paypal';
+    const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
+    const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
+    const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
 
     /**
      * @var Repository
      */
     private $assetRepository;
 
-    public function __construct(Repository $assetRepo)
+    /**
+     * @var TransactionServiceFactory
+     */
+    private $transactionServiceFactory;
+    /**
+     * ConfigProvider constructor.
+     * @param TransactionServiceFactory $transactionServiceFactory
+     * @param Repository $assetRepo
+     */
+    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo)
     {
+        $this->transactionServiceFactory = $transactionServiceFactory;
         $this->assetRepository = $assetRepo;
     }
 
@@ -57,10 +70,28 @@ class ConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {
         return [
-            'payment' => [
-                self::CODE => [
-                    'logo_url' => $this->getLogoUrl(self::CODE),
-                ]
+            'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
+                $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
+                $this->getConfigForCreditCard(self::MAESTRO_CODE)
+        ];
+    }
+
+    private function getConfigForPaymentMethod($paymentMethodName)
+    {
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+            ]
+        ];
+    }
+
+    private function getConfigForCreditCard($paymentMethodName)
+    {
+        $transactionService = $this->transactionServiceFactory->create();
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi(), true)
             ]
         ];
     }

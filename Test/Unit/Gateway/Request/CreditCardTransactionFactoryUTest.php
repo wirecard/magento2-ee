@@ -35,24 +35,21 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
-use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
-use Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\ElasticEngine\Gateway\Request\CreditCardTransactionFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
-class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
+class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
+    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
     const ORDER_ID = '1234567';
 
     private $urlBuilder;
@@ -60,10 +57,6 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $resolver;
 
     private $storeManager;
-
-    private $basketFactory;
-
-    private $accountHolderFactory;
 
     private $config;
 
@@ -87,28 +80,19 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
         $this->storeManager->method('getStore')->willReturn($store);
 
-        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
-        $this->basketFactory->method('create')->willReturn(new Basket());
-
-        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
-        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
-
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
-
-        $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $address->method('getEmail')->willReturn('test@example.com');
-        $address->method('getFirstname')->willReturn('Joe');
-        $address->method('getLastname')->willReturn('Doe');
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
-        $this->order->method('getBillingAddress')->willReturn($address);
-        $this->order->method('getShippingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
+
+        $paymentInfo = $this->getMockForAbstractClass(InfoInterface::class);
+        $paymentInfo->method('getAdditionalInformation')->willReturn('mypersonaltoken');
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
+        $this->payment->method('getPayment')->willReturn($paymentInfo);
         $this->payment->method('getOrder')->willReturn($this->order);
 
         $this->commandSubject = ['payment' => $this->payment];
@@ -116,57 +100,28 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateMinimum()
     {
-        $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transaction = new CreditCardTransaction();
+        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction);
 
         $expected = $this->minimumExpectedTransaction();
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
-    }
-
-    public function testCreateSetsDescriptor()
-    {
-        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
-
-        $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setDescriptor('My shop n ' . self::ORDER_ID);
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
-    }
-
-    public function testCreateSetsBasket()
-    {
-        $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
-
-        $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setBasket(new Basket());
 
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
 
     /**
-     * @return PayPalTransaction
+     * @return CreditCardTransaction
      */
     private function minimumExpectedTransaction()
     {
-        $expected = new PayPalTransaction();
-        $expected->setAccountHolder(new AccountHolder());
-        $expected->setShipping(new AccountHolder());
-        $expected->setOrderNumber(self::ORDER_ID);
-        $expected->setOrderDetail('test@example.com Joe Doe');
-
+        $expected = new CreditCardTransaction();
+        $expected->setTokenId('mypersonaltoken');
+        $expected->setTermUrl(self::REDIRECT_URL);
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
+            self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            self::REDIRECT_URL));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));

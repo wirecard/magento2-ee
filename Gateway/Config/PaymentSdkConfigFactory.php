@@ -37,7 +37,10 @@ use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 /**
  * Class PaymentSDKConfig
@@ -51,9 +54,9 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     private $eeConfig;
 
     /**
-     * @var ConfigInterface
+     * @var ConfigInterface[]
      */
-    private $methodConfig;
+    private $methodConfigs;
 
     /**
      * @var ModuleListInterface
@@ -68,18 +71,18 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     /**
      * PaymentSDKConfigFactory constructor.
      * @param ConfigInterface $eeConfig
-     * @param ConfigInterface $methodConfig
+     * @param ConfigInterface[] $methodConfigs
      * @param ProductMetadata $productMetadata
      * @param ModuleListInterface $moduleList
      */
     public function __construct(
         ConfigInterface $eeConfig,
-        ConfigInterface $methodConfig,
+        array $methodConfigs,
         ProductMetadata $productMetadata,
         ModuleListInterface $moduleList
     ) {
         $this->eeConfig = $eeConfig;
-        $this->methodConfig = $methodConfig;
+        $this->methodConfigs = $methodConfigs;
         $this->moduleList = $moduleList;
         $this->productMetadata = $productMetadata;
     }
@@ -102,12 +105,17 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $config->setPublicKey($publicKey);
         }
 
-        if ($paymentCode !== null) {
-            $methodSdkConfig = new PaymentMethodConfig(
-                $paymentCode,
-                $this->methodConfig->getValue('merchant_account_id'),
-                $this->methodConfig->getValue('secret')
-            );
+        foreach ($this->methodConfigs as $name => $methodConfig) {
+            if ($name === CreditCardTransaction::NAME) {
+                $methodSdkConfig = $this->getCreditCardConfig($methodConfig);
+            } else {
+                $methodSdkConfig = new PaymentMethodConfig(
+                    $name,
+                    $methodConfig->getValue('merchant_account_id'),
+                    $methodConfig->getValue('secret')
+                );
+            }
+
             $config->add($methodSdkConfig);
         }
 
@@ -121,5 +129,40 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         );
 
         return $config;
+    }
+
+    /**
+     * @param \Magento\Payment\Gateway\Config\Config $config
+     * @return CreditCardConfig
+     */
+    private function getCreditCardConfig($config)
+    {
+        $methodSdkConfig = new CreditCardConfig(
+            $config->getValue('merchant_account_id'),
+            $config->getValue('secret')
+        );
+
+        if ($config->getValue('three_d_merchant_account_id') !== '') {
+            $methodSdkConfig->setThreeDCredentials(
+                $config->getValue('three_d_merchant_account_id'),
+                $config->getValue('three_d_secret')
+            );
+        }
+
+        if ($config->getValue('ssl_max_limit') !== '') {
+            $methodSdkConfig->addSslMaxLimit(new Amount(
+                $config->getValue('ssl_max_limit'),
+                $this->eeConfig->getValue('settings/default_currency')
+            ));
+        }
+
+        if ($config->getValue('three_d_min_limit') !== '') {
+            $methodSdkConfig->addThreeDMinLimit(new Amount(
+                $config->getValue('three_d_min_limit'),
+                $this->eeConfig->getValue('settings/default_currency')
+            ));
+        }
+
+        return $methodSdkConfig;
     }
 }
