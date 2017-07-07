@@ -37,9 +37,14 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Authorization;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Adminhtml\Test\Credentials;
 
+/**
+ * Class CredentialsTest
+ * @package Wirecard\ElasticEngine\Test\Unit\Adminhtml\Test
+ * @method _isAllowed()
+ */
 class CredentialsTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -53,29 +58,23 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
     private $resultJsonFactory;
 
     /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    /**
-     * @var Json
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $json;
 
     /**
-     * @var Request
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $request;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function setUp()
     {
-        $this->objectManager = new ObjectManager($this);
-
-        $context = $this->getMock(Context::class, [
-            'getRequest',
-            'getAuthorization',
-            'getObjectManager'
-        ], [], '', false);
+        $context = $this->getMock(Context::class, [], [], '', false);
 
         $authorization = $this->getMock(Authorization::class, ['isAllowed'], [], '', false);
         $authorization->method('isAllowed')->willReturn(true);
@@ -84,18 +83,14 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
         $this->request = $this->getMock(Request::class, ['getParams'], [], '', false);
         $context->method('getRequest')->willReturn($this->request);
 
-        $objectManager = $this->getMock(\Magento\Framework\App\ObjectManager::class, ['get'], [], '', false);
-        $context->method('getObjectManager')->willReturn($objectManager);
-
         $this->json = $this->getMock(Json::class, ['setData'], [], '', false);
         $this->resultJsonFactory = $this->getMock(JsonFactory::class, ['create'], [], '', false);
         $this->resultJsonFactory->method('create')->willReturn($this->json);
 
-        $data = [
-            'context' => $context,
-            'resultJsonFactory' => $this->resultJsonFactory
-        ];
-        $this->instance = $this->objectManager->getObject(Credentials::class, $data);
+        $this->logger = $this->getMock(LoggerInterface::class);
+
+        /** @var Context $context */
+        $this->instance = new Credentials($context, $this->resultJsonFactory, $this->logger);
     }
 
     public function testConstructor()

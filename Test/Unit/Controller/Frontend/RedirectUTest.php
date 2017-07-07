@@ -1,0 +1,150 @@
+<?php
+/**
+ * Shop System Plugins - Terms of Use
+ *
+ * The plugins offered are provided free of charge by Wirecard Central Eastern Europe GmbH
+ * (abbreviated to Wirecard CEE) and are explicitly not part of the Wirecard CEE range of
+ * products and services.
+ *
+ * They have been tested and approved for full functionality in the standard configuration
+ * (status on delivery) of the corresponding shop system. They are under General Public
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
+ * the same terms.
+ *
+ * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
+ * occurring when used in an enhanced, customized shop system configuration.
+ *
+ * Operation in an enhanced, customized configuration is at your own risk and requires a
+ * comprehensive test phase by the user of the plugin.
+ *
+ * Customers use the plugins at their own risk. Wirecard CEE does not guarantee their full
+ * functionality neither does Wirecard CEE assume liability for any disadvantages related to
+ * the use of the plugins. Additionally, Wirecard CEE does not guarantee the full functionality
+ * for customized shop systems or installed plugins of other vendors of plugins within the same
+ * shop system.
+ *
+ * Customers are responsible for testing the plugin's functionality before starting productive
+ * operation.
+ *
+ * By installing the plugin into the shop system the customer agrees to these terms of use.
+ * Please do not use the plugin if you do not agree to these terms of use!
+ */
+
+namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
+
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Response\Http;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Translate\InlineInterface;
+use Magento\Framework\UrlInterface;
+use Wirecard\ElasticEngine\Controller\Frontend\Redirect;
+
+class RedirectUTest extends \PHPUnit_Framework_TestCase
+{
+    const HAS_REDIRECT_URL = 'hasRedirectUrl';
+    const RESPONSE_JSON = 'representJson';
+
+    private $resultFactory;
+
+    private $context;
+
+    /**
+     * @var Json
+     */
+    private $json;
+
+    private $session;
+
+    private $response;
+
+    public function setUp()
+    {
+        $inline = $this->getMockForAbstractClass(InlineInterface::class);
+        $inline->method('processResponseBody')->willReturn(null);
+
+        $this->json = new Json($inline);
+
+        $this->resultFactory = $this->getMOckBuilder(ResultFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+
+        $this->resultFactory->method('create')->willReturn($this->json);
+
+        $urlBuilder = $this->getMock(UrlInterface::class);
+        $urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
+        $this->context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getResultFactory', 'getUrl'])
+            ->getMock();
+        $this->context->method('getUrl')->willReturn($urlBuilder);
+
+        $this->context->method('getResultFactory')->willReturn($this->resultFactory);
+
+        $this->session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getRedirectUrl', self::HAS_REDIRECT_URL, 'unsRedirectUrl'])
+            ->getMock();
+        $this->session->method('getRedirectUrl')->willReturn('http://redir.ect');
+
+        $this->response = $this->getMockBuilder(Http::class)
+            ->disableOriginalConstructor()
+            ->setMethods([self::RESPONSE_JSON])
+            ->getMock();
+    }
+
+    public function testGetRedirectUnsetsRedirect()
+    {
+        /** @var \PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock = $this->session;
+        $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(true);
+        $sessionMock->expects($this->once())->method('unsRedirectUrl');
+
+        /** @var $sessionMock Session */
+        $redirect = new Redirect($this->context, $sessionMock);
+        $redirect->execute();
+    }
+
+    public function testGetRedirectWhenSet()
+    {
+        /** @var \PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock = $this->session;
+        $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(true);
+
+        /** @var Session $sessionMock */
+        $redirect = new Redirect($this->context, $sessionMock);
+        $result = $redirect->execute();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
+        $responseMock = $this->response;
+        $responseMock->expects($this->once())
+            ->method(self::RESPONSE_JSON)
+            ->with('{"redirect-url":"http:\/\/redir.ect"}');
+
+        /** @var $responseMock ResponseInterface */
+        $result->renderResult($responseMock);
+    }
+
+    public function testGetRedirectWhenNotSet()
+    {
+        /** @var \PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock = $this->session;
+        $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(false);
+
+        /** @var Session $sessionMock */
+        $redirect = new Redirect($this->context, $sessionMock);
+        $result = $redirect->execute();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
+        $responseMock = $this->response;
+        $responseMock->expects($this->once())
+            ->method(self::RESPONSE_JSON)
+            ->with('{"redirect-url":"http:\/\/magen.to\/frontend\/failure"}');
+
+        /** @var $responseMock ResponseInterface */
+        $result->renderResult($responseMock);
+    }
+}

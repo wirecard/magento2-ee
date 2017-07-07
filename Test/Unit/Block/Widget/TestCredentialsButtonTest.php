@@ -42,6 +42,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\Url;
 use Magento\Framework\View\Element\Template\File\Resolver;
 use Magento\Framework\View\Element\Template\File\Validator;
+use Magento\Framework\View\LayoutInterface;
 use Magento\TestFramework\EventManager;
 use Monolog\Logger;
 use Wirecard\ElasticEngine\Block\Widget\TestCredentialsButton;
@@ -63,11 +64,6 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $storeManagerMock;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $layoutMock;
 
     public function setUp()
     {
@@ -107,7 +103,7 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
 
         $this->instance = $this->objectManager->getObject(TestCredentialsButton::class, $data);
 
-        $this->layoutMock = $this->getMockBuilder('Magento\Framework\View\Layout')
+        $layoutMock = $this->getMockBuilder('Magento\Framework\View\Layout')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -117,8 +113,10 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
         $button->method('setData')->willReturn($button);
         $button->method('toHtml')->willReturn(self::BUTTON);
 
-        $this->layoutMock->method('createBlock')->willReturn($button);
-        $this->instance->setLayout($this->layoutMock);
+        $layoutMock->method('createBlock')->willReturn($button);
+
+        /** @var $layoutMock LayoutInterface */
+        $this->instance->setLayout($layoutMock);
     }
 
     public function testConstructor()
@@ -132,6 +130,7 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
         $element = $this->getMock(AbstractElement::class, ['unScope', 'getHtmlId', 'getScope', 'getLabel'], [], '',
             false);
 
+        /** @var $element AbstractElement */
         $this->assertEquals('<tr id="row_"><td class="label"><label for=""><span></span></label></td><td class="value"></td><td class=""></td></tr>',
             $this->instance->render($element));
     }

@@ -8,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -30,68 +30,46 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Controller\Adminhtml\Test;
+namespace Wirecard\ElasticEngine\Gateway\Service;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\Controller\Result\Json;
-use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
-class Credentials extends Action
+/**
+ * Class TransactionServiceFactory
+ * @package Wirecard\ElasticEngine\Gateway\Service
+ */
+class TransactionServiceFactory
 {
-
     /**
-     * @var JsonFactory
+     * @var ConfigFactoryInterface
      */
-    protected $resultJsonFactory;
+    private $paymentSdkConfigFactory;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
 
     /**
-     * Credentials constructor.
-     * @param Context $context
-     * @param JsonFactory $resultJsonFactory
+     * TransactionServiceFactory constructor.
      * @param LoggerInterface $logger
+     * @param ConfigFactoryInterface $paymentSdkConfigFactory
      */
-    public function __construct(Context $context, JsonFactory $resultJsonFactory, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, ConfigFactoryInterface $paymentSdkConfigFactory)
     {
-        $this->resultJsonFactory = $resultJsonFactory;
         $this->logger = $logger;
-        parent::__construct($context);
+        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
     }
 
     /**
-     * @return Json
+     * @param $methodCode
+     * @return TransactionService
      */
-    public function execute()
+    public function create($methodCode)
     {
-        $data = $this->getRequest()->getParams();
-
-        $config = new Config($data['baseUrl'], $data['httpUser'], $data['httpPass']);
-        $transactionService = new TransactionService($config, $this->logger);
-
-        $message = __('Please check your credentials.');
-        if ($valid = $transactionService->checkCredentials()) {
-            $message = __('Credentials correct.');
-        }
-
-        $result = $this->resultJsonFactory->create();
-        return $result->setData(['valid' => $valid, 'message' => $message]);
-    }
-
-    /**
-     * Check currently called action by permissions for current user
-     *
-     * @return bool
-     */
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Magento_Payment::payment');
+        $txConfig = $this->paymentSdkConfigFactory->create($methodCode);
+        return new TransactionService($txConfig, $this->logger);
     }
 }

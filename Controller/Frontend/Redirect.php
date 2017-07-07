@@ -8,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -30,68 +30,57 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Controller\Adminhtml\Test;
+namespace Wirecard\ElasticEngine\Controller\Frontend;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
-use Magento\Framework\Controller\Result\JsonFactory;
-use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\TransactionService;
+use Magento\Framework\Controller\ResultFactory;
 
-class Credentials extends Action
+/**
+ * Class Redirect
+ * @package Wirecard\ElasticEngine\Controller\Frontend
+ */
+class Redirect extends Action
 {
-
     /**
-     * @var JsonFactory
+     * @var Session
      */
-    protected $resultJsonFactory;
+    private $session;
 
     /**
-     * @var LoggerInterface
+     * @var string
      */
-    protected $logger;
-
+    private $baseUrl;
     /**
-     * Credentials constructor.
+     * Redirect constructor.
      * @param Context $context
-     * @param JsonFactory $resultJsonFactory
-     * @param LoggerInterface $logger
+     * @param Session $session
      */
-    public function __construct(Context $context, JsonFactory $resultJsonFactory, LoggerInterface $logger)
+    public function __construct(Context $context, Session $session)
     {
-        $this->resultJsonFactory = $resultJsonFactory;
-        $this->logger = $logger;
         parent::__construct($context);
+        $this->session = $session;
+        $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
     }
 
     /**
-     * @return Json
+     * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
-        $data = $this->getRequest()->getParams();
-
-        $config = new Config($data['baseUrl'], $data['httpUser'], $data['httpPass']);
-        $transactionService = new TransactionService($config, $this->logger);
-
-        $message = __('Please check your credentials.');
-        if ($valid = $transactionService->checkCredentials()) {
-            $message = __('Credentials correct.');
+        if ($this->session->hasRedirectUrl()) {
+            $redirectUrl = $this->session->getRedirectUrl();
+            $this->session->unsRedirectUrl();
+        } else {
+            $redirectUrl = $this->baseUrl . 'frontend/failure';
         }
 
-        $result = $this->resultJsonFactory->create();
-        return $result->setData(['valid' => $valid, 'message' => $message]);
-    }
+        /** @var Json $result */
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result->setData(['redirect-url' => $redirectUrl]);
 
-    /**
-     * Check currently called action by permissions for current user
-     *
-     * @return bool
-     */
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Magento_Payment::payment');
+        return $result;
     }
 }

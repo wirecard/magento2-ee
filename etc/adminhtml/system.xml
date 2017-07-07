@@ -32,7 +32,7 @@
 */
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Magento_Config/etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="wirecard_elasticengine" translate="label" sortOrder="10">
             <label>Wirecard Elastic Engine</label>
@@ -65,7 +65,7 @@
                         Wirecard CEE will only be made liable for specifications and functions as described within this documentation. No warranty whatsoever can be granted on any alterations and/or new implementations as well as resulting diverging usage not supported or described within this documentation.
                     ]]>
                 </comment>
-                <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"></field>
+                <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"/>
             </group>
             <group id="credentials" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Credentials</label>
@@ -89,6 +89,10 @@
                     <label>Default Currency</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
                 </field>
+                <field id="public_key" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Public Key</label>
+                    <comment>If a public certificate (format x.509 PEM) is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers</comment>
+                </field>
             </group>
         </section>
         <section id="payment">
@@ -98,11 +102,35 @@
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="merchant_account_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account Id</label>
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Title</label>
                 </field>
-                <field id="secret" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Merchant Account ID</label>
+                </field>
+                <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Key</label>
+                </field>
+                <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Payment Action</label>
+                    <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
+                </field>
+                <field id="send_shopping_basket" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Shopping Basket</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="send_descriptor" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Descriptor</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Sort Order</label>
+                    <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
         </section>
