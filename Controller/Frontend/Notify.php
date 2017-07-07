@@ -32,8 +32,10 @@
 
 namespace Wirecard\ElasticEngine\Controller\Frontend;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -43,7 +45,6 @@ use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 /**
  * Class Notify
@@ -70,17 +71,24 @@ class Notify extends Action
     private $logger;
 
     /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * Notify constructor.
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
-    public function __construct(Context $context, TransactionServiceFactory $transactionServiceFactory, OrderRepositoryInterface $orderRepository, LoggerInterface $logger)
+    public function __construct(Context $context, TransactionServiceFactory $transactionServiceFactory, OrderRepositoryInterface $orderRepository, LoggerInterface $logger, SearchCriteriaBuilder $searchCriteriaBuilder)
     {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
 
         parent::__construct($context);
     }
@@ -97,7 +105,7 @@ class Notify extends Action
         $payload = $this->getRequest()->getContent();
         $this->logger->debug('Engine response: ' . $payload);
         try {
-            $transactionService = $this->transactionServiceFactory->create(PayPalTransaction::NAME);
+            $transactionService = $this->transactionServiceFactory->create();
             //handle response
             $response = $transactionService->handleNotification($payload);
         } catch (\InvalidArgumentException $e) {
@@ -113,10 +121,13 @@ class Notify extends Action
         //retrieve order id from response
         $orderId = $response->getCustomFields()->get('orderId');
 
-        /**
-         * @var $order Order
-         */
-        $order = $this->orderRepository->get($orderId);
+        try {
+            $order = $this->getOrderByIncrementId($orderId);
+        } catch (NoSuchEntityException $e) {
+            $this->logger->warning(sprintf('Order with orderID %s not found.', $orderId));
+            return;
+        }
+
         if ($response instanceof SuccessResponse) {
             if ($order->getStatus() !== Order::STATE_COMPLETE) {
                 if ($response->isValidSignature()) {
@@ -181,6 +192,21 @@ class Notify extends Action
         if ($response->getProviderTransactionReference() !== null) {
             $additionalInfo['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
         }
+
+        if ($response->getMaskedAccountNumber() !== null) {
+            $additionalInfo['maskedAccountNumber'] = $response->getMaskedAccountNumber();
+        }
+
+        try {
+            $additionalInfo['authorizationCode'] = $response->findElement('authorization-code');
+        } catch (MalformedResponseException $e) {
+            //Is only triggered if it is not included. e.g. not a credit card transaction
+        }
+
+        if ($response->getCardholderAuthenticationStatus() !== null) {
+            $additionalInfo['cardholderAuthenticationStatus'] = $response->getCardholderAuthenticationStatus();
+        }
+
         if ($additionalInfo !== []) {
             $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additionalInfo);
         }
@@ -190,5 +216,27 @@ class Notify extends Action
 
         $payment->addTransaction($response->getTransactionType());
         return $payment;
+    }
+
+    /**
+     * @param $orderId
+     * @throws NoSuchEntityException
+     * @return Order
+     */
+    private function getOrderByIncrementId($orderId)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter(
+            OrderInterface::INCREMENT_ID,
+            $orderId
+        )->create();
+        $result = $this->orderRepository->getList($searchCriteria);
+
+        if (empty($result->getItems())) {
+            throw new NoSuchEntityException(__('No such order.'));
+        }
+
+        $orders = $result->getItems();
+
+        return reset($orders);
     }
 }

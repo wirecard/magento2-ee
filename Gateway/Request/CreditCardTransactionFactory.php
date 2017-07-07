@@ -35,55 +35,37 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\CustomField;
-use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
-use Wirecard\PaymentSdk\Entity\Redirect;
+use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class TransactionFactory
+ * Class CreditCardTransactionFactory
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
-class TransactionFactory
+class CreditCardTransactionFactory extends TransactionFactory
 {
-    const PAYMENT = 'payment';
-
     /**
-     * @var UrlInterface
-     */
-    protected $urlBuilder;
-
-    /**
-     * @var ResolverInterface
-     */
-    protected $resolver;
-
-    /**
-     * @var Transaction
+     * @var CreditCardTransaction
      */
     protected $transaction;
 
     /**
-     * @var string
-     */
-    protected $orderId;
-
-    /**
-     * TransactionFactory constructor.
+     * CreditCardTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
+     * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
+        StoreManagerInterface $storeManager,
         Transaction $transaction
     ) {
-        $this->urlBuilder = $urlBuilder;
-        $this->resolver = $resolver;
-        $this->transaction = $transaction;
+        parent::__construct($urlBuilder, $resolver, $transaction);
     }
 
     /**
@@ -94,34 +76,15 @@ class TransactionFactory
      */
     public function create($commandSubject)
     {
-        if (!isset($commandSubject[self::PAYMENT])
-            || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
-        ) {
-            throw new \InvalidArgumentException('Payment data object should be provided.');
-        }
+        parent::create($commandSubject);
 
         /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
+        $paymentDO = $commandSubject[self::PAYMENT];
 
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
-        $this->transaction->setAmount($amount);
-
-        $this->orderId = $order->getOrderIncrementId();
-        $customFields = new CustomFieldCollection();
-        $customFields->add(new CustomField('orderId', $this->orderId));
-        $this->transaction->setCustomFields($customFields);
-
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+        $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-
-        $this->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect',
-            $wdBaseUrl . 'frontend/cancel',
-            $wdBaseUrl . 'frontend/redirect'));
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+        $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect');
 
         return $this->transaction;
     }

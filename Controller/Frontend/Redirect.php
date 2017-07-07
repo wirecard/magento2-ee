@@ -35,52 +35,81 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\App\Request\Http;
+use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Class Redirect
  * @package Wirecard\ElasticEngine\Controller\Frontend
+ * @method Http getRequest()
  */
 class Redirect extends Action
 {
     /**
      * @var Session
      */
-    private $session;
+    private $checkoutSession;
 
     /**
-     * @var string
+     * @var TransactionServiceFactory
      */
-    private $baseUrl;
+    private $transactionServiceFactory;
+
     /**
      * Redirect constructor.
      * @param Context $context
-     * @param Session $session
+     * @param Session $checkoutSession
+     * @param TransactionServiceFactory $transactionServiceFactory
      */
-    public function __construct(Context $context, Session $session)
+    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory)
     {
+        $this->checkoutSession = $checkoutSession;
+        $this->transactionServiceFactory = $transactionServiceFactory;
         parent::__construct($context);
-        $this->session = $session;
-        $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return RedirectResult
      */
     public function execute()
     {
-        if ($this->session->hasRedirectUrl()) {
-            $redirectUrl = $this->session->getRedirectUrl();
-            $this->session->unsRedirectUrl();
+        /**
+         * @var $resultRedirect RedirectResult
+         */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+
+        if ($this->getRequest()->isPost()) {
+            $transactionService = $this->transactionServiceFactory->create();
+            $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
+
+            if ($result instanceof SuccessResponse) {
+                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
+            } elseif ($result instanceof FailureResponse) {
+                $this->checkoutSession->restoreQuote();
+                $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
+                $this->setRedirectPath($resultRedirect, 'checkout/cart');
+            } else {
+                $this->messageManager->addNoticeMessage(__('Final state of transaction could not be determined.'));
+            }
         } else {
-            $redirectUrl = $this->baseUrl . 'frontend/failure';
+            $this->checkoutSession->restoreQuote();
+            $this->setRedirectPath($resultRedirect, 'checkout/cart');
         }
 
-        /** @var Json $result */
-        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $result->setData(['redirect-url' => $redirectUrl]);
+        return $resultRedirect;
+    }
 
-        return $result;
+    /**
+     * @param RedirectResult $resultRedirect
+     * @param String $path
+     * @return RedirectResult
+     */
+    private function setRedirectPath(RedirectResult $resultRedirect, $path)
+    {
+        return $resultRedirect->setPath($path, ['_secure' => true]);
     }
 }
