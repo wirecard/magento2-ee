@@ -158,16 +158,6 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->controller->execute();
     }
 
-    public function testExecuteInteractionResponse()
-    {
-        $this->setIsPost(true);
-        $interactionResponse = $this->getMockWithoutInvokingTheOriginalConstructor(InteractionResponse::class);
-        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($interactionResponse);
-
-        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('Final state of transaction could not be determined.'));
-        $this->controller->execute();
-    }
-
     /**
      * @param $value
      */
