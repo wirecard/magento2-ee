@@ -134,8 +134,8 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
                 <three_d_merchant_account_id>508b8896-b37d-4614-845c-26bf8bf2c948</three_d_merchant_account_id>
                 <three_d_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</three_d_secret>
-                <ssl_max_limit>100.0</ssl_max_limit>
-                <three_d_min_limit>50.0</three_d_min_limit>
+                <ssl_max_limit>0.0</ssl_max_limit>
+                <three_d_min_limit></three_d_min_limit>
             </wirecard_elasticengine_maestro>
         </payment>
     </default>
