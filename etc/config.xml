@@ -137,6 +137,24 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <ssl_max_limit>0.0</ssl_max_limit>
                 <three_d_min_limit></three_d_min_limit>
             </wirecard_elasticengine_maestro>
+            <wirecard_elasticengine_sepa>
+                <title>Wirecard SEPA</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>SepaFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>authorize</payment_action>
+                <merchant_account_id>4c901196-eff7-411e-82a3-5ef6b6860d64</merchant_account_id>
+                <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
+                <send_shopping_basket>1</send_shopping_basket>
+                <send_descriptor>1</send_descriptor>
+            </wirecard_elasticengine_sepa>
         </payment>
     </default>
 </config>

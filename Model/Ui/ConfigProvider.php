@@ -41,6 +41,7 @@ class ConfigProvider implements ConfigProviderInterface
     const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
     const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
     const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
+    const SEPA_CODE = 'wirecard_elasticengine_sepa';
 
     /**
      * @var Repository
@@ -72,7 +73,8 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
                 $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
-                $this->getConfigForCreditCard(self::MAESTRO_CODE)
+                $this->getConfigForCreditCard(self::MAESTRO_CODE) +
+                $this->getConfigForPaymentMethod(self::SEPA_CODE)
         ];
     }
 

@@ -104,6 +104,12 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             return $map[$key];
         });
 
+        $methodConfigSepa = $this->getMock(ConfigInterface::class);
+        $methodConfigSepa->method(self::GET_VALUE)->withConsecutive(
+            ['merchant_account_id'],
+            ['secret']
+        )->willReturnOnConsecutiveCalls('account_id_124', 'secret_key');
+
         $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)
             ->disableOriginalConstructor()->getMock();
         $this->productMetadata->method('getName')->willReturn('Magento');
@@ -119,7 +125,8 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             $this->eeConfig,
             [
                 'paypal' => $methodConfigPayPal,
-                'creditcard' => $methodConfigCreditCard
+                'creditcard' => $methodConfigCreditCard,
+                'sepa' => $methodConfigSepa
             ],
             $this->productMetadata,
             $this->moduleList
