@@ -33,9 +33,10 @@ define(
     [
         'jquery',
         'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
-        'mage/translate'
+        'mage/translate',
+        'mage/url'
     ],
-    function ($, Component, $t) {
+    function ($, Component, $t, url) {
         'use strict';
         return Component.extend({
             token_id: null,
