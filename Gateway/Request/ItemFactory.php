@@ -61,12 +61,15 @@ class ItemFactory
         $name = $magentoItemObj->getName();
         $taxAmount = $magentoItemObj->getTaxAmount()/$magentoItemObj->getQtyOrdered();
 
+
         if ($amount * $qty !== $magentoItemObj->getBaseRowTotalInclTax()) {
             $amount = $magentoItemObj->getBaseRowTotalInclTax();
             $name .= ' x' . $qty;
             $qty = 1;
             $taxAmount = $magentoItemObj->getTaxAmount();
         }
+
+        $taxRate = $taxAmount / $amount;
 
         $item = new Item(
             $name,
@@ -75,7 +78,7 @@ class ItemFactory
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxAmount(new Amount($taxAmount, $currency));
+        $item->setTaxRate(number_format($taxRate * 100, 2));
 
         return $item;
     }
