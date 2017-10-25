@@ -70,7 +70,6 @@ class ItemFactory
         }
 
         $taxRate = $taxAmount / $amount;
-
         $item = new Item(
             $name,
             new Amount($amount, $currency),
