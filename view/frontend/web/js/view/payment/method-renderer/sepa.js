@@ -32,15 +32,29 @@
 define(
     [
         'jquery',
-        'Magento_Checkout/js/view/payment/default',
+        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
+        'mage/translate',
         'mage/url'
     ],
-    function ($, Component, url) {
+    function ($, Component, $t, url) {
         'use strict';
         return Component.extend({
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-default',
+                template: 'Wirecard_ElasticEngine/payment/method-sepa',
+                accountOwner: '',
+                bankName: '',
+                bankBic: '',
+                bankAccountIban: '',
                 redirectAfterPlaceOrder: false
+            },
+            initObservable: function () {
+                this._super().observe([
+                    'accountOwner',
+                    'bankName',
+                    'bankBic',
+                    'bankAccountIban'
+                ]);
+                return this;
             },
             initialize: function() {
                 this._super();

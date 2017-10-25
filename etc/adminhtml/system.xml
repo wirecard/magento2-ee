@@ -248,8 +248,14 @@
                 </field>
                 <field id="enable_bic" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Enable BIC presentation</label>
+                    <label>BIC enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="creditor_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Creditor ID</label>
+                </field>
+                <field id="creditor_name" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Creditor name</label>
                 </field>
                 <field id="send_descriptor" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">

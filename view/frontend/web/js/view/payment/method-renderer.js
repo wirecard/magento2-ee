@@ -54,7 +54,7 @@ define(
             },
             {
                 type: 'wirecard_elasticengine_sepa',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/sepa'
             }
         );
         return Component.extend({});
