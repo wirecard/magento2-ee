@@ -61,7 +61,6 @@ class ItemFactory
         $name = $magentoItemObj->getName();
         $taxAmount = $magentoItemObj->getTaxAmount()/$magentoItemObj->getQtyOrdered();
 
-
         if ($amount * $qty !== $magentoItemObj->getBaseRowTotalInclTax()) {
             $amount = $magentoItemObj->getBaseRowTotalInclTax();
             $name .= ' x' . $qty;
