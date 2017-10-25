@@ -37,7 +37,7 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new Item('One Plus 5', new Amount(120.0, 'EUR'), 1);
         $expected->setDescription(self::DESCRIPTION);
         $expected->setArticleNumber(self::SKU);
-        $expected->setTaxAmount(new Amount(20.0, 'EUR'));
+        $expected->setTaxRate(number_format((100 * 20 / 120), 2));
 
         $this->assertEquals($expected, $itemFactory->create($this->orderItem, 'EUR'));
     }
@@ -50,7 +50,7 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new Item('One Plus 5 x1', new Amount(100.0, 'EUR'), 1);
         $expected->setDescription(self::DESCRIPTION);
         $expected->setArticleNumber(self::SKU);
-        $expected->setTaxAmount(new Amount(20.0, 'EUR'));
+        $expected->setTaxRate(number_format((100 * 20 / 100), 2));
 
         $this->assertEquals($expected, $itemFactory->create($this->orderItem, 'EUR'));
     }
