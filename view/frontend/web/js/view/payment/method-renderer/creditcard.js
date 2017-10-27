@@ -33,9 +33,10 @@ define(
     [
         'jquery',
         'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
-        'mage/translate'
+        'mage/translate',
+        'mage/url'
     ],
-    function ($, Component, $t) {
+    function ($, Component, $t, url) {
         'use strict';
         return Component.extend({
             token_id: null,
@@ -118,7 +119,7 @@ define(
                 return this._super();
             },
             afterPlaceOrder: function () {
-                $.get("/wirecard_elasticengine/frontend/callback", function (data) {
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
                     if (data['form-url']) {
                         var form = $('<form />', {action: data['form-url'], method: data['form-method']});
 

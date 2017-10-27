@@ -32,9 +32,10 @@
 define(
     [
         'jquery',
-        'Magento_Checkout/js/view/payment/default'
+        'Magento_Checkout/js/view/payment/default',
+        'mage/url'
     ],
-    function ($, Component) {
+    function ($, Component, url) {
         'use strict';
         return Component.extend({
             defaults: {
@@ -49,7 +50,7 @@ define(
                 return this.config.logo_url;
             },
             afterPlaceOrder: function () {
-                $.get("/wirecard_elasticengine/frontend/callback", function (data) {
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
                     window.location.replace(data["redirect-url"]);
                 });
             }
