@@ -152,7 +152,6 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <payment_action>authorize</payment_action>
                 <merchant_account_id>4c901196-eff7-411e-82a3-5ef6b6860d64</merchant_account_id>
                 <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
-                <send_shopping_basket>1</send_shopping_basket>
                 <send_descriptor>1</send_descriptor>
             </wirecard_elasticengine_sepa>
         </payment>

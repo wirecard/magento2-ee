@@ -40,6 +40,8 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\Entity\Mandate;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
  * Class SepaTransactionFactory
@@ -48,14 +50,9 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 class SepaTransactionFactory extends TransactionFactory
 {
     /**
-     * @var PayPalTransaction
+     * @var SepaTransaction
      */
     protected $transaction;
-
-    /**
-     * @var AccountHolderFactory
-     */
-    private $accountHolderFactory;
 
     /**
      * @var ConfigInterface
@@ -68,7 +65,7 @@ class SepaTransactionFactory extends TransactionFactory
     private $storeManager;
 
     /**
-     * PayPalTransactionFactory constructor.
+     * SepaTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
@@ -81,13 +78,11 @@ class SepaTransactionFactory extends TransactionFactory
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
-        AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->storeManager = $storeManager;
-        $this->accountHolderFactory = $accountHolderFactory;
         $this->methodConfig = $methodConfig;
     }
 
@@ -104,24 +99,17 @@ class SepaTransactionFactory extends TransactionFactory
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
 
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
-        $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $billingAddress->getEmail(),
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        ));
+        $mandate = new Mandate('12345678');
 
-        if ($this->methodConfig->getValue('send_descriptor')) {
-            $this->transaction->setDescriptor(sprintf('%s %s',
-                substr($this->storeManager->getStore()->getName(), 0, 9),
-                $this->orderId
-            ));
-        }
+        $accountHolder = new AccountHolder();
+        $accountHolder->setLastName('Doe');
+        $accountHolder->setFirstName('Jane');
+        $this->transaction->setAccountHolder($accountHolder);
+        $this->transaction->setIban('DE42512308000000060004');
+        $this->transaction->setBic('WIREDEMMXXX');
+        $this->transaction->setMandate($mandate);
+
 
         return $this->transaction;
     }

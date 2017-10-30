@@ -32,29 +32,15 @@
 define(
     [
         'jquery',
-        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
-        'mage/translate',
+        'Magento_Checkout/js/view/payment/default',
         'mage/url'
     ],
-    function ($, Component, $t, url) {
+    function ($, Component, url) {
         'use strict';
         return Component.extend({
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-sepa',
-                accountOwner: '',
-                bankName: '',
-                bankBic: '',
-                bankAccountIban: '',
+                template: 'Wirecard_ElasticEngine/payment/method-default',
                 redirectAfterPlaceOrder: false
-            },
-            initObservable: function () {
-                this._super().observe([
-                    'accountOwner',
-                    'bankName',
-                    'bankBic',
-                    'bankAccountIban'
-                ]);
-                return this;
             },
             initialize: function() {
                 this._super();
@@ -65,7 +51,20 @@ define(
             },
             afterPlaceOrder: function () {
                 $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {
-                    window.location.replace(data["redirect-url"]);
+                    if (data['form-url']) {
+                        var form = $('<form />', {action: data['form-url'], method: data['form-method']});
+
+                        for (var i = 0; i < data['form-fields'].length; i++) {
+                            form.append($('<input />', {
+                                type: 'hidden',
+                                name: data['form-fields'][i]['key'],
+                                value: data['form-fields'][i]['value']
+                            }));
+                        }
+                        form.appendTo('body').submit();
+                    } else {
+                        window.location.replace(data['redirect-url']);
+                    }
                 });
             }
         });
