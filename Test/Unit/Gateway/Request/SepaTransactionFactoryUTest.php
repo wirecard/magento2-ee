@@ -38,6 +38,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory;
@@ -67,6 +68,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $commandSubject;
 
+    private $paymentInterface;
+
     public function setUp()
     {
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
@@ -95,9 +98,17 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getShippingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
+
+        $this->paymentInterface = $this->getMockBuilder(InfoInterface::class)->disableOriginalConstructor()->getMock();
+        $this->paymentInterface->method('getAdditionalInformation')->with('accountFirstName')->willReturn('Jane');
+        $this->paymentInterface->method('getAdditionalInformation')->with('accountLastName')->willReturn('Doe');
+        $this->paymentInterface->method('getAdditionalInformation')->with('bankAccountIban')->willReturn('DE42512308000000060004');
+        $this->paymentInterface->method('getAdditionalInformation')->with('bankBic')->willReturn('WIREDEMMXXX');
+
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
+        $this->payment->method('getPayment')->willReturn($this->paymentInterface);
 
         $this->commandSubject = ['payment' => $this->payment];
     }
@@ -108,6 +119,19 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+    }
+
+    public function testCreateSetsBic()
+    {
+        $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
+
+        $transaction = new SepaTransaction();
+        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->config);
+
+        $expected = $this->minimumExpectedTransaction();
+        $expected->setBic('WIREDEMMXXX');
 
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
@@ -139,7 +163,6 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $accountHolder->setFirstName('Jane');
         $expected->setAccountHolder($accountHolder);
         $expected->setIban('DE42512308000000060004');
-        $expected->setBic('WIREDEMMXXX');
         $expected->setMandate($mandate);
 
         return $expected;

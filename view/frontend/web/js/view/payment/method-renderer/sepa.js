@@ -38,21 +38,14 @@ define(
     function ($, Component, url) {
         'use strict';
         return Component.extend({
+            accountFirstName: '',
+            accountLastName: '',
+            bankBic: '',
+            bankAccountIban: '',
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-sepa',
-                accountOwner: '',
-                bankBic: '',
-                bankAccountIban: '',
                 redirectAfterPlaceOrder: false
             },
-            initObservable: function () {
-                this._super().observe([
-                    'accountOwner',
-                    'bankBic',
-                    'bankAccountIban'
-                ]);
-                return this;
-                },
             initialize: function() {
                 this._super();
                 this.config = window.checkoutConfig.payment[this.getCode()];
@@ -68,11 +61,19 @@ define(
                     'method': this.getCode(),
                     'po_number': null,
                     'additional_data': {
-                        'accountOwner': this.accountOwner,
+                        'accountFirstName': this.accountFirstName,
+                        'accountLastName': this.accountLastName,
                         'bankBic': this.bankBic,
                         'bankAccountIban': this.bankAccountIban
                     }
                 };
+            },
+            hasBankBic: function() {
+                return this.config.enable_bic;
+            },
+            validate: function () {
+                var frm = $('#' + this.getCode() + '-form');
+                return frm.validation() && frm.validation('isValid');
             },
             afterPlaceOrder: function () {
                 $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {

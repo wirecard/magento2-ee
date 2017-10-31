@@ -97,17 +97,20 @@ class SepaTransactionFactory extends TransactionFactory
         parent::create($commandSubject);
 
         /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
+        $paymentDO = $commandSubject[self::PAYMENT];
 
         $mandate = new Mandate('12345678');
 
         $accountHolder = new AccountHolder();
-        $accountHolder->setLastName('Doe');
-        $accountHolder->setFirstName('Jane');
+        $accountHolder->setFirstName($paymentDO->getPayment()->getAdditionalInformation('accountFirstName'));
+        $accountHolder->setLastName($paymentDO->getPayment()->getAdditionalInformation('accountLastName'));
         $this->transaction->setAccountHolder($accountHolder);
-        $this->transaction->setIban('DE42512308000000060004');
-        $this->transaction->setBic('WIREDEMMXXX');
+        $this->transaction->setIban($paymentDO->getPayment()->getAdditionalInformation('bankAccountIban'));
+
+        if ($this->methodConfig->getValue('enable_bic')) {
+            $this->transaction->setBic($paymentDO->getPayment()->getAdditionalInformation('bankBic'));
+        }
+
         $this->transaction->setMandate($mandate);
 
 

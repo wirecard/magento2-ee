@@ -60,22 +60,36 @@
 
             <fieldset data-bind="attr: {class: 'fieldset payment items sepa ' + getCode(), id: 'payment_form_' + getCode()}">
 
-                <div class="field accountOwner">
-                    <label data-bind="attr: {for: getCode() + '_accountOwner'}" class="label">
-                        <span><!-- ko i18n: 'Account Owner'--><!-- /ko --></span>
+                <div class="field accountFirstName">
+                    <label data-bind="attr: {for: getCode() + '_accountFirstName'}" class="label">
+                        <span><!-- ko i18n: 'First Name'--><!-- /ko --></span>
                     </label>
                     <div class="control">
-                        <input type="text" name="payment[sepa_accountOwner]" class="input-text" value=""
-                               data-bind="attr: { autocomplete: off, id: getCode() + '_accountOwner',
-                                    title: $t('Account Owner'),
-                                    'data-container': getCode() + '-accountOwner' },
-                              value: accountOwner"/>
+                        <input type="text" name="payment[sepa_accountFirstName]" class="input-text" value=""
+                               data-bind="attr: { autocomplete: off, id: getCode() + '_accountFirstName',
+                                    title: $t('First Name'),
+                                    'data-container': getCode() + '-accountFirstName' },
+                              value: accountFirstName"/>
                     </div>
                 </div>
 
+                <div class="field accountLastName">
+                    <label data-bind="attr: {for: getCode() + '_accountLastName'}" class="label">
+                        <span><!-- ko i18n: 'Last Name'--><!-- /ko --></span>
+                    </label>
+                    <div class="control">
+                        <input type="text" name="payment[sepa_accountLastName]" class="input-text" value=""
+                               data-bind="attr: { autocomplete: off, id: getCode() + '_accountLastName',
+                                    title: $t('Last Name'),
+                                    'data-container': getCode() + '-accountLastName' },
+                              value: accountLastName"/>
+                    </div>
+                </div>
+
+                <!-- ko if: (hasBankBic())-->
                 <div class="field bankBic">
                     <label data-bind="attr: {for: getCode() + '_bankBic'}" class="label">
-                        <span><!-- ko i18n: 'Bank Bic'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'Bank BIC'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input type="text" name="payment[sepa_bankBic]" class="input-text" value=""
@@ -87,11 +101,11 @@
                                     value: bankBic "/>
                     </div>
                 </div>
-
+                <!-- /ko -->
 
                 <div class="field bankAccountIban required">
                     <label data-bind="attr: {for: getCode() + '_bankAccountIban'}" class="label">
-                        <span><!-- ko i18n: 'Bank Account Iban'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'Bank Account IBAN'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input type="text" name="payment[sepa_bankAccountIban]" class="input-text" value=""
