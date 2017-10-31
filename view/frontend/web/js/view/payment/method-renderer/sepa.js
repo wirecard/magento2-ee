@@ -39,15 +39,40 @@ define(
         'use strict';
         return Component.extend({
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-default',
+                template: 'Wirecard_ElasticEngine/payment/method-sepa',
+                accountOwner: '',
+                bankBic: '',
+                bankAccountIban: '',
                 redirectAfterPlaceOrder: false
             },
+            initObservable: function () {
+                this._super().observe([
+                    'accountOwner',
+                    'bankBic',
+                    'bankAccountIban'
+                ]);
+                return this;
+                },
             initialize: function() {
                 this._super();
                 this.config = window.checkoutConfig.payment[this.getCode()];
             },
             getLogoUrl: function() {
                 return this.config.logo_url;
+            },
+            /**
+             * Get payment method data
+             */
+            getData: function () {
+                return {
+                    'method': this.getCode(),
+                    'po_number': null,
+                    'additional_data': {
+                        'accountOwner': this.accountOwner,
+                        'bankBic': this.bankBic,
+                        'bankAccountIban': this.bankAccountIban
+                    }
+                };
             },
             afterPlaceOrder: function () {
                 $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {
