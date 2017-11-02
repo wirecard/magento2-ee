@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4af3259e612f2a4a84cd353cdd91dfb1",
+    "content-hash": "a982ed9220f715163cc1db2fe7a8b093",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -2121,16 +2121,16 @@
         },
         {
             "name": "wirecard/payment-sdk-php",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "ce33b843c0b377f290936cc4a8e22fbf003b4636"
+                "reference": "f05a69f39d889d6e6b6ce0529e904f3bd0079663"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/ce33b843c0b377f290936cc4a8e22fbf003b4636",
-                "reference": "ce33b843c0b377f290936cc4a8e22fbf003b4636",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/f05a69f39d889d6e6b6ce0529e904f3bd0079663",
+                "reference": "f05a69f39d889d6e6b6ce0529e904f3bd0079663",
                 "shasum": ""
             },
             "require": {
@@ -2157,7 +2157,7 @@
                 "GPL-3.0"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2017-07-06 09:42:14"
+            "time": "2017-10-25T11:03:55+00:00"
         },
         {
             "name": "zendframework/zend-code",
@@ -5675,9 +5675,7 @@
     ],
     "aliases": [],
     "minimum-stability": "beta",
-    "stability-flags": {
-        "wirecard/payment-sdk-php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
