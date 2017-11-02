@@ -66,9 +66,9 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $order;
 
-    private $commandSubject;
+    private $paymentInfo;
 
-    private $paymentInterface;
+    private $commandSubject;
 
     public function setUp()
     {
@@ -99,16 +99,11 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
-        $this->paymentInterface = $this->getMockBuilder(InfoInterface::class)->disableOriginalConstructor()->getMock();
-        $this->paymentInterface->method('getAdditionalInformation')->with('accountFirstName')->willReturn('Jane');
-        $this->paymentInterface->method('getAdditionalInformation')->with('accountLastName')->willReturn('Doe');
-        $this->paymentInterface->method('getAdditionalInformation')->with('bankAccountIban')->willReturn('DE42512308000000060004');
-        $this->paymentInterface->method('getAdditionalInformation')->with('bankBic')->willReturn('WIREDEMMXXX');
+        $this->paymentInfo = $this->getMock(InfoInterface::class);
 
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
-        $this->payment->method('getPayment')->willReturn($this->paymentInterface);
 
         $this->commandSubject = ['payment' => $this->payment];
     }
@@ -126,7 +121,6 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateSetsBic()
     {
         $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
-
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->config);
 
@@ -141,6 +135,20 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     private function minimumExpectedTransaction()
     {
+        $additionalInfo = array(
+            'bankBic' => 'WIREDEMMXXX',
+            'bankAccountIban' => 'DE42512308000000060004',
+            'accountFirstName' => 'Jane',
+            'accountLastName' => 'Doe'
+        );
+        $this->payment->expects(static::once())
+            ->method('getPayment')
+            ->willReturn($this->paymentInfo);
+
+        $this->paymentInfo->expects(static::once())
+            ->method('getAdditionalInformation')
+            ->willReturn($additionalInfo);
+
         $expected = new SepaTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
@@ -159,8 +167,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $mandate = new Mandate('12345678');
 
         $accountHolder = new AccountHolder();
-        $accountHolder->setLastName('Doe');
         $accountHolder->setFirstName('Jane');
+        $accountHolder->setLastName('Doe');
         $expected->setAccountHolder($accountHolder);
         $expected->setIban('DE42512308000000060004');
         $expected->setMandate($mandate);

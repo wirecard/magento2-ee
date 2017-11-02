@@ -100,19 +100,19 @@ class SepaTransactionFactory extends TransactionFactory
         $paymentDO = $commandSubject[self::PAYMENT];
 
         $mandate = new Mandate('12345678');
+        $additionalInfo = $paymentDO->getPayment()->getAdditionalInformation();
 
         $accountHolder = new AccountHolder();
-        $accountHolder->setFirstName($paymentDO->getPayment()->getAdditionalInformation('accountFirstName'));
-        $accountHolder->setLastName($paymentDO->getPayment()->getAdditionalInformation('accountLastName'));
+        $accountHolder->setFirstName($additionalInfo['accountFirstName']);
+        $accountHolder->setLastName($additionalInfo['accountLastName']);
         $this->transaction->setAccountHolder($accountHolder);
-        $this->transaction->setIban($paymentDO->getPayment()->getAdditionalInformation('bankAccountIban'));
+        $this->transaction->setIban($additionalInfo['bankAccountIban']);
 
         if ($this->methodConfig->getValue('enable_bic')) {
-            $this->transaction->setBic($paymentDO->getPayment()->getAdditionalInformation('bankBic'));
+            $this->transaction->setBic($additionalInfo['bankBic']);
         }
 
         $this->transaction->setMandate($mandate);
-
 
         return $this->transaction;
     }
