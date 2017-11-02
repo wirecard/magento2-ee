@@ -39,6 +39,8 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
@@ -89,6 +91,14 @@ class Redirect extends Action
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
             } else {
                 $this->checkoutSession->restoreQuote();
+                if ($result instanceof FailureResponse) {
+                    foreach ($result->getStatusCollection() as $status) {
+                        /**
+                         * @var $status Status
+                         */
+                        $this->messageManager->addErrorMessage($status->getDescription());
+                    }
+                }
                 $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
                 $this->setRedirectPath($resultRedirect, 'checkout/cart');
             }
