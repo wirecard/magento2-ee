@@ -1,0 +1,165 @@
+
+<?php
+/**
+ * Shop System Plugins - Terms of Use
+ *
+ * The plugins offered are provided free of charge by Wirecard Central Eastern Europe GmbH
+ * (abbreviated to Wirecard CEE) and are explicitly not part of the Wirecard CEE range of
+ * products and services.
+ *
+ * They have been tested and approved for full functionality in the standard configuration
+ * (status on delivery) of the corresponding shop system. They are under General Public
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
+ * the same terms.
+ *
+ * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
+ * occurring when used in an enhanced, customized shop system configuration.
+ *
+ * Operation in an enhanced, customized configuration is at your own risk and requires a
+ * comprehensive test phase by the user of the plugin.
+ *
+ * Customers use the plugins at their own risk. Wirecard CEE does not guarantee their full
+ * functionality neither does Wirecard CEE assume liability for any disadvantages related to
+ * the use of the plugins. Additionally, Wirecard CEE does not guarantee the full functionality
+ * for customized shop systems or installed plugins of other vendors of plugins within the same
+ * shop system.
+ *
+ * Customers are responsible for testing the plugin's functionality before starting productive
+ * operation.
+ *
+ * By installing the plugin into the shop system the customer agrees to these terms of use.
+ * Please do not use the plugin if you do not agree to these terms of use!
+ */
+?>
+<table border="0" cellpadding="0" cellspacing="0" class="stretch">
+    <tr>
+        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
+    </tr>
+    <tr>
+        <td class="text11justify">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="10%"><?php echo __('Test SEPA Mandate') ?></td>
+                    <td class="text11justify">
+                        <i ><?= $texts["elvSEPACreditorText"] ?></i><br />
+                        <?= $texts['elvSEPACreditorValue'] ?>
+                        <?= $texts["elvSEPACreditorIdTitle"] ?>:&nbsp;<?= $texts['elvSEPACreditorIdValue'] ?><br />
+                        <?= $texts["elvSEPAMandateIdTitle"] ?>:&nbsp;<?= $texts["elvSEPAMandateIdValue"] ?><br />
+                    </td>
+                    <td width="10%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
+    </tr>
+    <tr>
+        <td>
+            <table border="0" width="100%">
+                <tr>
+                    <td width="10%">&nbsp;</td>
+                    <td class="text11">
+                        <i><?= $texts["elvSEPAMandateText"] ?></i><br />
+                        <?= $texts["elvSEPAAccountOwnerTitle"] ?>&nbsp;<?= $texts["elvSEPAAccountOwnerValue"] ?><br />
+                        <?= $texts["elvSEPAIbanTitle"] ?>&nbsp;<?= $texts["elvSEPAIbanValue"] ?><br />
+                        <?php if (!$texts['hideBic']) { ?><?= $texts["elvSEPABicTitle"] ?>&nbsp;<?= $texts["elvSEPABicValue"] ?><br /><?php } ?>
+                    </td>
+                    <td width="10%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="./img/transparent.gif" height="10" width="10" alt=""/></td>
+    </tr>
+    <tr>
+        <td class="text11justify">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="10%">&nbsp;</td>
+                    <td class="text11justify">
+                        <?= $texts["elvSEPAText1"] ?>
+                    </td>
+                    <td width="10%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
+    </tr>
+    <tr>
+        <td class="text11justify">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="10%">&nbsp;</td>
+                    <td class="text11justify">
+                        <?= $texts["elvSEPAText2"] ?>
+                    </td>
+                    <td width="10%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
+    </tr>
+    <tr>
+        <td class="text11justify">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="10%">&nbsp;</td>
+                    <td class="text11justify">
+                        <?= $texts["elvSEPAText3"] ?>
+                    </td>
+                    <td width="10%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="./img/transparent.gif" height="10" width="10" alt=""/></td>
+    </tr>
+    <tr>
+        <td class="text11justify">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="10%">&nbsp;</td>
+                    <td class="text11justify">
+                        <?= $texts["elvSEPASignatureLocation"] ?>,  <?= $texts["elvSEPASignatureDate"] ?>  <?= $texts["elvSEPAAccountOwnerValue"] ?>
+                    </td>
+                    <td width="10%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="./img/transparent.gif" height="15" width="10" alt=""/></td>
+    </tr>
+    <tr>
+        <td class="text11justify">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="10%">&nbsp;</td>
+                    <td>
+                        <form name="wcp_form" method="post" action="<?= $texts["formAction"] ?>" autocomplete="off">
+                            <table border="0" width="100%">
+                                <tr>
+                                    <td><input type="checkbox" name="agb" id="agb" value="1" class="i_checkbox"/>
+                                    </td>
+                                    <td class="text11justify"><label for="agb"><?= $texts["elvAGBAccept"] ?></label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </td>
+                    <td width="10%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="./img/transparent.gif" height="25" width="10" alt=""/></td>
+    </tr>
+</table>

@@ -7,7 +7,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -33,9 +33,10 @@ define(
     [
         'jquery',
         'Magento_Checkout/js/view/payment/default',
-        'mage/url'
+        'mage/url',
+        'Magento_Checkout/js/model/quote'
     ],
-    function ($, Component, url) {
+    function ($, Component, url, quote) {
         'use strict';
         return Component.extend({
             accountFirstName: '',
@@ -74,6 +75,15 @@ define(
             validate: function () {
                 var frm = $('#' + this.getCode() + '-form');
                 return frm.validation() && frm.validation('isValid');
+            },
+            loadSepaMandate: function (data, event) {
+                if (event) {
+                    event.preventDefault();
+                }
+
+                $.get(url.build("/wirecard_elasticengine/frontend/sepamandate"), function (data) {
+                    window.location.replace('http://magen.to/frontend/sepamandate');
+                });
             },
             afterPlaceOrder: function () {
                 $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {

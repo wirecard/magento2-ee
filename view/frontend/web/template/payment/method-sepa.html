@@ -8,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -122,15 +122,16 @@
             </fieldset>
         </form>
 
+        <div><?php echo "das ist ein test"; ?></div>
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: placeOrder,
-                        attr: {'id': getCode() + '_submit', title: $t('Place Order')}
+                        click: loadSepaMandate,
+                        attr: {'id': getCode() + '_submit', title: $t('Create Sepa Mandate')}
                         ">
-                    <span data-bind="i18n: 'Place Order'"></span>
+                    <span data-bind="i18n: 'Create Sepa Mandate'"></span>
                 </button>
             </div>
         </div>
