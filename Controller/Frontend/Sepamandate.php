@@ -39,45 +39,24 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\View\Result\PageFactory;
 
 
-class SepaMandate extends \Magento\Framework\App\Action\Action
+class Sepamandate extends \Magento\Framework\App\Action\Action
 {
-    const REDIRECT_URL = 'redirect-url';
+    protected $_url;
 
-    /**
-     * @var Session
-     */
-    private $session;
+    protected $_order;
 
-    /**
-     * @var string
-     */
-    private $baseUrl;
-
-    /**
-     * @var PageFactory
-     */
-    protected $resultPageFactory;
-
-    /**
-     * Callback constructor.
-     * @param Context $context
-     * @param Session $session
-     */
-    public function __construct(Context $context,
-                                Session $session,
-                                PageFactory $resultPageFactory)
+    public function __construct(Context $context)
     {
         parent::__construct($context);
-        $this->session = $session;
-        $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
-        $this->url               = $context->getUrl();
-        $this->resultPageFactory = $resultPageFactory;
+
+        $this->_url               = $context->getUrl();
     }
 
     public function execute()
     {
-        $redirectTo = 'frontend/sepamandate';
-        $redirectUrl = $this->url->getUrl($redirectTo);
+        $redirectTo = 'checkout/cart';
+        $redirectUrl = $this->_url->getUrl($redirectTo);
+
         $page = $this->resultPageFactory->create();
         $page->getLayout()->getBlock('frontend.sepamandate')->addData(['redirectUrl' => $redirectUrl]);
 

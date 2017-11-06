@@ -56,7 +56,7 @@
             <!--/ko-->
         </div>
 
-        <form data-bind="attr: {id: getCode() + '-form'}" class="form">
+        <form data-bind="attr: {id: getCode() + '-form'}" class="form" action="<?php echo Mage::getUrl(); ?>wirecard_elasticengine/frontend/sepadmandate/">
 
             <fieldset data-bind="attr: {class: 'fieldset payment items sepa ' + getCode(), id: 'payment_form_' + getCode()}">
 
@@ -122,7 +122,6 @@
             </fieldset>
         </form>
 
-        <div><?php echo "das ist ein test"; ?></div>
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"

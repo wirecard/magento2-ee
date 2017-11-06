@@ -81,9 +81,12 @@ define(
                     event.preventDefault();
                 }
 
-                $.get(url.build("/wirecard_elasticengine/frontend/sepamandate"), function (data) {
-                    window.location.replace('http://magen.to/frontend/sepamandate');
-                });
+                var checkoutStartUrl = url.build('wirecard_elasticengine/frontend/sepamandate', {});
+                $.mage.redirect(checkoutStartUrl);
+
+                /*$.get(url.build("/wirecard_elasticengine/frontend/sepamandate"), function (data) {
+                    window.location.replace(data["redirect-url"]);
+                });*/
             },
             afterPlaceOrder: function () {
                 $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {
