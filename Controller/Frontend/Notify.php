@@ -131,7 +131,7 @@ class Notify extends Action
         if ($response instanceof SuccessResponse) {
             if ($order->getStatus() !== Order::STATE_COMPLETE) {
                 if ($response->isValidSignature()) {
-                    $this->updateOrderState($order, Order::STATE_PROCESSING);
+                    $this->updateOrderState($order, Order::STATE_PROCESSING);$this->orderRepository->save($order);
                 } else {
                     $this->updateOrderState($order, Order::STATUS_FRAUD);
                     $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s', $orderId));
@@ -170,6 +170,7 @@ class Notify extends Action
     {
         $order->setStatus($newState);
         $order->setState($newState);
+        $this->orderRepository->save($order);
         return $order;
     }
 
@@ -214,7 +215,13 @@ class Notify extends Action
             $payment->setParentTransactionId($response->getParentTransactionId());
         }
 
-        $payment->addTransaction($response->getTransactionType());
+        $transactionType = $response->getTransactionType();
+
+        if ('debit' === $transactionType) {
+            $transactionType = 'payment';
+        }
+
+        $payment->addTransaction($transactionType);
         return $payment;
     }
 
