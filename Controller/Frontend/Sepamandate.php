@@ -35,30 +35,44 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\App\Request\Http;
 use Magento\Framework\View\Result\PageFactory;
+use Psr\Log\LoggerInterface;
 
-
-class Sepamandate extends \Magento\Framework\App\Action\Action
+class Sepamandate extends Action
 {
+    private $session;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     protected $_url;
 
     protected $_order;
 
-    public function __construct(Context $context)
+    protected $_resultPageFactory;
+
+
+
+    public function __construct(Context $context, PageFactory $resultPageFactory, Session $session, LoggerInterface $logger)
     {
         parent::__construct($context);
 
+        $this->session = $session;
+        $this->logger = $logger;
         $this->_url               = $context->getUrl();
+        $this->_resultPageFactory = $resultPageFactory;
     }
 
     public function execute()
     {
-        $redirectTo = 'checkout/cart';
-        $redirectUrl = $this->_url->getUrl($redirectTo);
+        $this->logger->debug('Sepa: ');
 
-        $page = $this->resultPageFactory->create();
-        $page->getLayout()->getBlock('frontend.sepamandate')->addData(['redirectUrl' => $redirectUrl]);
+
+        $page = $this->_resultPageFactory->create();
+        $page->getLayout()->getBlock('frontend.sepamandate');
 
         return $page;
     }

@@ -36,6 +36,7 @@
         <title/>
     </head>
     <body>
+        <referenceContainer name="page.wrapper" remove="true"/>
         <referenceContainer name="content">
             <block class="Magento\Framework\View\Element\Template" template="Wirecard_ElasticEngine::sepamandate.phtml" name="frontend.sepamandate" cacheable="false"/>
         </referenceContainer>

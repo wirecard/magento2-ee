@@ -31,75 +31,34 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 ?>
-
-<script>
-    require([
-        'jquery',
-        'Magento_Checkout/js/view/payment/sepa',
-        'mage/url',
-        'Magento_Checkout/js/model/quote'
-    ], function($, Component, url, quote){
-
-        function afterPlaceOrder() {
-            $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {
-                if (data['form-url']) {
-                    var form = $('<form />', {action: data['form-url'], method: data['form-method']});
-
-                    for (var i = 0; i < data['form-fields'].length; i++) {
-                        form.append($('<input />', {
-                            type: 'hidden',
-                            name: data['form-fields'][i]['key'],
-                            value: data['form-fields'][i]['value']
-                        }));
-                    }
-                    form.appendTo('body').submit();
-                } else {
-                    window.location.replace(data['redirect-url']);
-                }
-            });
-        }
-
-        function iframeBreakout(redirectUrl)
-        {
-            parent.location.href = redirectUrl;
-        }
-
-        iframeBreakout(<?php echo json_encode($block->getData('redirectUrl')); ?>);
-
-    });
-</script>
-
 <table border="0" cellpadding="0" cellspacing="0" class="stretch">
-    <tr>
-        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
-    </tr>
     <tr>
         <td class="text11justify">
             <table border="0" width="100%">
                 <tr>
-                    <td width="10%"><?php echo __('Test SEPA Mandate') ?></td>
                     <td class="text11justify">
-                        <i >elvSEPACreditorText</i><br />elvSEPACreditorValue elvSEPACreditorIdTitle elvSEPACreditorIdValue<br />
-                        elvSEPAMandateIdTitle elvSEPAMandateIdValue<br />
+                        <i ><?php echo __('Zahlungsempfänger') ?></i><br />
+                        creditorName, Ort<br />
+                        <?php echo __('Creditor-ID:') ?> creditorId<br />
+                        <?php echo __('Mandatsreferenz:') ?> mandateId<br />
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
             </table>
         </td>
-    </tr>
-    <tr>
-        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
     </tr>
     <tr>
         <td>
             <table border="0" width="100%">
                 <tr>
-                    <td width="10%">&nbsp;</td>
                     <td class="text11">
-                        <i>elvSEPAMandateText</i><br />
-                        elvSEPAAccountOwnerTitle elvSEPAAccountOwnerValue<br />
-                        elvSEPAIbanTitle elvSEPAIbanValue<br />
-                        hideBic elvSEPABicTitle elvSEPABicValue<br />
+                        <i><?php echo __('Zahlungspflichtiger') ?></i><br />
+                        <?php echo __('Kontoinhaber:') ?> %firstname% %lastname%<br />
+                        <?php echo __('IBAN:') ?> %bankAccountIban% <br />
+                        <?php if(true) {
+                            echo __('BIC:') ?> %bankBic% <br /><?php
+                                }
+                                ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -107,15 +66,11 @@
         </td>
     </tr>
     <tr>
-        <td><img src="./img/transparent.gif" height="10" width="10" alt=""/></td>
-    </tr>
-    <tr>
         <td class="text11justify">
             <table border="0" width="100%">
                 <tr>
-                    <td width="10%">&nbsp;</td>
                     <td class="text11justify">
-                        elvSEPAText1
+                        <?php echo __('SepaMandateText1') ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -123,15 +78,11 @@
         </td>
     </tr>
     <tr>
-        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
-    </tr>
-    <tr>
         <td class="text11justify">
             <table border="0" width="100%">
                 <tr>
-                    <td width="10%">&nbsp;</td>
                     <td class="text11justify">
-                        elvSEPAText2
+                        <?php echo __('SepaMandateText2') ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -139,15 +90,11 @@
         </td>
     </tr>
     <tr>
-        <td><img src="./img/transparent.gif" height="5" width="10" alt=""/></td>
-    </tr>
-    <tr>
         <td class="text11justify">
             <table border="0" width="100%">
                 <tr>
-                    <td width="10%">&nbsp;</td>
                     <td class="text11justify">
-                        elvSEPAText3
+                        <?php echo __('SepaMandateText3') ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -155,15 +102,11 @@
         </td>
     </tr>
     <tr>
-        <td><img src="./img/transparent.gif" height="10" width="10" alt=""/></td>
-    </tr>
-    <tr>
         <td class="text11justify">
             <table border="0" width="100%">
                 <tr>
-                    <td width="10%">&nbsp;</td>
                     <td class="text11justify">
-                        elvSEPASignatureLocation elvSEPASignatureDate elvSEPAAccountOwnerValue
+                        Ort, elvSEPASignatureDate %firstname% %lastname%
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -171,31 +114,19 @@
         </td>
     </tr>
     <tr>
-        <td><img src="./img/transparent.gif" height="15" width="10" alt=""/></td>
-    </tr>
-    <tr>
         <td class="text11justify">
             <table border="0" width="100%">
                 <tr>
-                    <td width="10%">&nbsp;</td>
                     <td>
-                        <form name="wcp_form" method="post" action="formAction" autocomplete="off">
                             <table border="0" width="100%">
                                 <tr>
-                                    <td><input type="checkbox" name="agb" id="agb" value="1" class="i_checkbox"/>
-                                    </td>
-                                    <td class="text11justify"><label for="agb">elvAGBAccept</label>
-                                    </td>
+                                    <td class="text11justify">elvAGBAccept</td>
                                 </tr>
                             </table>
-                        </form>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
             </table>
         </td>
-    </tr>
-    <tr>
-        <td><img src="./img/transparent.gif" height="25" width="10" alt=""/></td>
     </tr>
 </table>

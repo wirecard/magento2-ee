@@ -82,7 +82,7 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'logo_url' => $this->getLogoUrl($paymentMethodName)
             ]
         ];
     }

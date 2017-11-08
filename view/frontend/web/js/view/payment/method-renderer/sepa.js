@@ -33,19 +33,26 @@ define(
     [
         'jquery',
         'Magento_Checkout/js/view/payment/default',
+        'Magento_Checkout/js/model/payment/additional-validators',
         'mage/url',
-        'Magento_Checkout/js/model/quote'
+        'Magento_Checkout/js/model/quote',
+        'Magento_Ui/js/modal/modal',
+        'ko',
+        'Magento_Checkout/js/action/place-order',
+        'mage/storage',
+        'mage/translate'
     ],
-    function ($, Component, url, quote) {
+    function ($, Component, additionalValidators, url, quote, modal, ko, placeOrderAction, storage) {
         'use strict';
         return Component.extend({
             accountFirstName: '',
             accountLastName: '',
             bankBic: '',
             bankAccountIban: '',
+            mandate: false,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-sepa',
-                redirectAfterPlaceOrder: false
+                redirectAfterPlaceOrder: false,
             },
             initialize: function() {
                 this._super();
@@ -76,17 +83,44 @@ define(
                 var frm = $('#' + this.getCode() + '-form');
                 return frm.validation() && frm.validation('isValid');
             },
-            loadSepaMandate: function (data, event) {
-                if (event) {
-                    event.preventDefault();
+            beforePlaceOrder: function (data, event) {
+                if (this.validate()) {
+                    var self = this;
+                    var sepaMandate = $('#sepaMandate');
+
+                    $.get(url.build('/wirecard_elasticengine/frontend/sepamandate', {})).done(
+                        function (response) {
+                            response.replace("%firstname%", $("input[name='payment[sepa_accountFirstName]']").val());
+                            response.replace("%lastname%", $("input[name='payment[sepa_accountLastName]']").val());
+                            response.replace("%bankBic%", $("input[name='payment[sepa_bankBic]']").val());
+                            response.replace("%bankAccountIban%", $("input[name='payment[sepa_bankAccountIban]']").val());
+                            sepaMandate.append(response);
+                        }
+                    );
+
+                    var modalOptions = {
+                        title: $.mage.__('SEPA-Lastschrift-Mandat'),
+                        autoOpen: true,
+                        closeText: '',
+                        buttons: [{
+                            text: 'Accept',
+                            class: '',
+                            click: function () {
+                                this.closeModal();
+                                self.placeOrder();
+                            }
+                        },
+                            {
+                                text: 'Close',
+                                class: '',
+                                click: function () {
+                                    this.closeModal();
+                                }
+                            }]
+                    };
+
+                    sepaMandate.modal(modalOptions);
                 }
-
-                var checkoutStartUrl = url.build('wirecard_elasticengine/frontend/sepamandate', {});
-                $.mage.redirect(checkoutStartUrl);
-
-                /*$.get(url.build("/wirecard_elasticengine/frontend/sepamandate"), function (data) {
-                    window.location.replace(data["redirect-url"]);
-                });*/
             },
             afterPlaceOrder: function () {
                 $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {

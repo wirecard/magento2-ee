@@ -30,7 +30,8 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 -->
-
+<div id="sepaMandate" display="none">
+</div>
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <div class="payment-method-title field choice">
         <input type="radio"
@@ -56,7 +57,7 @@
             <!--/ko-->
         </div>
 
-        <form data-bind="attr: {id: getCode() + '-form'}" class="form" action="<?php echo Mage::getUrl(); ?>wirecard_elasticengine/frontend/sepadmandate/">
+        <form data-bind="attr: {id: getCode() + '-form'}" class="form">
 
             <fieldset data-bind="attr: {class: 'fieldset payment items sepa ' + getCode(), id: 'payment_form_' + getCode()}">
 
@@ -127,10 +128,10 @@
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: loadSepaMandate,
-                        attr: {'id': getCode() + '_submit', title: $t('Create Sepa Mandate')}
+                        click: beforePlaceOrder,
+                        attr: {title: $t('Place Order')}
                         ">
-                    <span data-bind="i18n: 'Create Sepa Mandate'"></span>
+                    <span data-bind="i18n: 'Place Order'"></span>
                 </button>
             </div>
         </div>
