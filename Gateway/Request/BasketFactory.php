@@ -92,12 +92,13 @@ class BasketFactory
             new Amount($shippingAddress->getShippingInclTax(), $order->getCurrencyCode()),
             1
         );
+
+        $taxRate = number_format(($shippingAddress->getShippingTaxAmount() / $shippingAddress->getShippingInclTax()) * 100,
+            2);
+
         $shippingItem->setDescription($shippingAddress->getShippingDescription());
         $shippingItem->setArticleNumber($shippingAddress->getShippingMethod());
-        $shippingItem->setTaxAmount(
-            new Amount($shippingAddress->getShippingTaxAmount(),
-                $order->getCurrencyCode())
-        );
+        $shippingItem->setTaxRate($taxRate);
         $basket->add($shippingItem);
 
         return $basket;

@@ -68,6 +68,7 @@ class ItemFactory
             $taxAmount = $magentoItemObj->getTaxAmount();
         }
 
+        $taxRate = $taxAmount / $amount;
         $item = new Item(
             $name,
             new Amount($amount, $currency),
@@ -75,7 +76,7 @@ class ItemFactory
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxAmount(new Amount($taxAmount, $currency));
+        $item->setTaxRate(number_format($taxRate * 100, 2));
 
         return $item;
     }
