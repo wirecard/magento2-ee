@@ -137,7 +137,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedTransaction()
     {
         $additionalInfo = array(
-            'bankBic' => 'ING'
+            'bankBic' => IdealBic::INGBNL2A
         );
         $this->payment->expects(static::once())
             ->method('getPayment')
@@ -161,7 +161,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
-        $expected->setBic('ING');
+        $expected->setBic(IdealBic::INGBNL2A);
 
         return $expected;
     }

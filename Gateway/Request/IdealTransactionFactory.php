@@ -34,7 +34,6 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
-use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -47,16 +46,10 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class IdealTransactionFactory extends TransactionFactory
 {
-    const PAYMENT = 'payment';
     /**
      * @var IdealTransaction
      */
     protected $transaction;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
 
     /**
      * @var StoreManagerInterface
@@ -71,21 +64,18 @@ class IdealTransactionFactory extends TransactionFactory
      * @param Transaction $transaction
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
-     * @param ConfigInterface $methodConfig
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
-        AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig
+        AccountHolderFactory $accountHolderFactory
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->storeManager = $storeManager;
         $this->accountHolderFactory = $accountHolderFactory;
-        $this->methodConfig = $methodConfig;
     }
 
     /**
@@ -108,12 +98,10 @@ class IdealTransactionFactory extends TransactionFactory
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
         $this->transaction->setBic($additionalInfo['bankBic']);
 
-        if ($this->methodConfig->getValue('send_descriptor')) {
-            $this->transaction->setDescriptor(sprintf('%s %s',
-                substr($this->storeManager->getStore()->getName(), 0, 9),
-                $this->orderId
-            ));
-        }
+        $this->transaction->setDescriptor(sprintf('%s %s',
+            substr($this->storeManager->getStore()->getName(), 0, 9),
+            $this->orderId
+        ));
 
         return $this->transaction;
     }
