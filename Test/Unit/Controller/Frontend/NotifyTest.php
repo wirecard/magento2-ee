@@ -261,6 +261,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $successResponse->method('getMaskedAccountNumber')->willReturn('5151***5485');
         $successResponse->method('findElement')->willReturn('1515');
         $successResponse->method('getCardholderAuthenticationStatus')->willReturn('Y');
+        $successResponse->method('getTransactionType')->willReturn('debit');
 
         $this->transactionService->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 

@@ -83,8 +83,13 @@ class Notify extends Action
      * @param LoggerInterface $logger
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
-    public function __construct(Context $context, TransactionServiceFactory $transactionServiceFactory, OrderRepositoryInterface $orderRepository, LoggerInterface $logger, SearchCriteriaBuilder $searchCriteriaBuilder)
-    {
+    public function __construct(
+        Context $context,
+        TransactionServiceFactory $transactionServiceFactory,
+        OrderRepositoryInterface $orderRepository,
+        LoggerInterface $logger,
+        SearchCriteriaBuilder $searchCriteriaBuilder
+    ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
@@ -134,7 +139,8 @@ class Notify extends Action
                     $this->updateOrderState($order, Order::STATE_PROCESSING);
                 } else {
                     $this->updateOrderState($order, Order::STATUS_FRAUD);
-                    $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s', $orderId));
+                    $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s',
+                        $orderId));
                 }
             }
 
@@ -170,6 +176,7 @@ class Notify extends Action
     {
         $order->setStatus($newState);
         $order->setState($newState);
+        $this->orderRepository->save($order);
         return $order;
     }
 
@@ -214,7 +221,13 @@ class Notify extends Action
             $payment->setParentTransactionId($response->getParentTransactionId());
         }
 
-        $payment->addTransaction($response->getTransactionType());
+        $transactionType = $response->getTransactionType();
+
+        if ('debit' === $transactionType) {
+            $transactionType = 'payment';
+        }
+
+        $payment->addTransaction($transactionType);
         return $payment;
     }
 
