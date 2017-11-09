@@ -84,7 +84,22 @@ class Redirect extends Action
         if ($this->getRequest()->isPost()) {
             $transactionService = $this->transactionServiceFactory->create();
             $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
-
+            if ($result instanceof SuccessResponse) {
+                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
+            } else {
+                $this->checkoutSession->restoreQuote();
+                $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
+                $this->setRedirectPath($resultRedirect, 'checkout/cart');
+            }
+        }elseif ($this->getRequest()->isGet()) {
+            if (isEmpty($this->getRequest()->getParams())) {
+                $this->checkoutSession->restoreQuote();
+                $this->messageManager->addNoticeMessage(__('There is no existing information for this payment method.'));
+                $this->setRedirectPath($resultRedirect, 'checkout/cart');
+                return $resultRedirect;
+            }
+            $transactionService = $this->transactionServiceFactory->create();
+            $result = $transactionService->handleResponse($this->getRequest()->getParams());
             if ($result instanceof SuccessResponse) {
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
             } else {
@@ -94,6 +109,7 @@ class Redirect extends Action
             }
         } else {
             $this->checkoutSession->restoreQuote();
+            $this->messageManager->addNoticeMessage(__('There is no existing information for this payment method.'));
             $this->setRedirectPath($resultRedirect, 'checkout/cart');
         }
 

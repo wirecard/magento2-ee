@@ -47,6 +47,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class IdealTransactionFactory extends TransactionFactory
 {
+    const PAYMENT = 'payment';
     /**
      * @var IdealTransaction
      */
@@ -95,6 +96,7 @@ class IdealTransactionFactory extends TransactionFactory
      */
     public function create($commandSubject)
     {
+        $this->logger->debug('creating ideal transaction');
         parent::create($commandSubject);
 
         /** @var PaymentDataObjectInterface $payment */
@@ -104,15 +106,7 @@ class IdealTransactionFactory extends TransactionFactory
         $additionalInfo = $paymentDO->getPayment()->getAdditionalInformation();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
         $this->transaction->setBic($additionalInfo['bankBic']);
-        //$this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $billingAddress->getEmail(),
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        ));
 
         if ($this->methodConfig->getValue('send_descriptor')) {
             $this->transaction->setDescriptor(sprintf('%s %s',

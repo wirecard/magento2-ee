@@ -149,7 +149,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <sort_order>1</sort_order>
                 <model>IdealFacade</model>
                 <order_status>processing</order_status>
-                <payment_action>authorize</payment_action>
+                <payment_action>debit</payment_action>
                 <merchant_account_id>b4ca14c0-bb9a-434d-8ce3-65fbff2c2267</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
                 <send_descriptor>1</send_descriptor>

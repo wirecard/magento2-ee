@@ -62,16 +62,18 @@
 
                 <div class="field bankBic">
                     <label data-bind="attr: {for: getCode() + '_bankBic'}" class="label">
-                        <span><!-- ko i18n: 'Bank BIC'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'Choose your bank...'--><!-- /ko --></span>
                     </label>
                     <div class="control">
-                        <input type="text" name="payment[ideal_bankBic]" class="input-text" value=""
+                        <select name="payment[ideal_bankBic]" class="input-select"
                                data-bind="attr: {
-                                    autocomplete: off,
                                     id: getCode() + '_bankBic',
                                     title: $t('Bank Bic'),
                                     'data-container': getCode() + '-bankBic'},
-                                    value: bankBic "/>
+                                    value: bankBic,
+                                    options: getIdealBic(),
+                                    optionsValue: 'key',
+                                    optionsText: 'label'"/>
                     </div>
                 </div>
 

@@ -44,12 +44,8 @@ define(
                 template: 'Wirecard_ElasticEngine/payment/method-ideal',
                 redirectAfterPlaceOrder: false
             },
-            initialize: function() {
-                this._super();
-                this.config = window.checkoutConfig.payment[this.getCode()];
-            },
-            getLogoUrl: function() {
-                return this.config.logo_url;
+            getIdealBic: function() {
+                return this.config.ideal_bic;
             },
             getData: function () {
                 return {
@@ -66,20 +62,7 @@ define(
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    if (data['form-url']) {
-                        var form = $('<form />', {action: data['form-url'], method: data['form-method']});
-
-                        for (var i = 0; i < data['form-fields'].length; i++) {
-                            form.append($('<input />', {
-                                type: 'hidden',
-                                name: data['form-fields'][i]['key'],
-                                value: data['form-fields'][i]['value']
-                            }));
-                        }
-                        form.appendTo('body').submit();
-                    } else {
-                        window.location.replace(data['redirect-url']);
-                    }
+                    window.location.replace(data["redirect-url"]);
                 });
             }
         });

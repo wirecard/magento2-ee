@@ -83,6 +83,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'ideal_bic' => $this->getIdealBic(),
             ]
         ];
     }
@@ -106,5 +107,25 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $logoName = substr($code, strlen('wirecard_elasticengine_')) . '.png';
         return $this->assetRepository->getUrlWithParams('Wirecard_ElasticEngine::images/' . $logoName, ['_secure' => true]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getIdealBic()
+    {
+        $options = [
+            ['key' => 'ABNANL2A', 'label' => 'ABN Amro Bank'],
+            ['key' => 'ASNBNL21', 'label' => 'ASN Bank'],
+            ['key' => 'BUNQNL2A', 'label' => 'bunq'],
+            ['key' => 'INGBNL2A', 'label' => 'ING'],
+            ['key' => 'KNABNL2H', 'label' => 'Knab'],
+            ['key' => 'RABONL2U', 'label' => 'Rabobank'],
+            ['key' => 'RGGINL21', 'label' => 'Regio Bank'],
+            ['key' => 'SNSBNL2A', 'label' => 'SNS Bank'],
+            ['key' => 'TRIONL2U', 'label' => 'Triodos Bank'],
+            ['key' => 'FVLBNL22', 'label' => 'Van Lanschot Bankiers']
+        ];
+        return $options;
     }
 }

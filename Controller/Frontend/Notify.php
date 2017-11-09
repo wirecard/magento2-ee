@@ -170,6 +170,7 @@ class Notify extends Action
     {
         $order->setStatus($newState);
         $order->setState($newState);
+        $this->orderRepository->save($order);
         return $order;
     }
 
@@ -214,7 +215,12 @@ class Notify extends Action
             $payment->setParentTransactionId($response->getParentTransactionId());
         }
 
-        $payment->addTransaction($response->getTransactionType());
+        $transactionType = $response->getTransactionType();
+        if ('debit' === $transactionType) {
+            $transactionType = 'payment';
+        }
+
+        $payment->addTransaction($transactionType);
         return $payment;
     }
 
