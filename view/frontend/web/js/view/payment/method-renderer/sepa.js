@@ -32,7 +32,7 @@
 define(
     [
         'jquery',
-        'Magento_Checkout/js/view/payment/default',
+        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
         'Magento_Checkout/js/model/payment/additional-validators',
         'mage/url',
         'Magento_Checkout/js/model/quote',
@@ -52,14 +52,7 @@ define(
             mandate: false,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-sepa',
-                redirectAfterPlaceOrder: false,
-            },
-            initialize: function() {
-                this._super();
-                this.config = window.checkoutConfig.payment[this.getCode()];
-            },
-            getLogoUrl: function() {
-                return this.config.logo_url;
+                redirectAfterPlaceOrder: false
             },
             /**
              * Get payment method data
@@ -88,42 +81,42 @@ define(
                     var self = this;
                     var sepaMandate = $('#sepaMandate');
 
-                    $.get(url.build('/wirecard_elasticengine/frontend/sepamandate', {})).done(
-                        function (response) {
-                            response.replace("%firstname%", $("input[name='payment[sepa_accountFirstName]']").val());
-                            response.replace("%lastname%", $("input[name='payment[sepa_accountLastName]']").val());
-                            response.replace("%bankBic%", $("input[name='payment[sepa_bankBic]']").val());
-                            response.replace("%bankAccountIban%", $("input[name='payment[sepa_bankAccountIban]']").val());
-                            sepaMandate.append(response);
-                        }
-                    );
-
-                    var modalOptions = {
+                    sepaMandate.modal({
                         title: $.mage.__('SEPA-Lastschrift-Mandat'),
-                        autoOpen: true,
-                        closeText: '',
+                        responsive: true,
+                        innerScroll: true,
                         buttons: [{
                             text: 'Accept',
-                            class: '',
-                            click: function () {
+                            click: function() {
                                 this.closeModal();
                                 self.placeOrder();
                             }
                         },
                             {
                                 text: 'Close',
-                                class: '',
-                                click: function () {
-                                    this.closeModal();
-                                }
-                            }]
-                    };
+                                click: this.closeModal
+                            }],
+                        opened: function(){
+                            $.get(url.build('wirecard_elasticengine/frontend/sepamandate', {})).done(
+                                function (response) {
+                                    response = response.replace(/%firstname%/g, $("#wirecard_elasticengine_sepa_accountFirstName").val())
+                                        .replace(/%lastname%/g, $("#wirecard_elasticengine_sepa_accountLastName").val())
+                                        .replace(/%bankAccountIban%/g, $("#wirecard_elasticengine_sepa_bankAccountIban").val());
+                                    var bankAccountBic = $("#wirecard_elasticengine_sepa_bankAccountBic").val();
 
-                    sepaMandate.modal(modalOptions);
+                                    if(bankAccountBic == undefined) {
+                                        bankAccountBic = "";
+                                    }
+                                    response = response.replace(/%bankBic%/g, bankAccountBic);
+                                    sepaMandate.append(response).show();
+                                }
+                            );
+                        }
+                    }).modal('openModal');
                 }
             },
             afterPlaceOrder: function () {
-                $.get(url.build("/wirecard_elasticengine/frontend/callback"), function (data) {
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
                     if (data['form-url']) {
                         var form = $('<form />', {action: data['form-url'], method: data['form-method']});
 
