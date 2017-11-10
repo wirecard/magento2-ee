@@ -38,11 +38,10 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\IdealTransactionFactory;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
@@ -59,8 +58,6 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $resolver;
 
     private $storeManager;
-
-    private $accountHolderFactory;
 
     private $config;
 
@@ -86,9 +83,6 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
         $this->storeManager->method('getStore')->willReturn($store);
 
-        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
-        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
-
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
 
         $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
@@ -104,9 +98,13 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
         $this->paymentInfo = $this->getMock(InfoInterface::class);
+        $addInfo = ['bankBic' => IdealBic::INGBNL2A];
+        $this->paymentInfo->method('getAdditionalInformation')->willReturn($addInfo);
+
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
+        $this->payment->method('getPayment')->willReturn($this->paymentInfo);
 
         $this->commandSubject = ['payment' => $this->payment];
     }
@@ -114,7 +112,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new IdealTransaction();
-        $transactionFactory = new IdealTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new IdealTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -126,19 +124,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     private function minimumExpectedTransaction()
     {
-        $additionalInfo = array(
-            'bankBic' => IdealBic::INGBNL2A
-        );
-
-        $this->payment->expects(static::once())
-            ->method('getPayment')
-            ->willReturn($this->paymentInfo);
-        $this->paymentInfo->expects(static::once())
-            ->method('getAdditionalInformation')
-            ->willReturn($additionalInfo);
-
         $expected = new IdealTransaction();
-        $expected->setAccountHolder(new AccountHolder());
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify');

@@ -39,7 +39,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-use Wirecard\PaymentSdk\Entity\IdealBic;
 
 /**
  * Class IdealTransactionFactory
@@ -63,20 +62,16 @@ class IdealTransactionFactory extends TransactionFactory
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
-     * @param BasketFactory $basketFactory
-     * @param AccountHolderFactory $accountHolderFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
-        Transaction $transaction,
-        AccountHolderFactory $accountHolderFactory
+        Transaction $transaction
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->storeManager = $storeManager;
-        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**
@@ -91,17 +86,8 @@ class IdealTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
-        $order = $paymentDO->getOrder();
-        $billingAddress = $order->getBillingAddress();
         $additionalInfo = $paymentDO->getPayment()->getAdditionalInformation();
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
         $this->transaction->setBic($additionalInfo['bankBic']);
-
-        $this->transaction->setDescriptor(sprintf('%s %s',
-            substr($this->storeManager->getStore()->getName(), 0, 9),
-            $this->orderId
-        ));
 
         return $this->transaction;
     }
