@@ -32,10 +32,10 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Block;
 
-use Wirecard\ElasticEngine\Block\SepaMandateBlock;
-use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Payment\Gateway\ConfigInterface;
+use Wirecard\ElasticEngine\Block\SepaMandateBlock;
 
 class SepaMandateBlockUTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,31 +49,36 @@ class SepaMandateBlockUTest extends \PHPUnit_Framework_TestCase
      */
     private $block;
 
-    protected function setUp() {
+    protected function setUp()
+    {
         $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
         $this->sepaConfig = $this->getMockWithoutInvokingTheOriginalConstructor(ConfigInterface::class);
 
         $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
 
-        $this->block = new SepaMandateBlock($context, $this->sepaConfig, $session, array());
+        $this->block = new SepaMandateBlock($context, $this->sepaConfig, $session, []);
     }
 
-    public function testGetCreditorId() {
+    public function testGetCreditorId()
+    {
         $this->sepaConfig->method('getValue')->with('creditor_id')->willReturn('CREDITOR ID');
         $this->assertEquals('CREDITOR ID', $this->block->getCreditorId());
     }
 
-    public function testGetCreditorName() {
+    public function testGetCreditorName()
+    {
         $this->sepaConfig->method('getValue')->with('creditor_name')->willReturn('CREDITOR NAME');
         $this->assertEquals('CREDITOR NAME', $this->block->getCreditorName());
     }
 
-    public function testGetStoreCity() {
+    public function testGetStoreCity()
+    {
         $this->sepaConfig->method('getValue')->with('creditor_city')->willReturn('CREDITOR CITY');
         $this->assertEquals('CREDITOR CITY', $this->block->getStoreCity());
     }
 
-    public function testGetMandateId() {
-        $this->assertEquals('--'.strtotime(date("Y-m-d H:i:s")), $this->block->getMandateId());
+    public function testGetMandateId()
+    {
+        $this->assertEquals('--' . strtotime(date("Y-m-d H:i:s")), $this->block->getMandateId());
     }
 }

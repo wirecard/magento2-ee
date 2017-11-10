@@ -35,7 +35,6 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Request\Http;
 use Magento\Framework\View\Result\PageFactory;
 use Psr\Log\LoggerInterface;
 
@@ -54,23 +53,22 @@ class Sepamandate extends Action
 
     protected $_resultPageFactory;
 
-
-
-    public function __construct(Context $context, PageFactory $resultPageFactory, Session $session, LoggerInterface $logger)
-    {
-        parent::__construct($context);
-
+    public function __construct(
+        Context $context,
+        PageFactory $resultPageFactory,
+        Session $session,
+        LoggerInterface $logger
+    ) {
         $this->session = $session;
         $this->logger = $logger;
-        $this->_url               = $context->getUrl();
         $this->_resultPageFactory = $resultPageFactory;
+        $this->_url = $context->getUrl();
+
+        parent::__construct($context);
     }
 
     public function execute()
     {
-        $this->logger->debug('Sepa: ');
-
-
         $page = $this->_resultPageFactory->create();
         $page->getLayout()->getBlock('frontend.sepamandate');
 

@@ -46,8 +46,8 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
-use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Entity\Mandate;
+use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 
 class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
@@ -135,12 +135,12 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     private function minimumExpectedTransaction()
     {
-        $additionalInfo = array(
+        $additionalInfo = [
             'bankBic' => 'WIREDEMMXXX',
             'bankAccountIban' => 'DE42512308000000060004',
             'accountFirstName' => 'Jane',
             'accountLastName' => 'Doe'
-        );
+        ];
         $this->payment->expects(static::once())
             ->method('getPayment')
             ->willReturn($this->paymentInfo);

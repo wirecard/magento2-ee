@@ -73,11 +73,6 @@ class SepaMandateBlock extends Template
         $this->session = $session;
     }
 
-    public function getCreditorId()
-    {
-        return $this->sepaConfig->getValue('creditor_id');
-    }
-
     public function getCreditorName()
     {
         return $this->sepaConfig->getValue('creditor_name');
@@ -85,8 +80,12 @@ class SepaMandateBlock extends Template
 
     public function getMandateId()
     {
-
         return $this->getCreditorId() . "-" . $this->session->getQuoteId() . "-" . strtotime(date("Y-m-d H:i:s"));
+    }
+
+    public function getCreditorId()
+    {
+        return $this->sepaConfig->getValue('creditor_id');
     }
 
     public function getStoreCity()
