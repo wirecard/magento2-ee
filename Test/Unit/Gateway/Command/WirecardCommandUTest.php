@@ -149,7 +149,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         return [
             [ Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY],
             [ Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY],
-            [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::PAY ],
+            [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE],
             [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY ]
         ];
     }
