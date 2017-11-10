@@ -118,9 +118,9 @@ class WirecardCommand implements CommandInterface
         $stateObject->setData('state', Order::STATE_PENDING_PAYMENT);
 
         $operation = Operation::PAY;
-        /*if ($transaction instanceof Reservable && $this->methodConfig->getValue('payment_action') === PaymentAction::AUTHORIZE) {
+        if ($transaction instanceof Reservable && $this->methodConfig->getValue('payment_action') === PaymentAction::AUTHORIZE) {
             $operation = Operation::RESERVE;
-        }*/
+        }
 
         try {
             $response = $transactionService->process($transaction, $operation);

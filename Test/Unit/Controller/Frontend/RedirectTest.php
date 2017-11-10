@@ -107,6 +107,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 
         $postParams = $this->getMock(ParametersInterface::class);
         $postParams->method('toArray')->willReturn(['test' => 'payload']);
+        $getParams = $this->getMock(ParametersInterface::class);
 
         $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
         $this->request->method('getPost')->willReturn($postParams);

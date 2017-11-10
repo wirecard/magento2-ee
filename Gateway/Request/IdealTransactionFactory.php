@@ -39,6 +39,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 
 /**
  * Class IdealTransactionFactory
@@ -86,7 +87,6 @@ class IdealTransactionFactory extends TransactionFactory
      */
     public function create($commandSubject)
     {
-        $this->logger->debug('creating ideal transaction');
         parent::create($commandSubject);
 
         /** @var PaymentDataObjectInterface $payment */

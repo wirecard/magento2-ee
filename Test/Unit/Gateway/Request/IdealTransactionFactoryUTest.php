@@ -68,6 +68,8 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $order;
 
+    private $paymentInfo;
+
     private $commandSubject;
 
     public function setUp()
@@ -101,6 +103,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getShippingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
+        $this->paymentInfo = $this->getMock(InfoInterface::class);
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
@@ -118,19 +121,6 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
 
-    public function testCreateSetsDescriptor()
-    {
-        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
-
-        $transaction = new IdealTransaction();
-        $transactionFactory = new IdealTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setDescriptor('My shop n ' . self::ORDER_ID);
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
-    }
-
     /**
      * @return IdealTransaction
      */
@@ -139,6 +129,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $additionalInfo = array(
             'bankBic' => IdealBic::INGBNL2A
         );
+
         $this->payment->expects(static::once())
             ->method('getPayment')
             ->willReturn($this->paymentInfo);

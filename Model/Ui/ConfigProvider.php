@@ -35,6 +35,7 @@ namespace Wirecard\ElasticEngine\Model\Ui;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -115,16 +116,16 @@ class ConfigProvider implements ConfigProviderInterface
     private function getIdealBic()
     {
         $options = [
-            ['key' => 'ABNANL2A', 'label' => 'ABN Amro Bank'],
-            ['key' => 'ASNBNL21', 'label' => 'ASN Bank'],
-            ['key' => 'BUNQNL2A', 'label' => 'bunq'],
-            ['key' => 'INGBNL2A', 'label' => 'ING'],
-            ['key' => 'KNABNL2H', 'label' => 'Knab'],
-            ['key' => 'RABONL2U', 'label' => 'Rabobank'],
-            ['key' => 'RGGINL21', 'label' => 'Regio Bank'],
-            ['key' => 'SNSBNL2A', 'label' => 'SNS Bank'],
-            ['key' => 'TRIONL2U', 'label' => 'Triodos Bank'],
-            ['key' => 'FVLBNL22', 'label' => 'Van Lanschot Bankiers']
+            ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
+            ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
+            ['key' => IdealBic::BUNQNL2A, 'label' => 'bunq'],
+            ['key' => IdealBic::INGBNL2A, 'label' => 'ING'],
+            ['key' => IdealBic::KNABNL2H, 'label' => 'Knab'],
+            ['key' => IdealBic::RABONL2U, 'label' => 'Rabobank'],
+            ['key' => IdealBic::RGGINL21, 'label' => 'Regio Bank'],
+            ['key' => IdealBic::SNSBNL2A, 'label' => 'SNS Bank'],
+            ['key' => IdealBic::TRIONL2U, 'label' => 'Triodos Bank'],
+            ['key' => IdealBic::FVLBNL22, 'label' => 'Van Lanschot Bankiers']
         ];
         return $options;
     }
