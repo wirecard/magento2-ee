@@ -30,9 +30,9 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 -->
-<div id="sepaMandate" display="none">
-</div>
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div id="sepaMandate" display="none">
+    </div>
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
@@ -122,7 +122,7 @@
 
             </fieldset>
         </form>
-
+        <br>
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"
