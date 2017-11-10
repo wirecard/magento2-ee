@@ -30,6 +30,8 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
+
+$mandateId = $this->getMandateId();
 ?>
 <table border="0" cellpadding="0" cellspacing="0" class="stretch">
     <tr>
@@ -38,9 +40,10 @@
                 <tr>
                     <td class="text11justify">
                         <i ><?php echo __('Zahlungsempfänger') ?></i><br />
-                        creditorName, Ort<br />
-                        <?php echo __('Creditor-ID:') ?> creditorId<br />
-                        <?php echo __('Mandatsreferenz:') ?> mandateId<br />
+                        <?php echo $this->getCreditorName() ?>, <?php echo $this->getStoreCity() ?><br />
+                        <?php echo __('Creditor-ID:') ?> <?php echo $this->getCreditorId() ?><br />
+                        <?php echo __('Mandatsreferenz:') ?> <?php echo $mandateId ?><br />
+                        <input type="hidden" name="mandateId" value="<?php echo $mandateId ?>">
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -106,23 +109,7 @@
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        Ort, elvSEPASignatureDate %firstname% %lastname%
-                    </td>
-                    <td width="10%">&nbsp;</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td class="text11justify">
-            <table border="0" width="100%">
-                <tr>
-                    <td>
-                            <table border="0" width="100%">
-                                <tr>
-                                    <td class="text11justify">elvAGBAccept</td>
-                                </tr>
-                            </table>
+                        <?php echo $this->getStoreCity() ?>, <?php echo date("d.m.Y") ?> %firstname% %lastname%
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
