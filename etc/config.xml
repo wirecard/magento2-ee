@@ -139,7 +139,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             </wirecard_elasticengine_maestro>
             <wirecard_elasticengine_ideal>
                 <title>Wirecard iDEAL</title>
-                <active>1</active>
+                <active>0</active>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>0</can_capture>
