@@ -74,7 +74,7 @@ class ConfigProvider implements ConfigProviderInterface
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
                 $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
                 $this->getConfigForCreditCard(self::MAESTRO_CODE) +
-                $this->getConfigForPaymentMethod(self::SEPA_CODE)
+                $this->getConfigForSepa(self::SEPA_CODE)
         ];
     }
 
@@ -83,6 +83,17 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName)
+            ]
+        ];
+    }
+
+    private function getConfigForSepa($paymentMethodName)
+    {
+        $this->methodsConfig->getValue('wirecard_elasticengine_sepa/enable_bic');
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'enable_bic' => $this->methodsConfig->getValue('wirecard_elasticengine_sepa/enable_bic')
             ]
         ];
     }

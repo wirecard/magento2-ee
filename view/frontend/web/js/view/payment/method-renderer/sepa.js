@@ -91,7 +91,6 @@ define(
                             text: 'Accept',
                             click: function() {
                                 self.mandateId = $("input[name=mandateId]", sepaMandate).val();
-                                console.log(self.mandateId);
                                 this.closeModal();
                                 self.placeOrder();
                             }
@@ -111,6 +110,8 @@ define(
 
                                     if(self.hasBankBic()) {
                                     response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepa_bankAccountBic").val());
+                                    } else {
+                                        response = response.replace(/%bankBic%/g, '');
                                     }
                                     acceptButton.removeClass('disabled');
                                     sepaMandate.html(response).show();
