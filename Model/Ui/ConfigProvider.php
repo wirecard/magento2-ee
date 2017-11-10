@@ -89,11 +89,9 @@ class ConfigProvider implements ConfigProviderInterface
 
     private function getConfigForSepa($paymentMethodName)
     {
-        $this->methodsConfig->getValue('wirecard_elasticengine_sepa/enable_bic');
         return [
             $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'enable_bic' => $this->methodsConfig->getValue('wirecard_elasticengine_sepa/enable_bic')
+                'logo_url' => $this->getLogoUrl($paymentMethodName)
             ]
         ];
     }
