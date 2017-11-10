@@ -42,10 +42,10 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\IdealTransactionFactory;
-use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 
@@ -90,8 +90,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $address->method('getFirstname')->willReturn('Joe');
         $address->method('getLastname')->willReturn('Doe');
 
-        $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
-            ->disableOriginalConstructor()->getMock();
+        $this->order = $this->getMockBuilder(OrderAdapterInterface::class)->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
         $this->order->method('getBillingAddress')->willReturn($address);
         $this->order->method('getShippingAddress')->willReturn($address);
@@ -101,8 +100,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $addInfo = ['bankBic' => IdealBic::INGBNL2A];
         $this->paymentInfo->method('getAdditionalInformation')->willReturn($addInfo);
 
-        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
-            ->disableOriginalConstructor()->getMock();
+        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
         $this->payment->method('getPayment')->willReturn($this->paymentInfo);
 

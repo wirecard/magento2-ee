@@ -35,8 +35,8 @@ namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 use Magento\Framework\View\Asset\Repository;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
-use Wirecard\PaymentSdk\TransactionService;
 use Wirecard\PaymentSdk\Entity\IdealBic;
+use Wirecard\PaymentSdk\TransactionService;
 
 class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 {

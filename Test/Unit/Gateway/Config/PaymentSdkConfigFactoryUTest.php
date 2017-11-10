@@ -106,10 +106,10 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         });
 
         $methodConfigIdeal = $this->getMock(ConfigInterface::class);
-                $methodConfigIdeal->method(self::GET_VALUE)->withConsecutive(
-                    ['merchant_account_id'],
-                    ['secret']
-                )->willReturnOnConsecutiveCalls('account_id_123', 'secret_key');
+        $methodConfigIdeal->method(self::GET_VALUE)->withConsecutive(
+            ['merchant_account_id'],
+            ['secret']
+        )->willReturnOnConsecutiveCalls('account_id_123', 'secret_key');
 
         $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)
             ->disableOriginalConstructor()->getMock();
