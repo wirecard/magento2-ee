@@ -53,8 +53,8 @@ define(
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
             },
             {
-                type: 'wirecard_elasticengine_sofort',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/sofort'
+                type: 'wirecard_elasticengine_sofortbanking',
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
             }
         );
         return Component.extend({});

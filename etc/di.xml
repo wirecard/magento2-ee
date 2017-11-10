@@ -297,7 +297,7 @@
             <argument name="methodConfigs" xsi:type="array">
                 <item name="paypal" xsi:type="object">WirecardPaypalConfig</item>
                 <item name="creditcard" xsi:type="object">WirecardCreditCardConfig</item>
-                <item name="sofort" xsi:type="object">WirecardSofortConfig</item>
+                <item name="sofortbanking" xsi:type="object">WirecardSofortConfig</item>
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
