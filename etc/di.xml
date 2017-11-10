@@ -326,4 +326,9 @@
             <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
         </arguments>
     </type>
+    <type name="Wirecard\ElasticEngine\Block\SepaMandateBlock">
+        <arguments>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </type>
 </config>
