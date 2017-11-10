@@ -49,6 +49,7 @@ define(
             accountLastName: '',
             bankBic: '',
             bankAccountIban: '',
+            mandateId: '',
             mandate: false,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-sepa',
@@ -65,7 +66,8 @@ define(
                         'accountFirstName': this.accountFirstName,
                         'accountLastName': this.accountLastName,
                         'bankBic': this.bankBic,
-                        'bankAccountIban': this.bankAccountIban
+                        'bankAccountIban': this.bankAccountIban,
+                        'mandateId': this.mandateId
                     }
                 };
             },
@@ -88,6 +90,8 @@ define(
                         buttons: [{
                             text: 'Accept',
                             click: function() {
+                                self.mandateId = $("input[name=mandateId]", sepaMandate).val();
+                                console.log(self.mandateId);
                                 this.closeModal();
                                 self.placeOrder();
                             }
@@ -97,18 +101,19 @@ define(
                                 click: this.closeModal
                             }],
                         opened: function(){
+                                var acceptButton = $("footer button:first", sepaMandate.closest('.modal-inner-wrap'));
+                            acceptButton.addClass('disabled');
                             $.get(url.build('wirecard_elasticengine/frontend/sepamandate', {})).done(
                                 function (response) {
                                     response = response.replace(/%firstname%/g, $("#wirecard_elasticengine_sepa_accountFirstName").val())
                                         .replace(/%lastname%/g, $("#wirecard_elasticengine_sepa_accountLastName").val())
                                         .replace(/%bankAccountIban%/g, $("#wirecard_elasticengine_sepa_bankAccountIban").val());
-                                    var bankAccountBic = $("#wirecard_elasticengine_sepa_bankAccountBic").val();
 
-                                    if(bankAccountBic == undefined) {
-                                        bankAccountBic = "";
+                                    if(self.hasBankBic()) {
+                                    response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepa_bankAccountBic").val());
                                     }
-                                    response = response.replace(/%bankBic%/g, bankAccountBic);
-                                    sepaMandate.append(response).show();
+                                    acceptButton.removeClass('disabled');
+                                    sepaMandate.html(response).show();
                                 }
                             );
                         }
