@@ -36,14 +36,14 @@
         <title/>
     </head>
     <body>
-        <referenceContainer name="page.wrapper" remove="true"/>
+        <referenceContainer name="header.container" remove="true" />
+        <referenceBlock name="page.messages" remove="true"/>
+        <referenceBlock name="navigation.sections" remove="true"/>
         <referenceContainer name="content">
-            <block class="Magento\Framework\View\Element\Template" template="Wirecard_ElasticEngine::sepamandate.phtml" name="frontend.sepamandate" cacheable="false"/>
+            <block class="Wirecard\ElasticEngine\Block\SepaMandateBlock" template="Wirecard_ElasticEngine::sepamandate.phtml" name="frontend.sepamandate" cacheable="false"/>
         </referenceContainer>
-        <referenceBlock name="footer_links" remove="true"/>
         <referenceBlock name="catalog.topnav" remove="true"/>
         <referenceBlock name="minicart" remove="true"/>
-        <referenceBlock name="header.links" remove="true"/>
         <referenceBlock name="top.search" remove="true"/>
         <referenceBlock name="messages" remove="true"/>
         <referenceBlock name="store.links" remove="true"/>
@@ -51,6 +51,7 @@
         <referenceBlock name="form.subscribe" remove="true"/>
         <referenceBlock name="footer" remove="true"/>
         <referenceBlock name="logo" remove="true"/>
+        <referenceContainer name="copyright" remove="true"/>
     </body>
 </page>
 
