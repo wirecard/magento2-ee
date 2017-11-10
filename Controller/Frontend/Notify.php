@@ -83,8 +83,13 @@ class Notify extends Action
      * @param LoggerInterface $logger
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
-    public function __construct(Context $context, TransactionServiceFactory $transactionServiceFactory, OrderRepositoryInterface $orderRepository, LoggerInterface $logger, SearchCriteriaBuilder $searchCriteriaBuilder)
-    {
+    public function __construct(
+        Context $context,
+        TransactionServiceFactory $transactionServiceFactory,
+        OrderRepositoryInterface $orderRepository,
+        LoggerInterface $logger,
+        SearchCriteriaBuilder $searchCriteriaBuilder
+    ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
@@ -135,7 +140,8 @@ class Notify extends Action
                     $this->orderRepository->save($order);
                 } else {
                     $this->updateOrderState($order, Order::STATUS_FRAUD);
-                    $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s', $orderId));
+                    $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s',
+                        $orderId));
                 }
             }
 
