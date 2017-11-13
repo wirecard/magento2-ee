@@ -48,6 +48,8 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class Redirect extends Action
 {
+    const CHECKOUT_URL = 'checkout/cart';
+
     /**
      * @var Session
      */
@@ -88,7 +90,7 @@ class Redirect extends Action
             } else {
                 $this->checkoutSession->restoreQuote();
                 $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
-                $this->setRedirectPath($resultRedirect, 'checkout/cart');
+                $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
             }
         } elseif ($this->getRequest()->getParam('request_id')) {
             //Ideal transaction
@@ -99,12 +101,12 @@ class Redirect extends Action
             } else {
                 $this->checkoutSession->restoreQuote();
                 $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
-                $this->setRedirectPath($resultRedirect, 'checkout/cart');
+                $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
             }
         } else {
             $this->checkoutSession->restoreQuote();
             $this->messageManager->addNoticeMessage(__('There is no existing information for this payment method.'));
-            $this->setRedirectPath($resultRedirect, 'checkout/cart');
+            $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
         }
 
         return $resultRedirect;
