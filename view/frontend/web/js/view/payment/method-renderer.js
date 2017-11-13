@@ -53,6 +53,10 @@ define(
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
             },
             {
+                type: 'wirecard_elasticengine_sofortbanking',
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+            },
+            {
                 type: 'wirecard_elasticengine_ideal',
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ideal'
             }

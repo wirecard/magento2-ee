@@ -93,6 +93,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $seamlessRequestData
                 ],
+                'wirecard_elasticengine_sofortbanking' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
+                ],
                 'wirecard_elasticengine_ideal' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
