@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
+use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Element\AbstractBlock;
 use Magento\Framework\View\Layout;
 use Magento\Framework\View\Result\Page;
@@ -60,8 +61,17 @@ class SepamandateUTest extends \PHPUnit_Framework_TestCase
      */
     private $block;
 
+    /**
+     * @var $context Context|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $context;
+
     public function setUp()
     {
+        $this->context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->page = $this->getMockWithoutInvokingTheOriginalConstructor(Page::class);
         $this->layout = $this->getMockWithoutInvokingTheOriginalConstructor(Layout::class);
         $this->block = $this->getMockWithoutInvokingTheOriginalConstructor(AbstractBlock::class);
@@ -75,7 +85,7 @@ class SepamandateUTest extends \PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
-        $prov = new Sepamandate($this->resultFactory);
+        $prov = new Sepamandate($this->context, $this->resultFactory);
         $result = $prov->execute();
 
         $this->assertEquals($this->page, $result);
