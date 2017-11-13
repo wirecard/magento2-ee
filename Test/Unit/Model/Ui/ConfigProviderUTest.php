@@ -85,7 +85,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
@@ -174,7 +174,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_sepa' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'enable_bic' => false
+                    'enable_bic' => true
                 ],
                 'wirecard_elasticengine_sofortbanking' => [
                     'logo_url' => self::LOGO_URL_PATH,
