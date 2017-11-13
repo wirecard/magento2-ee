@@ -110,7 +110,6 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 
         $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
         $this->request->method('getPost')->willReturn($postParams);
-        //$this->request->method('getParam')->willReturn(['request_id' => '1234']);
         $this->request->method('getParams')->willReturn(['request_id' => '1234']);
         $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
 
@@ -132,7 +131,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithGetSuccess()
     {
         $this->setIsPost(false);
-        $this->setHasRequestId(true);
+        $this->setIsGet(true);
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($successResponse);
 
@@ -143,7 +142,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithGetFailure()
     {
         $this->setIsPost(false);
-        $this->setHasRequestId(true);
+        $this->setIsGet(true);
         $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
         $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($failureResponse);
 
@@ -156,7 +155,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithoutParam()
     {
         $this->setIsPost(false);
-        $this->setHasRequestId(false);
+        $this->setIsGet(false);
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo('checkout/cart'), $this->isSecure());
         $this->session->expects($this->once())->method('restoreQuote');
         $this->controller->execute();
@@ -165,6 +164,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function testExecuteSuccessResponse()
     {
         $this->setIsPost(true);
+        $this->setIsGet(false);
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($successResponse);
 
@@ -175,6 +175,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function testExecuteFailureResponse()
     {
         $this->setIsPost(true);
+        $this->setIsGet(false);
         $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
         $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($failureResponse);
 
@@ -195,11 +196,10 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $value
      */
-    private function setHasRequestId($value)
+    private function setIsGet($value)
     {
-        if ($value) {
-            $this->request->method('getParam')->willReturn('1234');
-        }
+        $this->request->method('isGet')->willReturn($value);
+        $this->request->method('getParam')->willReturn('1234');
     }
 
     /**

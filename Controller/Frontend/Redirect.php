@@ -92,7 +92,7 @@ class Redirect extends Action
                 $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
                 $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
             }
-        } elseif ($this->getRequest()->getParam('request_id')) {
+        } elseif ($this->getRequest()->isGet() && $this->getRequest()->getParam('request_id')) {
             //Ideal transaction
             $transactionService = $this->transactionServiceFactory->create();
             $result = $transactionService->handleResponse($this->getRequest()->getParams());
