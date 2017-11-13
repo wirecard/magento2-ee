@@ -74,6 +74,26 @@
             <argument name="commandPool" xsi:type="object">SepaCommandPool</argument>
         </arguments>
     </virtualType>
+    <virtualType name="SofortFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SOFORT_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SofortValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SofortValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SofortCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="IdealFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::IDEAL_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IdealValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">IdealValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">IdealCommandPool</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Value handlers -->
     <virtualType name="PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
@@ -127,6 +147,32 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="SofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SofortConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SofortConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardSofortConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IdealValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IdealConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="IdealConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardIdealConfig</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Configs -->
     <virtualType name="WirecardElasticEngineConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
@@ -154,6 +200,16 @@
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPA_CODE</argument>
         </arguments>
     </virtualType>
+    <virtualType name="WirecardSofortConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SOFORT_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WirecardIdealConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::IDEAL_CODE</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Validator -->
     <virtualType name="PaypalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
@@ -177,6 +233,20 @@
     </virtualType>
 
     <virtualType name="SepaValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SofortValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IdealValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
             </argument>
@@ -248,6 +318,38 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="SofortCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">SofortInitializeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SofortInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SofortTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSofortConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IdealCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">IdealInitializeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="IdealInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">IdealTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardIdealConfig</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Wirecard paymentSDK transaction objects -->
     <virtualType name="PayPalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory">
         <arguments>
@@ -268,6 +370,19 @@
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaTransaction</argument>
             <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SofortTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SofortTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SofortTransaction</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSofortConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IdealTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\IdealTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\IdealTransaction</argument>
         </arguments>
     </virtualType>
 
@@ -297,6 +412,8 @@
                 <item name="paypal" xsi:type="object">WirecardPaypalConfig</item>
                 <item name="creditcard" xsi:type="object">WirecardCreditCardConfig</item>
                 <item name="sepa" xsi:type="object">WirecardSepaConfig</item>
+                <item name="sofortbanking" xsi:type="object">WirecardSofortConfig</item>
+                <item name="ideal" xsi:type="object">WirecardIdealConfig</item>
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>

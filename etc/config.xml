@@ -155,6 +155,38 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <enable_bic>0</enable_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
             </wirecard_elasticengine_sepa>
+            <wirecard_elasticengine_sofortbanking>
+                <title>Wirecard Sofort.</title>
+                <active>0</active>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>SofortFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>debit</payment_action>
+                <merchant_account_id>c021a23a-49a5-4987-aa39-e8e858d29bad</merchant_account_id>
+                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+            </wirecard_elasticengine_sofortbanking>
+            <wirecard_elasticengine_ideal>
+                <title>Wirecard iDEAL</title>
+                <active>0</active>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>IdealFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>debit</payment_action>
+                <merchant_account_id>b4ca14c0-bb9a-434d-8ce3-65fbff2c2267</merchant_account_id>
+                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+            </wirecard_elasticengine_ideal>
         </payment>
     </default>
 </config>

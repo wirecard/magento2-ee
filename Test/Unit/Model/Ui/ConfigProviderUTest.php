@@ -37,6 +37,7 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\MethodInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\TransactionService;
 
 class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
@@ -53,6 +54,19 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         ];
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
+
+        $idealBic = [
+            ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
+            ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
+            ['key' => IdealBic::BUNQNL2A, 'label' => 'bunq'],
+            ['key' => IdealBic::INGBNL2A, 'label' => 'ING'],
+            ['key' => IdealBic::KNABNL2H, 'label' => 'Knab'],
+            ['key' => IdealBic::RABONL2U, 'label' => 'Rabobank'],
+            ['key' => IdealBic::RGGINL21, 'label' => 'Regio Bank'],
+            ['key' => IdealBic::SNSBNL2A, 'label' => 'SNS Bank'],
+            ['key' => IdealBic::TRIONL2U, 'label' => 'Triodos Bank'],
+            ['key' => IdealBic::FVLBNL22, 'label' => 'Van Lanschot Bankiers']
+        ];
 
         /**
          * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
@@ -71,11 +85,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
-                    'logo_url' => self::LOGO_URL_PATH
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
                 ],
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -84,6 +99,14 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_maestro' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $seamlessRequestData
+                ],
+                'wirecard_elasticengine_sofortbanking' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
+                ],
+                'wirecard_elasticengine_ideal' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
                 ],
                 'wirecard_elasticengine_sepa' => [
                     'logo_url' => self::LOGO_URL_PATH,

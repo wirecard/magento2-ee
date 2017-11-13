@@ -41,4 +41,7 @@
     <event name="payment_method_assign_data_wirecard_elasticengine_sepa">
         <observer name="wirecard_elasticengine_sepa_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\SepaDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_wirecard_elasticengine_ideal">
+        <observer name="wirecard_elasticengine_ideal_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\IdealDataAssignObserver" />
+    </event>
 </config>
