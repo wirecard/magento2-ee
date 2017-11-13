@@ -77,6 +77,9 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_maestro' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $seamlessRequestData
+                ],
+                'wirecard_elasticengine_sofortbanking' => [
+                    'logo_url' => self::LOGO_URL_PATH
                 ]
             ]
         ], $prov->getConfig());

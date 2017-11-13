@@ -51,6 +51,10 @@ define(
             {
                 type: 'wirecard_elasticengine_maestro',
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
+            },
+            {
+                type: 'wirecard_elasticengine_sofortbanking',
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
             }
         );
         return Component.extend({});
