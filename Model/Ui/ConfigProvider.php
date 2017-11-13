@@ -84,8 +84,7 @@ class ConfigProvider implements ConfigProviderInterface
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
                 $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
                 $this->getConfigForCreditCard(self::MAESTRO_CODE) +
-                $this->getConfigForSepa(self::SEPA_CODE)
-                $this->getConfigForCreditCard(self::MAESTRO_CODE) +
+                $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE)
         ];
@@ -99,7 +98,8 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName)
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'ideal_bic' => $this->getIdealBic()
             ]
         ];
     }
@@ -113,7 +113,6 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'ideal_bic' => $this->getIdealBic(),
                 'enable_bic' => $this->getBicEnabled()
             ]
         ];
