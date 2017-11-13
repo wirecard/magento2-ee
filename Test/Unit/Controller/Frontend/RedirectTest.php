@@ -197,7 +197,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
      */
     private function setHasRequestId($value)
     {
-        if($value) {
+        if ($value) {
             $this->request->method('getParam')->willReturn('1234');
         }
     }
