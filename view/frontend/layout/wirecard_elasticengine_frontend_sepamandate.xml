@@ -40,7 +40,7 @@
         <referenceBlock name="page.messages" remove="true"/>
         <referenceBlock name="navigation.sections" remove="true"/>
         <referenceContainer name="content">
-            <block class="Wirecard\ElasticEngine\Block\SepaMandateBlock" template="Wirecard_ElasticEngine::sepamandate.phtml" name="frontend.sepamandate" cacheable="false"/>
+            <block class="Wirecard\ElasticEngine\Block\Checkout\SepaMandateBlock" template="Wirecard_ElasticEngine::sepamandate.phtml" name="frontend.sepamandate" cacheable="false"/>
         </referenceContainer>
         <referenceBlock name="catalog.topnav" remove="true"/>
         <referenceBlock name="minicart" remove="true"/>

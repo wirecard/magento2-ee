@@ -58,7 +58,7 @@ $mandateId = $this->getMandateId();
                         <i><?php echo __('Zahlungspflichtiger') ?></i><br />
                         <?php echo __('Kontoinhaber:') ?> %firstname% %lastname%<br />
                         <?php echo __('IBAN:') ?> %bankAccountIban% <br />
-                        <?php if(true) {
+                        <?php if($this->getBankBicEnabled()) {
                             echo __('BIC:') ?> %bankBic% <br /><?php
                                 }
                                 ?>

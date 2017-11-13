@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
+use Magento\Payment\Helper\Data;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 
 class ConfigProvider implements ConfigProviderInterface
@@ -52,15 +53,21 @@ class ConfigProvider implements ConfigProviderInterface
      * @var TransactionServiceFactory
      */
     private $transactionServiceFactory;
+
+    /**
+     * @var Data
+     */
+    private $paymentHelper;
     /**
      * ConfigProvider constructor.
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param Repository $assetRepo
      */
-    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo)
+    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper)
     {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->assetRepository = $assetRepo;
+        $this->paymentHelper = $paymentHelper;
     }
 
     /**
@@ -78,6 +85,10 @@ class ConfigProvider implements ConfigProviderInterface
         ];
     }
 
+    /**
+     * @param $paymentMethodName
+     * @return array
+     */
     private function getConfigForPaymentMethod($paymentMethodName)
     {
         return [
@@ -87,15 +98,24 @@ class ConfigProvider implements ConfigProviderInterface
         ];
     }
 
+    /**
+     * @param $paymentMethodName
+     * @return array
+     */
     private function getConfigForSepa($paymentMethodName)
     {
         return [
             $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName)
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'enable_bic' => $this->getBicEnabled()
             ]
         ];
     }
 
+    /**
+     * @param $paymentMethodName
+     * @return array
+     */
     private function getConfigForCreditCard($paymentMethodName)
     {
         $transactionService = $this->transactionServiceFactory->create();
@@ -115,5 +135,14 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $logoName = substr($code, strlen('wirecard_elasticengine_')) . '.png';
         return $this->assetRepository->getUrlWithParams('Wirecard_ElasticEngine::images/' . $logoName, ['_secure' => true]);
+    }
+
+    /**
+     * @return string
+     */
+    private function getBicEnabled()
+    {
+        $method = $this->paymentHelper->getMethodInstance(self::SEPA_CODE);
+        return $method->getConfigData('enable_bic');
     }
 }

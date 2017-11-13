@@ -30,55 +30,86 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Test\Unit\Block;
+namespace Wirecard\ElasticEngine\Block\Checkout;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\View\Element\Template\Context;
+use Magento\Framework\View\Element\Template;
 use Magento\Payment\Gateway\ConfigInterface;
-use Wirecard\ElasticEngine\Block\SepaMandateBlock;
 
-class SepaMandateBlockUTest extends \PHPUnit_Framework_TestCase
+class SepaMandateBlock extends Template
 {
     /**
-     * @var ConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ConfigInterface
      */
     private $sepaConfig;
 
     /**
-     * @var SepaMandateBlock|\PHPUnit_Framework_MockObject_MockObject
+     * @var Template\Context $context
      */
-    private $block;
+    private $context;
 
-    protected function setUp()
-    {
-        $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
-        $this->sepaConfig = $this->getMockWithoutInvokingTheOriginalConstructor(ConfigInterface::class);
+    /**
+     * @var Session $session
+     */
+    private $session;
 
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
-
-        $this->block = new SepaMandateBlock($context, $this->sepaConfig, $session, []);
+    /**
+     * Constructor
+     *
+     * @param Template\Context $context
+     * @param ConfigInterface $methodConfig
+     * @param Session $session
+     * @param array $data
+     */
+    public function __construct(
+        Template\Context $context,
+        ConfigInterface $methodConfig,
+        Session $session,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
+        $this->sepaConfig = $methodConfig;
+        $this->context = $context;
+        $this->session = $session;
     }
 
-    public function testGetCreditorId()
+    /**
+     * @return string
+     */
+    public function getCreditorName()
     {
-        $this->sepaConfig->method('getValue')->with('creditor_id')->willReturn('CREDITOR ID');
-        $this->assertEquals('CREDITOR ID', $this->block->getCreditorId());
+        return $this->sepaConfig->getValue('creditor_name');
     }
 
-    public function testGetCreditorName()
+    /**
+     * @return string
+     */
+    public function getMandateId()
     {
-        $this->sepaConfig->method('getValue')->with('creditor_name')->willReturn('CREDITOR NAME');
-        $this->assertEquals('CREDITOR NAME', $this->block->getCreditorName());
+        return $this->getCreditorId() . "-" . $this->session->getQuoteId() . "-" . strtotime(date("Y-m-d H:i:s"));
     }
 
-    public function testGetStoreCity()
+    /**
+     * @return string
+     */
+    public function getCreditorId()
     {
-        $this->sepaConfig->method('getValue')->with('creditor_city')->willReturn('CREDITOR CITY');
-        $this->assertEquals('CREDITOR CITY', $this->block->getStoreCity());
+        return $this->sepaConfig->getValue('creditor_id');
     }
 
-    public function testGetMandateId()
+    /**
+     * @return string
+     */
+    public function getStoreCity()
     {
-        $this->assertEquals('--' . strtotime(date("Y-m-d H:i:s")), $this->block->getMandateId());
+        return $this->sepaConfig->getValue('creditor_city');
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getBankBicEnabled()
+    {
+        return $this->sepaConfig->getValue('enable_bic');
     }
 }

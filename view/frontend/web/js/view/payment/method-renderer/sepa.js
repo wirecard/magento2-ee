@@ -109,7 +109,7 @@ define(
                                         .replace(/%bankAccountIban%/g, $("#wirecard_elasticengine_sepa_bankAccountIban").val());
 
                                     if(self.hasBankBic()) {
-                                    response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepa_bankAccountBic").val());
+                                    response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepa_bankBic").val());
                                     } else {
                                         response = response.replace(/%bankBic%/g, '');
                                     }

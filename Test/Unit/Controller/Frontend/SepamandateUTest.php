@@ -30,36 +30,54 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Controller\Frontend;
+namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
-use Magento\Framework\App\Action\Action;
+use Magento\Framework\View\Element\AbstractBlock;
+use Magento\Framework\View\Layout;
+use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
+use Wirecard\ElasticEngine\Controller\Frontend\Sepamandate;
 
-class Sepamandate extends Action
+class SepamandateUTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var PageFactory
+     * @var PageFactory|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $resultPageFactory;
+    private $resultFactory;
 
     /**
-     * Sepamandate constructor.
-     * @param PageFactory $resultPageFactory
+     * @var Page|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function __construct(
-        PageFactory $resultPageFactory
-    ) {
-        $this->resultPageFactory = $resultPageFactory;
+    private $page;
+
+    /**
+     * @var Layout|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $layout;
+
+    /**
+     * @var AbstractBlock|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $block;
+
+    public function setUp()
+    {
+        $this->page = $this->getMockWithoutInvokingTheOriginalConstructor(Page::class);
+        $this->layout = $this->getMockWithoutInvokingTheOriginalConstructor(Layout::class);
+        $this->block = $this->getMockWithoutInvokingTheOriginalConstructor(AbstractBlock::class);
+
+        $this->layout->method('getBlock')->with('frontend.sepamandate')->willReturn($this->block);
+        $this->page->method('getLayout')->willReturn($this->layout);
+
+        $this->resultFactory = $this->getMockWithoutInvokingTheOriginalConstructor(PageFactory::class);
+        $this->resultFactory->method('create')->willReturn($this->page);
     }
 
-    /**
-     * @return \Magento\Framework\View\Result\Page
-     */
-    public function execute()
+    public function testExecute()
     {
-        $page = $this->resultPageFactory->create();
-        $page->getLayout()->getBlock('frontend.sepamandate');
+        $prov = new Sepamandate($this->resultFactory);
+        $result = $prov->execute();
 
-        return $page;
+        $this->assertEquals($this->page, $result);
     }
 }

@@ -33,6 +33,8 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 
 use Magento\Framework\View\Asset\Repository;
+use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\MethodInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 use Wirecard\PaymentSdk\TransactionService;
@@ -41,7 +43,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 {
     const LOGO_URL_PATH = '/logo/url.png';
 
-    public function testGetConfigDummy()
+    public function testGetConfigDummyWithoutBic()
     {
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
@@ -58,13 +60,18 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $transactionServiceFactory->method('create')->willReturn($transactionService);
 
+        $methodInterface = $this->getMockWithoutInvokingTheOriginalConstructor(MethodInterface::class);
+        $methodInterface->method('getConfigData')->willReturn(false);
+        $paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(Data::class);
+        $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
+
         /**
          * @var $assetRepo Repository|\PHPUnit_Framework_MockObject_MockObject
          */
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
@@ -79,7 +86,58 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'seamless_request_data' => $seamlessRequestData
                 ],
                 'wirecard_elasticengine_sepa' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'enable_bic' => false
+                ]
+            ]
+        ], $prov->getConfig());
+    }
+
+    public function testGetConfigDummyWithBic()
+    {
+        $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
+        $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+
+        $seamlessRequestData = [
+            'key' => 'value'
+        ];
+        $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
+        $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
+
+        /**
+         * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $transactionServiceFactory->method('create')->willReturn($transactionService);
+
+        $methodInterface = $this->getMockWithoutInvokingTheOriginalConstructor(MethodInterface::class);
+        $methodInterface->method('getConfigData')->willReturn(true);
+        $paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(Data::class);
+        $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
+
+        /**
+         * @var $assetRepo Repository|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
+        $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
+
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper);
+        $this->assertEquals([
+            'payment' => [
+                'wirecard_elasticengine_paypal' => [
                     'logo_url' => self::LOGO_URL_PATH
+                ],
+                'wirecard_elasticengine_creditcard' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'seamless_request_data' => $seamlessRequestData
+                ],
+                'wirecard_elasticengine_maestro' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'seamless_request_data' => $seamlessRequestData
+                ],
+                'wirecard_elasticengine_sepa' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'enable_bic' => true
                 ]
             ]
         ], $prov->getConfig());
