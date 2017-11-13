@@ -61,7 +61,7 @@
 
             <fieldset data-bind="attr: {class: 'fieldset payment items sepa ' + getCode(), id: 'payment_form_' + getCode()}">
 
-                <div class="field accountFirstName">
+                <div class="field accountFirstName required">
                     <label data-bind="attr: {for: getCode() + '_accountFirstName'}" class="label">
                         <span><!-- ko i18n: 'First Name'--><!-- /ko --></span>
                     </label>
@@ -69,12 +69,13 @@
                         <input type="text" name="payment[sepa_accountFirstName]" class="input-text" value=""
                                data-bind="attr: { autocomplete: off, id: getCode() + '_accountFirstName',
                                     title: $t('First Name'),
-                                    'data-container': getCode() + '-accountFirstName' },
+                                    'data-container': getCode() + '-accountFirstName',
+                                    'data-validate': JSON.stringify({'required':true})},
                               value: accountFirstName"/>
                     </div>
                 </div>
 
-                <div class="field accountLastName">
+                <div class="field accountLastName required">
                     <label data-bind="attr: {for: getCode() + '_accountLastName'}" class="label">
                         <span><!-- ko i18n: 'Last Name'--><!-- /ko --></span>
                     </label>
@@ -82,7 +83,8 @@
                         <input type="text" name="payment[sepa_accountLastName]" class="input-text" value=""
                                data-bind="attr: { autocomplete: off, id: getCode() + '_accountLastName',
                                     title: $t('Last Name'),
-                                    'data-container': getCode() + '-accountLastName' },
+                                    'data-container': getCode() + '-accountLastName',
+                                    'data-validate': JSON.stringify({'required':true})},
                               value: accountLastName"/>
                     </div>
                 </div>
