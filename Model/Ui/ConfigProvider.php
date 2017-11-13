@@ -35,6 +35,7 @@ namespace Wirecard\ElasticEngine\Model\Ui;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -42,6 +43,7 @@ class ConfigProvider implements ConfigProviderInterface
     const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
     const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
+    const IDEAL_CODE = 'wirecard_elasticengine_ideal';
 
     /**
      * @var Repository
@@ -74,7 +76,8 @@ class ConfigProvider implements ConfigProviderInterface
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
                 $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
                 $this->getConfigForCreditCard(self::MAESTRO_CODE) +
-                $this->getConfigForPaymentMethod(self::SOFORT_CODE)
+                $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
+                $this->getConfigForPaymentMethod(self::IDEAL_CODE)
         ];
     }
 
@@ -83,6 +86,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'ideal_bic' => $this->getIdealBic(),
             ]
         ];
     }
@@ -106,5 +110,25 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $logoName = substr($code, strlen('wirecard_elasticengine_')) . '.png';
         return $this->assetRepository->getUrlWithParams('Wirecard_ElasticEngine::images/' . $logoName, ['_secure' => true]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getIdealBic()
+    {
+        $options = [
+            ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
+            ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
+            ['key' => IdealBic::BUNQNL2A, 'label' => 'bunq'],
+            ['key' => IdealBic::INGBNL2A, 'label' => 'ING'],
+            ['key' => IdealBic::KNABNL2H, 'label' => 'Knab'],
+            ['key' => IdealBic::RABONL2U, 'label' => 'Rabobank'],
+            ['key' => IdealBic::RGGINL21, 'label' => 'Regio Bank'],
+            ['key' => IdealBic::SNSBNL2A, 'label' => 'SNS Bank'],
+            ['key' => IdealBic::TRIONL2U, 'label' => 'Triodos Bank'],
+            ['key' => IdealBic::FVLBNL22, 'label' => 'Van Lanschot Bankiers']
+        ];
+        return $options;
     }
 }
