@@ -80,7 +80,6 @@ class Redirect extends Action
          * @var $resultRedirect RedirectResult
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-
         if ($this->getRequest()->isPost()) {
             $transactionService = $this->transactionServiceFactory->create();
             $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
