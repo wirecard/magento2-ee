@@ -39,10 +39,10 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <i ><?php echo __('Zahlungsempfänger') ?></i><br />
+                        <i ><?php echo __('Creditor') ?></i><br />
                         <?php echo $this->getCreditorName() ?>, <?php echo $this->getStoreCity() ?><br />
-                        <?php echo __('Creditor-ID:') ?> <?php echo $this->getCreditorId() ?><br />
-                        <?php echo __('Mandatsreferenz:') ?> <?php echo $mandateId ?><br />
+                        <?php echo __('Creditor ID:') ?> <?php echo $this->getCreditorId() ?><br />
+                        <?php echo __('Mandate reference:') ?> <?php echo $mandateId ?><br />
                         <input type="hidden" name="mandateId" value="<?php echo $mandateId ?>">
                     </td>
                     <td width="10%">&nbsp;</td>
@@ -55,8 +55,8 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11">
-                        <i><?php echo __('Zahlungspflichtiger') ?></i><br />
-                        <?php echo __('Kontoinhaber:') ?> %firstname% %lastname%<br />
+                        <i><?php echo __('Debtor') ?></i><br />
+                        <?php echo __('Account owner:') ?> %firstname% %lastname%<br />
                         <?php echo __('IBAN:') ?> %bankAccountIban% <br />
                         <?php if($this->getBankBicEnabled()) {
                             echo __('BIC:') ?> %bankBic% <br /><?php
@@ -73,7 +73,9 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('SepaMandateText1') ?>
+                        <?php echo sprintf(__(
+                                'I authorize the creditor %s to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor %s.'
+                        ), $this->getCreditorName(), $this->getCreditorName()) ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -85,7 +87,7 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('SepaMandateText2') ?>
+                        <?php echo 'Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.' ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -97,7 +99,9 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('SepaMandateText3') ?>
+                        <?php echo sprintf(__(
+                                'I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %s my full name, address and date of birth.'
+                        ), $this->getCreditorName()) ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -112,6 +116,11 @@ $mandateId = $this->getMandateId();
                         <?php echo $this->getStoreCity() ?>, <?php echo date("d.m.Y") ?> %firstname% %lastname%
                     </td>
                     <td width="10%">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="sepa-accept"><?php echo __('I have read and accepted the SEPA Direct Debit Mandate information.') ?>
+                    </td>
                 </tr>
             </table>
         </td>

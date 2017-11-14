@@ -37,12 +37,9 @@ define(
         'mage/url',
         'Magento_Checkout/js/model/quote',
         'Magento_Ui/js/modal/modal',
-        'ko',
-        'Magento_Checkout/js/action/place-order',
-        'mage/storage',
         'mage/translate'
     ],
-    function ($, Component, additionalValidators, url, quote, modal, ko, placeOrderAction, storage) {
+    function ($, Component, additionalValidators, url, quote, modal) {
         'use strict';
         return Component.extend({
             accountFirstName: '',
@@ -79,12 +76,12 @@ define(
                 return frm.validation() && frm.validation('isValid');
             },
             beforePlaceOrder: function (data, event) {
+                var self = this;
                 if (this.validate()) {
-                    var self = this;
                     var sepaMandate = $('#sepaMandate');
 
                     sepaMandate.modal({
-                        title: $.mage.__('SEPA-Lastschrift-Mandat'),
+                        title: $.mage.__('SEPA Direct Debit Mandate Form'),
                         responsive: true,
                         innerScroll: true,
                         buttons: [{
@@ -102,6 +99,7 @@ define(
                         opened: function(){
                                 var acceptButton = $("footer button:first", sepaMandate.closest('.modal-inner-wrap'));
                             acceptButton.addClass('disabled');
+                            var modal = this;
                             $.get(url.build('wirecard_elasticengine/frontend/sepamandate', {})).done(
                                 function (response) {
                                     response = response.replace(/%firstname%/g, $("#wirecard_elasticengine_sepa_accountFirstName").val())
@@ -113,8 +111,17 @@ define(
                                     } else {
                                         response = response.replace(/%bankBic%/g, '');
                                     }
-                                    acceptButton.removeClass('disabled');
-                                    sepaMandate.html(response).show();
+                                    $(modal).html(response);
+                                    $('#sepa-accept', modal).on('change', function(event) {
+                                        if ($('#sepa-accept', modal).prop("checked")) {
+                                            if (acceptButton.hasClass('disabled')) {
+                                                acceptButton.removeClass('disabled');
+                                            }
+                                        } else {
+                                            acceptButton.addClass('disabled');
+                                        }
+
+                                    });
                                 }
                             );
                         }

@@ -34,12 +34,14 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <title/>
+        <link src="requirejs/require.js"/>
     </head>
     <body>
         <referenceContainer name="header.container" remove="true" />
         <referenceBlock name="page.messages" remove="true"/>
         <referenceBlock name="navigation.sections" remove="true"/>
         <referenceContainer name="content">
+            <block name="require.js" class="Magento\Backend\Block\Page\RequireJs" template="Magento_Backend::page/js/require_js.phtml"/>
             <block class="Wirecard\ElasticEngine\Block\Checkout\SepaMandateBlock" template="Wirecard_ElasticEngine::sepamandate.phtml" name="frontend.sepamandate" cacheable="false"/>
         </referenceContainer>
         <referenceBlock name="catalog.topnav" remove="true"/>
