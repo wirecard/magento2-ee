@@ -224,7 +224,7 @@ class Notify extends Action
         $transactionType = $response->getTransactionType();
 
         if ('debit' === $transactionType) {
-            $transactionType = 'payment';
+            $transactionType = 'capture';
         }
 
         $payment->addTransaction($transactionType);
