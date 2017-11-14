@@ -61,6 +61,11 @@
 
             <fieldset data-bind="attr: {class: 'fieldset payment items sepa ' + getCode(), id: 'payment_form_' + getCode()}">
 
+                <input type="hidden" name="payment[sepa_mandateId]" class="input-text" value=""
+                       data-bind="attr: { autocomplete: off, id: getCode() + '_mandateId',
+                                    'data-container': getCode() + '-mandateId',
+                                    'data-validate': JSON.stringify({'required':true})},
+                              value: mandateId"/>
                 <div class="field accountFirstName required">
                     <label data-bind="attr: {for: getCode() + '_accountFirstName'}" class="label">
                         <span><!-- ko i18n: 'First Name'--><!-- /ko --></span>
@@ -89,7 +94,7 @@
                     </div>
                 </div>
 
-                <!-- ko if: (hasBankBic())-->
+                <!-- ko if: hasBankBic() -->
                 <div class="field bankBic">
                     <label data-bind="attr: {for: getCode() + '_bankBic'}" class="label">
                         <span><!-- ko i18n: 'Bank BIC'--><!-- /ko --></span>

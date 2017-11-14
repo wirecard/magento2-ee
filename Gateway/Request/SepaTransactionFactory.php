@@ -70,7 +70,6 @@ class SepaTransactionFactory extends TransactionFactory
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
-     * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
      */
     public function __construct(
@@ -98,8 +97,6 @@ class SepaTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
-
-        $mandate = new Mandate('12345678');
         $additionalInfo = $paymentDO->getPayment()->getAdditionalInformation();
 
         $accountHolder = new AccountHolder();
@@ -111,7 +108,7 @@ class SepaTransactionFactory extends TransactionFactory
         if ($this->methodConfig->getValue('enable_bic')) {
             $this->transaction->setBic($additionalInfo['bankBic']);
         }
-
+        $mandate = new Mandate($additionalInfo['mandateId']);
         $this->transaction->setMandate($mandate);
 
         return $this->transaction;

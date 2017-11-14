@@ -37,9 +37,10 @@ define(
         'mage/url',
         'Magento_Checkout/js/model/quote',
         'Magento_Ui/js/modal/modal',
-        'mage/translate'
+        'mage/translate',
+        'ko'
     ],
-    function ($, Component, additionalValidators, url, quote, modal) {
+    function ($, Component, additionalValidators, url, quote, modal, ko) {
         'use strict';
         return Component.extend({
             accountFirstName: '',
@@ -50,7 +51,7 @@ define(
             mandate: false,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-sepa',
-                redirectAfterPlaceOrder: false
+                redirectAfterPlaceOrder: false,
             },
             /**
              * Get payment method data
@@ -69,7 +70,12 @@ define(
                 };
             },
             hasBankBic: function() {
-                return this.config.enable_bic;
+                if(this.config.enable_bic) {
+                    console.log('is should be shown');
+                    return true;
+                }
+                console.log('should not be shown');
+                return false;
             },
             validate: function () {
                 var frm = $('#' + this.getCode() + '-form');

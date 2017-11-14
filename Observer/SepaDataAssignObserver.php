@@ -48,5 +48,11 @@ class SepaDataAssignObserver extends AbstractDataAssignObserver
                 $additionalData['bankAccountIban']
             );
         }
+        if (array_key_exists('mandateId', $additionalData)) {
+            $paymentInfo->setAdditionalInformation(
+                'mandateId',
+                $additionalData['mandateId']
+            );
+        }
     }
 }
