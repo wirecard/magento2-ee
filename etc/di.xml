@@ -80,6 +80,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PaypalConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
             </argument>
         </arguments>
     </virtualType>
