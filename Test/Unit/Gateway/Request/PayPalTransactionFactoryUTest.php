@@ -144,7 +144,6 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $transactionList->method('getItemById')->willReturn($this->transaction);
 
-
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
         $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
         $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
@@ -263,7 +262,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
             $this->searchCriteriaBuilder, $this->filterBuilder);
 
-        $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->capture(array()));
+        $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->capture([]));
     }
 
     /**
