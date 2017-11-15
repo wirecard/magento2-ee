@@ -131,7 +131,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
         $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
         $transactionList = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
-        $transactionList->method('getAllIds')->willReturn(array(1,2));
+        $transactionList->method('getAllIds')->willReturn([1,2]);
 
         $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
             ->getMock();
