@@ -149,7 +149,6 @@ class PayPalTransactionFactory extends TransactionFactory
         return $this->transaction;
     }
 
-
     /**
      * @param array $commandSubject
      * @return Transaction
