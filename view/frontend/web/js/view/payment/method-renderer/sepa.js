@@ -70,11 +70,9 @@ define(
                 };
             },
             hasBankBic: function() {
-                if(this.config.enable_bic) {
-                    console.log('is should be shown');
+                if(parseInt(this.config.enable_bic)) {
                     return true;
                 }
-                console.log('should not be shown');
                 return false;
             },
             validate: function () {

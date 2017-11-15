@@ -139,7 +139,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             'bankBic' => 'WIREDEMMXXX',
             'bankAccountIban' => 'DE42512308000000060004',
             'accountFirstName' => 'Jane',
-            'accountLastName' => 'Doe'
+            'accountLastName' => 'Doe',
+            'mandateId' => '1234'
         ];
         $this->payment->expects(static::once())
             ->method('getPayment')
@@ -164,7 +165,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
-        $mandate = new Mandate('12345678');
+        $mandate = new Mandate('1234');
 
         $accountHolder = new AccountHolder();
         $accountHolder->setFirstName('Jane');
