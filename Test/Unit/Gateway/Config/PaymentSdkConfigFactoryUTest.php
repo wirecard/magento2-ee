@@ -39,11 +39,13 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\ElasticEngine\Gateway\Config\PaymentSdkConfigFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
+use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 
 class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 {
@@ -106,10 +108,15 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         });
 
         $methodConfigSepa = $this->getMock(ConfigInterface::class);
-        $methodConfigSepa->method(self::GET_VALUE)->withConsecutive(
-            ['merchant_account_id'],
-            ['secret']
-        )->willReturnOnConsecutiveCalls('account_id_124', 'secret_key');
+        $methodConfigSepa->method(self::GET_VALUE)->willReturnCallback(function ($key) {
+            $map = [
+                'merchant_account_id' => 'account_id_123',
+                'secret' => 'secret_key',
+                'creditor_id' => '1234'
+            ];
+
+            return $map[$key];
+        });
 
         $methodConfigIdeal = $this->getMock(ConfigInterface::class);
         $methodConfigIdeal->method(self::GET_VALUE)->withConsecutive(
@@ -175,6 +182,20 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $creditCardConfig->addThreeDMinLimit(new Amount(50.0, 'EUR'));
         $creditCardConfig->setThreeDCredentials('account_id_three', 'secret_three');
         $this->assertEquals($creditCardConfig, $configFromFactory->get(CreditCardTransaction::NAME));
+    }
+
+    public function testCreateAddsSepa()
+    {
+        /** @var $configFromFactory Config */
+        $configFromFactory = $this->configFactory->create();
+        $this->assertInstanceOf(Config::class, $configFromFactory);
+
+        $sepaConfig = new SepaConfig(
+            'account_id_123',
+            'secret_key'
+        );
+        $sepaConfig->setCreditorId('1234');
+        $this->assertEquals($sepaConfig, $configFromFactory->get(SepaTransaction::NAME));
     }
 
     public function testCreateAddsIdeal()
