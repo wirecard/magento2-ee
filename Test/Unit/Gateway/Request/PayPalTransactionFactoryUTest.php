@@ -248,7 +248,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
             $this->searchCriteriaBuilder, $this->filterBuilder);
 
-        $this->assertEquals($this->minimalCaptureTransaction(),$transactionFactory->capture($this->commandSubject));
+        $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->capture($this->commandSubject));
     }
 
     /**
@@ -263,7 +263,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
             $this->searchCriteriaBuilder, $this->filterBuilder);
 
-        $this->assertEquals($this->minimalCaptureTransaction(),$transactionFactory->capture(array()));
+        $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->capture(array()));
     }
 
     /**
@@ -278,6 +278,6 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
             $this->searchCriteriaBuilder, $this->filterBuilder);
 
-        $this->assertEquals($this->minimalCaptureTransaction(),$transactionFactory->create(array()));
+        $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->create([]));
     }
 }
