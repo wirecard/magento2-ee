@@ -37,7 +37,6 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Model\Order\Payment\Transaction as MageTransaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
@@ -46,7 +45,6 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-use Wirecard\PaymentSdk\Exception\UnsupportedOperationException;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -149,7 +147,8 @@ class TransactionFactory
         return $this->transaction;
     }
 
-    public function capture($commandSubject) {
+    public function capture($commandSubject)
+    {
         if (!isset($commandSubject[self::PAYMENT])
             || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
         ) {
@@ -160,32 +159,20 @@ class TransactionFactory
         $payment = $commandSubject[self::PAYMENT];
         $this->orderId = $payment->getOrder()->getId();
 
-        $paymentIdFilter = $this->filterBuilder->setField('payment_id')
-            ->setValue($payment->getPayment()->getId())
-            ->create();
-
         $orderIdFilter = $this->filterBuilder->setField('order_id')
             ->setValue($this->orderId)
             ->create();
 
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter($paymentIdFilter)->addFilter($orderIdFilter)->create();
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter($orderIdFilter)
+            ->create();
 
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
+        /** @var MageTransaction $transaction */
+        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
 
-        $parentTransactionId = array();
-        foreach($transactionList as $transaction) {
-            /** @var MageTransaction $transaction */
-            if (!isset($parentTransactionId['id']) || $parentTransactionId['id'] < $transaction->getId()){
-                $parentTransactionId = array('id' => $transaction->getId(), 'txn' => $transaction->getTxnId());
-            }
-
-            if ($transaction->getTxnType() === TransactionInterface::TYPE_CAPTURE) {
-                throw new UnsupportedOperationException('Can not capture a capture.');
-            }
-        }
-
-        $this->transaction->setParentTransactionId($parentTransactionId['txn']);
+        $this->transaction->setParentTransactionId($transaction->getTxnId());
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 

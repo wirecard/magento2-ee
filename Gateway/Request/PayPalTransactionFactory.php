@@ -40,7 +40,6 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -52,15 +51,13 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 class PayPalTransactionFactory extends TransactionFactory
 {
     /**
-     * @var BasketFactory
-     */
-    private $basketFactory;
-
-    /**
      * @var PayPalTransaction
      */
     protected $transaction;
-
+    /**
+     * @var BasketFactory
+     */
+    private $basketFactory;
     /**
      * @var AccountHolderFactory
      */
@@ -159,7 +156,8 @@ class PayPalTransactionFactory extends TransactionFactory
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      */
-    public function capture($commandSubject) {
+    public function capture($commandSubject)
+    {
         parent::capture($commandSubject);
 
         return $this->transaction;

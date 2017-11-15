@@ -32,12 +32,19 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
+use Magento\Framework\Api\Filter;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\SearchCriteria;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -72,6 +79,14 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $order;
 
     private $commandSubject;
+
+    private $repository;
+
+    private $searchCriteriaBuilder;
+
+    private $filterBuilder;
+
+    private $transaction;
 
     public function setUp()
     {
@@ -112,40 +127,38 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->payment->method('getOrder')->willReturn($this->order);
 
         $this->commandSubject = ['payment' => $this->payment];
+
+        $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
+        $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
+        $transactionList = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
+        $transactionList->method('getAllIds')->willReturn(array(1,2));
+
+        $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
+            ->getMock();
+        $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
+        $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
+
+        $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
+        $this->repository->method('getList')->willReturn($transactionList);
+
+        $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $transactionList->method('getItemById')->willReturn($this->transaction);
+
+
+        $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
+        $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
+        $this->filterBuilder->method('create')->willReturn($filter);
     }
 
     public function testCreateMinimum()
     {
         $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedTransaction();
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
-    }
-
-    public function testCreateSetsDescriptor()
-    {
-        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
-
-        $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setDescriptor('My shop n ' . self::ORDER_ID);
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
-    }
-
-    public function testCreateSetsBasket()
-    {
-        $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
-
-        $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setBasket(new Basket());
 
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
@@ -175,5 +188,96 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setEntryMode('ecommerce');
 
         return $expected;
+    }
+
+    /**
+     * @return PayPalTransaction
+     */
+    private function minimalCaptureTransaction()
+    {
+        $expected = new PayPalTransaction();
+
+        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setRedirect(new Redirect(
+            'http://magen.to/frontend/redirect',
+            'http://magen.to/frontend/cancel',
+            'http://magen.to/frontend/redirect'));
+
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    public function testCreateSetsDescriptor()
+    {
+        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
+
+        $transaction = new PayPalTransaction();
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $expected = $this->minimumExpectedTransaction();
+        $expected->setDescriptor('My shop n ' . self::ORDER_ID);
+
+        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+    }
+
+    public function testCreateSetsBasket()
+    {
+        $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
+
+        $transaction = new PayPalTransaction();
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $expected = $this->minimumExpectedTransaction();
+        $expected->setBasket(new Basket());
+
+        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+    }
+
+    public function testCapture()
+    {
+        $transaction = new PayPalTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $this->assertEquals($this->minimalCaptureTransaction(),$transactionFactory->capture($this->commandSubject));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCaptureWithWrongCommandSubject()
+    {
+        $transaction = new PayPalTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $this->assertEquals($this->minimalCaptureTransaction(),$transactionFactory->capture(array()));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateWithWrongCommandSubject()
+    {
+        $transaction = new PayPalTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $this->assertEquals($this->minimalCaptureTransaction(),$transactionFactory->create(array()));
     }
 }
