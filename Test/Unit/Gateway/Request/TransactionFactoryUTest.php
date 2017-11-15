@@ -70,7 +70,6 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
 
-
         $this->commandSubject = ['payment' => $this->payment];
     }
 
