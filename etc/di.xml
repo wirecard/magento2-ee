@@ -64,6 +64,16 @@
             <argument name="commandPool" xsi:type="object">MaestroCommandPool</argument>
         </arguments>
     </virtualType>
+    <virtualType name="SepaFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPA_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SepaValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SepaValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">SepaCommandPool</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="SofortFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SOFORT_CODE</argument>
@@ -124,6 +134,18 @@
             <argument name="configInterface" xsi:type="object">WirecardMaestroConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="SepaValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SepaConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SepaConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
 
     <virtualType name="SofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
@@ -173,6 +195,11 @@
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MAESTRO_CODE</argument>
         </arguments>
     </virtualType>
+    <virtualType name="WirecardSepaConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPA_CODE</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="WirecardSofortConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SOFORT_CODE</argument>
@@ -199,6 +226,13 @@
     </virtualType>
 
     <virtualType name="CreditCardValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SepaValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
             </argument>
@@ -268,6 +302,22 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="SepaCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">SepaInitializeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SepaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="SofortCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -316,6 +366,13 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="SepaTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaTransaction</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="SofortTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SofortTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SofortTransaction</argument>
@@ -354,6 +411,7 @@
             <argument name="methodConfigs" xsi:type="array">
                 <item name="paypal" xsi:type="object">WirecardPaypalConfig</item>
                 <item name="creditcard" xsi:type="object">WirecardCreditCardConfig</item>
+                <item name="sepa" xsi:type="object">WirecardSepaConfig</item>
                 <item name="sofortbanking" xsi:type="object">WirecardSofortConfig</item>
                 <item name="ideal" xsi:type="object">WirecardIdealConfig</item>
             </argument>
@@ -383,6 +441,11 @@
     <type name="Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader">
         <arguments>
             <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
+        </arguments>
+    </type>
+    <type name="Wirecard\ElasticEngine\Block\Checkout\SepaMandateBlock">
+        <arguments>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </type>
 </config>
