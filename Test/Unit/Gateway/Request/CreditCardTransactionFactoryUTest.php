@@ -32,11 +32,18 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
+use Magento\Framework\Api\Filter;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\SearchCriteria;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -65,6 +72,14 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $order;
 
     private $commandSubject;
+
+    private $repository;
+
+    private $searchCriteriaBuilder;
+
+    private $filterBuilder;
+
+    private $transaction;
 
     public function setUp()
     {
@@ -96,12 +111,34 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->payment->method('getOrder')->willReturn($this->order);
 
         $this->commandSubject = ['payment' => $this->payment];
+
+        $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
+        $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
+        $transactionList = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
+        $transactionList->method('getAllIds')->willReturn([1, 2]);
+
+        $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
+            ->getMock();
+        $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
+        $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
+
+        $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
+        $this->repository->method('getList')->willReturn($transactionList);
+
+        $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $transactionList->method('getItemById')->willReturn($this->transaction);
+
+        $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
+        $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
+        $this->filterBuilder->method('create')->willReturn($filter);
     }
 
     public function testCreateMinimum()
     {
         $transaction = new CreditCardTransaction();
-        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction);
+        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedTransaction();
 
