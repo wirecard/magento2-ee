@@ -204,6 +204,10 @@ class Notify extends Action
             $additionalInfo['maskedAccountNumber'] = $response->getMaskedAccountNumber();
         }
 
+        if ($response->getCardTokenId() !== null) {
+            $additionalInfo['creditCardToken'] = $response->getCardTokenId();
+        }
+
         try {
             $additionalInfo['authorizationCode'] = $response->findElement('authorization-code');
         } catch (MalformedResponseException $e) {

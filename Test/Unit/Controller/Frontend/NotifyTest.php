@@ -262,6 +262,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $successResponse->method('findElement')->willReturn('1515');
         $successResponse->method('getCardholderAuthenticationStatus')->willReturn('Y');
         $successResponse->method('getTransactionType')->willReturn('debit');
+        $successResponse->method('getCardTokenId')->willReturn('0123456CARDTOKEN');
 
         $this->transactionService->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
@@ -273,7 +274,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
                 'requestId' => '1-2-3',
                 'maskedAccountNumber' => '5151***5485',
                 'authorizationCode' => '1515',
-                'cardholderAuthenticationStatus' => 'Y'
+                'cardholderAuthenticationStatus' => 'Y',
+                'creditCardToken' => '0123456CARDTOKEN'
             ]
         );
 
