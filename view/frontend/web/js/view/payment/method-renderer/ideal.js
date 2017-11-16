@@ -31,40 +31,40 @@
 
 define(
     [
-        'uiComponent',
-        'Magento_Checkout/js/model/payment/renderer-list'
+        'jquery',
+        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
+        'mage/translate',
+        'mage/url'
     ],
-    function (
-        Component,
-        rendererList
-    ) {
+    function ($, Component, $t, url) {
         'use strict';
-        rendererList.push(
-            {
-                type: 'wirecard_elasticengine_paypal',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+        return Component.extend({
+            bankBic: '',
+            defaults: {
+                template: 'Wirecard_ElasticEngine/payment/method-ideal',
+                redirectAfterPlaceOrder: false
             },
-            {
-                type: 'wirecard_elasticengine_creditcard',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
+            getIdealBic: function() {
+                return this.config.ideal_bic;
             },
-            {
-                type: 'wirecard_elasticengine_maestro',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
+            getData: function () {
+                return {
+                    'method': this.getCode(),
+                    'po_number': null,
+                    'additional_data': {
+                        'bankBic': this.bankBic,
+                    }
+                };
             },
-            {
-                type: 'wirecard_elasticengine_sepa',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/sepa'
+            validate: function () {
+                var frm = $('#' + this.getCode() + '-form');
+                return frm.validation() && frm.validation('isValid');
             },
-            {
-                type: 'wirecard_elasticengine_sofortbanking',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
-            },
-            {
-                type: 'wirecard_elasticengine_ideal',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ideal'
+            afterPlaceOrder: function () {
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
+                    window.location.replace(data["redirect-url"]);
+                });
             }
-        );
-        return Component.extend({});
+        });
     }
 );

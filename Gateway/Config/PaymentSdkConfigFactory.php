@@ -39,8 +39,10 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 
 /**
  * Class PaymentSDKConfig
@@ -108,6 +110,8 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         foreach ($this->methodConfigs as $name => $methodConfig) {
             if ($name === CreditCardTransaction::NAME) {
                 $methodSdkConfig = $this->getCreditCardConfig($methodConfig);
+            } elseif ($name === SepaTransaction::NAME) {
+                $methodSdkConfig = $this->getSepaConfig($methodConfig);
             } else {
                 $methodSdkConfig = new PaymentMethodConfig(
                     $name,
@@ -161,6 +165,24 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
                 $config->getValue('three_d_min_limit'),
                 $this->eeConfig->getValue('settings/default_currency')
             ));
+        }
+
+        return $methodSdkConfig;
+    }
+
+    /**
+     * @param \Magento\Payment\Gateway\Config\Config $config
+     * @return SepaConfig
+     */
+    private function getSepaConfig($config)
+    {
+        $methodSdkConfig = new SepaConfig(
+            $config->getValue('merchant_account_id'),
+            $config->getValue('secret')
+        );
+
+        if ($config->getValue('creditor_id') !== '') {
+            $methodSdkConfig->setCreditorId($config->getValue('creditor_id'));
         }
 
         return $methodSdkConfig;

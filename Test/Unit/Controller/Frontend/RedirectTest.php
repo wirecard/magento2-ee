@@ -110,6 +110,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 
         $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
         $this->request->method('getPost')->willReturn($postParams);
+        $this->request->method('getParams')->willReturn(['request_id' => '1234']);
         $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
 
         $context->method('getRequest')->willReturn($this->request);
@@ -127,9 +128,34 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory);
     }
 
-    public function testExecuteWithGet()
+    public function testExecuteWithGetSuccess()
     {
         $this->setIsPost(false);
+        $this->setIsGet(true);
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($successResponse);
+
+        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
+        $this->controller->execute();
+    }
+
+    public function testExecuteWithGetFailure()
+    {
+        $this->setIsPost(false);
+        $this->setIsGet(true);
+        $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
+        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($failureResponse);
+
+        $this->session->expects($this->once())->method('restoreQuote');
+        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('An error occurred during the payment process. Please try again.'));
+        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo('checkout/cart'), $this->isSecure());
+        $this->controller->execute();
+    }
+
+    public function testExecuteWithoutParam()
+    {
+        $this->setIsPost(false);
+        $this->setIsGet(false);
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo('checkout/cart'), $this->isSecure());
         $this->session->expects($this->once())->method('restoreQuote');
         $this->controller->execute();
@@ -138,6 +164,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function testExecuteSuccessResponse()
     {
         $this->setIsPost(true);
+        $this->setIsGet(false);
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($successResponse);
 
@@ -148,6 +175,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     public function testExecuteFailureResponse()
     {
         $this->setIsPost(true);
+        $this->setIsGet(false);
         $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
         $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($failureResponse);
 
@@ -163,6 +191,15 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     private function setIsPost($value)
     {
         $this->request->method('isPost')->willReturn($value);
+    }
+
+    /**
+     * @param $value
+     */
+    private function setIsGet($value)
+    {
+        $this->request->method('isGet')->willReturn($value);
+        $this->request->method('getParam')->willReturn('1234');
     }
 
     /**

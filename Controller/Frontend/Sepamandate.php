@@ -1,3 +1,4 @@
+<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -7,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -29,42 +30,40 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-define(
-    [
-        'uiComponent',
-        'Magento_Checkout/js/model/payment/renderer-list'
-    ],
-    function (
-        Component,
-        rendererList
+namespace Wirecard\ElasticEngine\Controller\Frontend;
+
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\View\Result\PageFactory;
+
+class Sepamandate extends Action
+{
+    /**
+     * @var PageFactory
+     */
+    protected $resultPageFactory;
+
+    /**
+     * Sepamandate constructor.
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     */
+    public function __construct(
+        Context $context,
+        PageFactory $resultPageFactory
     ) {
-        'use strict';
-        rendererList.push(
-            {
-                type: 'wirecard_elasticengine_paypal',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
-            },
-            {
-                type: 'wirecard_elasticengine_creditcard',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
-            },
-            {
-                type: 'wirecard_elasticengine_maestro',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
-            },
-            {
-                type: 'wirecard_elasticengine_sepa',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/sepa'
-            },
-            {
-                type: 'wirecard_elasticengine_sofortbanking',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
-            },
-            {
-                type: 'wirecard_elasticengine_ideal',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ideal'
-            }
-        );
-        return Component.extend({});
+        $this->resultPageFactory = $resultPageFactory;
+        parent::__construct($context);
     }
-);
+
+    /**
+     * @return \Magento\Framework\View\Result\Page
+     */
+    public function execute()
+    {
+        $page = $this->resultPageFactory->create();
+        $page->getLayout()->getBlock('frontend.sepamandate');
+
+        return $page;
+    }
+}
