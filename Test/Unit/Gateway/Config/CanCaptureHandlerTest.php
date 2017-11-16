@@ -29,7 +29,6 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
 
     private $payment;
 
-
     public function setUp()
     {
         $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
