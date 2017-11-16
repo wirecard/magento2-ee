@@ -15,6 +15,7 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Api\Data\TransactionExtensionInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler;
@@ -44,8 +45,10 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
         $transactionRepository = $this->getMockBuilder(Transaction\Repository::class)->disableOriginalConstructor()->getMock();
         $transactionRepository->method('getList')->willReturn($transactionList);
 
+        $transactionExtensionInterface = $this->getMockBuilder(TransactionExtensionInterface::class)->disableOriginalConstructor()->getMock();
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $this->transaction->method('getTxnType')->willReturn('authorization');
+        $this->transaction->method('setExtensionAttributes')->with($transactionExtensionInterface)->willReturn($this->transaction);
         $transactionList->method('getItemById')->willReturn($this->transaction);
 
         $filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
