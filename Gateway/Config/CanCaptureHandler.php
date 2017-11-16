@@ -13,7 +13,6 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
@@ -46,7 +45,7 @@ class CanCaptureHandler implements ValueHandlerInterface
     public function handle(array $subject, $storeId = null)
     {
         /** @var PaymentDataObjectInterface $paymentDO */
-        $paymentDO = SubjectReader::readPayment($subject);
+        $paymentDO = $subject['payment'];
 
         $order = $paymentDO->getOrder();
 
