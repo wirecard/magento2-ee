@@ -32,9 +32,14 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction as MageTransaction;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -49,6 +54,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 class TransactionFactory
 {
     const PAYMENT = 'payment';
+    const AMOUNT = 'amount';
 
     /**
      * @var UrlInterface
@@ -69,6 +75,21 @@ class TransactionFactory
      * @var string
      */
     protected $orderId;
+
+    /**
+     * @var Repository $transactionRepository
+     */
+    protected $transactionRepository;
+
+    /**
+     * @var SearchCriteriaBuilder $searchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var FilterBuilder $filterBuilder
+     */
+    protected $filterBuilder;
 
     /**
      * TransactionFactory constructor.
@@ -124,5 +145,42 @@ class TransactionFactory
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
 
         return $this->transaction;
+    }
+
+    public function capture($commandSubject)
+    {
+        if (!isset($commandSubject[self::PAYMENT])
+            || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
+        ) {
+            throw new \InvalidArgumentException('Payment data object should be provided.');
+        }
+
+        /** @var PaymentDataObjectInterface $payment */
+        $payment = $commandSubject[self::PAYMENT];
+        $this->orderId = $payment->getOrder()->getId();
+
+        $orderIdFilter = $this->filterBuilder->setField('order_id')
+            ->setValue($this->orderId)
+            ->create();
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter($orderIdFilter)
+            ->create();
+
+        /** @var Collection $transactionList */
+        $transactionList = $this->transactionRepository->getList($searchCriteria);
+        /** @var MageTransaction $transaction */
+        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+
+        $this->transaction->setParentTransactionId($transaction->getTxnId());
+        $this->transaction->setEntryMode('ecommerce');
+        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $this->transaction->setRedirect(new Redirect(
+            $wdBaseUrl . 'frontend/redirect',
+            $wdBaseUrl . 'frontend/cancel',
+            $wdBaseUrl . 'frontend/redirect'));
+        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
     }
 }

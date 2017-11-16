@@ -100,6 +100,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PaypalConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -113,6 +114,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">CreditCardConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -126,6 +128,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">MaestroConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -138,6 +141,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">SepaConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -258,7 +262,16 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">PaypalInitializeCommand</item>
+                <item name="capture" xsi:type="string">PaypalCaptureCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">PayPalTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="PaypalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -274,7 +287,16 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">CreditCardInitializeCommand</item>
+                <item name="capture" xsi:type="string">CreditCardCaptureCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CreditCardCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="CreditCardInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -290,6 +312,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">MaestroInitializeCommand</item>
+                <item name="capture" xsi:type="string">CreditCardCaptureCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -306,7 +329,16 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">SepaInitializeCommand</item>
+                <item name="capture" xsi:type="string">SepaCaptureCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SepaCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="SepaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">

@@ -32,9 +32,12 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -63,9 +66,16 @@ class CreditCardTransactionFactory extends TransactionFactory
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
-        Transaction $transaction
+        Transaction $transaction,
+        Repository $transactionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
+
+        $this->transactionRepository = $transactionRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->filterBuilder = $filterBuilder;
     }
 
     /**
@@ -85,6 +95,19 @@ class CreditCardTransactionFactory extends TransactionFactory
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect');
+
+        return $this->transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function capture($commandSubject)
+    {
+        parent::capture($commandSubject);
 
         return $this->transaction;
     }

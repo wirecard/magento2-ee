@@ -65,6 +65,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
+        $this->order->method('getId')->willReturn('1');
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);

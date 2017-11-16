@@ -32,10 +32,13 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
@@ -48,15 +51,13 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 class PayPalTransactionFactory extends TransactionFactory
 {
     /**
-     * @var BasketFactory
-     */
-    private $basketFactory;
-
-    /**
      * @var PayPalTransaction
      */
     protected $transaction;
-
+    /**
+     * @var BasketFactory
+     */
+    private $basketFactory;
     /**
      * @var AccountHolderFactory
      */
@@ -81,6 +82,9 @@ class PayPalTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
+     * @param Repository $transactionRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -89,7 +93,10 @@ class PayPalTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        Repository $transactionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
@@ -97,6 +104,10 @@ class PayPalTransactionFactory extends TransactionFactory
         $this->basketFactory = $basketFactory;
         $this->accountHolderFactory = $accountHolderFactory;
         $this->methodConfig = $methodConfig;
+
+        $this->transactionRepository = $transactionRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->filterBuilder = $filterBuilder;
     }
 
     /**
@@ -134,6 +145,19 @@ class PayPalTransactionFactory extends TransactionFactory
                 $this->orderId
             ));
         }
+
+        return $this->transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function capture($commandSubject)
+    {
+        parent::capture($commandSubject);
 
         return $this->transaction;
     }
