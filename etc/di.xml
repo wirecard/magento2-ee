@@ -201,7 +201,6 @@
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
             <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
-            <argument name="name" xsi:type="string">paypal</argument>
         </arguments>
     </virtualType>
 

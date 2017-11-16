@@ -73,8 +73,6 @@ class WirecardCaptureCommand implements CommandInterface
      */
     private $methodConfig;
 
-    private $name;
-
     /**
      * WirecardCommand constructor.
      * @param TransactionFactory $transactionFactory
@@ -89,15 +87,13 @@ class WirecardCaptureCommand implements CommandInterface
         TransactionServiceFactory $transactionServiceFactory,
         LoggerInterface $logger,
         HandlerInterface $handler,
-        ConfigInterface $methodConfig,
-        $name
+        ConfigInterface $methodConfig
     ) {
         $this->transactionFactory = $transactionFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;
         $this->handler = $handler;
         $this->methodConfig = $methodConfig;
-        $this->name = $name;
     }
 
     /**
