@@ -99,7 +99,6 @@ class WirecardCaptureCommand implements CommandInterface
     /**
      * @param array $commandSubject
      * @return void
-     * @throws \InvalidArgumentException
      */
     public function execute(array $commandSubject)
     {
