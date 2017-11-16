@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
+use Magento\Sales\Api\Data\OrderItemInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
@@ -81,7 +82,11 @@ class BasketFactory
         $basket = new Basket();
         $items = $order->getItems();
 
+        /** @var OrderItemInterface $item*/
         foreach ($items as $item) {
+            if ($item->getPriceInclTax() == 0) {
+                continue;
+            }
             $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
         }
 
