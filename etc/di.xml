@@ -141,6 +141,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">SepaConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -328,7 +329,16 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">SepaInitializeCommand</item>
+                <item name="capture" xsi:type="string">SepaCaptureCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SepaCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="SepaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">

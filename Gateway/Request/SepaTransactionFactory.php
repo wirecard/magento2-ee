@@ -32,10 +32,13 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
@@ -77,12 +80,18 @@ class SepaTransactionFactory extends TransactionFactory
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        Repository $transactionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->storeManager = $storeManager;
         $this->methodConfig = $methodConfig;
+        $this->transactionRepository = $transactionRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->filterBuilder = $filterBuilder;
     }
 
     /**
@@ -110,6 +119,19 @@ class SepaTransactionFactory extends TransactionFactory
         }
         $mandate = new Mandate($additionalInfo['mandateId']);
         $this->transaction->setMandate($mandate);
+
+        return $this->transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function capture($commandSubject)
+    {
+        parent::capture($commandSubject);
 
         return $this->transaction;
     }

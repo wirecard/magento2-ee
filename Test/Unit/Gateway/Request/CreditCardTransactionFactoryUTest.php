@@ -145,6 +145,17 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
 
+    public function testCaptureMinimum()
+    {
+        $transaction = new CreditCardTransaction();
+        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $expected = $this->minimumExpectedCaptureTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->capture($this->commandSubject));
+    }
+
     /**
      * @return CreditCardTransaction
      */
@@ -163,6 +174,24 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setCustomFields($customFields);
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return CreditCardTransaction
+     */
+    private function minimumExpectedCaptureTransaction()
+    {
+        $expected = new CreditCardTransaction();
+        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setRedirect(new Redirect(
+            self::REDIRECT_URL,
+            'http://magen.to/frontend/cancel',
+            self::REDIRECT_URL));
+
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
