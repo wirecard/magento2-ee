@@ -288,10 +288,19 @@
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">CreditCardInitializeCommand</item>
                 <item name="capture" xsi:type="string">CreditCardCaptureCommand</item>
+                <item name="refund" xsi:type="string">CreditCardRefundCommand</item>
             </argument>
         </arguments>
     </virtualType>
     <virtualType name="CreditCardCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CreditCardRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
@@ -330,10 +339,19 @@
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">SepaInitializeCommand</item>
                 <item name="capture" xsi:type="string">SepaCaptureCommand</item>
+                <item name="refund" xsi:type="string">SepaRefundCommand</item>
             </argument>
         </arguments>
     </virtualType>
     <virtualType name="SepaCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SepaRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
