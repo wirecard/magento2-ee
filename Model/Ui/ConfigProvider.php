@@ -46,6 +46,7 @@ class ConfigProvider implements ConfigProviderInterface
     const SEPA_CODE = 'wirecard_elasticengine_sepa';
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
     const IDEAL_CODE = 'wirecard_elasticengine_ideal';
+    const RATEPAYINVOICE_CODE = 'wirecard_elasticengine_ratepayinvoice';
 
     /**
      * @var Repository
@@ -86,7 +87,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForCreditCard(self::MAESTRO_CODE) +
                 $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
-                $this->getConfigForPaymentMethod(self::IDEAL_CODE)
+                $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
+                $this->getConfigForPaymentMethod(self::RATEPAYINVOICE_CODE)
         ];
     }
 

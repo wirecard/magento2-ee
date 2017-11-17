@@ -68,17 +68,19 @@ class BasketFactory
 
     /**
      * @param OrderAdapterInterface $order
+     * @param Transaction $transaction
      * @return Basket
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      */
-    public function create($order)
+    public function create($order, $transaction)
     {
         if (!$order instanceof OrderAdapterInterface) {
             throw new \InvalidArgumentException('Order data obj should be provided.');
         }
 
         $basket = new Basket();
+        $basket->setVersion($transaction);
         $items = $order->getItems();
 
         foreach ($items as $item) {

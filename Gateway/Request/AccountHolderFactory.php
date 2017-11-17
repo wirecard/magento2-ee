@@ -72,6 +72,7 @@ class AccountHolderFactory
         $accountHolder->setFirstName($magentoAddressObj->getFirstname());
         $accountHolder->setLastName($magentoAddressObj->getLastname());
         $accountHolder->setPhone($magentoAddressObj->getTelephone());
+        $accountHolder->setDateOfBirth(new \DateTime('1973-12-07'));
 
         return $accountHolder;
     }

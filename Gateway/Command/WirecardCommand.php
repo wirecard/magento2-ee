@@ -106,7 +106,9 @@ class WirecardCommand implements CommandInterface
      */
     public function execute(array $commandSubject)
     {
+        $this->logger->debug('execute not called');
         $transaction = $this->transactionFactory->create($commandSubject);
+        $this->logger->debug('after create transaction');
         $transactionService = $this->transactionServiceFactory->create();
 
         if (!isset($commandSubject[self::STATEOBJECT])
@@ -123,6 +125,8 @@ class WirecardCommand implements CommandInterface
         }
 
         try {
+            $this->logger->debug('before process');
+            $this->logger->debug(print_r($transaction, true));
             $response = $transactionService->process($transaction, $operation);
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());

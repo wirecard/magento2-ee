@@ -41,17 +41,18 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use Psr\Log\LoggerInterface;
 
 /**
- * Class PayPalTransactionFactory
+ * Class RatepayInvoiceTransactionFactory
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
-class PayPalTransactionFactory extends TransactionFactory
+class RatepayInvoiceTransactionFactory extends TransactionFactory
 {
     /**
-     * @var PayPalTransaction
+     * @var RatepayInvoiceTransaction
      */
     protected $transaction;
     /**
@@ -74,7 +75,12 @@ class PayPalTransactionFactory extends TransactionFactory
     private $storeManager;
 
     /**
-     * PayPalTransactionFactory constructor.
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * RatepayInvoiceTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
@@ -85,6 +91,7 @@ class PayPalTransactionFactory extends TransactionFactory
      * @param Repository $transactionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
+     * @param LoggerInterface $logger
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -96,7 +103,8 @@ class PayPalTransactionFactory extends TransactionFactory
         ConfigInterface $methodConfig,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        FilterBuilder $filterBuilder,
+        LoggerInterface $logger
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
@@ -108,6 +116,7 @@ class PayPalTransactionFactory extends TransactionFactory
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
+        $this->logger = $logger;
     }
 
     /**
@@ -118,33 +127,29 @@ class PayPalTransactionFactory extends TransactionFactory
      */
     public function create($commandSubject)
     {
+        $this->logger->debug('before parent create');
         parent::create($commandSubject);
+        $this->logger->debug('after parent create');
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
+        $this->logger->debug('get order');
         $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
-        $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $billingAddress->getEmail(),
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        ));
 
-        if ($this->methodConfig->getValue('send_shopping_basket')) {
-            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
-        }
+        $this->logger->debug('after accountholder');
+        $this->transaction->setOrderNumber('7495');
+        $this->logger->debug('after orderid');
 
-        if ($this->methodConfig->getValue('send_descriptor')) {
-            $this->transaction->setDescriptor(sprintf('%s %s',
-                substr($this->storeManager->getStore()->getName(), 0, 9),
-                $this->orderId
-            ));
-        }
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+
+        $this->logger->debug('after basket');
+        $device = new \Wirecard\PaymentSdk\Entity\Device();
+        $device->setFingerprint('123455');
+        $this->transaction->setDevice($device);
+        $this->logger->debug('after device');
 
         return $this->transaction;
     }
