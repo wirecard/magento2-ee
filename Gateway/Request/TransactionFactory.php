@@ -177,10 +177,26 @@ class TransactionFactory
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $this->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect',
-            $wdBaseUrl . 'frontend/cancel',
-            $wdBaseUrl . 'frontend/redirect'));
+        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+    }
+
+    public function refund($commandSubject)
+    {
+        if (!isset($commandSubject[self::PAYMENT])
+            || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
+        ) {
+            throw new \InvalidArgumentException('Payment data object should be provided.');
+        }
+
+        /** @var PaymentDataObjectInterface $payment */
+        $payment = $commandSubject[self::PAYMENT];
+        $this->orderId = $payment->getOrder()->getId();
+
+        $this->transaction->setEntryMode('ecommerce');
+        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+        $this->transaction->setAmount(new Amount($commandSubject['amount'], $payment->getOrder()->getCurrencyCode()));
+
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
     }
 }
