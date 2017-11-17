@@ -125,6 +125,7 @@ class WirecardCommand implements CommandInterface
         try {
             $response = $transactionService->process($transaction, $operation);
         } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
             $response = null;
         }
 
