@@ -135,4 +135,17 @@ class SepaTransactionFactory extends TransactionFactory
 
         return $this->transaction;
     }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function refund($commandSubject)
+    {
+        parent::refund($commandSubject);
+
+        return $this->transaction;
+    }
 }

@@ -37,9 +37,12 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction as MageTransaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -111,4 +114,51 @@ class CreditCardTransactionFactory extends TransactionFactory
 
         return $this->transaction;
     }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function refund($commandSubject)
+    {
+        parent::refund($commandSubject);
+
+        /** @var PaymentDataObjectInterface $payment */
+        $payment = $commandSubject[self::PAYMENT];
+        $this->orderId = $payment->getOrder()->getId();
+
+        $orderIdFilter = $this->filterBuilder->setField('order_id')
+            ->setValue($this->orderId)
+            ->create();
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter($orderIdFilter)
+            ->create();
+        $tokenId = null;
+        /** @var Collection $transactionList */
+        $transactionList = $this->transactionRepository->getList($searchCriteria);
+        /** @var MageTransaction $transaction */
+        foreach ($transactionList as $transaction) {
+            $tokenId = $transaction->getAdditionalInformation('raw_details_info')['creditCardToken'];
+            if ($tokenId !== null) {
+                break;
+            }
+        }
+
+        if ($tokenId === null) {
+            throw new MandatoryFieldMissingException("Credit card token is a mandatory field.");
+        }
+
+        $this->transaction->setTokenId($tokenId);
+
+        $accountHolder = new AccountHolder();
+        $accountHolder->setLastName('lastName');
+
+        $this->transaction->setAccountHolder($accountHolder);
+
+        return $this->transaction;
+    }
+
 }

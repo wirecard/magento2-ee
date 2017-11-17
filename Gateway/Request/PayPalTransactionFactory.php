@@ -39,7 +39,9 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Sales\Model\Order\Payment\Transaction as MageTransaction;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -127,7 +129,7 @@ class PayPalTransactionFactory extends TransactionFactory
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
         $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
-        $this->transaction->setOrderNumber($this->orderId);
+   //     $this->transaction->setOrderNumber($this->orderId);
         $this->transaction->setOrderDetail(sprintf(
             '%s %s %s',
             $billingAddress->getEmail(),
@@ -158,6 +160,40 @@ class PayPalTransactionFactory extends TransactionFactory
     public function capture($commandSubject)
     {
         parent::capture($commandSubject);
+
+        return $this->transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function refund($commandSubject)
+    {
+        parent::refund($commandSubject);
+
+        $orderIdFilter = $this->filterBuilder->setField('order_id')
+            ->setValue($this->orderId)
+            ->create();
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter($orderIdFilter)
+            ->create();
+        $tokenId = null;
+        /** @var Collection $transactionList */
+        $transactionList = $this->transactionRepository->getList($searchCriteria);
+        /** @var MageTransaction $transaction */
+        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+
+        $this->transaction->setParentTransactionId($transaction->getTxnId());
+
+
+        $accountHolder = new AccountHolder();
+        $accountHolder->setEmail('shop@owner.com');
+
+        $this->transaction->setAccountHolder($accountHolder);
 
         return $this->transaction;
     }
