@@ -38,7 +38,10 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
+use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
  * Class WirecardCommand
@@ -114,6 +117,13 @@ class WirecardCaptureCommand implements CommandInterface
 
         if ($this->handler) {
             $this->handler->handle($commandSubject, ['paymentSDK-php' => $response]);
+        }
+
+        if ($response instanceof FailureResponse) {
+            foreach ($response->getStatusCollection()->getIterator() as $status) {
+                /** @var Status $status */
+                throw new InvalidArgumentException($status->getDescription());
+            }
         }
     }
 }
