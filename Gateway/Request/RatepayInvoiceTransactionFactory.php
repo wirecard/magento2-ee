@@ -127,29 +127,23 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
      */
     public function create($commandSubject)
     {
-        $this->logger->debug('before parent create');
         parent::create($commandSubject);
-        $this->logger->debug('after parent create');
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
-        $this->logger->debug('get order');
         $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
 
-        $this->logger->debug('after accountholder');
+        //Temporary default value
         $this->transaction->setOrderNumber('7495');
-        $this->logger->debug('after orderid');
 
         $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 
-        $this->logger->debug('after basket');
         $device = new \Wirecard\PaymentSdk\Entity\Device();
         $device->setFingerprint('123455');
         $this->transaction->setDevice($device);
-        $this->logger->debug('after device');
 
         return $this->transaction;
     }
