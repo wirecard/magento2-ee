@@ -131,13 +131,15 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
+        $additionalInfo = $payment->getPayment()->getAdditionalInformation();
         $order = $payment->getOrder();
         $billingAddress = $order->getBillingAddress();
 
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $dob = $additionalInfo['customerDob'];
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, $dob));
 
         //Temporary default value
-        $this->transaction->setOrderNumber('7495');
+        $this->transaction->setOrderNumber($this->orderId);
 
         $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 

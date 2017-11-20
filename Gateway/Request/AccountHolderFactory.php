@@ -60,7 +60,7 @@ class AccountHolderFactory
      * @return AccountHolder
      * @throws \InvalidArgumentException
      */
-    public function create($magentoAddressObj)
+    public function create($magentoAddressObj, $customerBirthdate = null)
     {
         if (!$magentoAddressObj instanceof AddressAdapterInterface) {
             throw new \InvalidArgumentException('Address data object should be provided.');
@@ -72,7 +72,9 @@ class AccountHolderFactory
         $accountHolder->setFirstName($magentoAddressObj->getFirstname());
         $accountHolder->setLastName($magentoAddressObj->getLastname());
         $accountHolder->setPhone($magentoAddressObj->getTelephone());
-        $accountHolder->setDateOfBirth(new \DateTime('1973-12-07'));
+        if ($customerBirthdate != null) {
+            $accountHolder->setDateOfBirth(new \DateTime($customerBirthdate));
+        }
 
         return $accountHolder;
     }

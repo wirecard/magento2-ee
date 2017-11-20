@@ -8,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -55,6 +55,22 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
+
+        <form class="form" data-bind="attr: {'id': getCode() + '-form'}">
+            <fieldset class="fieldset">
+                <div class="field required">
+                    <label class="label" data-bind="attr: {'for': getCode() + '-dob'}">
+                        <span><!-- ko i18n: 'Birthdate:'--><!-- /ko --></span>
+                    </label>
+                    <div class="control">
+                        <input class="input-text" type="text" name="customerDob" style="width: 120px"
+                               data-validate="{required:true}"
+                               data-bind="attr: {'id': getCode() + '-dob'}, value: customerDob, datepicker: { storage: customerDob, options: {} }"/>
+                    </div>
+                    <div class="mage-error" generated="true" style="display: none;" data-bind="attr: {'id': getCode() + '-dob-error'}"></div>
+                </div>
+            </fieldset>
+        </form>
 
         <br>
         <div class="actions-toolbar">

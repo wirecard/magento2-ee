@@ -7,7 +7,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -33,27 +33,48 @@ define(
     [
         'jquery',
         'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
+        'Wirecard_ElasticEngine/js/validator/min-age-validator',
         'mage/translate',
         'mage/url'
     ],
-    function ($, Component, $t, url) {
+    function ($, Component, minAgeValidator, $t, url) {
         'use strict';
         return Component.extend({
+            customerData: {},
+            customerDob: null,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-ratepay',
                 redirectAfterPlaceOrder: false
+            },
+            initObservable: function () {
+                this._super().observe('customerDob');
+                return this;
+            },
+            initialize: function() {
+                this._super();
+                this.config = window.checkoutConfig.payment[this.getCode()];
+                this.customerData = window.customerData;
+                this.customerDob(this.customerData.dob);
+                return this;
             },
             getData: function () {
                 return {
                     'method': this.getCode(),
                     'po_number': null,
                     'additional_data': {
+                        'customerDob': this.customerDob()
                     }
                 };
             },
             validate: function () {
-                var frm = $('#' + this.getCode() + '-form');
-                return frm.validation() && frm.validation('isValid');
+                if (!minAgeValidator.validate(this.customerDob())) {
+                    var errorPane = $('#' + this.getCode() + '-dob-error');
+                    errorPane.html($t('You have to be at least 18 years to use this payment method.'));
+                    errorPane.css('display', 'block');
+                    return false;
+                }
+                var form = $('#' + this.getCode() + '-form');
+                return $(form).validation() && $(form).validation('isValid');
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
