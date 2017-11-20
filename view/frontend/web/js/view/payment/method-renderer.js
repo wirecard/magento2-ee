@@ -67,6 +67,10 @@ define(
             {
                 type: 'wirecard_elasticengine_ratepayinvoice',
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay'
+            },
+            {
+                type: 'wirecard_elasticengine_ratepayinstall',
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay'
             }
         );
         return Component.extend({});
