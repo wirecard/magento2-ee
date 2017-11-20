@@ -229,7 +229,6 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             'http://magen.to/frontend/cancel',
             'http://magen.to/frontend/redirect'));
 
-
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setCustomFields($customFields);

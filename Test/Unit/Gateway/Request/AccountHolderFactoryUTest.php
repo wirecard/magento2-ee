@@ -54,7 +54,6 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setDateOfBirth(new \DateTime('1973-12-07'));
 
         $this->assertEquals($expected, $accountHolderFactory->create($this->address, '1973-12-07'));
-
     }
 
     /**
