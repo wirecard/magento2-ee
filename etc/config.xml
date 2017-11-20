@@ -189,7 +189,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             </wirecard_elasticengine_ideal>
             <wirecard_elasticengine_ratepayinvoice>
                 <title>Wirecard Invoice by Wirecard/Ratepay</title>
-                <active>1</active>
+                <active>0</active>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
@@ -211,7 +211,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             </wirecard_elasticengine_ratepayinvoice>
             <wirecard_elasticengine_ratepayinstall>
                 <title>Wirecard Installment by Wirecard/Ratepay</title>
-                <active>1</active>
+                <active>0</active>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
