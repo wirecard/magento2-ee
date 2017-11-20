@@ -44,7 +44,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class RatepayInvoiceTransactionFactory
@@ -76,11 +75,6 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
     private $storeManager;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var Session
      */
     private $checkoutSession;
@@ -97,7 +91,7 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
      * @param Repository $transactionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
-     * @param LoggerInterface $logger
+     * @param Session $session
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -110,7 +104,6 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder,
-        LoggerInterface $logger,
         Session $session
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
@@ -123,7 +116,6 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
-        $this->logger = $logger;
         $this->checkoutSession = $session;
     }
 
