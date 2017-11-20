@@ -137,10 +137,7 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
 
         $dob = $additionalInfo['customerDob'];
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, $dob));
-
-        //Temporary default value
         $this->transaction->setOrderNumber($this->orderId);
-
         $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 
         if (strlen($this->checkoutSession->getData('invoiceDeviceIdent'))) {

@@ -185,7 +185,7 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = $this->minimumExpectedTransaction();
 
         $this->session->method('getData')->willReturn('12345');
-        $device = new \Wirecard\PaymentSdk\Entity\Device();
+        $device = new Device();
         $device->setFingerprint('12345');
         $expected->setDevice($device);
 
