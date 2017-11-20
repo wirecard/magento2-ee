@@ -73,6 +73,8 @@ class ConfigProvider implements ConfigProviderInterface
      * ConfigProvider constructor.
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param Repository $assetRepo
+     * @param Data $paymentHelper
+     * @param Session $session
      */
     public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper, Session $session)
     {
