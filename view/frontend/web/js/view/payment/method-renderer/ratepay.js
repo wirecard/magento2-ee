@@ -66,6 +66,9 @@ define(
                     }
                 };
             },
+            getRatepayScript: function() {
+                return this.config.ratepay_script;
+            },
             validate: function () {
                 if (!minAgeValidator.validate(this.customerDob())) {
                     var errorPane = $('#' + this.getCode() + '-dob-error');

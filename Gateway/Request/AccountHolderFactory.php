@@ -57,6 +57,7 @@ class AccountHolderFactory
 
     /**
      * @param AddressAdapterInterface $magentoAddressObj
+     * @param string $customerBirthdate
      * @return AccountHolder
      * @throws \InvalidArgumentException
      */

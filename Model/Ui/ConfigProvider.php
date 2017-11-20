@@ -33,6 +33,7 @@
 namespace Wirecard\ElasticEngine\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -62,16 +63,23 @@ class ConfigProvider implements ConfigProviderInterface
      * @var Data
      */
     private $paymentHelper;
+
+    /**
+     * @var Session
+     */
+    private $checkoutSession;
+
     /**
      * ConfigProvider constructor.
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param Repository $assetRepo
      */
-    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper)
+    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper, Session $session)
     {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->assetRepository = $assetRepo;
         $this->paymentHelper = $paymentHelper;
+        $this->checkoutSession = $session;
     }
 
     /**
@@ -88,7 +96,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
-                $this->getConfigForPaymentMethod(self::RATEPAYINVOICE_CODE)
+                $this->getConfigForRatepay(self::RATEPAYINVOICE_CODE)
         ];
     }
 
@@ -116,6 +124,20 @@ class ConfigProvider implements ConfigProviderInterface
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'enable_bic' => $this->getBicEnabled()
+            ]
+        ];
+    }
+
+    /**
+     * @param $paymentMethodName
+     * @return array
+     */
+    private function getConfigForRatepay($paymentMethodName)
+    {
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'ratepay_script' => $this->getRatepayScript($paymentMethodName)
             ]
         ];
     }
@@ -172,5 +194,45 @@ class ConfigProvider implements ConfigProviderInterface
             ['key' => IdealBic::FVLBNL22, 'label' => 'Van Lanschot Bankiers']
         ];
         return $options;
+    }
+
+    /**
+     * Set deviceIdent for ratepay script
+     */
+    private function setInvoiceDeviceIdent()
+    {
+        $transactionService = $this->transactionServiceFactory->create();
+        if (!strlen($this->checkoutSession->getData('invoiceDeviceIdent'))) {
+            $deviceIdent = $transactionService->getRatePayInvoiceDeviceIdent();
+            $this->checkoutSession->setData('invoiceDeviceIdent', $deviceIdent);
+        }
+    }
+
+    /**
+     * @param $code
+     * @return string
+     */
+    private function getRatepayScript($code)
+    {
+        $this->setInvoiceDeviceIdent();
+        $deviceIdent = $this->checkoutSession->getData('installmentDeviceIdent');
+        if ($code == self::RATEPAYINVOICE_CODE) {
+            $deviceIdent = $this->checkoutSession->getData('invoiceDeviceIdent');
+        }
+        $script = '
+        <script>
+        var di = {t:\'' . $deviceIdent . '\',v:\'WDWL\',l:\'Checkout\'};
+        </script>
+        <script type=\'text/javascript\' src=\'//d.ratepay.com/' . $deviceIdent . '/di.js\'></script>
+        <noscript>
+            <link rel=\'stylesheet\' type=\'text/css\' href=\'//d.ratepay.com/di.css?t=' . $deviceIdent . '&v=WDWL&l=Checkout\'>
+        </noscript>
+        <object type=\'application/x-shockwave-flash\' data=\'//d.ratepay.com/WDWL/c.swf\' width=\'0\' height=\'0\'>
+            <param name=\'movie\' value=\'//d.ratepay.com/WDWL/c.swf\' />
+            <param name=\'flashvars\' value=\'t=' . $deviceIdent . '&v=WDWL\'/>
+            <param name=\'AllowScriptAccess\' value=\'always\'/>
+        </object>';
+
+        return $script;
     }
 }

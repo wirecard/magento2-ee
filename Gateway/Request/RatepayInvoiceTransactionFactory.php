@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
@@ -80,6 +81,11 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
     private $logger;
 
     /**
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
      * RatepayInvoiceTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
@@ -104,7 +110,8 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Session $session
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
@@ -117,6 +124,7 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
         $this->logger = $logger;
+        $this->checkoutSession = $session;
     }
 
     /**
@@ -143,9 +151,13 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
 
         $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 
-        $device = new \Wirecard\PaymentSdk\Entity\Device();
-        $device->setFingerprint('123455');
-        $this->transaction->setDevice($device);
+        if (strlen($this->checkoutSession->getData('invoiceDeviceIdent'))) {
+            $deviceIdent = $this->checkoutSession->getData('invoiceDeviceIdent');
+            $device = new \Wirecard\PaymentSdk\Entity\Device();
+            $device->setFingerprint($deviceIdent);
+            $this->transaction->setDevice($device);
+            $this->checkoutSession->unsetData('invoiceDeviceIdent');
+        }
 
         return $this->transaction;
     }
