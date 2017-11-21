@@ -82,6 +82,15 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionFactory->create([]);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testRefundThrowsExceptionWithoutPayment()
+    {
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction());
+        $transactionFactory->refund([]);
+    }
+
     public function testCreateSetsAmountValues()
     {
         $transactionMock = $this->getMock(Transaction::class);

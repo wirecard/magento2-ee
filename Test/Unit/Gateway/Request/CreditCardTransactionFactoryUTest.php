@@ -187,10 +187,6 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new CreditCardTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
-        $expected->setRedirect(new Redirect(
-            self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
 
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');

@@ -198,7 +198,5 @@ class TransactionFactory
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
-
-        return $this->transaction;
     }
 }

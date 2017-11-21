@@ -126,7 +126,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
 
-        $this->commandSubject = ['payment' => $this->payment];
+        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
 
         $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
         $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
@@ -197,13 +197,28 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new PayPalTransaction();
 
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
-        $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
-            'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
 
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return PayPalTransaction
+     */
+    private function minimalRefundTransaction()
+    {
+        $expected = new PayPalTransaction();
+
+        $expected->setAmount(new Amount(1.0, 'EUR'));
+        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+        $accountHolder = new AccountHolder();
+        $accountHolder->setEmail('test@example.com');
+        $expected->setAccountHolder($accountHolder);
 
         return $expected;
     }
@@ -278,5 +293,16 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->create([]));
+    }
+
+    public function testRefund()
+    {
+        $transaction = new PayPalTransaction();
+
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }
 }

@@ -121,7 +121,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
 
-        $this->commandSubject = ['payment' => $this->payment];
+        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
 
         $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
         $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
@@ -167,6 +167,17 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $transactionFactory->capture($this->commandSubject));
     }
 
+    public function testRefundMinimum()
+    {
+        $transaction = new SepaTransaction();
+        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $expected = $this->minimumExpectedRefundTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->refund($this->commandSubject));
+    }
+
     public function testCreateSetsBic()
     {
         $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
@@ -208,7 +219,6 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             'http://magen.to/frontend/redirect',
             'http://magen.to/frontend/cancel',
             'http://magen.to/frontend/redirect'));
-
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setCustomFields($customFields);
@@ -234,11 +244,22 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new SepaTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
-        $expected->setRedirect(new Redirect(
-            self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
 
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return SepaTransaction
+     */
+    private function minimumExpectedRefundTransaction()
+    {
+        $expected = new SepaTransaction();
+        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+
+        $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 

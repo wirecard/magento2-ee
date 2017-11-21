@@ -84,9 +84,9 @@ class BasketFactory
 
         /** @var OrderItemInterface $item*/
         foreach ($items as $item) {
-            if ($item->getPriceInclTax() == 0) {
+            /*if ($item->getPriceInclTax() == 0) {
                 continue;
-            }
+            }*/
             $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
         }
 
