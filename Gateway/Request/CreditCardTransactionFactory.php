@@ -121,11 +121,10 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      */
-    public function refund($commandSubject)
+    /*public function refund($commandSubject)
     {
         parent::refund($commandSubject);
 
-        /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
         $this->orderId = $payment->getOrder()->getId();
 
@@ -137,9 +136,7 @@ class CreditCardTransactionFactory extends TransactionFactory
             ->addFilter($orderIdFilter)
             ->create();
         $tokenId = null;
-        /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
-        /** @var MageTransaction $transaction */
         foreach ($transactionList as $transaction) {
             $tokenId = $transaction->getAdditionalInformation('raw_details_info')['creditCardToken'];
             if ($tokenId !== null) {
@@ -159,6 +156,5 @@ class CreditCardTransactionFactory extends TransactionFactory
         $this->transaction->setAccountHolder($accountHolder);
 
         return $this->transaction;
-    }
-
+    }*/
 }
