@@ -263,10 +263,19 @@
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">PaypalInitializeCommand</item>
                 <item name="capture" xsi:type="string">PaypalCaptureCommand</item>
+                <item name="refund" xsi:type="string">PaypalRefundCommand</item>
             </argument>
         </arguments>
     </virtualType>
     <virtualType name="PaypalCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">PayPalTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PaypalRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">PayPalTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
