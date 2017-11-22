@@ -83,7 +83,6 @@ class WirecardRefundCommand implements CommandInterface
      * @param LoggerInterface $logger
      * @param HandlerInterface $handler
      * @param ConfigInterface $methodConfig
-     * @param String $name
      */
     public function __construct(
         TransactionFactory $transactionFactory,
@@ -119,7 +118,7 @@ class WirecardRefundCommand implements CommandInterface
             $this->handler->handle($commandSubject, ['paymentSDK-php' => $response]);
         }
 
-        if($response instanceof FailureResponse){
+        if($response instanceof FailureResponse) {
             foreach($response->getStatusCollection()->getIterator() as $item) {
                 /** @var Status $item */
                 throw new InvalidArgumentException($item->getDescription());

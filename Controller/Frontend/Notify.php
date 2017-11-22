@@ -149,6 +149,9 @@ class Notify extends Action
              */
             $payment = $order->getPayment();
             $this->updatePaymentTransactionIds($payment, $response);
+            $invoice = $order->prepareInvoice();
+            $invoice->pay();
+            $order->addRelatedObject($invoice);
             $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
