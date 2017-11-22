@@ -40,8 +40,8 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -51,6 +51,8 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class PayPalTransactionFactory extends TransactionFactory
 {
+    const REFUND_OPERATION = Operation::CANCEL;
+
     /**
      * @var PayPalTransaction
      */
@@ -173,14 +175,16 @@ class PayPalTransactionFactory extends TransactionFactory
     {
         parent::refund($commandSubject);
 
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $accountHolder = new AccountHolder();
-        $accountHolder->setEmail($billingAddress->getEmail());
-        $this->transaction->setAccountHolder($accountHolder);
+        $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return self::REFUND_OPERATION;
     }
 }

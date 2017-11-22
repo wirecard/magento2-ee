@@ -50,12 +50,14 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory;
+use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
@@ -150,6 +152,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->filterBuilder->method('create')->willReturn($filter);
     }
 
+    public function testRefundOperationSetter()
+    {
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            new PayPalTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+        $expected = Operation::CANCEL;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
+    }
+
     public function testCreateMinimum()
     {
         $transaction = new PayPalTransaction();
@@ -216,9 +227,6 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
-        $accountHolder = new AccountHolder();
-        $accountHolder->setEmail('test@example.com');
-        $expected->setAccountHolder($accountHolder);
 
         return $expected;
     }
@@ -298,6 +306,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testRefund()
     {
         $transaction = new PayPalTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
 
         $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,

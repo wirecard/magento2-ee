@@ -45,6 +45,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -55,6 +56,7 @@ class TransactionFactory
 {
     const PAYMENT = 'payment';
     const AMOUNT = 'amount';
+    const REFUND_OPERATION = Operation::CREDIT;
 
     /**
      * @var UrlInterface
@@ -90,6 +92,11 @@ class TransactionFactory
      * @var FilterBuilder $filterBuilder
      */
     protected $filterBuilder;
+
+    /**
+     * @var string
+     */
+    protected $transactionId;
 
     /**
      * TransactionFactory constructor.
@@ -147,6 +154,9 @@ class TransactionFactory
         return $this->transaction;
     }
 
+    /**
+     * @param $commandSubject
+     */
     public function capture($commandSubject)
     {
         if (!isset($commandSubject[self::PAYMENT])
@@ -180,6 +190,9 @@ class TransactionFactory
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
     }
 
+    /**
+     * @param $commandSubject
+     */
     public function refund($commandSubject)
     {
         if (!isset($commandSubject[self::PAYMENT])
@@ -192,11 +205,33 @@ class TransactionFactory
         $payment = $commandSubject[self::PAYMENT];
         $this->orderId = $payment->getOrder()->getId();
 
+        $orderIdFilter = $this->filterBuilder->setField('order_id')
+            ->setValue($this->orderId)
+            ->create();
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter($orderIdFilter)
+            ->create();
+
+        /** @var Collection $transactionList */
+        $transactionList = $this->transactionRepository->getList($searchCriteria);
+        /** @var MageTransaction $transaction */
+        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+        $this->transactionId = $transaction->getTxnId();
+
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
         $this->transaction->setAmount(new Amount($commandSubject['amount'], $payment->getOrder()->getCurrencyCode()));
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return self::REFUND_OPERATION;
     }
 }

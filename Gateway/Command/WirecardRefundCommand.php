@@ -109,7 +109,7 @@ class WirecardRefundCommand implements CommandInterface
         $transactionService = $this->transactionServiceFactory->create();
 
         try {
-            $response = $transactionService->process($transaction, Operation::CREDIT);
+            $response = $transactionService->process($transaction, $this->transactionFactory->getRefundOperation());
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
             $response = null;
