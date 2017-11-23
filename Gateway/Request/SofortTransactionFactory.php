@@ -93,4 +93,19 @@ class SofortTransactionFactory extends TransactionFactory
 
         return $this->transaction;
     }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function refund($commandSubject)
+    {
+        parent::refund($commandSubject);
+
+        $this->transaction->setParentTransactionId($this->transactionId);
+
+        return $this->transaction;
+    }
 }

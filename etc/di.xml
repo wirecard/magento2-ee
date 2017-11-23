@@ -381,7 +381,16 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">SofortInitializeCommand</item>
+                <item name="refund" xsi:type="string">SofortRefundCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SofortRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SofortTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSofortConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="SofortInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -397,7 +406,16 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">IdealInitializeCommand</item>
+                <item name="refund" xsi:type="string">IdealRefundCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="IdealRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">IdealTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardIdealConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="IdealInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">

@@ -130,7 +130,7 @@ class PayPalTransactionFactory extends TransactionFactory
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
         $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
-        $this->transaction->setOrderNumber($this->orderId);
+        //$this->transaction->setOrderNumber($this->orderId);
         $this->transaction->setOrderDetail(sprintf(
             '%s %s %s',
             $billingAddress->getEmail(),

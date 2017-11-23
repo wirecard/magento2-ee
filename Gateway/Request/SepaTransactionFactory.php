@@ -146,6 +146,14 @@ class SepaTransactionFactory extends TransactionFactory
     {
         parent::refund($commandSubject);
 
+        /** @var PaymentDataObjectInterface $payment */
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
+        $billingAddress = $order->getBillingAddress();
+
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $this->transaction->setParentTransactionId($this->transactionId);
+
         return $this->transaction;
     }
 }
