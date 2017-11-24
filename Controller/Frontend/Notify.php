@@ -187,7 +187,7 @@ class Notify extends Action
                 $transactionSave = $this->transaction->addObject($invoice)->addObject($invoice->getOrder());
                 $transactionSave->save();
                 $order->addStatusHistoryComment(
-                    __('Created invoice #%1 for transaction #%1.', $invoice->getId(), $response->getTransactionId())
+                    __('Captured amount of %s online. Transaction ID: %s.', $order->getGrandTotal(), $response->getTransactionId())
                 )->setIsCustomerNotified(true)->save();
             }
             $this->orderRepository->save($order);
@@ -270,7 +270,7 @@ class Notify extends Action
         if ('debit' === $transactionType) {
             $transactionType = 'capture';
         }
-        $payment->addTransaction($transactionType)->setIsClosed(0);
+        $payment->addTransaction($transactionType);
 
         return $payment;
     }

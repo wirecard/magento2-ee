@@ -48,6 +48,7 @@ use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -86,6 +87,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $transaction;
 
+    private $accountHolderFactory;
+
     public function setUp()
     {
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
@@ -99,6 +102,9 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
         $this->storeManager->method('getStore')->willReturn($store);
+
+        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
+        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
 
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
 
@@ -149,7 +155,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -160,7 +166,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -171,7 +177,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedRefundTransaction();
 
@@ -183,7 +189,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedTransaction();
         $expected->setBic('WIREDEMMXXX');
@@ -259,6 +265,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new SepaTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
 
+        $expected->setAccountHolder(new AccountHolder());
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');

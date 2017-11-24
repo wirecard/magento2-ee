@@ -387,10 +387,10 @@
     </virtualType>
     <virtualType name="SofortRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">SofortTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardSofortConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="SofortInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -412,10 +412,10 @@
     </virtualType>
     <virtualType name="IdealRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">IdealTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardIdealConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="IdealInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">

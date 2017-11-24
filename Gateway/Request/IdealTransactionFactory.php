@@ -91,25 +91,4 @@ class IdealTransactionFactory extends TransactionFactory
 
         return $this->transaction;
     }
-
-    /**
-     * @param array $commandSubject
-     * @return Transaction
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function refund($commandSubject)
-    {
-        parent::refund($commandSubject);
-
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setParentTransactionId($this->transactionId);
-
-        return $this->transaction;
-    }
 }

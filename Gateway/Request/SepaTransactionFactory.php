@@ -68,12 +68,21 @@ class SepaTransactionFactory extends TransactionFactory
     private $storeManager;
 
     /**
+     * @var AccountHolderFactory
+     */
+    private $accountHolderFactory;
+
+    /**
      * SepaTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
      * @param ConfigInterface $methodConfig
+     * @param Repository $transactionRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterBuilder $filterBuilder
+     * @param AccountHolderFactory $accountHolderFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -83,7 +92,8 @@ class SepaTransactionFactory extends TransactionFactory
         ConfigInterface $methodConfig,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        FilterBuilder $filterBuilder,
+        AccountHolderFactory $accountHolderFactory
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
@@ -92,6 +102,7 @@ class SepaTransactionFactory extends TransactionFactory
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
+        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**
