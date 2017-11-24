@@ -176,7 +176,7 @@ class Notify extends Action
              */
             $payment = $order->getPayment();
             $this->updatePaymentTransactionIds($payment, $response);
-            if ($response->getTransactionType() === 'debit') {
+            if ($response->getTransactionType() === 'debit' || $response->getTransactionType() === 'purchase') {
                 $invoice = $this->invoiceService->prepareInvoice($order);
                 $invoice->register();
                 $invoice->pay();
@@ -267,7 +267,7 @@ class Notify extends Action
         }
 
         $transactionType = $response->getTransactionType();
-        if ('debit' === $transactionType) {
+        if ('debit' === $transactionType || 'purchase' === $transactionType) {
             $transactionType = 'capture';
         }
         $payment->addTransaction($transactionType);

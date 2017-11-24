@@ -37,14 +37,13 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction as MageTransaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
-use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -53,10 +52,17 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class CreditCardTransactionFactory extends TransactionFactory
 {
+    const REFUND_OPERATION = Operation::REFUND;
+
     /**
      * @var CreditCardTransaction
      */
     protected $transaction;
+
+    /**
+     * @var AccountHolderFactory
+     */
+    protected $accountHolderFactory;
 
     /**
      * CreditCardTransactionFactory constructor.
@@ -64,6 +70,10 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
+     * @param Repository $transactionRepository
+     * @param SearchCriterialBuilder $searchCriteriaBuilder
+     * @param FilterBuilder $filterBuilder
+     * @param AccountHolderFactory $accountHolderFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -72,13 +82,15 @@ class CreditCardTransactionFactory extends TransactionFactory
         Transaction $transaction,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        FilterBuilder $filterBuilder,
+        AccountHolderFactory $accountHolderFactory
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
+        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**
@@ -121,40 +133,25 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      */
-    /*public function refund($commandSubject)
+    public function refund($commandSubject)
     {
         parent::refund($commandSubject);
 
         $payment = $commandSubject[self::PAYMENT];
-        $this->orderId = $payment->getOrder()->getId();
+        $order = $payment->getOrder();
+        $billingAddress = $order->getBillingAddress();
 
-        $orderIdFilter = $this->filterBuilder->setField('order_id')
-            ->setValue($this->orderId)
-            ->create();
-
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter($orderIdFilter)
-            ->create();
-        $tokenId = null;
-        $transactionList = $this->transactionRepository->getList($searchCriteria);
-        foreach ($transactionList as $transaction) {
-            $tokenId = $transaction->getAdditionalInformation('raw_details_info')['creditCardToken'];
-            if ($tokenId !== null) {
-                break;
-            }
-        }
-
-        if ($tokenId === null) {
-            throw new MandatoryFieldMissingException("Credit card token is a mandatory field.");
-        }
-
-        $this->transaction->setTokenId($tokenId);
-
-        $accountHolder = new AccountHolder();
-        $accountHolder->setLastName('lastName');
-
-        $this->transaction->setAccountHolder($accountHolder);
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;
-    }*/
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return self::REFUND_OPERATION;
+    }
 }
