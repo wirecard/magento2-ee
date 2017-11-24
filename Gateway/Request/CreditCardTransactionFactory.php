@@ -71,7 +71,7 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
      * @param Repository $transactionRepository
-     * @param SearchCriterialBuilder $searchCriteriaBuilder
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
      * @param AccountHolderFactory $accountHolderFactory
      */
