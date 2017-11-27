@@ -170,7 +170,6 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
             $context, $transactionServiceFactory,
             $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction,
             $orderSender);
-
     }
 
     public function testExecuteWithSuccessResponse()

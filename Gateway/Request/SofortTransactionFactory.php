@@ -93,5 +93,4 @@ class SofortTransactionFactory extends TransactionFactory
 
         return $this->transaction;
     }
-
 }

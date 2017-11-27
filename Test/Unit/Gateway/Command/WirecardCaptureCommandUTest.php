@@ -235,7 +235,7 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
         $status->method('getDescription')->willReturn('description');
 
         $statusCollection = $this->getMockBuilder(StatusCollection::class)->disableArgumentCloning()->getMock();
-        $statusCollection->method('getIterator')->willReturn(array($status));
+        $statusCollection->method('getIterator')->willReturn([$status]);
 
         $failureResponse = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
         $failureResponse->method('getStatusCollection')->willReturn($statusCollection);
@@ -245,7 +245,6 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
         $transactionServiceFactoryMock->method('create')->willReturn($transactionServiceMock);
-
 
         $command = new WirecardCaptureCommand(
             $this->transactionFactory,
