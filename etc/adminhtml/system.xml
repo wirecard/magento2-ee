@@ -155,7 +155,7 @@
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Secret Key</label>
                 </field>
-                <field id="ssl_max_limit" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>SSL Max Limit</label>
                     <comment>The maximum order amount in your default currency to initialize SSL transactions.</comment>
                 </field>
@@ -201,11 +201,11 @@
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Secret Key</label>
                 </field>
-                <field id="ssl_max_limit" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>SSL Max Limit</label>
                     <comment>The maximum order amount in your default currency to initialize SSL transactions.</comment>
                 </field>
-                <field id="three_d_min_limit" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="three_d_min_limit" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Min Limit</label>
                     <comment>
                         <![CDATA[
@@ -254,11 +254,13 @@
                 <field id="creditor_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Creditor ID</label>
                 </field>
-                <field id="creditor_name" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="creditor_name" translate="label comment" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Creditor Name</label>
+                    <comment>Creditor name will be shown in SEPA Direct Debit Mandate</comment>
                 </field>
-                <field id="creditor_city" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="creditor_city" translate="label comment" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Creditor City</label>
+                    <comment>Creditor city will be shown in SEPA Direct Debit Mandate</comment>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
@@ -354,7 +356,6 @@
                 <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Billing/Shipping Address must be identical</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Billing and Shipping address must be identical.</comment>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
@@ -406,7 +407,6 @@
                 <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Billing/Shipping Address must be identical</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Billing and Shipping address must be identical.</comment>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">

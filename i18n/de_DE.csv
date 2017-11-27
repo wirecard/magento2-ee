@@ -14,6 +14,8 @@
 "SSL Max Limit","SSL Maximal Limit"
 "3D Min Limit","3D Minimum Limit"
 "Default Currency","Standard Währung"
+"Creditor name will be shown in SEPA Direct Debit Mandate","Creditor Name wird im SEPA Lastschrift Mandat angezeigt"
+"Creditor city will be shown in SEPA Direct Debit Mandate","Creditor Stadt wird im SEPA Lastschrift Mandat angezeigt"
 "Birthdate:","Geburtsdatum"
 "Choose your bank...","Finanzinstitut"
 "Bank BIC","BIC"
