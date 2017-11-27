@@ -1,4 +1,3 @@
-<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -8,7 +7,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
+ * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -30,37 +29,35 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Request;
+/*jshint browser:true jquery:true*/
+/*global alert*/
+define(
+    [
+        'jquery',
+        'mage/validation'
+    ],
+    function ($) {
+        'use strict';
 
-use Magento\Payment\Gateway\Data\AddressAdapterInterface;
-use Wirecard\PaymentSdk\Entity\Address;
+        return {
+            /**
+             * Validate checkout agreements
+             *
+             * @returns {Boolean}
+             */
+            validate: function (dob) {
 
-/**
- * Class AddressFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
- */
-class AddressFactory
-{
-    /**
-     * @param AddressAdapterInterface $magentoAddressObj
-     * @return Address
-     * @throws \InvalidArgumentException
-     */
-    public function create($magentoAddressObj)
-    {
-        if (!$magentoAddressObj instanceof AddressAdapterInterface) {
-            throw new \InvalidArgumentException('Address data object should be provided.');
-        }
+                var birthdate = new Date(dob);
 
-        $address = new Address(
-            $magentoAddressObj->getCountryId(),
-            $magentoAddressObj->getCity(),
-            $magentoAddressObj->getStreetLine1()
-        );
-        $address->setPostalCode($magentoAddressObj->getPostcode());
-        if (strlen($magentoAddressObj->getStreetLine2())) {
-            $address->setStreet2($magentoAddressObj->getStreetLine2());
-        }
-        return $address;
+                var year = birthdate.getFullYear();
+                var today = new Date();
+                if (year <= 1899 || year >= today.getFullYear() + 1) {
+                    return false;
+                }
+
+                var limit = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate());
+                return birthdate < limit;
+            }
+        };
     }
-}
+);

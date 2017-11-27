@@ -41,6 +41,21 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $accountHolderFactory->create($this->address));
     }
 
+    public function testCreateWithDob()
+    {
+        $accountHolderFactory = new AccountHolderFactory($this->addressFactory);
+
+        $expected = new AccountHolder();
+        $expected->setAddress(new Address('', '', ''));
+        $expected->setEmail('test@example.com');
+        $expected->setFirstName('Joe');
+        $expected->setLastName('Doe');
+        $expected->setPhone('00433165349753');
+        $expected->setDateOfBirth(new \DateTime('1973-12-07'));
+
+        $this->assertEquals($expected, $accountHolderFactory->create($this->address, '1973-12-07'));
+    }
+
     /**
      * @expectedException InvalidArgumentException
      */

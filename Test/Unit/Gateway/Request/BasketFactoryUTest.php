@@ -12,6 +12,7 @@ use Wirecard\ElasticEngine\Gateway\Request\ItemFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,6 +21,8 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     private $itemFactory;
 
     private $checkoutSession;
+
+    private $transaction;
 
     public function setUp()
     {
@@ -50,6 +53,8 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->checkoutSession->method('getQuote')->willReturn($quote);
+
+        $this->transaction = $this->getMockBuilder(Transaction::class)->getMock();
     }
 
     public function testCreate()
@@ -57,6 +62,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession);
 
         $expected = new Basket();
+        $expected->setVersion($this->transaction);
         $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
@@ -65,7 +71,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $shipping->setTaxRate(0.0);
         $expected->add($shipping);
 
-        $this->assertEquals($expected, $basketFactory->create($this->order));
+        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction));
     }
 
     /**
@@ -74,6 +80,6 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateThrowsException()
     {
         $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession);
-        $basketFactory->create(null);
+        $basketFactory->create(null, null);
     }
 }
