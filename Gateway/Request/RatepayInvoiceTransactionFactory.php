@@ -32,6 +32,7 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
@@ -41,17 +42,17 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class PayPalTransactionFactory
+ * Class RatepayInvoiceTransactionFactory
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
-class PayPalTransactionFactory extends TransactionFactory
+class RatepayInvoiceTransactionFactory extends TransactionFactory
 {
     /**
-     * @var PayPalTransaction
+     * @var RatepayInvoiceTransaction
      */
     protected $transaction;
     /**
@@ -74,7 +75,12 @@ class PayPalTransactionFactory extends TransactionFactory
     private $storeManager;
 
     /**
-     * PayPalTransactionFactory constructor.
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
+     * RatepayInvoiceTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
@@ -85,6 +91,7 @@ class PayPalTransactionFactory extends TransactionFactory
      * @param Repository $transactionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
+     * @param Session $session
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -96,7 +103,8 @@ class PayPalTransactionFactory extends TransactionFactory
         ConfigInterface $methodConfig,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        FilterBuilder $filterBuilder,
+        Session $session
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
@@ -108,6 +116,7 @@ class PayPalTransactionFactory extends TransactionFactory
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
+        $this->checkoutSession = $session;
     }
 
     /**
@@ -122,28 +131,21 @@ class PayPalTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
+        $additionalInfo = $payment->getPayment()->getAdditionalInformation();
         $order = $payment->getOrder();
         $billingAddress = $order->getBillingAddress();
 
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
+        $dob = $additionalInfo['customerDob'];
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, $dob));
         $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $billingAddress->getEmail(),
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        ));
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 
-        if ($this->methodConfig->getValue('send_shopping_basket')) {
-            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
-        }
-
-        if ($this->methodConfig->getValue('send_descriptor')) {
-            $this->transaction->setDescriptor(sprintf('%s %s',
-                substr($this->storeManager->getStore()->getName(), 0, 9),
-                $this->orderId
-            ));
+        if (strlen($this->checkoutSession->getData('invoiceDeviceIdent'))) {
+            $deviceIdent = $this->checkoutSession->getData('invoiceDeviceIdent');
+            $device = new \Wirecard\PaymentSdk\Entity\Device();
+            $device->setFingerprint($deviceIdent);
+            $this->transaction->setDevice($device);
+            $this->checkoutSession->unsetData('invoiceDeviceIdent');
         }
 
         return $this->transaction;
