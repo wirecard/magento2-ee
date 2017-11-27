@@ -40,6 +40,9 @@ use Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Entity\StatusCollection;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -186,10 +189,49 @@ class WirecardRefundCommandUTest extends \PHPUnit_Framework_TestCase
     public function transactionDataProvider()
     {
         return [
-            [ Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY],
-            [ Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY],
-            [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE ],
-            [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY ]
+            [Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY],
+            [Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY],
+            [PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE],
+            [PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY]
         ];
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExecuteThrows()
+    {
+        // TransactionService mocks
+        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $status = $this->getMockBuilder(Status::class)->disableOriginalConstructor()->getMock();
+        $status->method('getDescription')->willReturn('description');
+
+        $statusCollection = $this->getMockBuilder(StatusCollection::class)->disableArgumentCloning()->getMock();
+        $statusCollection->method('getIterator')->willReturn(array($status));
+
+        $failureResponse = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
+        $failureResponse->method('getStatusCollection')->willReturn($statusCollection);
+
+        $transactionServiceMock->method('process')->willReturn($failureResponse);
+
+        $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceFactoryMock->method('create')->willReturn($transactionServiceMock);
+
+
+        $command = new WirecardRefundCommand(
+            $this->transactionFactory,
+            $transactionServiceFactoryMock,
+            $this->logger,
+            $this->handler,
+            $this->methodConfig
+        );
+
+        $stateObject = $this->getMock(DataObject::class);
+        $commandSubject = ['stateObject' => $stateObject];
+
+        $command->execute($commandSubject);
     }
 }
