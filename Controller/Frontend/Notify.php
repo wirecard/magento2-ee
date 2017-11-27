@@ -88,10 +88,6 @@ class Notify extends Action
      */
     private $transaction;
 
-    /**
-     * @var OrderSender
-     */
-    private $orderSender;
 
     /**
      * Notify constructor.
@@ -102,7 +98,6 @@ class Notify extends Action
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
-     * @param OrderSender $orderSender
      */
     public function __construct(
         Context $context,
@@ -111,8 +106,7 @@ class Notify extends Action
         LoggerInterface $logger,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         InvoiceService $invoiceService,
-        Transaction $transaction,
-        OrderSender $orderSender
+        Transaction $transaction
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
@@ -120,7 +114,6 @@ class Notify extends Action
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->invoiceService = $invoiceService;
         $this->transaction = $transaction;
-        $this->orderSender = $orderSender;
 
         parent::__construct($context);
     }
