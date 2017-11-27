@@ -303,7 +303,7 @@ class Notify extends Action
         $transactionSave = $transactionSave->addObject($invoice->getOrder());
         $transactionSave->save();
         $order->addStatusHistoryComment(
-            __('Captured amount of %s online. Transaction ID: %s.', $order->getGrandTotal(), $response->getTransactionId())
-        )->setIsCustomerNotified(true)->save();
+            __('Captured amount of %1 online. Transaction ID: %2.', $order->getGrandTotal(), $response->getTransactionId())
+        )->setIsCustomerNotified(true);
     }
 }
