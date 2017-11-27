@@ -22,4 +22,14 @@
 "Bank Account IBAN","IBAN"
 "The minimum order amount in your default currency to initialize 3D transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>",
 "Minimum Summe für Bestellung in your default currency to initialize 3D transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>"
-
+"Creditor","Zahlungsempfänger"
+"Creditor ID:","Creditor ID:"
+"Mandate reference:","Mandatsreferenz:"
+"Debtor","Zahlungspflichtiger"
+"Account owner:","Kontoinhaber:"
+"IBAN:","IBAN:"
+"BIC:","BIC:"
+"I authorize the creditor %s to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor %s.","Ich ermächtige die Firma %s einmalig eine Zahlung von meinem Konto mittels SEPA Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die von der Firma %s auf mein Konto gezogene SEPA Lastschrift einzulösen."
+"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.","Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen."
+"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %1 my full name, address and date of birth.","Für den Fall der Nichteinlösung der Lastschrift oder des Widerspruchs gegen die Lastschrift weise ich meine Bank unwiderruflich an, der Firma %1 oder Dritten auf Anforderung meinen Namen, Adresse und Geburtsdatum vollständig mitzuteilen."
+"I have read and accepted the SEPA Direct Debit Mandate information.","Ich bestätige, den oben stehenden Text verstanden und akzeptiert zu haben."
