@@ -177,18 +177,7 @@ class Notify extends Action
             $payment = $order->getPayment();
             $this->updatePaymentTransactionIds($payment, $response);
             if ($response->getTransactionType() === 'debit' || $response->getTransactionType() === 'purchase') {
-                $invoice = $this->invoiceService->prepareInvoice($order);
-                $invoice->register();
-                $invoice->pay();
-                //add transactionid for invoice
-                $invoice->setTransactionId($response->getTransactionId());
-                $order->addRelatedObject($invoice);
-
-                $transactionSave = $this->transaction->addObject($invoice)->addObject($invoice->getOrder());
-                $transactionSave->save();
-                $order->addStatusHistoryComment(
-                    __('Captured amount of %s online. Transaction ID: %s.', $order->getGrandTotal(), $response->getTransactionId())
-                )->setIsCustomerNotified(true)->save();
+                $this->captureInvoice($order, $response);
             }
             $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
@@ -295,5 +284,25 @@ class Notify extends Action
         $orders = $result->getItems();
 
         return reset($orders);
+    }
+
+    /**
+     * @param Order $order
+     * @param SuccessResponse $response
+     */
+    private function captureInvoice($order, $response)
+    {
+        $invoice = $this->invoiceService->prepareInvoice($order);
+        $invoice->register();
+        $invoice->pay();
+        //add transactionid for invoice
+        $invoice->setTransactionId($response->getTransactionId());
+        $order->addRelatedObject($invoice);
+
+        $transactionSave = $this->transaction->addObject($invoice)->addObject($invoice->getOrder());
+        $transactionSave->save();
+        $order->addStatusHistoryComment(
+            __('Captured amount of %s online. Transaction ID: %s.', $order->getGrandTotal(), $response->getTransactionId())
+        )->setIsCustomerNotified(true)->save();
     }
 }
