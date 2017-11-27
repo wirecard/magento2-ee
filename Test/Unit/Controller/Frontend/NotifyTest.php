@@ -132,6 +132,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $orderStatusHistoryInterface = $this->getMockWithoutInvokingTheOriginalConstructor(Order\Status\History::class);
         $orderStatusHistoryInterface->method('setIsCustomerNotified')->willReturn($orderStatusHistoryInterface);
+        $orderStatusHistoryInterface->method('setExtensionAttributes')->willReturn($orderStatusHistoryInterface);
 
         $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
 
