@@ -40,7 +40,6 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;

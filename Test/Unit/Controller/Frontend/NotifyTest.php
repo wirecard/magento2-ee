@@ -168,7 +168,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $this->controller = new Notify(
             $context, $transactionServiceFactory,
-            $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction, $orderSender);
+            $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction,
+            $orderSender);
 
     }
 
@@ -185,6 +186,12 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->order->expects($this->once())->method('setStatus')->with('processing');
         $this->order->expects($this->once())->method('setState')->with('processing');
         $this->controller->execute();
+    }
+
+    private function setDefaultOrder()
+    {
+        $this->orderSearchResult->method('getItems')->willReturn([$this->order]);
+        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 
     public function testExecuteWithFraudResponse()
@@ -306,11 +313,5 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->controller->execute();
-    }
-
-    private function setDefaultOrder()
-    {
-        $this->orderSearchResult->method('getItems')->willReturn([$this->order]);
-        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 }
