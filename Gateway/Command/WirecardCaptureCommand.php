@@ -120,10 +120,12 @@ class WirecardCaptureCommand implements CommandInterface
         }
 
         if ($response instanceof FailureResponse) {
-            foreach ($response->getStatusCollection()->getIterator() as $status) {
-                /** @var Status $status */
-                throw new InvalidArgumentException($status->getDescription());
+            $errors = "";
+            foreach ($response->getStatusCollection()->getIterator() as $item) {
+                /** @var Status $item */
+                $errors .= $item->getDescription() . "<br>\n";
             }
+            throw new InvalidArgumentException($errors);
         }
     }
 }
