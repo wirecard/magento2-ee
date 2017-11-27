@@ -33,6 +33,7 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Locale\Resolver;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\MethodInterface;
@@ -49,6 +50,9 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
     {
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+
+        $store = $this->getMockWithoutInvokingTheOriginalConstructor(Resolver::class);
+        $store->method('getLocale')->willReturn('en');
 
         $seamlessRequestData = [
             'key' => 'value'
@@ -101,7 +105,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
@@ -144,6 +148,9 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
     {
         $assetRepo = $this->getMockWithoutInvokingTheOriginalConstructor(Repository::class);
         $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+
+        $store = $this->getMockWithoutInvokingTheOriginalConstructor(Resolver::class);
+        $store->method('getLocale')->willReturn('en');
 
         $seamlessRequestData = [
             'key' => 'value'
@@ -196,7 +203,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [

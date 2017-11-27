@@ -36,6 +36,7 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
+use Magento\Framework\Locale\Resolver;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\IdealBic;
 
@@ -71,18 +72,25 @@ class ConfigProvider implements ConfigProviderInterface
     private $checkoutSession;
 
     /**
+     * @var Resolver
+     */
+    private $store;
+
+    /**
      * ConfigProvider constructor.
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param Repository $assetRepo
      * @param Data $paymentHelper
      * @param Session $session
+     * @param Resolver $store
      */
-    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper, Session $session)
+    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper, Session $session, Resolver $store)
     {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->assetRepository = $assetRepo;
         $this->paymentHelper = $paymentHelper;
         $this->checkoutSession = $session;
+        $this->store = $store;
     }
 
     /**
@@ -152,11 +160,12 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private function getConfigForCreditCard($paymentMethodName)
     {
+        $locale = $this->store->getLocale();
         $transactionService = $this->transactionServiceFactory->create();
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi(), true)
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale), true)
             ]
         ];
     }
