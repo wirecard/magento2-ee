@@ -131,6 +131,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_ratepayinvoice' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript
+                ],
+                'wirecard_elasticengine_ratepayinstall' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ratepay_script' => $ratepayScript
                 ]
             ]
         ], $prov->getConfig());
@@ -220,6 +224,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'ideal_bic' => $idealBic
                 ],
                 'wirecard_elasticengine_ratepayinvoice' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ratepay_script' => $ratepayScript
+                ],
+                'wirecard_elasticengine_ratepayinstall' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript
                 ]

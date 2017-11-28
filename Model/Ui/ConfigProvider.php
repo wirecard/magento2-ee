@@ -48,6 +48,7 @@ class ConfigProvider implements ConfigProviderInterface
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
     const IDEAL_CODE = 'wirecard_elasticengine_ideal';
     const RATEPAYINVOICE_CODE = 'wirecard_elasticengine_ratepayinvoice';
+    const RATEPAYINSTALL_CODE = 'wirecard_elasticengine_ratepayinstall';
 
     /**
      * @var Repository
@@ -98,7 +99,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
-                $this->getConfigForRatepay(self::RATEPAYINVOICE_CODE)
+                $this->getConfigForRatepay(self::RATEPAYINVOICE_CODE) +
+                $this->getConfigForRatepay(self::RATEPAYINSTALL_CODE)
         ];
     }
 
@@ -211,14 +213,27 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * Set deviceIdent for ratepay script
+     */
+    private function setInstallmentDeviceIdent()
+    {
+        $transactionService = $this->transactionServiceFactory->create();
+        if (!strlen($this->checkoutSession->getData('installmentDeviceIdent'))) {
+            $deviceIdent = $transactionService->getRatePayInstallmentDeviceIdent();
+            $this->checkoutSession->setData('installmentDeviceIdent', $deviceIdent);
+        }
+    }
+
+    /**
      * @param $code
      * @return string
      */
     private function getRatepayScript($code)
     {
-        $this->setInvoiceDeviceIdent();
+        $this->setInstallmentDeviceIdent();
         $deviceIdent = $this->checkoutSession->getData('installmentDeviceIdent');
         if ($code == self::RATEPAYINVOICE_CODE) {
+            $this->setInvoiceDeviceIdent();
             $deviceIdent = $this->checkoutSession->getData('invoiceDeviceIdent');
         }
         $script = '
