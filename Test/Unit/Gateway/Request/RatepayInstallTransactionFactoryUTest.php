@@ -195,6 +195,10 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCaptureMinimum()
     {
         $transaction = new RatepayInstallmentTransaction();
+        $transaction->setRedirect(new Redirect(
+            self::REDIRECT_URL,
+            'http://magen.to/frontend/cancel',
+            self::REDIRECT_URL));
         $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
             $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
