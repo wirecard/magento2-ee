@@ -39,6 +39,7 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\DB\Transaction;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderSearchResultInterface;
+use Magento\Sales\Api\Data\OrderStatusHistoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
@@ -130,9 +131,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
-        $orderStatusHistoryInterface = $this->getMockWithoutInvokingTheOriginalConstructor(Order\Status\History::class);
+        $orderStatusHistoryInterface = $this->getMockWithoutInvokingTheOriginalConstructor(OrderStatusHistoryInterface::class);
         $orderStatusHistoryInterface->method('setIsCustomerNotified')->willReturn($orderStatusHistoryInterface);
-        $orderStatusHistoryInterface->method('setExtensionAttributes')->willReturn($orderStatusHistoryInterface);
 
         $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
 
