@@ -47,12 +47,15 @@ use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\CreditCardTransactionFactory;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\Operation;
 
 class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
@@ -81,6 +84,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $transaction;
 
+    private $accountHolderFactory;
+
     public function setUp()
     {
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
@@ -94,6 +99,9 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
         $this->storeManager->method('getStore')->willReturn($store);
+
+        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
+        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
 
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
 
@@ -110,7 +118,7 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->payment->method('getPayment')->willReturn($paymentInfo);
         $this->payment->method('getOrder')->willReturn($this->order);
 
-        $this->commandSubject = ['payment' => $this->payment];
+        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
 
         $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
         $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
@@ -134,11 +142,20 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->filterBuilder->method('create')->willReturn($filter);
     }
 
+    public function testRefundOperationSetter()
+    {
+        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            new CreditCardTransaction(), $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder,
+            $this->accountHolderFactory);
+        $expected = Operation::REFUND;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
+    }
+
     public function testCreateMinimum()
     {
         $transaction = new CreditCardTransaction();
         $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -149,11 +166,22 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new CreditCardTransaction();
         $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
         $this->assertEquals($expected, $transactionFactory->capture($this->commandSubject));
+    }
+
+    public function testRefund()
+    {
+        $transaction = new CreditCardTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
+
+        $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }
 
     /**
@@ -187,11 +215,23 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new CreditCardTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
-        $expected->setRedirect(new Redirect(
-            self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
 
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return CreditCardTransaction
+     */
+    private function minimumExpectedRefundTransaction()
+    {
+        $expected = new CreditCardTransaction();
+        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+
+        $expected->setAccountHolder(new AccountHolder());
+        $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 

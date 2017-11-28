@@ -39,6 +39,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -80,6 +81,22 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction());
         $transactionFactory->create([]);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testRefundThrowsExceptionWithoutPayment()
+    {
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction());
+        $transactionFactory->refund([]);
+    }
+
+    public function testRefundOperationSetter()
+    {
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction());
+        $expected = Operation::CREDIT;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
     public function testCreateSetsAmountValues()

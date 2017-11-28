@@ -36,11 +36,15 @@ use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\DB\Transaction;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderSearchResultInterface;
+use Magento\Sales\Api\Data\OrderStatusHistoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Service\InvoiceService;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Notify;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -99,6 +103,11 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
+    /**
+     * @var InvoiceService|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $invoiceService;
+
     public function setUp()
     {
         /**
@@ -122,11 +131,21 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
+        $orderStatusHistoryInterface = $this->getMockWithoutInvokingTheOriginalConstructor(OrderStatusHistoryInterface::class);
+        $orderStatusHistoryInterface->method('setIsCustomerNotified')->willReturn($orderStatusHistoryInterface);
+
         $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
+
         $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
         $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
         $this->order->method('getPayment')->willReturn($this->payment);
+        $this->order->method('addStatusHistoryComment')->willReturn($orderStatusHistoryInterface);
+
         $this->orderRepository->method('get')->willReturn($this->order);
+        $invoice = $this->getMockBuilder(Order\Invoice::class)->disableOriginalConstructor()->getMock();
+        $invoice->method('getOrder')->willReturn($this->order);
+        $this->invoiceService = $this->getMockWithoutInvokingTheOriginalConstructor(InvoiceService::class);
+        $this->invoiceService->method('prepareInvoice')->willReturn($invoice);
 
         $this->logger = $this->getMock(LoggerInterface::class);
 
@@ -141,9 +160,15 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $searchCriteriaBuilder->method('addFilter')->willReturn($searchCriteriaBuilder);
         $searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
 
+        $transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $transaction->method('addObject')->withAnyParameters()->willReturn($transaction);
+
+        $orderSender = $this->getMockWithoutInvokingTheOriginalConstructor(OrderSender::class);
+
         $this->controller = new Notify(
             $context, $transactionServiceFactory,
-            $this->orderRepository, $this->logger, $searchCriteriaBuilder);
+            $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction,
+            $orderSender);
     }
 
     public function testExecuteWithSuccessResponse()
@@ -159,6 +184,12 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->order->expects($this->once())->method('setStatus')->with('processing');
         $this->order->expects($this->once())->method('setState')->with('processing');
         $this->controller->execute();
+    }
+
+    private function setDefaultOrder()
+    {
+        $this->orderSearchResult->method('getItems')->willReturn([$this->order]);
+        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 
     public function testExecuteWithFraudResponse()
@@ -280,11 +311,5 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->controller->execute();
-    }
-
-    private function setDefaultOrder()
-    {
-        $this->orderSearchResult->method('getItems')->willReturn([$this->order]);
-        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 }

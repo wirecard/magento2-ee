@@ -36,7 +36,7 @@ use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Psr\Log\LoggerInterface;
-use Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand;
+use Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
@@ -50,7 +50,7 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\TransactionService;
 
-class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
+class WirecardRefundCommandUTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -101,7 +101,7 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
 
         $this->transactionFactory = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $this->transactionFactory->method('capture')
+        $this->transactionFactory->method('refund')
             ->willReturn($this->getMock(PayPalTransaction::class));
 
         // TransactionService mocks
@@ -124,7 +124,7 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
         $this->commandSubject = ['stateObject' => $stateObject];
     }
 
-    public function testExecuteCaptureTransactionService()
+    public function testExecuteRefundTransactionService()
     {
         $testTransactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()->getMock();
@@ -134,33 +134,7 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
         $testTransactionServiceFactory->expects($this->once())->method('create');
 
         /** @var TransactionServiceFactory $testTransactionServiceFactory */
-        $command = new WirecardCaptureCommand(
-            $this->transactionFactory,
-            $testTransactionServiceFactory,
-            $this->logger,
-            $this->handler,
-            $this->methodConfig
-        );
-
-        $command->execute($this->commandSubject);
-    }
-
-    public function testExecuteFailureCaptureTransactionService()
-    {
-        $testTransactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
-            ->disableOriginalConstructor()->getMock();
-        $testTransactionServiceFactory->method('create')->willReturn($this->transactionService);
-
-        // Test if the transactionService is created with the correct values
-        $testTransactionServiceFactory->expects($this->once())->method('create');
-
-        //Failureresponse without statuscollection
-        $response = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
-
-        $this->transactionService->method('process')->willReturn($response);
-
-        /** @var TransactionServiceFactory $testTransactionServiceFactory */
-        $command = new WirecardCaptureCommand(
+        $command = new WirecardRefundCommand(
             $this->transactionFactory,
             $testTransactionServiceFactory,
             $this->logger,
@@ -180,7 +154,7 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
         // Transaction mocks
         $transactionFactoryMock = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionFactoryMock->method('capture')->willReturn($this->getMock($transactionClass));
+        $transactionFactoryMock->method('refund')->willReturn($this->getMock($transactionClass));
 
         $exception = new \Exception('Testing the exception');
 
@@ -201,7 +175,7 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
          * @var TransactionFactory $transactionFactoryMock
          * @var TransactionServiceFactory $transactionServiceFactoryMock
          */
-        $command = new WirecardCaptureCommand(
+        $command = new WirecardRefundCommand(
             $transactionFactoryMock,
             $transactionServiceFactoryMock,
             $loggerMock,
@@ -215,10 +189,10 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
     public function transactionDataProvider()
     {
         return [
-            [ Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY],
-            [ Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY],
-            [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE ],
-            [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY ]
+            [Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY],
+            [Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY],
+            [PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE],
+            [PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY]
         ];
     }
 
@@ -246,7 +220,7 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $transactionServiceFactoryMock->method('create')->willReturn($transactionServiceMock);
 
-        $command = new WirecardCaptureCommand(
+        $command = new WirecardRefundCommand(
             $this->transactionFactory,
             $transactionServiceFactoryMock,
             $this->logger,
