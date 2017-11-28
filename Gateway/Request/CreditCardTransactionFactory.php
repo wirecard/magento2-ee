@@ -42,6 +42,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -50,10 +51,17 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class CreditCardTransactionFactory extends TransactionFactory
 {
+    const REFUND_OPERATION = Operation::REFUND;
+
     /**
      * @var CreditCardTransaction
      */
     protected $transaction;
+
+    /**
+     * @var AccountHolderFactory
+     */
+    protected $accountHolderFactory;
 
     /**
      * CreditCardTransactionFactory constructor.
@@ -61,6 +69,10 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
+     * @param Repository $transactionRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterBuilder $filterBuilder
+     * @param AccountHolderFactory $accountHolderFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -69,13 +81,15 @@ class CreditCardTransactionFactory extends TransactionFactory
         Transaction $transaction,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        FilterBuilder $filterBuilder,
+        AccountHolderFactory $accountHolderFactory
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
+        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**
@@ -110,5 +124,33 @@ class CreditCardTransactionFactory extends TransactionFactory
         parent::capture($commandSubject);
 
         return $this->transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function refund($commandSubject)
+    {
+        parent::refund($commandSubject);
+
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
+        $billingAddress = $order->getBillingAddress();
+
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $this->transaction->setParentTransactionId($this->transactionId);
+
+        return $this->transaction;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return self::REFUND_OPERATION;
     }
 }

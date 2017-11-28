@@ -35,10 +35,12 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Service\InvoiceService;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\Status;
@@ -76,24 +78,40 @@ class Notify extends Action
     private $searchCriteriaBuilder;
 
     /**
+     * @var InvoiceService
+     */
+    private $invoiceService;
+
+    /**
+     * @var Transaction
+     */
+    private $transaction;
+
+    /**
      * Notify constructor.
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param InvoiceService $invoiceService
+     * @param Transaction $transaction
      */
     public function __construct(
         Context $context,
         TransactionServiceFactory $transactionServiceFactory,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        InvoiceService $invoiceService,
+        Transaction $transaction
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->invoiceService = $invoiceService;
+        $this->transaction = $transaction;
 
         parent::__construct($context);
     }
@@ -226,11 +244,12 @@ class Notify extends Action
         }
 
         $transactionType = $response->getTransactionType();
-        if ('debit' === $transactionType) {
+        if ('debit' === $transactionType || 'purchase' === $transactionType) {
+            $this->captureInvoice($response);
             $transactionType = 'capture';
         }
-
         $payment->addTransaction($transactionType);
+
         return $payment;
     }
 
@@ -254,5 +273,26 @@ class Notify extends Action
         $orders = $result->getItems();
 
         return reset($orders);
+    }
+
+    /**
+     * @param SuccessResponse $response
+     */
+    private function captureInvoice($response)
+    {
+        $order = $this->getOrderByIncrementId($response->getCustomFields()->get('orderId'));
+        $invoice = $this->invoiceService->prepareInvoice($order);
+        $invoice->register();
+        $invoice->pay();
+        //add transactionid for invoice
+        $invoice->setTransactionId($response->getTransactionId());
+        $order->addRelatedObject($invoice);
+
+        $transactionSave = $this->transaction->addObject($invoice);
+        $transactionSave = $transactionSave->addObject($invoice->getOrder());
+        $transactionSave->save();
+        $order->addStatusHistoryComment(
+            __('Captured amount of %1 online. Transaction ID: %2.', $order->getGrandTotal(), $response->getTransactionId())
+        )->setIsCustomerNotified(true);
     }
 }

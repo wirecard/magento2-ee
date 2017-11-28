@@ -40,16 +40,15 @@ use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
-use Wirecard\PaymentSdk\Transaction\Operation;
 use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
- * Class WirecardCommand
+ * Class WirecardRefundCommand
  * @package Wirecard\ElasticEngine\Gateway
  */
-class WirecardCaptureCommand implements CommandInterface
+class WirecardRefundCommand implements CommandInterface
 {
-    const STATEOBJECT='stateObject';
+    const STATEOBJECT = 'stateObject';
 
     /**
      * @var TransactionFactory
@@ -83,7 +82,6 @@ class WirecardCaptureCommand implements CommandInterface
      * @param LoggerInterface $logger
      * @param HandlerInterface $handler
      * @param ConfigInterface $methodConfig
-     * @param String $name
      */
     public function __construct(
         TransactionFactory $transactionFactory,
@@ -105,11 +103,11 @@ class WirecardCaptureCommand implements CommandInterface
      */
     public function execute(array $commandSubject)
     {
-        $transaction = $this->transactionFactory->capture($commandSubject);
+        $transaction = $this->transactionFactory->refund($commandSubject);
         $transactionService = $this->transactionServiceFactory->create();
 
         try {
-            $response = $transactionService->process($transaction, Operation::PAY);
+            $response = $transactionService->process($transaction, $this->transactionFactory->getRefundOperation());
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
             $response = null;
