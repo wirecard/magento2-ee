@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadata;
+use Magento\Framework\DataObject;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Module\ModuleList\Loader;
 use Magento\Framework\Module\ModuleListInterface;
@@ -42,12 +43,7 @@ use Magento\Payment\Model\Config;
 class Support
 {
     /**
-     * @var \Magento\Framework\Url
-     */
-    protected $_url;
-
-    /**
-     * @var \Magento\Framework\Mail\Template\TransportBuilder
+     * @var TransportBuilder
      */
     protected $_transportBuilder;
 
@@ -195,6 +191,7 @@ class Support
      * @param Loader $moduleLoader
      * @param Config $paymentConfig
      * @param ModuleListInterface $moduleList
+     * @param ProductMetadata $productMetadata
      * @internal param ScopeConfigInterface $scopePool
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
@@ -215,7 +212,7 @@ class Support
     }
 
     /**
-     * @param \Magento\Framework\DataObject $postObject
+     * @param DataObject $postObject
      *
      * @return bool
      * @throws \Exception
