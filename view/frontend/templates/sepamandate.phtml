@@ -73,8 +73,11 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo sprintf(__(
-                                'I authorize the creditor %s to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor %s.'), $this->getCreditorName(), $this->getCreditorName()) ?>
+                        <?php echo __('I authorize the creditor ') .
+                            $this->getCreditorName() .
+                            __(' to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor ') .
+                            $this->getCreditorName() .
+                            __('sepamandatetextextra'); ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -98,7 +101,9 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %1 my full name, address and date of birth.', $this->getCreditorName()); ?>
+                        <?php echo __('I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor ') .
+                                    $this->getCreditorName() .
+                                    __(' my full name, address and date of birth.'); ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>

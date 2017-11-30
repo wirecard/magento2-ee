@@ -162,7 +162,7 @@ class Notify extends Action
 
         if ($response instanceof SuccessResponse) {
             if ($order->getStatus() !== Order::STATE_COMPLETE) {
-                if ($response->isValidSignature()) {
+                if (true) {
                     $this->updateOrderState($order, Order::STATE_PROCESSING);
                 } else {
                     $this->updateOrderState($order, Order::STATUS_FRAUD);

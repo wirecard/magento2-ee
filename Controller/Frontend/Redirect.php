@@ -105,7 +105,7 @@ class Redirect extends Action
             }
         } else {
             $this->checkoutSession->restoreQuote();
-            $this->messageManager->addNoticeMessage(__('There is no existing information for this payment method.'));
+            $this->messageManager->addNoticeMessage(__('An error occurred during the payment process. Please try again.'));
             $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
         }
 
