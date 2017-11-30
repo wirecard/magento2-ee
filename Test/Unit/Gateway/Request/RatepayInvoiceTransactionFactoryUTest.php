@@ -257,6 +257,8 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             'http://magen.to/frontend/cancel',
             self::REDIRECT_URL));
 
+        $expected->setAmount(new Amount(1.0, 'EUR'));
+        $expected->setBasket(new Basket());
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
