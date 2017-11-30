@@ -4,11 +4,11 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use InvalidArgumentException;
 use Magento\Checkout\Model\Session;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\OrderFactory;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\ItemFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
