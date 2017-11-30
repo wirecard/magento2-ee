@@ -32,76 +32,11 @@
 
 namespace Wirecard\ElasticEngine\Block\Adminhtml\Support\Edit;
 
-use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Form\Generic;
 use Magento\Backend\Block\Widget\Tab\TabInterface;
-use Magento\Framework\Data\FormFactory;
-use Magento\Framework\Registry;
 
 class Form extends Generic implements TabInterface
 {
-
-    /**
-     * @param Context $context
-     * @param Registry $registry
-     * @param FormFactory $formFactory
-     * @param array $data
-     */
-    public function __construct(
-        Context $context,
-        Registry $registry,
-        FormFactory $formFactory,
-        array $data = []
-    ) {
-        parent::__construct($context, $registry, $formFactory, $data);
-    }
-
-    protected function _prepareForm()
-    {
-        /** @var \Magento\Framework\Data\Form $form */
-        $form = $this->_formFactory->create([
-                'data' => [
-                    'id'     => 'edit_form',
-                    'action' => $this->getUrl('*/*/sendrequest', ['id' => $this->getRequest()->getParam('id')]),
-                    'method' => 'post'
-                ]
-            ]
-        );
-
-        $form->setUseContainer(true);
-
-        $fieldset = $form->addFieldset('form_form', ['legend' => __('Contact Form')]);
-        $fieldset->addField('to', 'select', [
-            'label'    => __('To'),
-            'class'    => 'required-entry',
-            'required' => true,
-            'name'     => 'to',
-            'options'  => [
-                'support.at@wirecard.com' => 'Support Team Wirecard CEE, Austria',
-                'support@wirecard.com'    => 'Support Team Wirecard AG, Germany',
-                'support.sg@wirecard.com' => 'Support Team Wirecard Singapore'
-            ]
-        ]);
-
-        $fieldset->addField('replyto', 'text', [
-            'label' => __('Your e-mail address'),
-            'class' => 'validate-email',
-            'name'  => 'replyto'
-        ]);
-
-        $fieldset->addField('description', 'textarea', [
-            'label'    => __('Your message'),
-            'class'    => 'required-entry',
-            'required' => true,
-            'name'     => 'description',
-            'style'    => 'height:30em;width:50em'
-        ]);
-
-        $this->setForm($form);
-
-        return parent::_prepareForm();
-    }
-
     /**
      * Prepare label for tab
      *
@@ -109,7 +44,7 @@ class Form extends Generic implements TabInterface
      */
     public function getTabLabel()
     {
-        return __('Support Request');
+        return $this->getTabTitle();
     }
 
     /**
@@ -136,5 +71,51 @@ class Form extends Generic implements TabInterface
     public function isHidden()
     {
         return false;
+    }
+
+    protected function _prepareForm()
+    {
+        /** @var \Magento\Framework\Data\Form $form */
+        $form = $this->_formFactory->create([
+                'data' => [
+                    'id' => 'edit_form',
+                    'action' => $this->getUrl('*/*/sendrequest', ['id' => $this->getRequest()->getParam('id')]),
+                    'method' => 'post'
+                ]
+            ]
+        );
+
+        $form->setUseContainer(true);
+
+        $fieldset = $form->addFieldset('form_form', ['legend' => __('Contact Form')]);
+        $fieldset->addField('to', 'select', [
+            'label' => __('To'),
+            'class' => 'required-entry',
+            'required' => true,
+            'name' => 'to',
+            'options' => [
+                'support.at@wirecard.com' => 'Support Team Wirecard CEE, Austria',
+                'support@wirecard.com' => 'Support Team Wirecard AG, Germany',
+                'support.sg@wirecard.com' => 'Support Team Wirecard Singapore'
+            ]
+        ]);
+
+        $fieldset->addField('replyto', 'text', [
+            'label' => __('Your e-mail address'),
+            'class' => 'validate-email',
+            'name' => 'replyto'
+        ]);
+
+        $fieldset->addField('description', 'textarea', [
+            'label' => __('Your message'),
+            'class' => 'required-entry',
+            'required' => true,
+            'name' => 'description',
+            'style' => 'height:30em;width:50em'
+        ]);
+
+        $this->setForm($form);
+
+        return parent::_prepareForm();
     }
 }
