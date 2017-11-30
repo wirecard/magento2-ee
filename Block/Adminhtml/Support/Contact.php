@@ -33,8 +33,8 @@
 namespace Wirecard\ElasticEngine\Block\Adminhtml\Support;
 
 use Magento\Backend\Block\Widget\Context;
-use Magento\Framework\Registry;
 use Magento\Backend\Block\Widget\Form\Container;
+use Magento\Framework\Registry;
 
 class Contact extends Container
 {
@@ -73,6 +73,4 @@ class Contact extends Container
             -100, 0, 'footer'
         );
     }
-
-
 }

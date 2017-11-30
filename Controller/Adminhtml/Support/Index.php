@@ -34,10 +34,8 @@ namespace Wirecard\ElasticEngine\Controller\Adminhtml\Support;
 
 class Index extends \Magento\Backend\App\Action
 {
-
     public function execute()
     {
         $this->_redirect('adminhtml/system_config/edit/section/wirecard_elasticengine');
     }
-
 }

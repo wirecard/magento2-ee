@@ -36,7 +36,6 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use Wirecard\ElasticEngine\Model\Support;
 
-
 class Sendrequest extends \Magento\Backend\App\Action
 {
     /**

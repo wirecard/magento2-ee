@@ -32,8 +32,8 @@
 
 namespace Wirecard\ElasticEngine\Controller\Adminhtml\Support;
 
-use Magento\Backend\App\Action\Context;
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 
 class Contact extends Action
 {

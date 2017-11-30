@@ -37,7 +37,6 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class SupportRequestButton extends Field
 {
-
     protected function _getElementHtml(AbstractElement $element)
     {
         $this->setElement($element);

@@ -251,16 +251,16 @@ class Support
 
         $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
-        $foreign = array();
-        $mine = array();
+        $foreign = [];
+        $mine = [];
         foreach ($payments as $paymentCode => $paymentModel) {
 
             /** @var AbstractPayment $paymentModel */
-            $method = array(
+            $method = [
                 'label' => $paymentModel->getTitle(),
                 'value' => $paymentCode,
                 'config' => []
-            );
+            ];
 
             if (preg_match('/^wirecard_elasticengine/i', $paymentCode)) {
                 $method['config'] = $this->scopeConfig->getValue('payment/' . $paymentCode, $scope);
