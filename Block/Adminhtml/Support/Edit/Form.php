@@ -37,6 +37,8 @@ use Magento\Backend\Block\Widget\Tab\TabInterface;
 
 class Form extends Generic implements TabInterface
 {
+    const LABEL = 'label';
+
     /**
      * Prepare label for tab
      *
@@ -89,7 +91,7 @@ class Form extends Generic implements TabInterface
 
         $fieldset = $form->addFieldset('form_form', ['legend' => __('Contact Form')]);
         $fieldset->addField('to', 'select', [
-            'label' => __('To'),
+            self::LABEL => __('To'),
             'class' => 'required-entry',
             'required' => true,
             'name' => 'to',
@@ -101,13 +103,13 @@ class Form extends Generic implements TabInterface
         ]);
 
         $fieldset->addField('replyto', 'text', [
-            'label' => __('Your e-mail address'),
+            self::LABEL => __('Your e-mail address'),
             'class' => 'validate-email',
             'name' => 'replyto'
         ]);
 
         $fieldset->addField('description', 'textarea', [
-            'label' => __('Your message'),
+            self::LABEL => __('Your message'),
             'class' => 'required-entry',
             'required' => true,
             'name' => 'description',
