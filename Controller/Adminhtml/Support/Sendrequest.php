@@ -34,7 +34,7 @@ namespace Wirecard\ElasticEngine\Controller\Adminhtml\Support;
 
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
-use Wirecard\ElasticEngine\Model\Support;
+use Wirecard\ElasticEngine\Model\Adminhtml\Support;
 
 class Sendrequest extends \Magento\Backend\App\Action
 {

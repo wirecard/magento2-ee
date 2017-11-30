@@ -39,7 +39,7 @@ use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Module\ModuleList\Loader;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Model\Config;
-use Wirecard\ElasticEngine\Model\Support;
+use Wirecard\ElasticEngine\Model\Adminhtml\Support;
 
 class SupportUtest extends \PHPUnit_Framework_TestCase
 {
@@ -86,10 +86,9 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
      * @expectedException \Exception
      * @expectedExceptionMessage Please enter a valid e-mail address (reply to).
      */
-    public function testMissingReplyTo()
+    public function testInvalidReplytoEmail()
     {
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'e@a']);
         $this->support->sendrequest($this->postObject);
     }
 }
-
