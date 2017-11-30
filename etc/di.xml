@@ -504,10 +504,19 @@
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">RatepayInvoiceInitializeCommand</item>
                 <item name="capture" xsi:type="string">RatepayInvoiceCaptureCommand</item>
+                <item name="refund" xsi:type="string">RatepayInvoiceRefundCommand</item>
             </argument>
         </arguments>
     </virtualType>
     <virtualType name="RatepayInvoiceCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">RatepayInvoiceTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardRatepayInvoiceConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="RatepayInvoiceRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">RatepayInvoiceTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
@@ -529,10 +538,19 @@
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">RatepayInstallInitializeCommand</item>
                 <item name="capture" xsi:type="string">RatepayInstallCaptureCommand</item>
+                <item name="refund" xsi:type="string">RatepayInstallRefundCommand</item>
             </argument>
         </arguments>
     </virtualType>
     <virtualType name="RatepayInstallCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="RatepayInstallRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>

@@ -41,6 +41,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -160,6 +161,13 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
     public function capture($commandSubject)
     {
         parent::capture($commandSubject);
+
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
+        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+
+        $this->transaction->setAmount($amount);
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 
         return $this->transaction;
     }
