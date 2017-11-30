@@ -43,6 +43,7 @@ use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -52,6 +53,8 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class RatepayInvoiceTransactionFactory extends TransactionFactory
 {
+    const REFUND_OPERATION = Operation::CANCEL;
+
     /**
      * @var RatepayInvoiceTransaction
      */
@@ -170,5 +173,34 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 
         return $this->transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function refund($commandSubject)
+    {
+        parent::refund($commandSubject);
+
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
+        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+
+        $this->transaction->setParentTransactionId($this->transactionId);
+        $this->transaction->setAmount($amount);
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+
+        return $this->transaction;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return self::REFUND_OPERATION;
     }
 }
