@@ -306,9 +306,11 @@ class Support
      */
     private function getConfigString()
     {
-        $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
-        $config = $this->scopeConfig->getValue('wirecard_elasticengine/credentials', $scope);
+        $config = $this->scopeConfig->getValue(
+            'wirecard_elasticengine/credentials',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
 
         $config_str = "";
 

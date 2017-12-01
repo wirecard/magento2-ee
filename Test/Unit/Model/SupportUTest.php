@@ -85,9 +85,17 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $transportInterface = $this->getMockBuilder(\Magento\Framework\Mail\TransportInterface::class)->disableOriginalConstructor()->getMock();
+
         $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)->disableOriginalConstructor()->getMock();
 
         $this->transportBuilder = $this->getMockBuilder(TransportBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->transportBuilder->method('setTemplateIdentifier')->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('setTemplateOptions')->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('setTemplateVars')->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('setFrom')->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('addTo')->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('getTransport')->willReturn($transportInterface);
 
         $this->moduleLoader = $this->getMockBuilder(Loader::class)->disableOriginalConstructor()->getMock();
         $this->moduleLoader->method('load')->willReturn(['Module1' => ['name' => 'Magento_TestModule']]);
@@ -100,7 +108,6 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
         $this->moduleListInterface = $this->getMockBuilder(ModuleListInterface::class)->disableOriginalConstructor()->getMock();
 
         $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)->disableOriginalConstructor()->getMock();
-
 
         $this->postObject = new DataObject();
     }
@@ -160,7 +167,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
 
     public function testSendrequest()
     {
-        $this->scopeConfig->method('getValue')->willReturn('trans_email@shop.com');
+        $this->scopeConfig->method('getValue')->will($this->returnCallback(array($this, 'configValueMap')));
 
         $this->support = new Support(
             $this->scopeConfig,
@@ -171,6 +178,22 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
             $this->productMetadata
         );
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);
-        $this->support->sendrequest($this->postObject);
+
+        $this->assertTrue($this->support->sendrequest($this->postObject));
+    }
+
+    public function configValueMap($key)
+    {
+        $data = [
+            'trans_email/ident_general/email' => 'trans_email@shop.com',
+            'trans_email/ident_general/name' => 'shop owner',
+            'wirecard_elasticengine/credentials' => [
+                'pass' => 'skipped',
+                'foo' => 'bar'
+            ],
+            'payment/wirecard_elasticengine_paypal' => 'Wirecard elastic engine paypal'
+        ];
+
+        return $data[$key];
     }
 }
