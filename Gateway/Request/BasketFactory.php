@@ -102,7 +102,9 @@ class BasketFactory
         if (!$isCreate) {
             $orderId = $order->getId();
             $orderObject = $this->orderFactory->create();
-            $orderObject->load($orderId);
+            if ($orderObject != null) {
+                $orderObject->load($orderId);
+            }
         }
 
         if ($orderObject->getDiscountAmount() < 0) {
