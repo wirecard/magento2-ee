@@ -34,9 +34,9 @@ namespace Wirecard\ElasticEngine\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Locale\Resolver;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
-use Magento\Framework\Locale\Resolver;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\IdealBic;
 
