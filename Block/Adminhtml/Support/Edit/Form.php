@@ -38,9 +38,9 @@ use Magento\Backend\Block\Widget\Tab\TabInterface;
 class Form extends Generic implements TabInterface
 {
     const LABEL = 'label';
-    
+
     const CLASSCONST = 'class';
-    
+
     const NAME = 'name';
 
     /**
