@@ -167,7 +167,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
 
     public function testSendrequest()
     {
-        $this->scopeConfig->method('getValue')->will($this->returnCallback(array($this, 'configValueMap')));
+        $this->scopeConfig->method('getValue')->will($this->returnCallback([$this, 'configValueMap']));
 
         $this->support = new Support(
             $this->scopeConfig,

@@ -254,7 +254,6 @@ class Support
         $foreign = [];
         $mine = [];
         foreach ($payments as $paymentCode => $paymentModel) {
-
             $method = [
                 'value' => $paymentCode,
                 'config' => []
@@ -306,7 +305,6 @@ class Support
      */
     private function getConfigString()
     {
-
         $config = $this->scopeConfig->getValue(
             'wirecard_elasticengine/credentials',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
