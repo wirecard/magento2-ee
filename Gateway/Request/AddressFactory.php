@@ -58,8 +58,9 @@ class AddressFactory
             $magentoAddressObj->getStreetLine1()
         );
         $address->setPostalCode($magentoAddressObj->getPostcode());
-        $address->setStreet2($magentoAddressObj->getStreetLine2());
-
+        if (strlen($magentoAddressObj->getStreetLine2())) {
+            $address->setStreet2($magentoAddressObj->getStreetLine2());
+        }
         return $address;
     }
 }

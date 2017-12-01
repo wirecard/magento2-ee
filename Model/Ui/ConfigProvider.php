@@ -216,7 +216,7 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $transactionService = $this->transactionServiceFactory->create();
         if (!strlen($this->checkoutSession->getData('invoiceDeviceIdent'))) {
-            $deviceIdent = $transactionService->getRatePayInstallmentDeviceIdent();
+            $deviceIdent = $transactionService->getRatePayInvoiceDeviceIdent();
             $this->checkoutSession->setData('invoiceDeviceIdent', $deviceIdent);
         }
     }
@@ -228,7 +228,7 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $transactionService = $this->transactionServiceFactory->create();
         if (!strlen($this->checkoutSession->getData('installmentDeviceIdent'))) {
-            $deviceIdent = $transactionService->getRatePayInvoiceDeviceIdent();
+            $deviceIdent = $transactionService->getRatePayInstallmentDeviceIdent();
             $this->checkoutSession->setData('installmentDeviceIdent', $deviceIdent);
         }
     }

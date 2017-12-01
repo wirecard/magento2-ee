@@ -40,7 +40,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Service\InvoiceService;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -89,11 +88,6 @@ class Notify extends Action
     private $transaction;
 
     /**
-     * @var OrderSender
-     */
-    private $orderSender;
-
-    /**
      * Notify constructor.
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
@@ -102,7 +96,6 @@ class Notify extends Action
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
-     * @param OrderSender $orderSender
      */
     public function __construct(
         Context $context,
@@ -111,8 +104,7 @@ class Notify extends Action
         LoggerInterface $logger,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         InvoiceService $invoiceService,
-        Transaction $transaction,
-        OrderSender $orderSender
+        Transaction $transaction
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
@@ -120,7 +112,6 @@ class Notify extends Action
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->invoiceService = $invoiceService;
         $this->transaction = $transaction;
-        $this->orderSender = $orderSender;
 
         parent::__construct($context);
     }
@@ -176,20 +167,6 @@ class Notify extends Action
              */
             $payment = $order->getPayment();
             $this->updatePaymentTransactionIds($payment, $response);
-            if ($response->getTransactionType() === 'debit' || $response->getTransactionType() === 'purchase') {
-                $invoice = $this->invoiceService->prepareInvoice($order);
-                $invoice->register();
-                $invoice->pay();
-                //add transactionid for invoice
-                $invoice->setTransactionId($response->getTransactionId());
-                $order->addRelatedObject($invoice);
-
-                $transactionSave = $this->transaction->addObject($invoice)->addObject($invoice->getOrder());
-                $transactionSave->save();
-                $order->addStatusHistoryComment(
-                    __('Captured amount of %s online. Transaction ID: %s.', $order->getGrandTotal(), $response->getTransactionId())
-                )->setIsCustomerNotified(true)->save();
-            }
             $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
@@ -268,6 +245,7 @@ class Notify extends Action
 
         $transactionType = $response->getTransactionType();
         if ('debit' === $transactionType || 'purchase' === $transactionType) {
+            $this->captureInvoice($response);
             $transactionType = 'capture';
         }
         $payment->addTransaction($transactionType);
@@ -295,5 +273,26 @@ class Notify extends Action
         $orders = $result->getItems();
 
         return reset($orders);
+    }
+
+    /**
+     * @param SuccessResponse $response
+     */
+    private function captureInvoice($response)
+    {
+        $order = $this->getOrderByIncrementId($response->getCustomFields()->get('orderId'));
+        $invoice = $this->invoiceService->prepareInvoice($order);
+        $invoice->register();
+        $invoice->pay();
+        //add transactionid for invoice
+        $invoice->setTransactionId($response->getTransactionId());
+        $order->addRelatedObject($invoice);
+
+        $transactionSave = $this->transaction->addObject($invoice);
+        $transactionSave = $transactionSave->addObject($invoice->getOrder());
+        $transactionSave->save();
+        $order->addStatusHistoryComment(
+            __('Captured amount of %1 online. Transaction ID: %2.', $order->getGrandTotal(), $response->getTransactionId())
+        )->setIsCustomerNotified(true);
     }
 }

@@ -48,7 +48,7 @@ use Zend\Loader\Exception\InvalidArgumentException;
  */
 class WirecardRefundCommand implements CommandInterface
 {
-    const STATEOBJECT='stateObject';
+    const STATEOBJECT = 'stateObject';
 
     /**
      * @var TransactionFactory
@@ -117,11 +117,13 @@ class WirecardRefundCommand implements CommandInterface
             $this->handler->handle($commandSubject, ['paymentSDK-php' => $response]);
         }
 
-        if($response instanceof FailureResponse) {
-            foreach($response->getStatusCollection()->getIterator() as $item) {
+        if ($response instanceof FailureResponse) {
+            $errors = "";
+            foreach ($response->getStatusCollection()->getIterator() as $item) {
                 /** @var Status $item */
-                throw new InvalidArgumentException($item->getDescription());
+                $errors .= $item->getDescription() . "<br>\n";
             }
+            throw new InvalidArgumentException($errors);
         }
     }
 }

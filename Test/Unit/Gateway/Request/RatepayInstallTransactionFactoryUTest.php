@@ -59,6 +59,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Device;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
 
 class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
@@ -137,7 +138,7 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
 
-        $this->commandSubject = ['payment' => $this->payment];
+        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
 
         $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
         $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
@@ -161,6 +162,15 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->filterBuilder->method('create')->willReturn($filter);
 
         $this->session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+    }
+
+    public function testRefundOperationSetter()
+    {
+        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            new RatepayInstallmentTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
+        $expected = Operation::CANCEL;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
     public function testCreateMinimum()
@@ -195,6 +205,10 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCaptureMinimum()
     {
         $transaction = new RatepayInstallmentTransaction();
+        $transaction->setRedirect(new Redirect(
+            self::REDIRECT_URL,
+            'http://magen.to/frontend/cancel',
+            self::REDIRECT_URL));
         $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
             $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
@@ -202,6 +216,23 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = $this->minimumExpectedCaptureTransaction();
 
         $this->assertEquals($expected, $transactionFactory->capture($this->commandSubject));
+    }
+
+    public function testRefundMinimum()
+    {
+        $transaction = new RatepayInstallmentTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+        $transaction->setRedirect(new Redirect(
+            self::REDIRECT_URL,
+            'http://magen.to/frontend/cancel',
+            self::REDIRECT_URL));
+        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
+
+        $expected = $this->minimumExpectedRefundTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->refund($this->commandSubject));
     }
 
     /**
@@ -253,6 +284,28 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             'http://magen.to/frontend/cancel',
             self::REDIRECT_URL));
 
+        $expected->setAmount(new Amount(1.0, 'EUR'));
+        $expected->setBasket(new Basket());
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return RatepayInstallmentTransaction
+     */
+    private function minimumExpectedRefundTransaction()
+    {
+        $expected = new RatepayInstallmentTransaction();
+        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setRedirect(new Redirect(
+            self::REDIRECT_URL,
+            'http://magen.to/frontend/cancel',
+            self::REDIRECT_URL));
+
+        $expected->setAmount(new Amount(1.0, 'EUR'));
+        $expected->setBasket(new Basket());
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 

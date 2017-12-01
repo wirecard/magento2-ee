@@ -39,6 +39,7 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\DB\Transaction;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderSearchResultInterface;
+use Magento\Sales\Api\Data\OrderStatusHistoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
@@ -130,12 +131,19 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
+        $orderStatusHistoryInterface = $this->getMockWithoutInvokingTheOriginalConstructor(OrderStatusHistoryInterface::class);
+        $orderStatusHistoryInterface->method('setIsCustomerNotified')->willReturn($orderStatusHistoryInterface);
+
         $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
+
         $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
         $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
         $this->order->method('getPayment')->willReturn($this->payment);
+        $this->order->method('addStatusHistoryComment')->willReturn($orderStatusHistoryInterface);
+
         $this->orderRepository->method('get')->willReturn($this->order);
         $invoice = $this->getMockBuilder(Order\Invoice::class)->disableOriginalConstructor()->getMock();
+        $invoice->method('getOrder')->willReturn($this->order);
         $this->invoiceService = $this->getMockWithoutInvokingTheOriginalConstructor(InvoiceService::class);
         $this->invoiceService->method('prepareInvoice')->willReturn($invoice);
 
@@ -152,14 +160,15 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $searchCriteriaBuilder->method('addFilter')->willReturn($searchCriteriaBuilder);
         $searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
 
-        $transaction = $this->getMockWithoutInvokingTheOriginalConstructor(Transaction::class);
+        $transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $transaction->method('addObject')->withAnyParameters()->willReturn($transaction);
 
         $orderSender = $this->getMockWithoutInvokingTheOriginalConstructor(OrderSender::class);
 
         $this->controller = new Notify(
             $context, $transactionServiceFactory,
-            $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction, $orderSender);
-
+            $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction,
+            $orderSender);
     }
 
     public function testExecuteWithSuccessResponse()
@@ -175,6 +184,12 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->order->expects($this->once())->method('setStatus')->with('processing');
         $this->order->expects($this->once())->method('setState')->with('processing');
         $this->controller->execute();
+    }
+
+    private function setDefaultOrder()
+    {
+        $this->orderSearchResult->method('getItems')->willReturn([$this->order]);
+        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 
     public function testExecuteWithFraudResponse()
@@ -296,11 +311,5 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->controller->execute();
-    }
-
-    private function setDefaultOrder()
-    {
-        $this->orderSearchResult->method('getItems')->willReturn([$this->order]);
-        $this->orderRepository->method('getList')->willReturn($this->orderSearchResult);
     }
 }

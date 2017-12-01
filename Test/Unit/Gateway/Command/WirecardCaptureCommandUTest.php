@@ -221,4 +221,42 @@ class WirecardCaptureCommandUTest extends \PHPUnit_Framework_TestCase
             [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY ]
         ];
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExecuteThrows()
+    {
+        // TransactionService mocks
+        $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $status = $this->getMockBuilder(Status::class)->disableOriginalConstructor()->getMock();
+        $status->method('getDescription')->willReturn('description');
+
+        $statusCollection = $this->getMockBuilder(StatusCollection::class)->disableArgumentCloning()->getMock();
+        $statusCollection->method('getIterator')->willReturn([$status]);
+
+        $failureResponse = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
+        $failureResponse->method('getStatusCollection')->willReturn($statusCollection);
+
+        $transactionServiceMock->method('process')->willReturn($failureResponse);
+
+        $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()->getMock();
+        $transactionServiceFactoryMock->method('create')->willReturn($transactionServiceMock);
+
+        $command = new WirecardCaptureCommand(
+            $this->transactionFactory,
+            $transactionServiceFactoryMock,
+            $this->logger,
+            $this->handler,
+            $this->methodConfig
+        );
+
+        $stateObject = $this->getMock(DataObject::class);
+        $commandSubject = ['stateObject' => $stateObject];
+
+        $command->execute($commandSubject);
+    }
 }
