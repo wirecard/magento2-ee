@@ -95,10 +95,9 @@ class BasketFactory
 
         /** @var OrderItemInterface $item*/
         foreach ($items as $item) {
-            /*if ($item->getPriceInclTax() == 0) {
-                continue;
-            }*/
-            $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
+            if ($item->getPriceInclTax() > 0) {
+                $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
+            }
         }
 
         $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
@@ -107,6 +106,20 @@ class BasketFactory
             $orderObject = $this->orderFactory->create();
             $orderObject->load($orderId);
         }
+
+        if ($orderObject->getDiscountAmount() < 0) {
+            $discountItem = new Item(
+                'Discount',
+                new Amount($orderObject->getDiscountAmount(), $order->getCurrencyCode()),
+                1
+            );
+
+            $discountItem->setDescription('Discount');
+            $discountItem->setArticleNumber('Discount');
+            $discountItem->setTaxRate(number_format(0, 2));
+            $basket->add($discountItem);
+        }
+
         if ($orderObject->getShippingInclTax() > 0) {
             $shippingItem = new Item(
                 'Shipping',
