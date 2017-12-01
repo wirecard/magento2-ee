@@ -60,10 +60,10 @@ class Support
      * @var ScopeConfigInterface
      */
     protected $scopeConfig;
-    /**
-     * @var ProductMetadata $productMetadata
-     */
 
+    /**
+     * @var array
+     */
     protected $_moduleBlacklist = [
         'Magento_Store',
         'Magento_AdvancedPricingImportExport',
@@ -255,9 +255,7 @@ class Support
         $mine = [];
         foreach ($payments as $paymentCode => $paymentModel) {
 
-            /** @var AbstractPayment $paymentModel */
             $method = [
-                'label' => $paymentModel->getTitle(),
                 'value' => $paymentCode,
                 'config' => []
             ];
@@ -315,7 +313,10 @@ class Support
         $config_str = "";
 
         foreach ($config as $key => $value) {
-            $config_str .= "[$key] = $value<br>\n";
+            if (in_array($key, ['pass'])) {
+                continue;
+            }
+            $config_str .= "[$key] = $value\n";
         }
 
         return $config_str;

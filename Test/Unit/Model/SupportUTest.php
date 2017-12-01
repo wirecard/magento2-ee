@@ -62,6 +62,9 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
         $moduleLoader = $this->getMockBuilder(Loader::class)->disableOriginalConstructor()->getMock();
 
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $config->method('getActiveMethods')->willReturn([
+            'wirecard_elasticengine_paypal' => []
+        ]);
 
         $moduleListInterface = $this->getMockBuilder(ModuleListInterface::class)->disableOriginalConstructor()->getMock();
 
@@ -89,6 +92,22 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
     public function testInvalidReplytoEmail()
     {
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'e@a']);
+        $this->support->sendrequest($this->postObject);
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Please set your shop e-mail address!
+     */
+    public function testMissingShopEmail()
+    {
+        $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);
+        $this->support->sendrequest($this->postObject);
+    }
+
+    public function testSendrequest()
+    {
+        $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);
         $this->support->sendrequest($this->postObject);
     }
 }
