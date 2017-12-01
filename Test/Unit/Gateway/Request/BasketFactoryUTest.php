@@ -7,6 +7,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
+use Magento\Sales\Api\Data\OrderItemInterface;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\ItemFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -27,8 +28,15 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)->disableOriginalConstructor()->getMock();
+
+        $orderItem = $this->getMockBuilder(OrderItemInterface::class)->disableOriginalConstructor()->getMock();
+        $orderItem->method('getPriceInclTax')->willReturn('10.00');
+
+        $shippingItem = $this->getMockBuilder(OrderItemInterface::class)->disableOriginalConstructor()->getMock();
+        $shippingItem->method('getPriceInclTax')->willReturn('0.00');
+
         $this->order->method('getItems')->willReturn([
-            'item 1'
+            $orderItem, $shippingItem
         ]);
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
