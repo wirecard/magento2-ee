@@ -95,9 +95,7 @@ class BasketFactory
 
         /** @var OrderItemInterface $item*/
         foreach ($items as $item) {
-            if ($item->getPriceInclTax() > 0) {
-                $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
-            }
+            $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
         }
 
         $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
