@@ -35,7 +35,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="head.additional">
-            <block class="Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader" template="Wirecard_ElasticEngine::payment-page-loader.phtml" name="checkout.script" />
+            <block class="Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader" template="Wirecard_ElasticEngine::payment-page-loader.phtml" name="elastic.checkout.script" />
         </referenceContainer>
         <referenceBlock name="checkout.root">
             <arguments>
