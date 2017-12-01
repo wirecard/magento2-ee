@@ -73,35 +73,25 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo sprintf(__(
-                                'I authorize the creditor %s to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor %s.'
-                        ), $this->getCreditorName(), $this->getCreditorName()) ?>
+                        <?php echo __('I authorize the creditor ') .
+                            $this->getCreditorName() .
+                            __(' to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor ') .
+                            $this->getCreditorName() .
+                            __('sepamandatetextextra'); ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td class="text11justify">
-            <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo 'Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.' ?>
+                        <?php echo __('Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.') ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td class="text11justify">
-            <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo sprintf(__(
-                                'I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %s my full name, address and date of birth.'
-                        ), $this->getCreditorName()) ?>
+                        <?php echo __('I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor ') .
+                                    $this->getCreditorName() .
+                                    __(' my full name, address and date of birth.'); ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>

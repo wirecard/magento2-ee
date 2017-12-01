@@ -139,7 +139,7 @@ class PayPalTransactionFactory extends TransactionFactory
         ));
 
         if ($this->methodConfig->getValue('send_shopping_basket')) {
-            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction, true));
         }
 
         if ($this->methodConfig->getValue('send_descriptor')) {

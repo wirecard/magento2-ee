@@ -35,6 +35,7 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Model\OrderFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
@@ -57,24 +58,32 @@ class BasketFactory
     private $checkoutSession;
 
     /**
+     * @var OrderFactory
+     */
+    private $orderFactory;
+
+    /**
      * BasketFactory constructor.
      * @param ItemFactory $itemFactory
      * @param Session $checkoutSession
+     * @param OrderFactory $orderFactory
      */
-    public function __construct(ItemFactory $itemFactory, Session $checkoutSession)
+    public function __construct(ItemFactory $itemFactory, Session $checkoutSession, OrderFactory $orderFactory)
     {
         $this->itemFactory = $itemFactory;
         $this->checkoutSession = $checkoutSession;
+        $this->orderFactory = $orderFactory;
     }
 
     /**
      * @param OrderAdapterInterface $order
      * @param Transaction $transaction
+     * @param Boolean $isCreate
      * @return Basket
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      */
-    public function create($order, $transaction)
+    public function create($order, $transaction, $isCreate = false)
     {
         if (!$order instanceof OrderAdapterInterface) {
             throw new \InvalidArgumentException('Order data obj should be provided.');
@@ -86,28 +95,44 @@ class BasketFactory
 
         /** @var OrderItemInterface $item*/
         foreach ($items as $item) {
-            /*if ($item->getPriceInclTax() == 0) {
-                continue;
-            }*/
             $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
         }
 
-        $shippingAddress = $this->checkoutSession->getQuote()->getShippingAddress();
+        $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
+        if (!$isCreate) {
+            $orderId = $order->getId();
+            $orderObject = $this->orderFactory->create();
+            if ($orderObject != null) {
+                $orderObject->load($orderId);
+            }
+        }
 
-        $shippingItem = new Item(
-            'Shipping',
-            new Amount($shippingAddress->getShippingInclTax(), $order->getCurrencyCode()),
-            1
-        );
+        if ($orderObject->getDiscountAmount() < 0) {
+            $discountItem = new Item(
+                'Discount',
+                new Amount($orderObject->getDiscountAmount(), $order->getCurrencyCode()),
+                1
+            );
+            $discountItem->setDescription('Discount');
+            $discountItem->setArticleNumber('Discount');
+            $discountItem->setTaxRate(number_format(0, 2));
+            $basket->add($discountItem);
+        }
 
-        $taxRate = number_format(($shippingAddress->getShippingTaxAmount() / $shippingAddress->getShippingInclTax()) * 100,
-            2);
+        if ($orderObject->getShippingInclTax() > 0) {
+            $shippingItem = new Item(
+                'Shipping',
+                new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                1
+            );
 
-        $shippingItem->setDescription($shippingAddress->getShippingDescription());
-        $shippingItem->setArticleNumber($shippingAddress->getShippingMethod());
-        $shippingItem->setTaxRate($taxRate);
-        $basket->add($shippingItem);
-
+            $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                    2);
+            $shippingItem->setDescription($orderObject->getShippingDescription());
+            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
+            $shippingItem->setTaxRate($taxRate);
+            $basket->add($shippingItem);
+        }
         return $basket;
     }
 }

@@ -88,6 +88,11 @@ class Notify extends Action
     private $transaction;
 
     /**
+     * @var bool
+     */
+    private $canCaptureInvoice;
+
+    /**
      * Notify constructor.
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
@@ -112,6 +117,7 @@ class Notify extends Action
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->invoiceService = $invoiceService;
         $this->transaction = $transaction;
+        $this->canCaptureInvoice = false;
 
         parent::__construct($context);
     }
@@ -153,20 +159,25 @@ class Notify extends Action
 
         if ($response instanceof SuccessResponse) {
             if ($order->getStatus() !== Order::STATE_COMPLETE) {
-                if ($response->isValidSignature()) {
+                /*if ($response->isValidSignature()) {
                     $this->updateOrderState($order, Order::STATE_PROCESSING);
                 } else {
                     $this->updateOrderState($order, Order::STATUS_FRAUD);
                     $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s',
                         $orderId));
-                }
+                }*/
+                $this->updateOrderState($order, Order::STATE_PROCESSING);
             }
 
             /**
              * @var $payment Order\Payment
              */
             $payment = $order->getPayment();
+            $this->setCanCaptureInvoice($response->getTransactionType());
             $this->updatePaymentTransactionIds($payment, $response);
+            if ($this->canCaptureInvoice) {
+                $this->captureInvoice($order, $response);
+            }
             $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
@@ -244,8 +255,7 @@ class Notify extends Action
         }
 
         $transactionType = $response->getTransactionType();
-        if ('debit' === $transactionType || 'purchase' === $transactionType) {
-            $this->captureInvoice($response);
+        if ($this->canCaptureInvoice) {
             $transactionType = 'capture';
         }
         $payment->addTransaction($transactionType);
@@ -278,9 +288,8 @@ class Notify extends Action
     /**
      * @param SuccessResponse $response
      */
-    private function captureInvoice($response)
+    private function captureInvoice($order, $response)
     {
-        $order = $this->getOrderByIncrementId($response->getCustomFields()->get('orderId'));
         $invoice = $this->invoiceService->prepareInvoice($order);
         $invoice->register();
         $invoice->pay();
@@ -295,4 +304,17 @@ class Notify extends Action
             __('Captured amount of %1 online. Transaction ID: %2.', $order->getGrandTotal(), $response->getTransactionId())
         )->setIsCustomerNotified(true);
     }
+
+    /**
+     * @param $transactionType
+     */
+    private function setCanCaptureInvoice($transactionType)
+    {
+        if ($transactionType === 'debit' || $transactionType === 'purchase') {
+            $this->canCaptureInvoice = true;
+        } else {
+            $this->canCaptureInvoice = false;
+        }
+    }
+
 }

@@ -35,11 +35,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="wirecard_elasticengine" translate="label" sortOrder="10">
-            <label>Wirecard Elastic Engine</label>
+            <label>Wirecard Payment Gateway</label>
         </tab>
         <section id="wirecard_elasticengine" translate="label" type="text" sortOrder="2999" showInDefault="1" showInWebsite="1" showInStore="1">
             <class>seperator-top</class>
-            <label>Wirecard Elastic Engine</label>
+            <label>Wirecard Payment Gateway</label>
             <tab>sales</tab>
             <resource>Magento_Sales::config_sales</resource>
             <group id="terms" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -50,7 +50,7 @@
                         <br/><br/>
                         The plugins offered are provided free of charge by Wirecard Central Eastern Europe GmbH (abbreviated to Wirecard CEE) and are explicitly not part of the Wirecard CEE range of products and services.
                         <br/><br/>
-                        They have been tested and approved for full functionality in the standard configuration (status on delivery) of the corresponding shop system. They are under General Public License Version 2 (GPLv2) and can be used, developed and passed on to third parties under the same terms.
+                        They have been tested and approved for full functionality in the standard configuration (status on delivery) of the corresponding shop system. They are under General Public License Version 3 (GPLv3) and can be used, developed and passed on to third parties under the same terms.
                         <br/><br/>
                         However, Wirecard CEE does not provide any guarantee or accept any liability for any errors occurring when used in an enhanced, customized shop system configuration.
                         <br/><br/>
@@ -94,13 +94,13 @@
                 </field>
                 <field id="public_key" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Public Key</label>
-                    <comment>If a public certificate (format x.509 PEM) is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers</comment>
+                    <comment>If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers</comment>
                 </field>
             </group>
         </section>
         <section id="payment">
             <group id="wirecard_elasticengine_paypal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine PayPal</label>
+                <label>Wirecard Payment Gateway PayPal</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -137,7 +137,7 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_creditcard" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine Credit Card</label>
+                <label>Wirecard Payment Gateway Credit Card</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -158,11 +158,11 @@
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Secret Key</label>
                 </field>
-                <field id="ssl_max_limit" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>SSL Max Limit</label>
                     <comment>The maximum order amount in your default currency to initialize SSL transactions.</comment>
                 </field>
-                <field id="three_d_min_limit" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="three_d_min_limit" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Min Limit</label>
                     <comment>
                         <![CDATA[
@@ -183,7 +183,7 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_maestro" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine Maestro</label>
+                <label>Wirecard Payment Gateway Maestro</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -204,11 +204,11 @@
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Secret Key</label>
                 </field>
-                <field id="ssl_max_limit" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>SSL Max Limit</label>
                     <comment>The maximum order amount in your default currency to initialize SSL transactions.</comment>
                 </field>
-                <field id="three_d_min_limit" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="three_d_min_limit" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>3D Min Limit</label>
                     <comment>
                         <![CDATA[
@@ -229,7 +229,7 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_sepa" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine SEPA</label>
+                <label>Wirecard Payment Gateway SEPA</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -257,11 +257,13 @@
                 <field id="creditor_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Creditor ID</label>
                 </field>
-                <field id="creditor_name" translate="label" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="creditor_name" translate="label comment" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Creditor Name</label>
+                    <comment>Creditor name will be shown in SEPA Direct Debit Mandate</comment>
                 </field>
-                <field id="creditor_city" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="creditor_city" translate="label comment" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Creditor City</label>
+                    <comment>Creditor city will be shown in SEPA Direct Debit Mandate</comment>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
@@ -270,7 +272,7 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_sofortbanking" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine Pay now.</label>
+                <label>Wirecard Payment Gateway Pay now.</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -292,7 +294,7 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_ideal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine iDEAL</label>
+                <label>Wirecard Payment Gateway iDEAL</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -314,7 +316,7 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_ratepayinvoice" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine Invoice by Wirecard/Ratepay</label>
+                <label>Wirecard Payment Gateway Guaranteed Invoice</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -328,11 +330,6 @@
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Key</label>
-                </field>
-                <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
-                    <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="send_shopping_basket" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
@@ -357,7 +354,6 @@
                 <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Billing/Shipping Address must be identical</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Billing and Shipping address must be identical.</comment>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
@@ -366,7 +362,7 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_ratepayinstall" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Elastic Engine Installment by Wirecard/Ratepay</label>
+                <label>Wirecard Payment Gateway Guaranteed Installment</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -380,11 +376,6 @@
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Key</label>
-                </field>
-                <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
-                    <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="send_shopping_basket" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
@@ -409,7 +400,6 @@
                 <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Billing/Shipping Address must be identical</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Billing and Shipping address must be identical.</comment>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">

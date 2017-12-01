@@ -37,10 +37,12 @@ use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Model\Order;
+use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Reservable;
 
@@ -131,6 +133,15 @@ class WirecardCommand implements CommandInterface
 
         if ($this->handler) {
             $this->handler->handle($commandSubject, ['paymentSDK-php' => $response]);
+        }
+
+        if ($response instanceof FailureResponse) {
+            $errors = "";
+            foreach ($response->getStatusCollection()->getIterator() as $item) {
+                /** @var Status $item */
+                $errors .= $item->getDescription() . "<br>\n";
+            }
+            throw new InvalidArgumentException($errors);
         }
     }
 }
