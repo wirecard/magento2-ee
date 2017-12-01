@@ -39,6 +39,10 @@ class Form extends Generic implements TabInterface
 {
     const LABEL = 'label';
 
+    const CLASSCONST = 'class';
+
+    const NAME = 'name';
+
     /**
      * Prepare label for tab
      *
@@ -92,9 +96,9 @@ class Form extends Generic implements TabInterface
         $fieldset = $form->addFieldset('form_form', ['legend' => __('Contact Form')]);
         $fieldset->addField('to', 'select', [
             self::LABEL => __('To'),
-            'class' => 'required-entry',
+            self::CLASSCONST => 'required-entry',
             'required' => true,
-            'name' => 'to',
+            self::NAME => 'to',
             'options' => [
                 'support.at@wirecard.com' => 'Support Team Wirecard CEE, Austria',
                 'support@wirecard.com' => 'Support Team Wirecard AG, Germany',
@@ -104,15 +108,15 @@ class Form extends Generic implements TabInterface
 
         $fieldset->addField('replyto', 'text', [
             self::LABEL => __('Your e-mail address'),
-            'class' => 'validate-email',
-            'name' => 'replyto'
+            self::CLASSCONST => 'validate-email',
+            self::NAME => 'replyto'
         ]);
 
         $fieldset->addField('description', 'textarea', [
             self::LABEL => __('Your message'),
-            'class' => 'required-entry',
+            self::CLASSCONST => 'required-entry',
             'required' => true,
-            'name' => 'description',
+            self::NAME => 'description',
             'style' => 'height:30em;width:50em'
         ]);
 
