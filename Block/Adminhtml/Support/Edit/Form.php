@@ -39,9 +39,9 @@ class Form extends Generic implements TabInterface
 {
     const LABEL = 'label';
     
-    const CLASS = 'class';
+    const CLASSCONST = 'class';
     
-    const CLASS = 'name';
+    const NAME = 'name';
 
     /**
      * Prepare label for tab
@@ -96,7 +96,7 @@ class Form extends Generic implements TabInterface
         $fieldset = $form->addFieldset('form_form', ['legend' => __('Contact Form')]);
         $fieldset->addField('to', 'select', [
             self::LABEL => __('To'),
-            self::CLASS => 'required-entry',
+            self::CLASSCONST => 'required-entry',
             'required' => true,
             self::NAME => 'to',
             'options' => [
@@ -108,13 +108,13 @@ class Form extends Generic implements TabInterface
 
         $fieldset->addField('replyto', 'text', [
             self::LABEL => __('Your e-mail address'),
-            self::CLASS => 'validate-email',
+            self::CLASSCONST => 'validate-email',
             self::NAME => 'replyto'
         ]);
 
         $fieldset->addField('description', 'textarea', [
             self::LABEL => __('Your message'),
-            self::CLASS => 'required-entry',
+            self::CLASSCONST => 'required-entry',
             'required' => true,
             self::NAME => 'description',
             'style' => 'height:30em;width:50em'
