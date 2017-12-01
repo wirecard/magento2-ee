@@ -42,11 +42,13 @@ class SupportRequestButton extends Field
         $this->setElement($element);
 
         $url = $this->getUrl('wirecard_elasticengine/support/contact');
-        return $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')
+        $html = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')
             ->setType('button')
             ->setClass('scalable')
             ->setLabel('Contact support')
             ->setOnClick("setLocation('$url')")
             ->toHtml();
+
+        return $html;
     }
 }
