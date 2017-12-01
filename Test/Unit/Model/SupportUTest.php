@@ -49,29 +49,58 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
     private $support;
 
     /**
+     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject $scopeConfig
+     */
+    private $scopeConfig;
+
+    /**
+     * @var TransportBuilder|\PHPUnit_Framework_MockObject_MockObject $scopeConfig
+     */
+    private $transportBuilder;
+
+    /**
+     * @var Loader|\PHPUnit_Framework_MockObject_MockObject $scopeConfig
+     */
+    private $moduleLoader;
+
+    /**
+     * @var ModuleListInterface|\PHPUnit_Framework_MockObject_MockObject $scopeConfig
+     */
+    private $moduleListInterface;
+
+    /**
+     * @var ProductMetadata|\PHPUnit_Framework_MockObject_MockObject $scopeConfig
+     */
+    private $productMetadata;
+
+    /**
+     * @var Config|\PHPUnit_Framework_MockObject_MockObject $scopeConfig
+     */
+    private $config;
+
+    /**
      * @var DataObject
      */
     private $postObject;
 
     public function setUp()
     {
-        $scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)->disableOriginalConstructor()->getMock();
+        $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)->disableOriginalConstructor()->getMock();
 
-        $transportBuilder = $this->getMockBuilder(TransportBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->transportBuilder = $this->getMockBuilder(TransportBuilder::class)->disableOriginalConstructor()->getMock();
 
-        $moduleLoader = $this->getMockBuilder(Loader::class)->disableOriginalConstructor()->getMock();
+        $this->moduleLoader = $this->getMockBuilder(Loader::class)->disableOriginalConstructor()->getMock();
+        $this->moduleLoader->method('load')->willReturn(['Module1' => ['name' => 'Magento_TestModule']]);
 
-        $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $config->method('getActiveMethods')->willReturn([
+        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $this->config->method('getActiveMethods')->willReturn([
             'wirecard_elasticengine_paypal' => []
         ]);
 
-        $moduleListInterface = $this->getMockBuilder(ModuleListInterface::class)->disableOriginalConstructor()->getMock();
+        $this->moduleListInterface = $this->getMockBuilder(ModuleListInterface::class)->disableOriginalConstructor()->getMock();
 
-        $productMetadata = $this->getMockBuilder(ProductMetadata::class)->disableOriginalConstructor()->getMock();
+        $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->support = new Support($scopeConfig, $transportBuilder, $moduleLoader, $config, $moduleListInterface,
-            $productMetadata);
 
         $this->postObject = new DataObject();
     }
@@ -82,6 +111,14 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingTo()
     {
+        $this->support = new Support(
+            $this->scopeConfig,
+            $this->transportBuilder,
+            $this->moduleLoader,
+            $this->config,
+            $this->moduleListInterface,
+            $this->productMetadata
+        );
         $this->support->sendrequest($this->postObject);
     }
 
@@ -91,6 +128,14 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidReplytoEmail()
     {
+        $this->support = new Support(
+            $this->scopeConfig,
+            $this->transportBuilder,
+            $this->moduleLoader,
+            $this->config,
+            $this->moduleListInterface,
+            $this->productMetadata
+        );
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'e@a']);
         $this->support->sendrequest($this->postObject);
     }
@@ -101,12 +146,30 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingShopEmail()
     {
+        $this->support = new Support(
+            $this->scopeConfig,
+            $this->transportBuilder,
+            $this->moduleLoader,
+            $this->config,
+            $this->moduleListInterface,
+            $this->productMetadata
+        );
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);
         $this->support->sendrequest($this->postObject);
     }
 
     public function testSendrequest()
     {
+        $this->scopeConfig->method('getValue')->willReturn('trans_email@shop.com');
+
+        $this->support = new Support(
+            $this->scopeConfig,
+            $this->transportBuilder,
+            $this->moduleLoader,
+            $this->config,
+            $this->moduleListInterface,
+            $this->productMetadata
+        );
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);
         $this->support->sendrequest($this->postObject);
     }
