@@ -32,7 +32,9 @@
 ?>
 <?php foreach ($this->getMethods() as $code => $_m): ?>
 <?php
-    printf("%s:%s\n", $_m['label'], $_m['value']);
+    if(array_key_exists('label', $_m) && array_key_exists('value', $_m)) {
+        printf("%s:%s\n", $_m['label'], $_m['value']);
+    }
     if (count($_m['config']))
         print "\n";
 
