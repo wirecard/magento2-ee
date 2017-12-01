@@ -168,6 +168,9 @@ class Notify extends Action
              */
             $payment = $order->getPayment();
             $this->updatePaymentTransactionIds($payment, $response);
+            if ($response->getTransactionType() !== 'authorization') {
+                $this->captureInvoice($order, $response);
+            }
             $this->orderRepository->save($order);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
@@ -246,7 +249,6 @@ class Notify extends Action
 
         $transactionType = $response->getTransactionType();
         if ('debit' === $transactionType || 'purchase' === $transactionType) {
-            $this->captureInvoice($response);
             $transactionType = 'capture';
         }
         $payment->addTransaction($transactionType);
@@ -279,9 +281,8 @@ class Notify extends Action
     /**
      * @param SuccessResponse $response
      */
-    private function captureInvoice($response)
+    private function captureInvoice($order, $response)
     {
-        $order = $this->getOrderByIncrementId($response->getCustomFields()->get('orderId'));
         $invoice = $this->invoiceService->prepareInvoice($order);
         $invoice->register();
         $invoice->pay();
