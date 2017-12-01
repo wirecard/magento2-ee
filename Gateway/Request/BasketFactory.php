@@ -113,7 +113,6 @@ class BasketFactory
                 new Amount($orderObject->getDiscountAmount(), $order->getCurrencyCode()),
                 1
             );
-
             $discountItem->setDescription('Discount');
             $discountItem->setArticleNumber('Discount');
             $discountItem->setTaxRate(number_format(0, 2));
@@ -129,14 +128,11 @@ class BasketFactory
 
             $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
                     2);
-
-
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
             $shippingItem->setTaxRate($taxRate);
             $basket->add($shippingItem);
         }
-
         return $basket;
     }
 }

@@ -310,7 +310,7 @@ class Notify extends Action
      */
     private function setCanCaptureInvoice($transactionType)
     {
-        if($transactionType === 'debit' || $transactionType === 'purchase') {
+        if ($transactionType === 'debit' || $transactionType === 'purchase') {
             $this->canCaptureInvoice = true;
         } else {
             $this->canCaptureInvoice = false;
