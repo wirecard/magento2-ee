@@ -78,11 +78,12 @@ class BasketFactory
     /**
      * @param OrderAdapterInterface $order
      * @param Transaction $transaction
+     * @param Boolean $isCreate
      * @return Basket
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      */
-    public function create($order, $transaction)
+    public function create($order, $transaction, $isCreate = false)
     {
         if (!$order instanceof OrderAdapterInterface) {
             throw new \InvalidArgumentException('Order data obj should be provided.');
@@ -101,25 +102,27 @@ class BasketFactory
         }
 
         $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
-        if (!$orderObject->getShippingInclTax()) {
+        if (!$isCreate) {
             $orderId = $order->getId();
-
             $orderObject = $this->orderFactory->create();
             $orderObject->load($orderId);
         }
-        $shippingItem = new Item(
-            'Shipping',
-            new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
-            1
-        );
+        if ($orderObject->getShippingInclTax() > 0) {
+            $shippingItem = new Item(
+                'Shipping',
+                new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                1
+            );
 
-        $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
-            2);
+            $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                    2);
 
-        $shippingItem->setDescription($orderObject->getShippingDescription());
-        $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-        $shippingItem->setTaxRate($taxRate);
-        $basket->add($shippingItem);
+
+            $shippingItem->setDescription($orderObject->getShippingDescription());
+            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
+            $shippingItem->setTaxRate($taxRate);
+            $basket->add($shippingItem);
+        }
 
         return $basket;
     }

@@ -88,6 +88,11 @@ class Notify extends Action
     private $transaction;
 
     /**
+     * @var bool
+     */
+    private $canCaptureInvoice;
+
+    /**
      * Notify constructor.
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
@@ -112,6 +117,7 @@ class Notify extends Action
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->invoiceService = $invoiceService;
         $this->transaction = $transaction;
+        $this->canCaptureInvoice = false;
 
         parent::__construct($context);
     }
@@ -167,8 +173,9 @@ class Notify extends Action
              * @var $payment Order\Payment
              */
             $payment = $order->getPayment();
+            $this->setCanCaptureInvoice($response->getTransactionType());
             $this->updatePaymentTransactionIds($payment, $response);
-            if ($response->getTransactionType() !== 'authorization') {
+            if ($this->canCaptureInvoice) {
                 $this->captureInvoice($order, $response);
             }
             $this->orderRepository->save($order);
@@ -248,7 +255,7 @@ class Notify extends Action
         }
 
         $transactionType = $response->getTransactionType();
-        if ('debit' === $transactionType || 'purchase' === $transactionType) {
+        if ($this->canCaptureInvoice) {
             $transactionType = 'capture';
         }
         $payment->addTransaction($transactionType);
@@ -297,4 +304,17 @@ class Notify extends Action
             __('Captured amount of %1 online. Transaction ID: %2.', $order->getGrandTotal(), $response->getTransactionId())
         )->setIsCustomerNotified(true);
     }
+
+    /**
+     * @param $transactionType
+     */
+    private function setCanCaptureInvoice($transactionType)
+    {
+        if($transactionType === 'debit' || $transactionType === 'purchase') {
+            $this->canCaptureInvoice = true;
+        } else {
+            $this->canCaptureInvoice = false;
+        }
+    }
+
 }
