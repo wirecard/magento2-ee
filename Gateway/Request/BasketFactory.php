@@ -103,12 +103,12 @@ class BasketFactory
         if (!$isCreate) {
             $orderId = $order->getId();
             $orderObject = $this->orderFactory->create();
-            if ($orderObject != null) {
+            if (!is_null($orderObject)) {
                 $orderObject->load($orderId);
             }
         }
 
-        if ($orderObject == null) {
+        if (is_null($orderObject)) {
             throw new NoSuchEntityException(__('No such order found.'));
         }
 
