@@ -8,7 +8,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
@@ -30,37 +30,11 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Block\Adminhtml\Support;
+namespace Magento\Framework\View\Element;
 
-use Magento\Backend\Block\Widget\Context;
-use Magento\Backend\Block\Widget\Form\Container;
-
-//require_once __DIR__ . '/../../../../Stubs/OrderAddressExtensionInterface.php';
-
-class Contact extends Container
+abstract class AbstractBlock
 {
-    /**
-     * @param Context $context
-     * @param array $data
-     */
-    public function __construct(
-        Context $context,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-
-        $this->_objectId = 'id';
-        $this->_controller = 'adminhtml_support';
-        $this->_blockGroup = 'Wirecard_ElasticEngine';
-        $this->buttonList->remove('save');
-        $this->buttonList->add(
-            'sendrequest',
-            [
-                'label' => __('Send support request'),
-                'class' => 'save',
-                'onclick' => 'jQuery("#edit_form").submit();',
-            ],
-            -100, 0, 'footer'
-        );
+    public function __construct($context, $data)
+    {
     }
 }
