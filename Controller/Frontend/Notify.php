@@ -110,8 +110,7 @@ class Notify extends Action
         SearchCriteriaBuilder $searchCriteriaBuilder,
         InvoiceService $invoiceService,
         Transaction $transaction
-    )
-    {
+    ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
@@ -317,5 +316,4 @@ class Notify extends Action
             $this->canCaptureInvoice = false;
         }
     }
-
 }
