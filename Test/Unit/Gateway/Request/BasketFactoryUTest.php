@@ -4,6 +4,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use InvalidArgumentException;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
@@ -52,7 +53,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->shippingAddress = $this->getMockBuilder(Address::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getShippingInclTax', 'getShippingDescription', 'getShippingMethod', 'getShippingTaxAmount'])
+            ->setMethods(['getShippingInclTax', 'getShippingDescription', 'getShippingMethod', 'getShippingTaxAmount', 'getDiscountAmount'])
             ->getMock();
 
         $this->quote = $this->getMockBuilder(Quote::class)
@@ -72,6 +73,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->shippingAddress->method('getShippingDescription')->willReturn('Fixed Flat Rate');
         $this->shippingAddress->method('getShippingMethod')->willReturn('flatrate_flatrate');
         $this->shippingAddress->method('getShippingTaxAmount')->willReturn(0.0);
+        $this->shippingAddress->method('getDiscountAmount')->willReturn(-1.0);
 
         $this->quote->method('getShippingAddress')->willReturn($this->shippingAddress);
         $this->checkoutSession->method('getQuote')->willReturn($this->quote);
@@ -102,13 +104,19 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setVersion($this->transaction);
         $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
 
+        $discount = new Item('Discount', new Amount(-1.0, 'EUR'), 1);
+        $discount->setDescription('Discount');
+        $discount->setArticleNumber('Discount');
+        $discount->setTaxRate(0.00);
+        $expected->add($discount);
+
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
         $shipping->setArticleNumber('flatrate_flatrate');
-        $shipping->setTaxRate(0.0);
+        $shipping->setTaxRate(0.00);
         $expected->add($shipping);
 
-        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction));
+        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction, true));
     }
 
     /**
@@ -118,6 +126,16 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
         $basketFactory->create(null, null);
+    }
+
+    /**
+     * @expectedException Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function testCreateThrowsNoOrderException()
+    {
+        $this->setUpWithQuoteData();
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory->create($this->order, $this->transaction, false);
     }
 
     public function testCreateWithoutSession()
@@ -135,6 +153,6 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $shipping->setTaxRate(0.0);
         $expected->add($shipping);
 
-        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction));
+        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction, false));
     }
 }
