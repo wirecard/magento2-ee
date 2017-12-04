@@ -35,8 +35,6 @@ namespace Wirecard\ElasticEngine\Block\Adminhtml\Support;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Backend\Block\Widget\Form\Container;
 
-//require_once __DIR__ . '/../../../../Stubs/OrderAddressExtensionInterface.php';
-
 class Contact extends Container
 {
     /**
