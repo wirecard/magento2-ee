@@ -3,6 +3,7 @@
   "description": "Magento2 plugin for Elastic Engine",
   "license": "GPL-3.0",
   "version": "1.0.0",
+  "minimum-stability": "beta",
   "prefer-stable": true,
   "require": {
     "php": ">=5.6",
