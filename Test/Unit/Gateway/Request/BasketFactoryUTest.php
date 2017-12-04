@@ -4,7 +4,6 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use InvalidArgumentException;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
