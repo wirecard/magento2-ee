@@ -2,7 +2,7 @@
   "name": "wirecard/magento2-ee",
   "description": "Magento2 plugin for Elastic Engine",
   "license": "GPL-3.0",
-  "minimum-stability": "beta",
+  "version": "1.0.0",
   "prefer-stable": true,
   "require": {
     "php": ">=5.6",

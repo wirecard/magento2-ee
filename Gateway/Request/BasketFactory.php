@@ -33,6 +33,7 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\OrderFactory;
@@ -105,6 +106,10 @@ class BasketFactory
             if ($orderObject != null) {
                 $orderObject->load($orderId);
             }
+        }
+
+        if ($orderObject == null) {
+            throw new NoSuchEntityException(__('No such order found.'));
         }
 
         if ($orderObject->getDiscountAmount() < 0) {
