@@ -6,6 +6,8 @@ use Magento\Backend\Block\Widget\Button\ButtonList;
 use Magento\Backend\Block\Widget\Context;
 use Wirecard\ElasticEngine\Block\Adminhtml\Support\Contact;
 
+require __DIR__ . '/../../../../Stubs/AbstractBlock.php';
+
 class ContactUTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()

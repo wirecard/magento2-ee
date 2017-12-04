@@ -9,6 +9,5 @@ require __DIR__ . '/Stubs/OrderPaymentExtensionInterface.php';
 require __DIR__ . '/Stubs/OrderStatusHistoryExtensionInterface.php';
 require __DIR__ . '/Stubs/OrderItemExtensionInterface.php';
 require __DIR__ . '/Stubs/AddressExtensionInterface.php';
-require __DIR__ . '/Stubs/AbstractBlock.php';
 require __DIR__ . '/Stubs/StoreExtensionInterface.php';
 require __DIR__ . '/Stubs/CartExtensionInterface.php';
