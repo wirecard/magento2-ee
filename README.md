@@ -10,14 +10,14 @@
 
 ***
 ### General information 
-Before proceeding please read the article [General information](https://github.com/wirecard/paymentSDK-php/wiki/General-information) first.
+Before proceeding please read the article [General information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information) first.
 
 ***
 
 ## Magento2 Payment Gateway Wiki
 
-For general information about our plugin please visit our [Magento2 Payment Gateway Wiki](https://github.com/wirecard/magento2-ee/wiki/Home). 
+For general information about our plugin please visit our [Magento2 Payment Gateway Wiki](https://github.com/wirecard/magento2-ee/wiki). 
 
 ## Magento2 Payment Gateway Installation
 
-Our Magento2 Payment Gateway Wiki also provides [Installation](https://wirecard.github.io/wirecard/magento2-ee/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Payment Gateway Plugin.
+Our Magento2 Payment Gateway Wiki also provides [Installation](https://github.com/wirecard/magento2-ee/wiki/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Payment Gateway Plugin.

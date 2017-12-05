@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -29,12 +28,9 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
--->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
-    <router id="standard">
-        <route id="wirecard_elasticengine" frontName="wirecard_elasticengine">
-            <module name="Wirecard_ElasticEngine" />
-        </route>
-    </router>
-</config>
+namespace Magento\Sales\Api\Data;
+
+interface OrderStatusHistoryExtensionInterface
+{
+}
