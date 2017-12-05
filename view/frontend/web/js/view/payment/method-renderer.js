@@ -70,6 +70,10 @@ define(
             {
                 type: 'wirecard_elasticengine_ratepayinstall',
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay'
+            },
+            {
+                type: 'wirecard_elasticengine_alipayxborder',
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
             }
         );
         return Component.extend({});
