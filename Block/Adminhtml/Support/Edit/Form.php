@@ -99,7 +99,7 @@ class Form extends Generic implements TabInterface
             'required' => true,
             self::NAME => 'to',
             'options' => [
-                'support.at@wirecard.com' => 'Support Team Wirecard AG, Austria',
+                'support.at@wirecard.com' => 'Support Team Wirecard CEE, Austria',
                 'support@wirecard.com' => 'Support Team Wirecard AG, Germany',
                 'support.sg@wirecard.com' => 'Support Team Wirecard Singapore'
             ]
