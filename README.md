@@ -10,7 +10,7 @@
 
 ***
 ### General information 
-Before proceeding please read the article [General information](https://github.com/wirecard/paymentSDK-php/wiki/General-information) first.
+Before proceeding please read the article [General information](https://github.com/wirecard/magento2-ee/wiki#terms-of-use) first.
 
 ***
 
