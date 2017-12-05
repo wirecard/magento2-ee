@@ -33,6 +33,7 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
@@ -55,21 +56,29 @@ class AlipayXBorderTransactionFactory extends TransactionFactory
     private $storeManager;
 
     /**
+     * @var AccountHolderFactory
+     */
+    private $accountHolderFactory;
+
+    /**
      * AlipayXBorderTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
+     * @param AccountHolderFactory $accountHolderFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
-        Transaction $transaction
+        Transaction $transaction,
+        AccountHolderFactory $accountHolderFactory
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->storeManager = $storeManager;
+        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**
@@ -81,6 +90,12 @@ class AlipayXBorderTransactionFactory extends TransactionFactory
     public function create($commandSubject)
     {
         parent::create($commandSubject);
+        /** @var PaymentDataObjectInterface $payment */
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
+        $billingAddress = $order->getBillingAddress();
+
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
 
         return $this->transaction;
     }

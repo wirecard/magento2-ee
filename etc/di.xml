@@ -681,6 +681,7 @@
     <virtualType name="AlipayXBorderTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
         </arguments>
     </virtualType>
