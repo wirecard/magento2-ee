@@ -72,7 +72,7 @@ class FormUTest extends \PHPUnit_Framework_TestCase
 
         $testForm = new TestForm($this->context, $this->registry, $this->formFactory, [], $requestInterface);
 
-        $this->assertNull($testForm->test_prepareForm());
+        $testForm->test_prepareForm();
     }
 }
 
