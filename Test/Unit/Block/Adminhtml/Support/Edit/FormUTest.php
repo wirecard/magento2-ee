@@ -4,11 +4,11 @@ namespace Wirecard\ElasticEngine\Test\Unit\Block\Adminhtml\Support;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Data\Form as MagentoForm;
+use Magento\Framework\Data\Form\Element\Fieldset;
 use Magento\Framework\Data\FormFactory;
 use Magento\Framework\Registry;
 use Wirecard\ElasticEngine\Block\Adminhtml\Support\Edit\Form;
-use Magento\Framework\Data\Form as MagentoForm;
-use Magento\Framework\Data\Form\Element\Fieldset;
 
 class FormUTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +35,6 @@ class FormUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
 
         $this->registry = $this->getMockBuilder(Registry::class)->disableOriginalConstructor()->getMock();
@@ -96,7 +95,8 @@ class TestForm extends Form
         return $this->requestInterface;
     }
 
-    public function getUrl($route = '', $params = []){
+    public function getUrl($route = '', $params = [])
+    {
         return "url";
     }
 
