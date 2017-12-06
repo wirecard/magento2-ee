@@ -31,12 +31,16 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -45,6 +49,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class AlipayXBorderTransactionFactory extends TransactionFactory
 {
+    const REFUND_OPERATION = Operation::CANCEL;
     /**
      * @var AlipayCrossborderTransaction
      */
@@ -67,18 +72,27 @@ class AlipayXBorderTransactionFactory extends TransactionFactory
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
      * @param AccountHolderFactory $accountHolderFactory
+     * @param Repository $transactionRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
-        AccountHolderFactory $accountHolderFactory
+        AccountHolderFactory $accountHolderFactory,
+        Repository $transactionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->storeManager = $storeManager;
         $this->accountHolderFactory = $accountHolderFactory;
+        $this->transactionRepository = $transactionRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->filterBuilder = $filterBuilder;
     }
 
     /**
@@ -98,5 +112,28 @@ class AlipayXBorderTransactionFactory extends TransactionFactory
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
 
         return $this->transaction;
+    }
+
+    /**
+     * @param array $commandSubject
+     * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws MandatoryFieldMissingException
+     */
+    public function refund($commandSubject)
+    {
+        parent::refund($commandSubject);
+
+        $this->transaction->setParentTransactionId($this->transactionId);
+
+        return $this->transaction;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return self::REFUND_OPERATION;
     }
 }

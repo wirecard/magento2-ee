@@ -41,14 +41,12 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory;
-use Wirecard\ElasticEngine\Gateway\Request\SofortTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
-use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 
 class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
