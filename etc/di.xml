@@ -113,6 +113,16 @@
             <argument name="commandPool" xsi:type="object">RatepayInstallCommandPool</argument>
         </arguments>
     </virtualType>
+    <virtualType name="AlipayXBorderFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::ALIPAYXBORDER_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">AlipayXBorderValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">AlipayXBorderValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">AlipayXBorderCommandPool</argument>
+        </arguments>
+    </virtualType>
 
 
     <!-- Value handlers -->
@@ -222,6 +232,18 @@
             <argument name="configInterface" xsi:type="object">WirecardRatepayInstallConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="AlipayXBorderValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">AlipayXBorderConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AlipayXBorderConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Configs -->
     <virtualType name="WirecardElasticEngineConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -268,6 +290,11 @@
     <virtualType name="WirecardRatepayInstallConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::RATEPAYINSTALL_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WirecardAlipayXBorderConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::ALIPAYXBORDER_CODE</argument>
         </arguments>
     </virtualType>
 
@@ -327,6 +354,12 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="AlipayXBorderValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
 
     <!-- Commands -->
     <virtualType name="PaypalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
@@ -566,6 +599,31 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="AlipayXBorderCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">AlipayXBorderInitializeCommand</item>
+                <item name="refund" xsi:type="string">AlipayXBorderRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AlipayXBorderRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">AlipayXBorderTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AlipayXBorderInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">AlipayXBorderTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Wirecard paymentSDK transaction objects -->
     <virtualType name="PayPalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory">
         <arguments>
@@ -620,6 +678,14 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="AlipayXBorderTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Wirecard paymentSDK objects -->
     <virtualType name="BasketFactory" type="Wirecard\ElasticEngine\Gateway\Request\BasketFactory">
         <arguments>
@@ -650,6 +716,7 @@
                 <item name="ideal" xsi:type="object">WirecardIdealConfig</item>
                 <item name="ratepayinvoice" xsi:type="object">WirecardRatepayInvoiceConfig</item>
                 <item name="ratepayinstall" xsi:type="object">WirecardRatepayInstallConfig</item>
+                <item name="alipay-xborder" xsi:type="object">WirecardAlipayXBorderConfig</item>
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
