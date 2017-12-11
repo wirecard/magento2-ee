@@ -142,6 +142,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_alipayxborder' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
+                ],
+                'wirecard_elasticengine_poipia' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
                 ]
             ]
         ], $prov->getConfig());
@@ -242,6 +246,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'ratepay_script' => $ratepayScript
                 ],
                 'wirecard_elasticengine_alipayxborder' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
+                ],
+                'wirecard_elasticengine_poipia' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
                 ]
