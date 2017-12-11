@@ -257,7 +257,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
             </wirecard_elasticengine_alipayxborder>
             <wirecard_elasticengine_poipia>
-                <title>Wirecard Payment on Invoice/ Payment on Advance</title>
+                <title>Wirecard Payment on Invoice / Payment on Advance</title>
                 <active>0</active>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
