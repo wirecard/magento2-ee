@@ -662,7 +662,16 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">PoiPiaInitializeCommand</item>
+                <item name="refund" xsi:type="string">PoiPiaRefundCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PoiPiaRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="PoiPiaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
