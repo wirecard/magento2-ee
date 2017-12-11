@@ -97,7 +97,6 @@ class PoiPiaTransactionFactory extends TransactionFactory
         $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setOrderNumber($this->orderId);
 
         return $this->transaction;
     }
