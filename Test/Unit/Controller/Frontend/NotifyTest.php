@@ -125,7 +125,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
          * @var $context Context|\PHPUnit_Framework_MockObject_MockObject
          */
         $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
-        $this->paymentData = array(
+        $this->paymentData = [
             'providerTransactionId' => 1234,
             'providerTransactionReferenceId' => 1234567,
             'requestId' => '1-2-3',
@@ -133,7 +133,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
             'authorizationCode' => '1515',
             'cardholderAuthenticationStatus' => 'Y',
             'creditCardToken' => '0123456CARDTOKEN'
-        );
+        ];
 
         /**
          * @var $httpRequest Http|\PHPUnit_Framework_MockObject_MockObject

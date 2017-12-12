@@ -76,7 +76,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
             ->setMethods([self::SET_REDIRECT_URL, 'setFormMethod', 'setFormUrl', 'setFormFields'])
             ->getMock();
 
-        $this->paymentData = array(
+        $this->paymentData = [
             'providerTransactionId' => 1234,
             'providerTransactionReferenceId' => 1234567,
             'requestId' => '1-2-3',
@@ -84,7 +84,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
             'authorizationCode' => '1515',
             'cardholderAuthenticationStatus' => 'Y',
             'creditCardToken' => '0123456CARDTOKEN'
-        );
+        ];
 
         $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
         $payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
