@@ -54,8 +54,6 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class Notify extends Action
 {
-    const PROVIDER_TRANSACTION_ID = 'providerTransactionId';
-
     /**
      * @var TransactionServiceFactory
      */
@@ -218,34 +216,13 @@ class Notify extends Action
         $payment->setTransactionId($response->getTransactionId());
         $payment->setLastTransId($response->getTransactionId());
         $additionalInfo = [];
-        if ($response->getProviderTransactionId() !== null) {
-            $additionalInfo[self::PROVIDER_TRANSACTION_ID] = $response->getProviderTransactionId();
-        }
-        if ($response->getRequestId() !== null) {
-            $additionalInfo['requestId'] = $response->getRequestId();
-        }
-        if ($response->getProviderTransactionReference() !== null) {
-            $additionalInfo['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
-        }
 
-        if ($response->getMaskedAccountNumber() !== null) {
-            $additionalInfo['maskedAccountNumber'] = $response->getMaskedAccountNumber();
+        $responseData = $response->getData();
+        if ($responseData !== []) {
+            foreach ($responseData as $key => $value) {
+                $additionalInfo[$key] = $value;
+            }
         }
-
-        if ($response->getCardTokenId() !== null) {
-            $additionalInfo['creditCardToken'] = $response->getCardTokenId();
-        }
-
-        try {
-            $additionalInfo['authorizationCode'] = $response->findElement('authorization-code');
-        } catch (MalformedResponseException $e) {
-            //Is only triggered if it is not included. e.g. not a credit card transaction
-        }
-
-        if ($response->getCardholderAuthenticationStatus() !== null) {
-            $additionalInfo['cardholderAuthenticationStatus'] = $response->getCardholderAuthenticationStatus();
-        }
-
         if ($additionalInfo !== []) {
             $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additionalInfo);
         }
@@ -256,6 +233,9 @@ class Notify extends Action
         $transactionType = $response->getTransactionType();
         if ($this->canCaptureInvoice) {
             $transactionType = 'capture';
+        }
+        if ($transactionType == 'check-payer-response') {
+            $transactionType = 'payment';
         }
         $payment->addTransaction($transactionType);
 

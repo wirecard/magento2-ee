@@ -62,6 +62,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
     const HANDLE_NOTIFICATION = 'handleNotification';
     const GET_CUSTOM_FIELDS = 'getCustomFields';
     const GET_PROVIDER_TRANSACTION_ID = 'getProviderTransactionId';
+    const GET_DATA = 'getData';
 
     /**
      * @var Notify
@@ -113,12 +114,26 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
      */
     private $transaction;
 
+    /**
+     * @var Array
+     */
+    private $paymentData;
+
     public function setUp()
     {
         /**
          * @var $context Context|\PHPUnit_Framework_MockObject_MockObject
          */
         $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
+        $this->paymentData = array(
+            'providerTransactionId' => 1234,
+            'providerTransactionReferenceId' => 1234567,
+            'requestId' => '1-2-3',
+            'maskedAccountNumber' => '5151***5485',
+            'authorizationCode' => '1515',
+            'cardholderAuthenticationStatus' => 'Y',
+            'creditCardToken' => '0123456CARDTOKEN'
+        );
 
         /**
          * @var $httpRequest Http|\PHPUnit_Framework_MockObject_MockObject
@@ -184,8 +199,40 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
-        $successResponse->method(self::GET_PROVIDER_TRANSACTION_ID)->willReturn(1234);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
+        $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
+
+        $this->order->expects($this->once())->method('setStatus')->with('processing');
+        $this->order->expects($this->once())->method('setState')->with('processing');
+        $this->controller->execute();
+    }
+
+    public function testExecuteWithSuccessResponseAndCanCapture()
+    {
+        $this->setDefaultOrder();
+
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
+        $successResponse->method('isValidSignature')->willReturn(true);
+        $successResponse->method('getTransactionType')->willReturn('debit');
+        $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
+
+        $this->order->expects($this->once())->method('setStatus')->with('processing');
+        $this->order->expects($this->once())->method('setState')->with('processing');
+        $this->controller->execute();
+    }
+
+    public function testExecuteWithSuccessResponseAndCheckPayerResponse()
+    {
+        $this->setDefaultOrder();
+
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
+        $successResponse->method('isValidSignature')->willReturn(true);
+        $successResponse->method('getTransactionType')->willReturn('check-payer-response');
         $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
         $this->order->expects($this->once())->method('setStatus')->with('processing');
@@ -292,15 +339,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
-        $successResponse->method(self::GET_PROVIDER_TRANSACTION_ID)->willReturn(1234);
-        $successResponse->method('getProviderTransactionReference')->willReturn(1234567);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('getParentTransactionId')->willReturn(999);
-        $successResponse->method('getRequestId')->willReturn('1-2-3');
-        $successResponse->method('getMaskedAccountNumber')->willReturn('5151***5485');
-        $successResponse->method('findElement')->willReturn('1515');
-        $successResponse->method('getCardholderAuthenticationStatus')->willReturn('Y');
-        $successResponse->method('getTransactionType')->willReturn('debit');
-        $successResponse->method('getCardTokenId')->willReturn('0123456CARDTOKEN');
 
         $this->transactionService->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
