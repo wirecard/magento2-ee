@@ -155,20 +155,7 @@ class Notify extends Action
         }
 
         if ($response instanceof SuccessResponse) {
-            if ($order->getStatus() !== Order::STATE_COMPLETE) {
-                $this->updateOrderState($order, Order::STATE_PROCESSING);
-            }
-
-            /**
-             * @var $payment Order\Payment
-             */
-            $payment = $order->getPayment();
-            $this->setCanCaptureInvoice($response->getTransactionType());
-            $this->updatePaymentTransactionIds($payment, $response);
-            if ($this->canCaptureInvoice) {
-                $this->captureInvoice($order, $response);
-            }
-            $this->orderRepository->save($order);
+            $this->handleSuccess($order, $response);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
                 /**
@@ -182,6 +169,23 @@ class Notify extends Action
         } else {
             $this->logger->warning(sprintf('Unexpected result object for notifications.'));
         }
+    }
+
+    private function handleSuccess($order, $response)
+    {
+        if ($order->getStatus() !== Order::STATE_COMPLETE) {
+            $this->updateOrderState($order, Order::STATE_PROCESSING);
+        }
+        /**
+         * @var $payment Order\Payment
+         */
+        $payment = $order->getPayment();
+        $this->setCanCaptureInvoice($response->getTransactionType());
+        $this->updatePaymentTransactionIds($payment, $response);
+        if ($this->canCaptureInvoice) {
+            $this->captureInvoice($order, $response);
+        }
+        $this->orderRepository->save($order);
     }
 
     /**
