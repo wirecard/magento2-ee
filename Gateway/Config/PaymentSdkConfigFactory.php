@@ -155,14 +155,14 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         if ($config->getValue('ssl_max_limit') !== '') {
             $methodSdkConfig->addSslMaxLimit(new Amount(
                 $config->getValue('ssl_max_limit'),
-                $this->eeConfig->getValue('settings/default_currency')
+                $config->getValue('default_currency')
             ));
         }
 
         if ($config->getValue('three_d_min_limit') !== '') {
             $methodSdkConfig->addThreeDMinLimit(new Amount(
                 $config->getValue('three_d_min_limit'),
-                $this->eeConfig->getValue('settings/default_currency')
+                $config->getValue('default_currency')
             ));
         }
 

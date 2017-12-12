@@ -40,7 +40,6 @@
                 <http_pass>qD2wzQ_hrc!8</http_pass>
             </credentials>
             <settings>
-                <default_currency>EUR</default_currency>
                 <public_key>-----BEGIN CERTIFICATE-----
 MIIF5DCCBMygAwIBAgICLHQwDQYJKoZIhvcNAQELBQAwWzELMAkGA1UEBhMCREUx
 ETAPBgNVBAoTCFdpcmVjYXJkMTkwNwYDVQQDFDB3aXJlY2FyZC1EUS1NVUMtaW50
@@ -117,6 +116,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <three_d_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</three_d_secret>
                 <ssl_max_limit>100.0</ssl_max_limit>
                 <three_d_min_limit>50.0</three_d_min_limit>
+                <default_currency>EUR</default_currency>
             </wirecard_elasticengine_creditcard>
             <wirecard_elasticengine_maestro>
                 <title>Wirecard Maestro</title>
@@ -137,6 +137,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <three_d_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</three_d_secret>
                 <ssl_max_limit>0.0</ssl_max_limit>
                 <three_d_min_limit></three_d_min_limit>
+                <default_currency>EUR</default_currency>
             </wirecard_elasticengine_maestro>
             <wirecard_elasticengine_sepa>
                 <title>Wirecard SEPA</title>

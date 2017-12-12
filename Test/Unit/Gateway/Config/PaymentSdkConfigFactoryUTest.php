@@ -81,10 +81,8 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             ['credentials/base_url'],
             ['credentials/http_user'],
             ['credentials/http_pass'],
-            ['settings/public_key'],
-            ['settings/default_currency'],
-            ['settings/default_currency']
-        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key', 'EUR', 'EUR');
+            ['settings/public_key']
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key');
 
         $methodConfigPayPal = $this->getMock(ConfigInterface::class);
         $methodConfigPayPal->method(self::GET_VALUE)->withConsecutive(
@@ -100,7 +98,8 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
                 'three_d_merchant_account_id' => 'account_id_three',
                 'three_d_secret' => 'secret_three',
                 'ssl_max_limit' => 100.0,
-                'three_d_min_limit' => 50.0
+                'three_d_min_limit' => 50.0,
+                'default_currency' => 'EUR'
             ];
 
             return $map[$key];
