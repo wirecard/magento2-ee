@@ -131,7 +131,7 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_creditcard" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="wirecard_elasticengine_creditcard" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Credit Card</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -166,7 +166,7 @@
                         ]]>
                     </comment>
                 </field>
-                <field id="default_currency" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="default_currency" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Currency for Limitdetection</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
                 </field>
@@ -181,7 +181,7 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_maestro" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="wirecard_elasticengine_maestro" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Maestro</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -216,7 +216,7 @@
                         ]]>
                     </comment>
                 </field>
-                <field id="default_currency" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="default_currency" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Currency for Limitdetection</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
                 </field>
@@ -231,7 +231,7 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_sepa" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="wirecard_elasticengine_sepa" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway SEPA</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -274,7 +274,7 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_sofortbanking" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="wirecard_elasticengine_sofortbanking" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Pay now.</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -296,7 +296,7 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_ideal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="wirecard_elasticengine_ideal" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway iDEAL</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -318,7 +318,7 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_ratepayinvoice" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="wirecard_elasticengine_ratepayinvoice" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Guaranteed Invoice</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -364,7 +364,7 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_ratepayinstall" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="wirecard_elasticengine_ratepayinstall" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Guaranteed Installment</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -410,28 +410,32 @@
                     <frontend_class>validate-number</frontend_class>
                 </field>
             </group>
-            <group id="wirecard_elasticengine_alipayxborder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Wirecard Payment Gateway Alipay Cross Border</label>
-            <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Enabled</label>
-                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            </field>
-            <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
-                   showInWebsite="1" showInStore="1">
-                <label>Title</label>
-            </field>
-            <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Merchant Account ID</label>
-            </field>
-            <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Secret Key</label>
-            </field>
-            <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
-                   showInStore="0">
-                <label>Sort Order</label>
-                <frontend_class>validate-number</frontend_class>
-            </field>
-        </group>
+            <group id="wirecard_elasticengine_alipayxborder" translate="label" type="text" sortOrder="50"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Wirecard Payment Gateway Alipay Cross Border</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Merchant Account ID</label>
+                </field>
+                <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Secret Key</label>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Sort Order</label>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+            </group>
         </section>
     </system>
 </config>
