@@ -2125,12 +2125,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "f05a69f39d889d6e6b6ce0529e904f3bd0079663"
+                "reference": "4ac2720d294d7f6c84b88963a58e058707ada2d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/f05a69f39d889d6e6b6ce0529e904f3bd0079663",
-                "reference": "f05a69f39d889d6e6b6ce0529e904f3bd0079663",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/4ac2720d294d7f6c84b88963a58e058707ada2d0",
+                "reference": "4ac2720d294d7f6c84b88963a58e058707ada2d0",
                 "shasum": ""
             },
             "require": {
