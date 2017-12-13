@@ -97,8 +97,13 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
      */
     public function create($paymentCode = null, $pathPattern = null)
     {
-        if (is_null($paymentCode)) {
-            throw new Exception('No valid configuration found');
+        if ($paymentCode === null) {
+            $config = new Config(
+                $this->eeConfig->getValue('base_url'),
+                $this->eeConfig->getValue('http_user'),
+                $this->eeConfig->getValue('http_pass')
+            );
+            return $config;
         }
         $methodConfig = $this->methodConfigs[$paymentCode];
 
@@ -117,7 +122,6 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         }
 
         $config->add($paymentMethod);
-
         $config->setShopInfo(
             $this->productMetadata->getName() . ' ' . $this->productMetadata->getEdition() . ' Edition',
             $this->productMetadata->getVersion()

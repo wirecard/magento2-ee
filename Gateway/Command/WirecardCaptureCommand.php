@@ -82,7 +82,6 @@ class WirecardCaptureCommand implements CommandInterface
      * @param LoggerInterface $logger
      * @param HandlerInterface $handler
      * @param ConfigInterface $methodConfig
-     * @param String $name
      */
     public function __construct(
         TransactionFactory $transactionFactory,
@@ -105,7 +104,7 @@ class WirecardCaptureCommand implements CommandInterface
     public function execute(array $commandSubject)
     {
         $transaction = $this->transactionFactory->capture($commandSubject);
-        $transactionService = $this->transactionServiceFactory->create();
+        $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
         try {
             $response = $transactionService->process($transaction, Operation::PAY);

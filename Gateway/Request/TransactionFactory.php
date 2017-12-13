@@ -155,6 +155,7 @@ class TransactionFactory
 
     /**
      * @param $commandSubject
+     * @return Transaction
      */
     public function capture($commandSubject)
     {
@@ -187,10 +188,13 @@ class TransactionFactory
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+
+        return $this->transaction;
     }
 
     /**
      * @param $commandSubject
+     * @return Transaction
      */
     public function refund($commandSubject)
     {
@@ -224,6 +228,8 @@ class TransactionFactory
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+
+        return $this->transaction;
     }
 
     /**

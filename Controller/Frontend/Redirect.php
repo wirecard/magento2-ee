@@ -94,7 +94,7 @@ class Redirect extends Action
             }
         } elseif ($this->getRequest()->isGet() && $this->getRequest()->getParam('request_id')) {
             //Ideal transaction
-            $transactionService = $this->transactionServiceFactory->create();
+            $transactionService = $this->transactionServiceFactory->create('ideal');
             $result = $transactionService->handleResponse($this->getRequest()->getParams());
             if ($result instanceof SuccessResponse) {
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
