@@ -83,10 +83,12 @@ class PoiPiaBlock extends Template
 
     public function isPoiPia()
     {
-        return (is_array($this->additionalInformation)
+        return (
+            is_array($this->additionalInformation)
             && isset($this->additionalInformation['data'])
             && isset($this->additionalInformation['data']['provider-transaction-reference-id'])
-            && isset($this->additionalInformation['data']['merchant-bank-account.0.iban']));
+            && isset($this->additionalInformation['data']['merchant-bank-account.0.iban'])
+        );
     }
 
 }

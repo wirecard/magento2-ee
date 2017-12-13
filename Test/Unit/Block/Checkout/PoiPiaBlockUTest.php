@@ -71,11 +71,13 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['iban' => 'IB0123456789', 'bic' => 'biccc'], $this->block->getMerchantBankAccount());
     }
 
-    public function testGetPtrid(){
+    public function testGetPtrid()
+    {
         $this->assertEquals('P0T1R2I3D4', $this->block->getPtrid());
     }
 
-    public function testIsPoiPia(){
+    public function testIsPoiPia()
+    {
         $this->assertTrue($this->block->isPoiPia());
     }
 
