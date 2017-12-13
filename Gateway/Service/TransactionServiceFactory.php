@@ -63,11 +63,12 @@ class TransactionServiceFactory
     }
 
     /**
+     * @param string $paymentName
      * @return TransactionService
      */
-    public function create()
+    public function create($paymentName = null)
     {
-        $txConfig = $this->paymentSdkConfigFactory->create();
+        $txConfig = $this->paymentSdkConfigFactory->create($paymentName);
         return new TransactionService($txConfig, $this->logger);
     }
 }

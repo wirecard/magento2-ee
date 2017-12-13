@@ -80,6 +80,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_paypal>
                 <title>Wirecard PayPal</title>
                 <active>1</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
@@ -99,6 +102,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_creditcard>
                 <title>Wirecard Credit Card</title>
                 <active>1</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
@@ -121,6 +127,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_maestro>
                 <title>Wirecard Maestro</title>
                 <active>1</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
@@ -142,6 +151,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_sepa>
                 <title>Wirecard SEPA</title>
                 <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
@@ -161,6 +173,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_sofortbanking>
                 <title>Wirecard Pay now.</title>
                 <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>0</can_capture>
@@ -179,6 +194,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_ideal>
                 <title>Wirecard iDEAL</title>
                 <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>0</can_capture>
@@ -197,6 +215,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_ratepayinvoice>
                 <title>Wirecard Guaranteed Invoice</title>
                 <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
@@ -220,6 +241,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_ratepayinstall>
                 <title>Wirecard Guaranteed Installment</title>
                 <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
@@ -243,6 +267,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_alipayxborder>
                 <title>Wirecard Alipay Cross Border</title>
                 <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>

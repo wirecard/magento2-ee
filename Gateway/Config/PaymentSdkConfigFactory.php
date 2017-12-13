@@ -31,6 +31,7 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Config;
 
+use Magento\Checkout\Exception;
 use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Gateway\ConfigFactoryInterface;
@@ -92,35 +93,30 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
      * @param null|string $paymentCode
      * @param null|string $pathPattern
      * @return Config
+     * @throws Exception
      */
     public function create($paymentCode = null, $pathPattern = null)
     {
+        if (is_null($paymentCode)) {
+            throw new Exception('No valid configuration found');
+        }
+        $methodConfig = $this->methodConfigs[$paymentCode];
+
         $config = new Config(
-            $this->eeConfig->getValue('credentials/base_url'),
-            $this->eeConfig->getValue('credentials/http_user'),
-            $this->eeConfig->getValue('credentials/http_pass')
+            $methodConfig->getValue('base_url'),
+            $methodConfig->getValue('http_user'),
+            $methodConfig->getValue('http_pass')
         );
 
-        $publicKey = $this->eeConfig->getValue('settings/public_key');
-        if ('' !== trim($publicKey)) {
-            $config->setPublicKey($publicKey);
+        if ($paymentCode === CreditCardTransaction::NAME) {
+            $paymentMethod = $this->getCreditCardConfig($methodConfig);
+        } elseif ($paymentCode === SepaTransaction::NAME) {
+            $paymentMethod = $this->getSepaConfig($methodConfig);
+        } else {
+            $paymentMethod = $this->getPaymentMethodConfig($methodConfig, $paymentCode);
         }
 
-        foreach ($this->methodConfigs as $name => $methodConfig) {
-            if ($name === CreditCardTransaction::NAME) {
-                $methodSdkConfig = $this->getCreditCardConfig($methodConfig);
-            } elseif ($name === SepaTransaction::NAME) {
-                $methodSdkConfig = $this->getSepaConfig($methodConfig);
-            } else {
-                $methodSdkConfig = new PaymentMethodConfig(
-                    $name,
-                    $methodConfig->getValue('merchant_account_id'),
-                    $methodConfig->getValue('secret')
-                );
-            }
-
-            $config->add($methodSdkConfig);
-        }
+        $config->add($paymentMethod);
 
         $config->setShopInfo(
             $this->productMetadata->getName() . ' ' . $this->productMetadata->getEdition() . ' Edition',
@@ -132,6 +128,22 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         );
 
         return $config;
+    }
+
+    /**
+     * @param $config
+     * @param $name
+     * @return PaymentMethodConfig
+     */
+    private function getPaymentMethodConfig($config, $name)
+    {
+        $methodConfig = new PaymentMethodConfig(
+            $name,
+            $config->getValue('merchant_account_id'),
+            $config->getValue('secret')
+        );
+
+        return $methodConfig;
     }
 
     /**

@@ -108,7 +108,7 @@ class WirecardCommand implements CommandInterface
     public function execute(array $commandSubject)
     {
         $transaction = $this->transactionFactory->create($commandSubject);
-        $transactionService = $this->transactionServiceFactory->create();
+        $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
         if (!isset($commandSubject[self::STATEOBJECT])
             || !($commandSubject[self::STATEOBJECT] instanceof DataObject)) {
