@@ -90,5 +90,4 @@ class PoiPiaBlock extends Template
             && isset($this->additionalInformation['data']['merchant-bank-account.0.iban'])
         );
     }
-
 }

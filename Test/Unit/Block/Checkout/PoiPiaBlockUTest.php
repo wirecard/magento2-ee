@@ -80,5 +80,4 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->block->isPoiPia());
     }
-
 }
