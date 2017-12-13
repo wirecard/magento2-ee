@@ -147,13 +147,14 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
             ->getMock();
         $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
+        $this->searchCriteriaBuilder->method('addSortOrder')->willReturn($this->searchCriteriaBuilder);
         $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
 
         $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
         $this->repository->method('getList')->willReturn($transactionList);
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
-        $transactionList->method('getItemById')->willReturn($this->transaction);
+        $transactionList->method('getLastItem')->willReturn($this->transaction);
 
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
         $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);

@@ -40,6 +40,7 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
         $searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
             ->getMock();
         $searchCriteriaBuilder->method('addFilter')->willReturn($searchCriteriaBuilder);
+        $searchCriteriaBuilder->method('addSortOrder')->willReturn($searchCriteriaBuilder);
         $searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
 
         $transactionRepository = $this->getMockBuilder(Transaction\Repository::class)->disableOriginalConstructor()->getMock();
@@ -47,6 +48,7 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
 
         $transactionExtensionInterface = $this->getMockBuilder(TransactionExtensionInterface::class)->disableOriginalConstructor()->getMock();
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $transactionList->method('getLastItem')->willReturn($this->transaction);
         $this->transaction->method('getTxnType')->willReturn('authorization');
         $this->transaction->method('setExtensionAttributes')->with($transactionExtensionInterface)->willReturn($this->transaction);
         $transactionList->method('getItemById')->willReturn($this->transaction);

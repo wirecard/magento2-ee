@@ -42,6 +42,7 @@ use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\PaymentSdk\Transaction\Operation;
 
 /**
  * Class MasterpassTransactionFactory
@@ -49,7 +50,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
  */
 class MasterpassTransactionFactory extends TransactionFactory
 {
-    const REFUND_OPERATION = "refund-purchase";
+    const REFUND_OPERATION = Operation::CANCEL;
     /**
      * @var MasterpassTransaction
      */
