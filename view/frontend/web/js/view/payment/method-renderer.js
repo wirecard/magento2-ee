@@ -78,6 +78,10 @@ define(
             {
                 type: 'wirecard_elasticengine_poipia',
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+            },
+            {
+                type: 'wirecard_elasticengine_masterpass',
+                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
             }
         );
         return Component.extend({});
