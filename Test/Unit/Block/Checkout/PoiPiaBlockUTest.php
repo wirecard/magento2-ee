@@ -32,10 +32,10 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Block\Checkout;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Sales\Model\Order;
 use Wirecard\ElasticEngine\Block\Checkout\PoiPiaBlock;
-use Magento\Framework\Pricing\Helper\Data;
 
 class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
 {
