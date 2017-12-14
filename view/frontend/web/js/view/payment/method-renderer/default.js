@@ -50,7 +50,20 @@ define(
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    window.location.replace(data["redirect-url"]);
+                    if (data['form-url']) {
+                        var form = $('<form />', {action: data['form-url'], method: data['form-method']});
+
+                        for (var i = 0; i < data['form-fields'].length; i++) {
+                            form.append($('<input />', {
+                                type: 'hidden',
+                                name: data['form-fields'][i]['key'],
+                                value: data['form-fields'][i]['value']
+                            }));
+                        }
+                        form.appendTo('body').submit();
+                    } else {
+                        window.location.replace(data['redirect-url']);
+                    }
                 });
             }
         });

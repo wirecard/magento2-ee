@@ -50,6 +50,7 @@ class ConfigProvider implements ConfigProviderInterface
     const RATEPAYINVOICE_CODE = 'wirecard_elasticengine_ratepayinvoice';
     const RATEPAYINSTALL_CODE = 'wirecard_elasticengine_ratepayinstall';
     const ALIPAYXBORDER_CODE = 'wirecard_elasticengine_alipayxborder';
+    const POIPIA_CODE = 'wirecard_elasticengine_poipia';
 
     /**
      * @var Repository
@@ -109,7 +110,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
                 $this->getConfigForRatepay(self::RATEPAYINVOICE_CODE) +
                 $this->getConfigForRatepay(self::RATEPAYINSTALL_CODE) +
-                $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE)
+                $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE) +
+                $this->getConfigForPaymentMethod(self::POIPIA_CODE)
         ];
     }
 

@@ -284,6 +284,23 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <merchant_account_id>7ca48aa0-ab12-4560-ab4a-af1c477cce43</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
             </wirecard_elasticengine_alipayxborder>
+            <wirecard_elasticengine_poipia>
+                <title>Wirecard Payment on Invoice / Payment on Advance</title>
+                <active>0</active>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_void>0</can_void>
+                <can_capture>0</can_capture>
+                <can_refund>1</can_refund>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>PoiPiaFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>authorize</payment_action>
+                <merchant_account_id>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</merchant_account_id>
+                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+            </wirecard_elasticengine_poipia>
         </payment>
     </default>
 </config>
