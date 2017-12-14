@@ -175,12 +175,13 @@ class TransactionFactory
 
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter($orderIdFilter)
+            ->addSortOrder('order_id', 'ASC')
             ->create();
 
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+        $transaction = $transactionList->getLastItem();
 
         $this->transaction->setParentTransactionId($transaction->getTxnId());
         $this->transaction->setEntryMode('ecommerce');
@@ -214,12 +215,13 @@ class TransactionFactory
 
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter($orderIdFilter)
+            ->addSortOrder('order_id', 'ASC')
             ->create();
 
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+        $transaction = $transactionList->getLastItem();
         $this->transactionId = $transaction->getTxnId();
 
         $this->transaction->setEntryMode('ecommerce');

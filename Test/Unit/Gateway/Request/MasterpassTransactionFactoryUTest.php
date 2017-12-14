@@ -31,7 +31,6 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteria;
@@ -42,28 +41,23 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
-use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
-use Wirecard\ElasticEngine\Gateway\Request\RatepayInstallTransactionFactory;
+use Wirecard\ElasticEngine\Gateway\Request\MasterpassTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
-use Wirecard\PaymentSdk\Entity\Device;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
 
-class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
+class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
     const ORDER_ID = '1234567';
 
     private $urlBuilder;
@@ -71,8 +65,6 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $resolver;
 
     private $storeManager;
-
-    private $basketFactory;
 
     private $accountHolderFactory;
 
@@ -82,19 +74,15 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $order;
 
-    private $paymentInfo;
-
     private $commandSubject;
 
-    private $repository;
+    private $transaction;
 
     private $searchCriteriaBuilder;
 
     private $filterBuilder;
 
-    private $transaction;
-
-    private $session;
+    private $repository;
 
     public function setUp()
     {
@@ -110,28 +98,21 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
         $this->storeManager->method('getStore')->willReturn($store);
 
-        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
-        $this->basketFactory->method('create')->willReturn(new Basket());
-
-        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
-        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
-
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
 
         $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $address->method('getEmail')->willReturn('test@example.com');
-        $address->method('getFirstname')->willReturn('Joe');
+        $address->method('getFirstname')->willReturn('Jane');
         $address->method('getLastname')->willReturn('Doe');
+
+        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
+        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
         $this->order->method('getBillingAddress')->willReturn($address);
-        $this->order->method('getShippingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
-
-        $this->paymentInfo = $this->getMock(InfoInterface::class);
 
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
@@ -146,6 +127,7 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
             ->getMock();
+
         $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
         $this->searchCriteriaBuilder->method('addSortOrder')->willReturn($this->searchCriteriaBuilder);
         $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
@@ -160,58 +142,24 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
         $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
         $this->filterBuilder->method('create')->willReturn($filter);
-
-        $this->session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
-    }
-
-    public function testRefundOperationSetter()
-    {
-        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new RatepayInstallmentTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
-        $expected = Operation::CANCEL;
-        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
     public function testCreateMinimum()
     {
-        $transaction = new RatepayInstallmentTransaction();
-        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
+        $transaction = new MasterpassTransaction();
+        $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedTransaction();
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
-    }
-
-    public function testCreateWithDevice()
-    {
-        $transaction = new RatepayInstallmentTransaction();
-        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
-
-        $expected = $this->minimumExpectedTransaction();
-
-        $this->session->method('getData')->willReturn('12345');
-        $device = new Device();
-        $device->setFingerprint('12345');
-        $expected->setDevice($device);
 
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
 
     public function testCaptureMinimum()
     {
-        $transaction = new RatepayInstallmentTransaction();
-        $transaction->setRedirect(new Redirect(
-            self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
-        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
+        $transaction = new MasterpassTransaction();
+        $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -220,38 +168,30 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundMinimum()
     {
-        $transaction = new RatepayInstallmentTransaction();
-        $transaction->setParentTransactionId('123456PARENT');
-        $transaction->setRedirect(new Redirect(
-            self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
-        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder, $this->session);
+        $transaction = new MasterpassTransaction();
+        $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
 
         $expected = $this->minimumExpectedRefundTransaction();
 
         $this->assertEquals($expected, $transactionFactory->refund($this->commandSubject));
     }
 
+    public function testRefundOperationSetter()
+    {
+        $transaction = new MasterpassTransaction();
+        $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
+        $expected = Operation::CANCEL;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
+    }
+
     /**
-     * @return RatepayInstallmentTransaction
+     * @return MasterpassTransaction
      */
     private function minimumExpectedTransaction()
     {
-        $additionalInfo = [
-            'customerDob' => '1973-12-07'
-        ];
-        $this->payment->expects(static::once())
-            ->method('getPayment')
-            ->willReturn($this->paymentInfo);
-
-        $this->paymentInfo->expects(static::once())
-            ->method('getAdditionalInformation')
-            ->willReturn($additionalInfo);
-
-        $expected = new RatepayInstallmentTransaction();
+        $expected = new MasterpassTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
@@ -263,9 +203,12 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setCustomFields($customFields);
-        $expected->setAccountHolder(new AccountHolder());
-        $expected->setBasket(new Basket());
-        $expected->setOrderNumber(self::ORDER_ID);
+
+        $accountHolder = new AccountHolder();
+        $accountHolder->setFirstName('Jane');
+        $accountHolder->setLastName('Doe');
+        $expected->setAccountHolder($accountHolder);
+
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
@@ -273,19 +216,13 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return RatepayInstallmentTransaction
+     * @return MasterpassTransaction
      */
     private function minimumExpectedCaptureTransaction()
     {
-        $expected = new RatepayInstallmentTransaction();
+        $expected = new MasterpassTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
-        $expected->setRedirect(new Redirect(
-            self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
 
-        $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setBasket(new Basket());
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
@@ -293,19 +230,14 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return RatepayInstallmentTransaction
+     * @return MasterpassTransaction
      */
     private function minimumExpectedRefundTransaction()
     {
-        $expected = new RatepayInstallmentTransaction();
+        $expected = new MasterpassTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
-        $expected->setRedirect(new Redirect(
-            self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setBasket(new Basket());
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
