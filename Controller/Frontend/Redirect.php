@@ -132,20 +132,18 @@ class Redirect extends Action
      */
     private function getPaymentMethod($payload)
     {
+        $paymentName = null;
+
         if (array_key_exists('MD', $payload) && array_key_exists('PaRes', $payload)) {
-            return CreditCardTransaction::NAME;
-        }
-        // PayPal
-        if (array_key_exists('eppresponse', $payload)) {
-            return PayPalTransaction::NAME;
-        }
-        // RatePAY installment
-        if (array_key_exists('base64payload', $payload) &&
+            $paymentName = CreditCardTransaction::NAME;
+        } elseif (array_key_exists('eppresponse', $payload)) {
+            $paymentName = PayPalTransaction::NAME;
+        } elseif (array_key_exists('base64payload', $payload) &&
             array_key_exists('psp_name', $payload)
         ) {
-            return RatepayInstallmentTransaction::NAME;
+            $paymentName = RatepayInstallmentTransaction::NAME;
         }
 
-        return null;
+        return $paymentName;
     }
 }
