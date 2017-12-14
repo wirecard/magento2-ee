@@ -55,6 +55,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 
 class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
@@ -149,6 +150,14 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
         $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
         $this->filterBuilder->method('create')->willReturn($filter);
+    }
+
+    public function testRefundOperationSetter()
+    {
+        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            new SepaTransaction(), $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
+        $expected = Operation::CREDIT;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
     public function testCreateMinimum()

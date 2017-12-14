@@ -127,17 +127,14 @@ class Redirect extends Action
         return $resultRedirect->setPath($path, ['_secure' => true]);
     }
 
+    /**
+     * @param $payload
+     * @return null|string
+     */
     private function getPaymentMethod($payload)
     {
         if (array_key_exists('MD', $payload) && array_key_exists('PaRes', $payload)) {
             return CreditCardTransaction::NAME;
-        }
-        // iDEAL
-        if (array_key_exists('ec', $payload)
-            && array_key_exists('trxid', $payload)
-            && array_key_exists(self::REQUEST_ID, $payload)
-        ) {
-            return IdealTransaction::NAME;
         }
         // PayPal
         if (array_key_exists('eppresponse', $payload)) {
