@@ -32,8 +32,8 @@
 namespace Wirecard\ElasticEngine\Block\Checkout;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\View\Element\Template;
 use Magento\Framework\Pricing\Helper\Data;
+use Magento\Framework\View\Element\Template;
 
 class PoiPiaBlock extends Template
 {
