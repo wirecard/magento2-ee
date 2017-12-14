@@ -33,6 +33,7 @@ namespace Wirecard\ElasticEngine\Block\Checkout;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\Pricing\Helper\Data;
 
 class PoiPiaBlock extends Template
 {
@@ -46,26 +47,39 @@ class PoiPiaBlock extends Template
     /** @var array $additionalInformation */
     private $additionalInformation;
 
+    /** @var Data $pricingHelper */
+    private $pricingHelper;
+
+    /** @var float $grandTotal */
+    private $grandTotal;
+
     /**
      * Constructor
      *
      * @param Template\Context $context
      * @param Session $session
+     * @param Data $pricingHelper
      * @param array $data
      */
     public function __construct(
         Template\Context $context,
         Session $session,
+        Data $pricingHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->context = $context;
         $this->session = $session;
+        $this->pricingHelper = $pricingHelper;
 
         /** @var \Magento\Sales\Model\Order $order */
         $order = $this->session->getLastRealOrder();
 
-        $this->additionalInformation = $order->getPayment()->getAdditionalInformation();
+        $this->grandTotal = $order->getGrandTotal();
+
+        $payment = $order->getPayment();
+
+        $this->additionalInformation = $payment->getAdditionalInformation();
     }
 
     public function getMerchantBankAccount()
@@ -74,6 +88,11 @@ class PoiPiaBlock extends Template
             'iban' => $this->additionalInformation['data']['merchant-bank-account.0.iban'],
             'bic' => $this->additionalInformation['data']['merchant-bank-account.0.bic']
         ];
+    }
+
+    public function getAmount()
+    {
+        return $this->pricingHelper->currency($this->grandTotal);
     }
 
     public function getPtrid()

@@ -35,6 +35,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Sales\Model\Order;
 use Wirecard\ElasticEngine\Block\Checkout\PoiPiaBlock;
+use Magento\Framework\Pricing\Helper\Data;
 
 class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
 {
@@ -63,7 +64,10 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
         $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
         $session->method('getLastRealOrder')->willReturn($order);
 
-        $this->block = new PoiPiaBlock($context, $session, []);
+        $pricingHelper = $this->getMock(Data::class, [], [], '', false);
+        $pricingHelper->method('currency')->willReturn("€30.5");
+
+        $this->block = new PoiPiaBlock($context, $session, $pricingHelper, []);
     }
 
     public function testGetMerchantBankAccount()
@@ -79,5 +83,10 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
     public function testIsPoiPia()
     {
         $this->assertTrue($this->block->isPoiPia());
+    }
+
+    public function testGetAmount()
+    {
+        $this->assertEquals("€30.5", $this->block->getAmount());
     }
 }
