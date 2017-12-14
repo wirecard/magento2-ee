@@ -50,13 +50,13 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
         $context = $this->getMock(Context::class, [], [], '', false);
 
         $payment = $this->getMock(Order\Payment::class, [], [], '', false);
-        $payment->method('getAdditionalInformation')->willReturn([
+        $payment->method('getAdditionalInformation')->willReturn(
             [
                 'merchant-bank-account.0.iban' => 'IB0123456789',
                 'merchant-bank-account.0.bic' => 'biccc',
                 'provider-transaction-reference-id' => 'P0T1R2I3D4'
             ]
-        ]);
+        );
 
         $order = $this->getMock(Order::class, [], [], '', false);
         $order->method('getPayment')->willReturn($payment);
