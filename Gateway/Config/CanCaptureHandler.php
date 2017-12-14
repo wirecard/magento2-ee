@@ -78,12 +78,13 @@ class CanCaptureHandler implements ValueHandlerInterface
 
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter($orderIdFilter)
+            ->addSortOrder('order_id', 'ASC')
             ->create();
 
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         /** @var Transaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+        $transaction = $transactionList->getLastItem();
 
         return $transaction->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION;
     }

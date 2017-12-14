@@ -146,6 +146,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_poipia' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
+                ],
+                'wirecard_elasticengine_masterpass' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
                 ]
             ]
         ], $prov->getConfig());
@@ -250,6 +254,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'ideal_bic' => $idealBic
                 ],
                 'wirecard_elasticengine_poipia' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
+                ],
+                'wirecard_elasticengine_masterpass' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
                 ]

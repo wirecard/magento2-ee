@@ -157,6 +157,9 @@ class Notify extends Action
         }
 
         if ($response instanceof SuccessResponse) {
+            if ($response->getPaymentMethod() === 'masterpass') {
+                return;
+            }
             if ($order->getStatus() !== Order::STATE_COMPLETE) {
                 /*if ($response->isValidSignature()) {
                     $this->updateOrderState($order, Order::STATE_PROCESSING);
