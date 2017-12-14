@@ -318,5 +318,4 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
         $this->controller->execute();
     }
-
 }
