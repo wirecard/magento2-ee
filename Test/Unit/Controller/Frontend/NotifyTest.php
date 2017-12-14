@@ -319,4 +319,19 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $this->controller->execute();
     }
+
+    public function testExecuteWithPaymentMasterpass()
+    {
+        $this->setDefaultOrder();
+
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method(self::GET_PROVIDER_TRANSACTION_ID)->willReturn(1234);
+        $successResponse->method('isValidSignature')->willReturn(true);
+        $successResponse->method('getPaymentMethod')->willReturn('masterpass');
+
+        $this->transactionService->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
+
+        $this->controller->execute();
+    }
 }
