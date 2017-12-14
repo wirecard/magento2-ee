@@ -85,8 +85,8 @@ class PoiPiaBlock extends Template
     public function getMerchantBankAccount()
     {
         return [
-            'iban' => $this->additionalInformation['data']['merchant-bank-account.0.iban'],
-            'bic' => $this->additionalInformation['data']['merchant-bank-account.0.bic']
+            'iban' => $this->additionalInformation['merchant-bank-account.0.iban'],
+            'bic' => $this->additionalInformation['merchant-bank-account.0.bic']
         ];
     }
 
@@ -97,16 +97,15 @@ class PoiPiaBlock extends Template
 
     public function getPtrid()
     {
-        return $this->additionalInformation['data']['provider-transaction-reference-id'];
+        return $this->additionalInformation['provider-transaction-reference-id'];
     }
 
     public function isPoiPia()
     {
         return (
             is_array($this->additionalInformation)
-            && isset($this->additionalInformation['data'])
-            && isset($this->additionalInformation['data']['provider-transaction-reference-id'])
-            && isset($this->additionalInformation['data']['merchant-bank-account.0.iban'])
+            && isset($this->additionalInformation['provider-transaction-reference-id'])
+            && isset($this->additionalInformation['merchant-bank-account.0.iban'])
         );
     }
 }

@@ -51,7 +51,7 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
 
         $payment = $this->getMock(Order\Payment::class, [], [], '', false);
         $payment->method('getAdditionalInformation')->willReturn([
-            'data' => [
+            [
                 'merchant-bank-account.0.iban' => 'IB0123456789',
                 'merchant-bank-account.0.bic' => 'biccc',
                 'provider-transaction-reference-id' => 'P0T1R2I3D4'
