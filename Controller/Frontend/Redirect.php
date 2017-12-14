@@ -39,6 +39,10 @@ use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\IdealTransaction;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
 
 /**
  * Class Redirect
@@ -83,7 +87,8 @@ class Redirect extends Action
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         if ($this->getRequest()->isPost()) {
-            $transactionService = $this->transactionServiceFactory->create();
+            $method = $this->getPaymentMethod($this->getRequest()->getPost()->toArray());
+            $transactionService = $this->transactionServiceFactory->create($method);
             $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
             if ($result instanceof SuccessResponse) {
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
@@ -120,5 +125,31 @@ class Redirect extends Action
     private function setRedirectPath(RedirectResult $resultRedirect, $path)
     {
         return $resultRedirect->setPath($path, ['_secure' => true]);
+    }
+
+    private function getPaymentMethod($payload)
+    {
+        if (array_key_exists('MD', $payload) && array_key_exists('PaRes', $payload)) {
+            return CreditCardTransaction::NAME;
+        }
+        // iDEAL
+        if (array_key_exists('ec', $payload)
+            && array_key_exists('trxid', $payload)
+            && array_key_exists(self::REQUEST_ID, $payload)
+        ) {
+            return IdealTransaction::NAME;
+        }
+        // PayPal
+        if (array_key_exists('eppresponse', $payload)) {
+            return PayPalTransaction::NAME;
+        }
+        // RatePAY installment
+        if (array_key_exists('base64payload', $payload) &&
+            array_key_exists('psp_name', $payload)
+        ) {
+            return RatepayInstallmentTransaction::NAME;
+        }
+
+        return null;
     }
 }

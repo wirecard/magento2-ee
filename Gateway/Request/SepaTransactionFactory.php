@@ -42,6 +42,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -51,6 +52,8 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class SepaTransactionFactory extends TransactionFactory
 {
+    const REFUND_OPERATION = Operation::CREDIT;
+
     /**
      * @var SepaTransaction
      */
@@ -165,5 +168,13 @@ class SepaTransactionFactory extends TransactionFactory
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundOperation()
+    {
+        return self::REFUND_OPERATION;
     }
 }
