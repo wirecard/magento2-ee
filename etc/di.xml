@@ -143,6 +143,16 @@
             <argument name="commandPool" xsi:type="object">MasterpassCommandPool</argument>
         </arguments>
     </virtualType>
+    <virtualType name="UnionPayInternationalFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::UPI_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnionPayInternationalValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnionPayInternationalValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnionPayInternationalCommandPool</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Value handlers -->
     <virtualType name="PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
@@ -288,6 +298,19 @@
             <argument name="configInterface" xsi:type="object">WirecardMasterpassConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="UnionPayInternationalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnionPayInternationalConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnionPayInternationalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Configs -->
     <virtualType name="WirecardElasticEngineConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -349,6 +372,11 @@
     <virtualType name="WirecardMasterpassConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MASTERPASS_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WirecardUnionPayInternationalConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::UPI_CODE</argument>
         </arguments>
     </virtualType>
 
@@ -422,6 +450,12 @@
         </arguments>
     </virtualType>
     <virtualType name="MasterpassValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnionPayInternationalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
             </argument>
@@ -748,6 +782,39 @@
             <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="UnionPayInternationalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">UnionPayInternationalInitializeCommand</item>
+                <item name="capture" xsi:type="string">UnionPayInternationalCaptureCommand</item>
+                <item name="refund" xsi:type="string">UnionPayInternationalRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnionPayInternationalCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">UnionPayInternationalTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnionPayInternationalRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">UnionPayInternationalTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnionPayInternationalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">UnionPayInternationalTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Wirecard paymentSDK transaction objects -->
     <virtualType name="PayPalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory">
@@ -827,6 +894,12 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnionPayInternationalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\UnionPayInternationalTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\CreditCardTransaction</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Wirecard paymentSDK objects -->
     <virtualType name="BasketFactory" type="Wirecard\ElasticEngine\Gateway\Request\BasketFactory">
         <arguments>
@@ -860,6 +933,7 @@
                 <item name="alipay-xborder" xsi:type="object">WirecardAlipayXBorderConfig</item>
                 <item name="wiretransfer" xsi:type="object">WirecardPoiPiaConfig</item>
                 <item name="masterpass" xsi:type="object">WirecardMasterpassConfig</item>
+                <item name="creditcard" xsi:type="object">WirecardUnionPayInternationalConfig</item>
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
