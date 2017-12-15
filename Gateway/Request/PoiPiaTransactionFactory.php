@@ -99,9 +99,6 @@ class PoiPiaTransactionFactory extends TransactionFactory
         $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $customFields = new CustomFieldCollection();
-        $customFields->add(new CustomField('poipia_action', $payment->getPayment()->getAdditionalInformation('poipia_action')));
-        $this->transaction->setCustomFields($customFields);
 
         return $this->transaction;
     }
