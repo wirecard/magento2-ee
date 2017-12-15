@@ -181,7 +181,7 @@ class TransactionFactory
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getLastItem();
+        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
 
         $this->transaction->setParentTransactionId($transaction->getTxnId());
         $this->transaction->setEntryMode('ecommerce');
@@ -221,7 +221,7 @@ class TransactionFactory
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getLastItem();
+        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
         $this->transactionId = $transaction->getTxnId();
 
         $this->transaction->setEntryMode('ecommerce');

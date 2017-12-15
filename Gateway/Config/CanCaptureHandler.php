@@ -84,7 +84,7 @@ class CanCaptureHandler implements ValueHandlerInterface
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         /** @var Transaction $transaction */
-        $transaction = $transactionList->getLastItem();
+        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
 
         return $transaction->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION;
     }
