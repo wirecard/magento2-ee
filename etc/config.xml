@@ -301,6 +301,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <model>PoiPiaFacade</model>
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
+                <poipia_action>invoice</poipia_action>
                 <merchant_account_id>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
             </wirecard_elasticengine_poipia>
