@@ -175,12 +175,12 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             ));
         }
 
-        if ($config->getValue('three_d_min_limit') !== '') {
+        /*if ($config->getValue('three_d_min_limit') !== '') {
             $methodSdkConfig->addThreeDMinLimit(new Amount(
                 $config->getValue('three_d_min_limit'),
                 $config->getValue('default_currency')
             ));
-        }
+        }*/
 
         return $methodSdkConfig;
     }

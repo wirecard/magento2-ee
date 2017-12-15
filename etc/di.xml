@@ -149,7 +149,7 @@
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnionPayInternationalValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">UnionPayInternationalValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">CreditCardValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnionPayInternationalCommandPool</argument>
         </arguments>
     </virtualType>
@@ -450,12 +450,6 @@
         </arguments>
     </virtualType>
     <virtualType name="MasterpassValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
-        <arguments>
-            <argument name="validators" xsi:type="array">
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="UnionPayInternationalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
             </argument>

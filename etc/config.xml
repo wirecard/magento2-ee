@@ -344,8 +344,8 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <payment_action>authorize</payment_action>
                 <merchant_account_id>c6e9331c-5c1f-4fc6-8a08-ef65ce09ddb0</merchant_account_id>
                 <secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</secret>
-                <ssl_max_limit>100.0</ssl_max_limit>
-                <three_d_min_limit>50.0</three_d_min_limit>
+                <ssl_max_limit></ssl_max_limit>
+                <three_d_min_limit></three_d_min_limit>
                 <default_currency>EUR</default_currency>
             </wirecard_elasticengine_unionpayinternational>
         </payment>
