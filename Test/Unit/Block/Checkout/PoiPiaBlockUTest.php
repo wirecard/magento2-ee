@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Block\Checkout;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Sales\Model\Order;
 use Wirecard\ElasticEngine\Block\Checkout\PoiPiaBlock;
 
@@ -45,9 +46,12 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
      */
     private $block;
 
+    private $methodConfig;
+
     public function setUp()
     {
         $context = $this->getMock(Context::class, [], [], '', false);
+        $this->methodConfig = $this->getMockWithoutInvokingTheOriginalConstructor(ConfigInterface::class);
 
         $payment = $this->getMock(Order\Payment::class, [], [], '', false);
         $payment->method('getAdditionalInformation')->willReturn(
@@ -67,7 +71,7 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
         $pricingHelper = $this->getMock(Data::class, [], [], '', false);
         $pricingHelper->method('currency')->willReturn("€30.5");
 
-        $this->block = new PoiPiaBlock($context, $session, $pricingHelper, []);
+        $this->block = new PoiPiaBlock($context, $session, $pricingHelper, [], $this->methodConfig);
     }
 
     public function testGetMerchantBankAccount()
@@ -80,9 +84,16 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('P0T1R2I3D4', $this->block->getPtrid());
     }
 
-    public function testIsPoiPia()
+    public function testIsPia()
     {
-        $this->assertTrue($this->block->isPoiPia());
+        $this->methodConfig->method('getValue')->with('poipia_action')->willReturn('advance');
+        $this->assertTrue($this->block->isPia());
+    }
+
+    public function testIsPoi()
+    {
+        $this->methodConfig->method('getValue')->with('poipia_action')->willReturn('invoice');
+        $this->assertFalse($this->block->isPia());
     }
 
     public function testGetAmount()

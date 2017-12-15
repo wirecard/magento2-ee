@@ -143,9 +143,6 @@ class ResponseHandler implements HandlerInterface
         $payment->setIsTransactionClosed(false);
         $payment->setAdditionalInformation(self::TRANSACTION_ID, $sdkResponse->getTransactionId());
         $data = $sdkResponse->getData();
-        if ($payment->hasAdditionalInformation('poipia_action')) {
-            array_push($data, $payment->getAdditionalInformation('poipia_action'));
-        }
         $payment->setAdditionalInformation($data);
         $additionalInfo = [];
 
