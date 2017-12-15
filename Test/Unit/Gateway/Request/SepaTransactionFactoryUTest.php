@@ -144,6 +144,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->repository->method('getList')->willReturn($transactionList);
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $this->transaction->method('getTxnId')->willReturn('123456PARENT');
+        $transactionList->method('getItemById')->willReturn($this->transaction);
         $transactionList->method('getLastItem')->willReturn($this->transaction);
 
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
@@ -259,6 +261,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new SepaTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setParentTransactionId('123456PARENT');
 
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
@@ -273,6 +276,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new SepaTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAccountHolder(new AccountHolder());
         $expected->setAmount(new Amount(1.0, 'EUR'));

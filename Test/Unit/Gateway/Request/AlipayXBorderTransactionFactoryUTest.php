@@ -135,7 +135,8 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->repository->method('getList')->willReturn($transactionList);
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
-        $transactionList->method('getLastItem')->willReturn($this->transaction);
+        $this->transaction->method('getTxnId')->willReturn('123456PARENT');
+        $transactionList->method('getItemById')->willReturn($this->transaction);
 
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
         $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
@@ -195,6 +196,7 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setParentTransactionId('123456PARENT');
 
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
