@@ -78,6 +78,7 @@ class CanCaptureHandler implements ValueHandlerInterface
 
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter($orderIdFilter)
+            ->addSortOrder('order_id', 'ASC')
             ->create();
 
         /** @var Collection $transactionList */

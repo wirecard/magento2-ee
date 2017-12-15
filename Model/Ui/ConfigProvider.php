@@ -49,6 +49,9 @@ class ConfigProvider implements ConfigProviderInterface
     const IDEAL_CODE = 'wirecard_elasticengine_ideal';
     const RATEPAYINVOICE_CODE = 'wirecard_elasticengine_ratepayinvoice';
     const RATEPAYINSTALL_CODE = 'wirecard_elasticengine_ratepayinstall';
+    const ALIPAYXBORDER_CODE = 'wirecard_elasticengine_alipayxborder';
+    const POIPIA_CODE = 'wirecard_elasticengine_poipia';
+    const MASTERPASS_CODE = 'wirecard_elasticengine_masterpass';
 
     /**
      * @var Repository
@@ -107,7 +110,10 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
                 $this->getConfigForRatepay(self::RATEPAYINVOICE_CODE) +
-                $this->getConfigForRatepay(self::RATEPAYINSTALL_CODE)
+                $this->getConfigForRatepay(self::RATEPAYINSTALL_CODE) +
+                $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE) +
+                $this->getConfigForPaymentMethod(self::POIPIA_CODE) +
+                $this->getConfigForPaymentMethod(self::MASTERPASS_CODE)
         ];
     }
 
@@ -160,7 +166,7 @@ class ConfigProvider implements ConfigProviderInterface
     private function getConfigForCreditCard($paymentMethodName)
     {
         $locale = $this->store->getLocale();
-        $transactionService = $this->transactionServiceFactory->create();
+        $transactionService = $this->transactionServiceFactory->create('creditcard');
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
@@ -213,7 +219,7 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private function setInvoiceDeviceIdent()
     {
-        $transactionService = $this->transactionServiceFactory->create();
+        $transactionService = $this->transactionServiceFactory->create('ratepayinvoice');
         if (!strlen($this->checkoutSession->getData('invoiceDeviceIdent'))) {
             $deviceIdent = $transactionService->getRatePayInvoiceDeviceIdent();
             $this->checkoutSession->setData('invoiceDeviceIdent', $deviceIdent);
@@ -225,7 +231,7 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private function setInstallmentDeviceIdent()
     {
-        $transactionService = $this->transactionServiceFactory->create();
+        $transactionService = $this->transactionServiceFactory->create('ratepayinstall');
         if (!strlen($this->checkoutSession->getData('installmentDeviceIdent'))) {
             $deviceIdent = $transactionService->getRatePayInstallmentDeviceIdent();
             $this->checkoutSession->setData('installmentDeviceIdent', $deviceIdent);

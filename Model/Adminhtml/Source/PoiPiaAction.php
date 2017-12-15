@@ -29,46 +29,29 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Service;
+namespace Wirecard\ElasticEngine\Model\Adminhtml\Source;
 
-use Magento\Payment\Gateway\ConfigFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\TransactionService;
+use Magento\Framework\Option\ArrayInterface;
 
-/**
- * Class TransactionServiceFactory
- * @package Wirecard\ElasticEngine\Gateway\Service
- */
-class TransactionServiceFactory
+class PoiPiaAction implements ArrayInterface
 {
-    /**
-     * @var ConfigFactoryInterface
-     */
-    private $paymentSdkConfigFactory;
+    const INVOICE = 'invoice';
+    const ADVANCE = 'advance';
 
     /**
-     * @var LoggerInterface
+     * {@inheritdoc}
      */
-    private $logger;
-
-    /**
-     * TransactionServiceFactory constructor.
-     * @param LoggerInterface $logger
-     * @param ConfigFactoryInterface $paymentSdkConfigFactory
-     */
-    public function __construct(LoggerInterface $logger, ConfigFactoryInterface $paymentSdkConfigFactory)
+    public function toOptionArray()
     {
-        $this->logger = $logger;
-        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
-    }
-
-    /**
-     * @param string $paymentName
-     * @return TransactionService
-     */
-    public function create($paymentName = null)
-    {
-        $txConfig = $this->paymentSdkConfigFactory->create($paymentName);
-        return new TransactionService($txConfig, $this->logger);
+        return [
+            [
+                'value' => self::INVOICE,
+                'label' => __('On Invoice')
+            ],
+            [
+                'value' => self::ADVANCE,
+                'label' => __('In Advance')
+            ]
+        ];
     }
 }

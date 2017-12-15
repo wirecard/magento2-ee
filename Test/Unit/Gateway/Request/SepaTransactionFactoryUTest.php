@@ -55,6 +55,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 
 class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
@@ -136,18 +137,29 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
             ->getMock();
         $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
+        $this->searchCriteriaBuilder->method('addSortOrder')->willReturn($this->searchCriteriaBuilder);
         $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
 
         $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
         $this->repository->method('getList')->willReturn($transactionList);
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $this->transaction->method('getTxnId')->willReturn('123456PARENT');
         $transactionList->method('getItemById')->willReturn($this->transaction);
+        $transactionList->method('getLastItem')->willReturn($this->transaction);
 
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
         $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
         $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
         $this->filterBuilder->method('create')->willReturn($filter);
+    }
+
+    public function testRefundOperationSetter()
+    {
+        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            new SepaTransaction(), $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder, $this->accountHolderFactory);
+        $expected = Operation::CREDIT;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
     public function testCreateMinimum()
@@ -249,6 +261,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new SepaTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setParentTransactionId('123456PARENT');
 
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
@@ -263,6 +276,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new SepaTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAccountHolder(new AccountHolder());
         $expected->setAmount(new Amount(1.0, 'EUR'));

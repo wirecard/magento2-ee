@@ -49,6 +49,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 {
     const PAYMENT_SDK_PHP = 'paymentSDK-php';
     const SET_REDIRECT_URL = 'setRedirectUrl';
+    const GET_DATA = 'getData';
 
     /**
      * @var LoggerInterface
@@ -56,6 +57,11 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     private $logger;
 
     private $session;
+
+    /**
+     * @var Array
+     */
+    private $paymentData;
 
     /**
      * @var UrlInterface
@@ -69,6 +75,16 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods([self::SET_REDIRECT_URL, 'setFormMethod', 'setFormUrl', 'setFormFields'])
             ->getMock();
+
+        $this->paymentData = [
+            'providerTransactionId' => 1234,
+            'providerTransactionReferenceId' => 1234567,
+            'requestId' => '1-2-3',
+            'maskedAccountNumber' => '5151***5485',
+            'authorizationCode' => '1515',
+            'cardholderAuthenticationStatus' => 'Y',
+            'creditCardToken' => '0123456CARDTOKEN'
+        ];
 
         $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
         $payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
@@ -88,6 +104,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 
         $response = $this->getMockBuilder(InteractionResponse::class)->disableOriginalConstructor()->getMock();
         $response->method('getRedirectUrl')->willReturn('http://redir.ect');
+        $response->method(self::GET_DATA)->willReturn($this->paymentData);
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method(self::SET_REDIRECT_URL)->with('http://redir.ect');
@@ -103,6 +120,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $response->method('getMethod')->willReturn('post');
         $response->method('getUrl')->willReturn('http://redirpost.ect');
         $response->method('getFormFields')->willReturn(['food' => 'burger']);
+        $response->method(self::GET_DATA)->willReturn($this->paymentData);
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method('setFormMethod')->with('post');
@@ -117,6 +135,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder);
 
         $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
+        $response->method(self::GET_DATA)->willReturn($this->paymentData);
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method(self::SET_REDIRECT_URL)->with('http://magen.to/frontend/redirect');

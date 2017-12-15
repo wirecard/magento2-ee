@@ -31,6 +31,7 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Config;
 
+use Magento\Checkout\Exception;
 use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Gateway\ConfigFactoryInterface;
@@ -92,36 +93,35 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
      * @param null|string $paymentCode
      * @param null|string $pathPattern
      * @return Config
+     * @throws Exception
      */
     public function create($paymentCode = null, $pathPattern = null)
     {
+        if ($paymentCode === null) {
+            $config = new Config(
+                $this->eeConfig->getValue('base_url'),
+                $this->eeConfig->getValue('http_user'),
+                $this->eeConfig->getValue('http_pass')
+            );
+            return $config;
+        }
+        $methodConfig = $this->methodConfigs[$paymentCode];
+
         $config = new Config(
-            $this->eeConfig->getValue('credentials/base_url'),
-            $this->eeConfig->getValue('credentials/http_user'),
-            $this->eeConfig->getValue('credentials/http_pass')
+            $methodConfig->getValue('base_url'),
+            $methodConfig->getValue('http_user'),
+            $methodConfig->getValue('http_pass')
         );
 
-        $publicKey = $this->eeConfig->getValue('settings/public_key');
-        if ('' !== trim($publicKey)) {
-            $config->setPublicKey($publicKey);
+        if ($paymentCode === CreditCardTransaction::NAME) {
+            $paymentMethod = $this->getCreditCardConfig($methodConfig);
+        } elseif ($paymentCode === SepaTransaction::NAME) {
+            $paymentMethod = $this->getSepaConfig($methodConfig);
+        } else {
+            $paymentMethod = $this->getPaymentMethodConfig($methodConfig, $paymentCode);
         }
 
-        foreach ($this->methodConfigs as $name => $methodConfig) {
-            if ($name === CreditCardTransaction::NAME) {
-                $methodSdkConfig = $this->getCreditCardConfig($methodConfig);
-            } elseif ($name === SepaTransaction::NAME) {
-                $methodSdkConfig = $this->getSepaConfig($methodConfig);
-            } else {
-                $methodSdkConfig = new PaymentMethodConfig(
-                    $name,
-                    $methodConfig->getValue('merchant_account_id'),
-                    $methodConfig->getValue('secret')
-                );
-            }
-
-            $config->add($methodSdkConfig);
-        }
-
+        $config->add($paymentMethod);
         $config->setShopInfo(
             $this->productMetadata->getName() . ' ' . $this->productMetadata->getEdition() . ' Edition',
             $this->productMetadata->getVersion()
@@ -132,6 +132,22 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         );
 
         return $config;
+    }
+
+    /**
+     * @param $config
+     * @param $name
+     * @return PaymentMethodConfig
+     */
+    private function getPaymentMethodConfig($config, $name)
+    {
+        $methodConfig = new PaymentMethodConfig(
+            $name,
+            $config->getValue('merchant_account_id'),
+            $config->getValue('secret')
+        );
+
+        return $methodConfig;
     }
 
     /**
@@ -155,14 +171,14 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         if ($config->getValue('ssl_max_limit') !== '') {
             $methodSdkConfig->addSslMaxLimit(new Amount(
                 $config->getValue('ssl_max_limit'),
-                $this->eeConfig->getValue('settings/default_currency')
+                $config->getValue('default_currency')
             ));
         }
 
         if ($config->getValue('three_d_min_limit') !== '') {
             $methodSdkConfig->addThreeDMinLimit(new Amount(
                 $config->getValue('three_d_min_limit'),
-                $this->eeConfig->getValue('settings/default_currency')
+                $config->getValue('default_currency')
             ));
         }
 

@@ -39,6 +39,9 @@ use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
 
 /**
  * Class Redirect
@@ -83,7 +86,8 @@ class Redirect extends Action
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         if ($this->getRequest()->isPost()) {
-            $transactionService = $this->transactionServiceFactory->create();
+            $method = $this->getPaymentMethod($this->getRequest()->getPost()->toArray());
+            $transactionService = $this->transactionServiceFactory->create($method);
             $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
             if ($result instanceof SuccessResponse) {
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
@@ -94,7 +98,7 @@ class Redirect extends Action
             }
         } elseif ($this->getRequest()->isGet() && $this->getRequest()->getParam('request_id')) {
             //Ideal transaction
-            $transactionService = $this->transactionServiceFactory->create();
+            $transactionService = $this->transactionServiceFactory->create('ideal');
             $result = $transactionService->handleResponse($this->getRequest()->getParams());
             if ($result instanceof SuccessResponse) {
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
@@ -120,5 +124,26 @@ class Redirect extends Action
     private function setRedirectPath(RedirectResult $resultRedirect, $path)
     {
         return $resultRedirect->setPath($path, ['_secure' => true]);
+    }
+
+    /**
+     * @param $payload
+     * @return null|string
+     */
+    private function getPaymentMethod($payload)
+    {
+        $paymentName = null;
+
+        if (array_key_exists('MD', $payload) && array_key_exists('PaRes', $payload)) {
+            $paymentName = CreditCardTransaction::NAME;
+        } elseif (array_key_exists('eppresponse', $payload)) {
+            $paymentName = PayPalTransaction::NAME;
+        } elseif (array_key_exists('base64payload', $payload) &&
+            array_key_exists('psp_name', $payload)
+        ) {
+            $paymentName = RatepayInstallmentTransaction::NAME;
+        }
+
+        return $paymentName;
     }
 }

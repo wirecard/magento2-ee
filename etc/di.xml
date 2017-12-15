@@ -113,7 +113,36 @@
             <argument name="commandPool" xsi:type="object">RatepayInstallCommandPool</argument>
         </arguments>
     </virtualType>
-
+    <virtualType name="AlipayXBorderFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::ALIPAYXBORDER_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">AlipayXBorderValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">AlipayXBorderValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">AlipayXBorderCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PoiPiaFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::POIPIA_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PoiPiaValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PoiPiaValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PoiPiaCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MASTERPASS_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MasterpassValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">MasterpassValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">MasterpassCommandPool</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Value handlers -->
     <virtualType name="PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
@@ -222,6 +251,43 @@
             <argument name="configInterface" xsi:type="object">WirecardRatepayInstallConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="AlipayXBorderValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">AlipayXBorderConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AlipayXBorderConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PoiPiaValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PoiPiaConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PoiPiaConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardPoiPiaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MasterpassConfigValueHandler</item>
+                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardMasterpassConfig</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Configs -->
     <virtualType name="WirecardElasticEngineConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -268,6 +334,21 @@
     <virtualType name="WirecardRatepayInstallConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::RATEPAYINSTALL_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WirecardAlipayXBorderConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::ALIPAYXBORDER_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WirecardPoiPiaConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::POIPIA_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WirecardMasterpassConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MASTERPASS_CODE</argument>
         </arguments>
     </virtualType>
 
@@ -327,6 +408,25 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="AlipayXBorderValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PoiPiaValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
 
     <!-- Commands -->
     <virtualType name="PaypalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
@@ -566,6 +666,89 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="AlipayXBorderCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">AlipayXBorderInitializeCommand</item>
+                <item name="refund" xsi:type="string">AlipayXBorderRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AlipayXBorderRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">AlipayXBorderTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="AlipayXBorderInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">AlipayXBorderTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PoiPiaCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">PoiPiaInitializeCommand</item>
+                <item name="refund" xsi:type="string">PoiPiaRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PoiPiaRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PoiPiaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">PoiPiaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPoiPiaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MasterpassInitializeCommand</item>
+                <item name="capture" xsi:type="string">MasterpassCaptureCommand</item>
+                <item name="refund" xsi:type="string">MasterpassRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MasterpassRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Wirecard paymentSDK transaction objects -->
     <virtualType name="PayPalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PayPalTransactionFactory">
         <arguments>
@@ -620,6 +803,30 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="AlipayXBorderTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PoiPiaTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PoiPiaTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\PoiPiaTransaction</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPoiPiaConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MasterpassTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\MasterpassTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\MasterpassTransaction</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Wirecard paymentSDK objects -->
     <virtualType name="BasketFactory" type="Wirecard\ElasticEngine\Gateway\Request\BasketFactory">
         <arguments>
@@ -650,6 +857,9 @@
                 <item name="ideal" xsi:type="object">WirecardIdealConfig</item>
                 <item name="ratepayinvoice" xsi:type="object">WirecardRatepayInvoiceConfig</item>
                 <item name="ratepayinstall" xsi:type="object">WirecardRatepayInstallConfig</item>
+                <item name="alipay-xborder" xsi:type="object">WirecardAlipayXBorderConfig</item>
+                <item name="wiretransfer" xsi:type="object">WirecardPoiPiaConfig</item>
+                <item name="masterpass" xsi:type="object">WirecardMasterpassConfig</item>
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
@@ -682,6 +892,11 @@
     <type name="Wirecard\ElasticEngine\Block\Checkout\SepaMandateBlock">
         <arguments>
             <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </type>
+    <type name="Wirecard\ElasticEngine\Block\Checkout\PoiPiaBlock">
+        <arguments>
+            <argument name="methodConfig" xsi:type="object">WirecardPoiPiaConfig</argument>
         </arguments>
     </type>
 </config>

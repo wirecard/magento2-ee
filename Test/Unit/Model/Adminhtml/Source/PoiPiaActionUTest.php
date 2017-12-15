@@ -29,46 +29,27 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Service;
+namespace Wirecard\ElasticEngine\Test\Model\Adminhtml\Source;
 
-use Magento\Payment\Gateway\ConfigFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\TransactionService;
+use Wirecard\ElasticEngine\Model\Adminhtml\Source\PoiPiaAction;
 
-/**
- * Class TransactionServiceFactory
- * @package Wirecard\ElasticEngine\Gateway\Service
- */
-class TransactionServiceFactory
+class PoiPiaActionUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ConfigFactoryInterface
-     */
-    private $paymentSdkConfigFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * TransactionServiceFactory constructor.
-     * @param LoggerInterface $logger
-     * @param ConfigFactoryInterface $paymentSdkConfigFactory
-     */
-    public function __construct(LoggerInterface $logger, ConfigFactoryInterface $paymentSdkConfigFactory)
+    public function testToOptionArray()
     {
-        $this->logger = $logger;
-        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
-    }
+        $poiPiaAction = new PoiPiaAction();
 
-    /**
-     * @param string $paymentName
-     * @return TransactionService
-     */
-    public function create($paymentName = null)
-    {
-        $txConfig = $this->paymentSdkConfigFactory->create($paymentName);
-        return new TransactionService($txConfig, $this->logger);
+        $actionArray = [
+            [
+                'value' => 'invoice',
+                'label' => 'On Invoice'
+            ],
+            [
+                'value' => 'advance',
+                'label' => 'In Advance'
+            ]
+        ];
+
+        $this->assertEquals($poiPiaAction->toOptionArray(), $actionArray);
     }
 }

@@ -105,7 +105,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $context->method('getMessageManager')->willReturn($this->messageManager);
 
         $postParams = $this->getMock(ParametersInterface::class);
-        $postParams->method('toArray')->willReturn(['test' => 'payload']);
+        $postParams->method('toArray')->willReturn(['MD' => 'payload', 'PaRes' => 'payload']);
 
         $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
         $this->request->method('getPost')->willReturn($postParams);
@@ -207,5 +207,115 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     private function isSecure()
     {
         return $this->equalTo(['_secure' => true]);
+    }
+
+    public function setUpForPayPal()
+    {
+        /**
+         * @var $context Context|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultFactory = $this->getMockBuilder(ResultFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->redirectResult = $this->getMockBuilder(Redirect::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultFactory->method('create')->willReturn($this->redirectResult);
+        $context->method('getResultFactory')->willReturn($resultFactory);
+
+        $this->messageManager = $this->getMock(ManagerInterface::class);
+        $context->method('getMessageManager')->willReturn($this->messageManager);
+
+        $postParams = $this->getMock(ParametersInterface::class);
+        $postParams->method('toArray')->willReturn(['eppresponse' => 'payload']);
+
+        $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
+        $this->request->method('getPost')->willReturn($postParams);
+        $this->request->method('getParams')->willReturn(['request_id' => '1234']);
+        $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
+
+        $context->method('getRequest')->willReturn($this->request);
+
+        $this->session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
+        /**
+         * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $transactionServiceFactory->method('create')->willReturn($this->transactionService);
+        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory);
+    }
+
+    public function testPayPalSuccess()
+    {
+        $this->setUpForPayPal();
+        $this->setIsPost(true);
+        $this->setIsGet(false);
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($successResponse);
+
+        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
+        $this->controller->execute();
+    }
+
+    public function setUpForRatePay()
+    {
+        /**
+         * @var $context Context|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultFactory = $this->getMockBuilder(ResultFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->redirectResult = $this->getMockBuilder(Redirect::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultFactory->method('create')->willReturn($this->redirectResult);
+        $context->method('getResultFactory')->willReturn($resultFactory);
+
+        $this->messageManager = $this->getMock(ManagerInterface::class);
+        $context->method('getMessageManager')->willReturn($this->messageManager);
+
+        $postParams = $this->getMock(ParametersInterface::class);
+        $postParams->method('toArray')->willReturn(['base64payload' => 'payload', 'psp_name' => 'payload']);
+
+        $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
+        $this->request->method('getPost')->willReturn($postParams);
+        $this->request->method('getParams')->willReturn(['request_id' => '1234']);
+        $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
+
+        $context->method('getRequest')->willReturn($this->request);
+
+        $this->session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
+        /**
+         * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $transactionServiceFactory->method('create')->willReturn($this->transactionService);
+        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory);
+    }
+
+    public function testRatePaySuccess()
+    {
+        $this->setUpForRatePay();
+        $this->setIsPost(true);
+        $this->setIsGet(false);
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $this->transactionService->method(self::HANDLE_RESPONSE)->willReturn($successResponse);
+
+        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
+        $this->controller->execute();
     }
 }

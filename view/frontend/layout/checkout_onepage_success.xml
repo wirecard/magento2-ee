@@ -1,4 +1,5 @@
-<?php
+<?xml version="1.0"?>
+<!--
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -28,47 +29,12 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
-
-namespace Wirecard\ElasticEngine\Gateway\Service;
-
-use Magento\Payment\Gateway\ConfigFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Wirecard\PaymentSdk\TransactionService;
-
-/**
- * Class TransactionServiceFactory
- * @package Wirecard\ElasticEngine\Gateway\Service
- */
-class TransactionServiceFactory
-{
-    /**
-     * @var ConfigFactoryInterface
-     */
-    private $paymentSdkConfigFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * TransactionServiceFactory constructor.
-     * @param LoggerInterface $logger
-     * @param ConfigFactoryInterface $paymentSdkConfigFactory
-     */
-    public function __construct(LoggerInterface $logger, ConfigFactoryInterface $paymentSdkConfigFactory)
-    {
-        $this->logger = $logger;
-        $this->paymentSdkConfigFactory = $paymentSdkConfigFactory;
-    }
-
-    /**
-     * @param string $paymentName
-     * @return TransactionService
-     */
-    public function create($paymentName = null)
-    {
-        $txConfig = $this->paymentSdkConfigFactory->create($paymentName);
-        return new TransactionService($txConfig, $this->logger);
-    }
-}
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="order.success.additional.info">
+            <block class="Wirecard\ElasticEngine\Block\Checkout\PoiPiaBlock" template="Wirecard_ElasticEngine::poipia.phtml" name="frontend.poipia" cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

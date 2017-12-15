@@ -54,8 +54,6 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class Notify extends Action
 {
-    const PROVIDER_TRANSACTION_ID = 'providerTransactionId';
-
     /**
      * @var TransactionServiceFactory
      */
@@ -157,27 +155,10 @@ class Notify extends Action
         }
 
         if ($response instanceof SuccessResponse) {
-            if ($order->getStatus() !== Order::STATE_COMPLETE) {
-                /*if ($response->isValidSignature()) {
-                    $this->updateOrderState($order, Order::STATE_PROCESSING);
-                } else {
-                    $this->updateOrderState($order, Order::STATUS_FRAUD);
-                    $this->logger->warning(sprintf('Possible fraud detected in notification for order id: %s',
-                        $orderId));
-                }*/
-                $this->updateOrderState($order, Order::STATE_PROCESSING);
+            if ($response->getPaymentMethod() === 'masterpass') {
+                return;
             }
-
-            /**
-             * @var $payment Order\Payment
-             */
-            $payment = $order->getPayment();
-            $this->setCanCaptureInvoice($response->getTransactionType());
-            $this->updatePaymentTransactionIds($payment, $response);
-            if ($this->canCaptureInvoice) {
-                $this->captureInvoice($order, $response);
-            }
-            $this->orderRepository->save($order);
+            $this->handleSuccess($order, $response);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
                 /**
@@ -191,6 +172,23 @@ class Notify extends Action
         } else {
             $this->logger->warning(sprintf('Unexpected result object for notifications.'));
         }
+    }
+
+    private function handleSuccess($order, $response)
+    {
+        if ($order->getStatus() !== Order::STATE_COMPLETE) {
+            $this->updateOrderState($order, Order::STATE_PROCESSING);
+        }
+        /**
+         * @var $payment Order\Payment
+         */
+        $payment = $order->getPayment();
+        $this->setCanCaptureInvoice($response->getTransactionType());
+        $this->updatePaymentTransactionIds($payment, $response);
+        if ($this->canCaptureInvoice) {
+            $this->captureInvoice($order, $response);
+        }
+        $this->orderRepository->save($order);
     }
 
     /**
@@ -218,34 +216,13 @@ class Notify extends Action
         $payment->setTransactionId($response->getTransactionId());
         $payment->setLastTransId($response->getTransactionId());
         $additionalInfo = [];
-        if ($response->getProviderTransactionId() !== null) {
-            $additionalInfo[self::PROVIDER_TRANSACTION_ID] = $response->getProviderTransactionId();
-        }
-        if ($response->getRequestId() !== null) {
-            $additionalInfo['requestId'] = $response->getRequestId();
-        }
-        if ($response->getProviderTransactionReference() !== null) {
-            $additionalInfo['providerTransactionReferenceId'] = $response->getProviderTransactionReference();
-        }
 
-        if ($response->getMaskedAccountNumber() !== null) {
-            $additionalInfo['maskedAccountNumber'] = $response->getMaskedAccountNumber();
+        $responseData = $response->getData();
+        if ($responseData !== []) {
+            foreach ($responseData as $key => $value) {
+                $additionalInfo[$key] = $value;
+            }
         }
-
-        if ($response->getCardTokenId() !== null) {
-            $additionalInfo['creditCardToken'] = $response->getCardTokenId();
-        }
-
-        try {
-            $additionalInfo['authorizationCode'] = $response->findElement('authorization-code');
-        } catch (MalformedResponseException $e) {
-            //Is only triggered if it is not included. e.g. not a credit card transaction
-        }
-
-        if ($response->getCardholderAuthenticationStatus() !== null) {
-            $additionalInfo['cardholderAuthenticationStatus'] = $response->getCardholderAuthenticationStatus();
-        }
-
         if ($additionalInfo !== []) {
             $payment->setTransactionAdditionalInfo(Order\Payment\Transaction::RAW_DETAILS, $additionalInfo);
         }
@@ -256,6 +233,9 @@ class Notify extends Action
         $transactionType = $response->getTransactionType();
         if ($this->canCaptureInvoice) {
             $transactionType = 'capture';
+        }
+        if ($transactionType == 'check-payer-response') {
+            $transactionType = 'payment';
         }
         $payment->addTransaction($transactionType);
 

@@ -37,6 +37,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -141,6 +142,19 @@ class ResponseHandler implements HandlerInterface
         $payment->setLastTransId($sdkResponse->getTransactionId());
         $payment->setIsTransactionClosed(false);
         $payment->setAdditionalInformation(self::TRANSACTION_ID, $sdkResponse->getTransactionId());
+        $data = $sdkResponse->getData();
+        $payment->setAdditionalInformation($data);
+        $additionalInfo = [];
+
+        if ($data !== []) {
+            foreach ($data as $key => $value) {
+                $additionalInfo[$key] = $value;
+            }
+        }
+        if ($additionalInfo !== []) {
+            $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $additionalInfo);
+        }
+
         $payment->addTransaction(TransactionInterface::TYPE_ORDER);
     }
 }

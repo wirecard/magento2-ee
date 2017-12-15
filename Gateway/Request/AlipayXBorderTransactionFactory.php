@@ -35,34 +35,25 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
-use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
-use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\SepaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class SepaTransactionFactory
+ * Class AlipayXBorderTransactionFactory
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
-class SepaTransactionFactory extends TransactionFactory
+class AlipayXBorderTransactionFactory extends TransactionFactory
 {
-    const REFUND_OPERATION = Operation::CREDIT;
-
+    const REFUND_OPERATION = Operation::CANCEL;
     /**
-     * @var SepaTransaction
+     * @var AlipayCrossborderTransaction
      */
     protected $transaction;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
 
     /**
      * @var StoreManagerInterface
@@ -75,36 +66,33 @@ class SepaTransactionFactory extends TransactionFactory
     private $accountHolderFactory;
 
     /**
-     * SepaTransactionFactory constructor.
+     * AlipayXBorderTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
-     * @param ConfigInterface $methodConfig
+     * @param AccountHolderFactory $accountHolderFactory
      * @param Repository $transactionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
-     * @param AccountHolderFactory $accountHolderFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
-        ConfigInterface $methodConfig,
+        AccountHolderFactory $accountHolderFactory,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
-        AccountHolderFactory $accountHolderFactory
+        FilterBuilder $filterBuilder
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction);
 
         $this->storeManager = $storeManager;
-        $this->methodConfig = $methodConfig;
+        $this->accountHolderFactory = $accountHolderFactory;
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
-        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**
@@ -116,35 +104,12 @@ class SepaTransactionFactory extends TransactionFactory
     public function create($commandSubject)
     {
         parent::create($commandSubject);
-
         /** @var PaymentDataObjectInterface $payment */
-        $paymentDO = $commandSubject[self::PAYMENT];
-        $additionalInfo = $paymentDO->getPayment()->getAdditionalInformation();
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
+        $billingAddress = $order->getBillingAddress();
 
-        $accountHolder = new AccountHolder();
-        $accountHolder->setFirstName($additionalInfo['accountFirstName']);
-        $accountHolder->setLastName($additionalInfo['accountLastName']);
-        $this->transaction->setAccountHolder($accountHolder);
-        $this->transaction->setIban($additionalInfo['bankAccountIban']);
-
-        if ($this->methodConfig->getValue('enable_bic')) {
-            $this->transaction->setBic($additionalInfo['bankBic']);
-        }
-        $mandate = new Mandate($additionalInfo['mandateId']);
-        $this->transaction->setMandate($mandate);
-
-        return $this->transaction;
-    }
-
-    /**
-     * @param array $commandSubject
-     * @return Transaction
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function capture($commandSubject)
-    {
-        parent::capture($commandSubject);
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
 
         return $this->transaction;
     }
@@ -159,12 +124,6 @@ class SepaTransactionFactory extends TransactionFactory
     {
         parent::refund($commandSubject);
 
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;

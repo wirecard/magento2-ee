@@ -78,29 +78,33 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->eeConfig = $this->getMock(ConfigInterface::class);
         $this->eeConfig->method(self::GET_VALUE)->withConsecutive(
-            ['credentials/base_url'],
-            ['credentials/http_user'],
-            ['credentials/http_pass'],
-            ['settings/public_key'],
-            ['settings/default_currency'],
-            ['settings/default_currency']
-        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key', 'EUR', 'EUR');
+            ['base_url'],
+            ['http_user'],
+            ['http_pass']
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass');
 
         $methodConfigPayPal = $this->getMock(ConfigInterface::class);
         $methodConfigPayPal->method(self::GET_VALUE)->withConsecutive(
+            ['base_url'],
+            ['http_user'],
+            ['http_pass'],
             ['merchant_account_id'],
             ['secret']
-        )->willReturnOnConsecutiveCalls('account_id_123', 'secret_key');
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'account_id_123', 'secret_key');
 
         $methodConfigCreditCard = $this->getMock(ConfigInterface::class);
         $methodConfigCreditCard->method(self::GET_VALUE)->willReturnCallback(function ($key) {
             $map = [
+                'base_url' => self::BASE_URL,
+                'http_user' => 'user',
+                'http_pass' => 'pass',
                 'merchant_account_id' => 'account_ssl',
                 'secret' => 'secret_ssl',
                 'three_d_merchant_account_id' => 'account_id_three',
                 'three_d_secret' => 'secret_three',
                 'ssl_max_limit' => 100.0,
-                'three_d_min_limit' => 50.0
+                'three_d_min_limit' => 50.0,
+                'default_currency' => 'EUR'
             ];
 
             return $map[$key];
@@ -109,6 +113,9 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $methodConfigSepa = $this->getMock(ConfigInterface::class);
         $methodConfigSepa->method(self::GET_VALUE)->willReturnCallback(function ($key) {
             $map = [
+                'base_url' => self::BASE_URL,
+                'http_user' => 'user',
+                'http_pass' => 'pass',
                 'merchant_account_id' => 'account_id_123',
                 'secret' => 'secret_key',
                 'creditor_id' => '1234'
@@ -119,9 +126,12 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $methodConfigIdeal = $this->getMock(ConfigInterface::class);
         $methodConfigIdeal->method(self::GET_VALUE)->withConsecutive(
+            ['base_url'],
+            ['http_user'],
+            ['http_pass'],
             ['merchant_account_id'],
             ['secret']
-        )->willReturnOnConsecutiveCalls('account_id_123', 'secret_key');
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'account_id_123', 'secret_key');
 
         $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)
             ->disableOriginalConstructor()->getMock();
@@ -156,7 +166,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateAddsPayPal()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create();
+        $configFromFactory = $this->configFactory->create('paypal');
         $this->assertInstanceOf(Config::class, $configFromFactory);
 
         $paypalConfig = new PaymentMethodConfig(
@@ -170,7 +180,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateAddsCreditCard()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create();
+        $configFromFactory = $this->configFactory->create(CreditCardTransaction::NAME);
         $this->assertInstanceOf(Config::class, $configFromFactory);
 
         $creditCardConfig = new CreditCardConfig(
@@ -186,7 +196,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateAddsSepa()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create();
+        $configFromFactory = $this->configFactory->create(SepaTransaction::NAME);
         $this->assertInstanceOf(Config::class, $configFromFactory);
 
         $sepaConfig = new SepaConfig(
@@ -200,7 +210,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateAddsIdeal()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create();
+        $configFromFactory = $this->configFactory->create(IdealTransaction::NAME);
         $this->assertInstanceOf(Config::class, $configFromFactory);
 
         $idealConfig = new PaymentMethodConfig(
@@ -214,7 +224,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateSetsShopInfo()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create();
+        $configFromFactory = $this->configFactory->create('paypal');
 
         $this->assertEquals($configFromFactory->getShopHeader(), ['headers' => [
             'shop-system-name' => 'Magento Community Edition',
