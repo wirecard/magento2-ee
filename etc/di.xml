@@ -894,4 +894,9 @@
             <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </type>
+    <type name="Wirecard\ElasticEngine\Block\Checkout\PoiPiaBlock">
+        <arguments>
+            <argument name="methodConfig" xsi:type="object">WirecardPoiPiaConfig</argument>
+        </arguments>
+    </type>
 </config>

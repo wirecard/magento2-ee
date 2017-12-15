@@ -35,6 +35,8 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\PaymentSdk\Entity\CustomField;
+use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\PoiPiaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -97,6 +99,9 @@ class PoiPiaTransactionFactory extends TransactionFactory
         $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('poipia_action', $payment->getPayment()->getAdditionalInformation('poipia_action')));
+        $this->transaction->setCustomFields($customFields);
 
         return $this->transaction;
     }
