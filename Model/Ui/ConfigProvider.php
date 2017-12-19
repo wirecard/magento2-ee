@@ -115,7 +115,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE) +
                 $this->getConfigForPaymentMethod(self::POIPIA_CODE) +
                 $this->getConfigForPaymentMethod(self::MASTERPASS_CODE) +
-                $this->getConfigForCreditCard(self::UPI_CODE)
+                $this->getConfigForUpi(self::UPI_CODE)
         ];
     }
 
@@ -173,6 +173,22 @@ class ConfigProvider implements ConfigProviderInterface
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale), true)
+            ]
+        ];
+    }
+
+    /**
+     * @param $paymentMethodName
+     * @return array
+     */
+    private function getConfigForUpi($paymentMethodName)
+    {
+        $locale = $this->store->getLocale();
+        $transactionService = $this->transactionServiceFactory->create('unionpayinternational');
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'seamless_request_data' => json_decode($transactionService->getDataForUpiUi($locale), true)
             ]
         ];
     }

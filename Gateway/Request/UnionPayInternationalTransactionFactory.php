@@ -40,9 +40,9 @@ use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 
 /**
  * Class UnionPayInternationalTransactionFactory
@@ -53,7 +53,7 @@ class UnionPayInternationalTransactionFactory extends TransactionFactory
     const REFUND_OPERATION = Operation::REFUND;
 
     /**
-     * @var CreditCardTransaction
+     * @var UpiTransaction
      */
     protected $transaction;
 

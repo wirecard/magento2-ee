@@ -890,7 +890,7 @@
 
     <virtualType name="UnionPayInternationalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\UnionPayInternationalTransactionFactory">
         <arguments>
-            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\CreditCardTransaction</argument>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\UpiTransaction</argument>
         </arguments>
     </virtualType>
 
@@ -927,7 +927,7 @@
                 <item name="alipay-xborder" xsi:type="object">WirecardAlipayXBorderConfig</item>
                 <item name="wiretransfer" xsi:type="object">WirecardPoiPiaConfig</item>
                 <item name="masterpass" xsi:type="object">WirecardMasterpassConfig</item>
-                <item name="creditcard" xsi:type="object">WirecardUnionPayInternationalConfig</item>
+                <item name="unionpayinternational" xsi:type="object">WirecardUnionPayInternationalConfig</item>
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
