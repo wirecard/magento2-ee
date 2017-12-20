@@ -40,8 +40,12 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
+use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\IdealTransactionFactory;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\IdealBic;
@@ -57,6 +61,10 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $resolver;
 
     private $storeManager;
+
+    private $basketFactory;
+
+    private $accountHolderFactory;
 
     private $config;
 
@@ -81,6 +89,12 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
         $this->storeManager->method('getStore')->willReturn($store);
+
+        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
+        $this->basketFactory->method('create')->willReturn(new Basket());
+
+        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
+        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
 
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
 
@@ -109,7 +123,8 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new IdealTransaction();
-        $transactionFactory = new IdealTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager, $transaction, $this->config);
+        $transactionFactory = new IdealTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
 
