@@ -635,7 +635,7 @@
                     "email": "igor@wiedler.ch"
                 },
                 {
-                    "name": "Robert Schönthal",
+                    "name": "Robert Sch?nthal",
                     "email": "seroscho@googlemail.com"
                 }
             ],
@@ -1031,7 +1031,7 @@
                     "email": "flyingmana@googlemail.com"
                 },
                 {
-                    "name": "Jörg Weller",
+                    "name": "J?rg Weller",
                     "email": "weller@flagbit.de"
                 },
                 {
@@ -1264,7 +1264,7 @@
                     "homepage": "https://github.com/agar"
                 },
                 {
-                    "name": "Martin Jantošovič",
+                    "name": "Martin Janto?ovi?",
                     "homepage": "https://github.com/Mordred"
                 },
                 {
@@ -1332,7 +1332,7 @@
                     "email": "typo3-coding@oliverklee.de"
                 },
                 {
-                    "name": "Roman Ožana",
+                    "name": "Roman O?ana",
                     "email": "ozana@omdesign.cz"
                 }
             ],
@@ -1399,7 +1399,7 @@
                     "role": "Developer"
                 },
                 {
-                    "name": "Hans-Jürgen Petrich",
+                    "name": "Hans-J?rgen Petrich",
                     "email": "petrich@tronic-media.com",
                     "role": "Developer"
                 },
@@ -2104,7 +2104,7 @@
             ],
             "authors": [
                 {
-                    "name": "Túbal Martín",
+                    "name": "T?bal Mart?n",
                     "homepage": "http://tubalmartin.me/"
                 }
             ],
@@ -2121,16 +2121,16 @@
         },
         {
             "name": "wirecard/payment-sdk-php",
-            "version": "1.0.8",
+            "version": "1.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "2f33b584a7ba7a4e58f3a6b69c6b799c17778898"
+                "reference": "32581ff7c599d3afe20beb0687fe7712288ff4be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/2f33b584a7ba7a4e58f3a6b69c6b799c17778898",
-                "reference": "2f33b584a7ba7a4e58f3a6b69c6b799c17778898",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/32581ff7c599d3afe20beb0687fe7712288ff4be",
+                "reference": "32581ff7c599d3afe20beb0687fe7712288ff4be",
                 "shasum": ""
             },
             "require": {
@@ -3508,7 +3508,7 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "a component that aids in manipulating and validating » Uniform Resource Identifiers (URIs)",
+            "description": "a component that aids in manipulating and validating ? Uniform Resource Identifiers (URIs)",
             "homepage": "https://github.com/zendframework/zend-uri",
             "keywords": [
                 "uri",
@@ -3904,7 +3904,7 @@
             ],
             "authors": [
                 {
-                    "name": "Dariusz Rumiński",
+                    "name": "Dariusz Rumi?ski",
                     "email": "dariusz.ruminski@gmail.com"
                 },
                 {
