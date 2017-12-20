@@ -81,6 +81,7 @@ class BasketFactory
      * @param Boolean $isCreate
      * @return Basket
      * @throws \InvalidArgumentException
+     * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
      */
     public function create($order, $transaction, $isCreate = false)
