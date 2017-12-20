@@ -47,9 +47,11 @@ use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
+use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\MasterpassTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
@@ -65,6 +67,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $resolver;
 
     private $storeManager;
+
+    private $basketFactory;
 
     private $accountHolderFactory;
 
@@ -103,6 +107,9 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
         $address->method('getFirstname')->willReturn('Jane');
         $address->method('getLastname')->willReturn('Doe');
+
+        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
+        $this->basketFactory->method('create')->willReturn(new Basket());
 
         $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
         $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
@@ -150,7 +157,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -161,7 +169,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -172,7 +181,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedRefundTransaction();
 
@@ -183,7 +193,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->repository, $this->filterBuilder, $this->searchCriteriaBuilder, $this->accountHolderFactory);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }

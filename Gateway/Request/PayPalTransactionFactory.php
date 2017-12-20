@@ -118,13 +118,6 @@ class PayPalTransactionFactory extends TransactionFactory
             $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction, true));
         }
 
-        if ($this->methodConfig->getValue('send_descriptor')) {
-            $this->transaction->setDescriptor(sprintf('%s %s',
-                substr($this->storeManager->getStore()->getName(), 0, 9),
-                $this->orderId
-            ));
-        }
-
         return $this->transaction;
     }
 
