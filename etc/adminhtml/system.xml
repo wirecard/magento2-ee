@@ -140,6 +140,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_creditcard" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Credit Card</label>
@@ -199,6 +204,11 @@
                        showInStore="0">
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_maestro" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -260,6 +270,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_sepa" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway SEPA</label>
@@ -313,6 +328,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_sofortbanking" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Pay now.</label>
@@ -345,6 +365,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_ideal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway iDEAL</label>
@@ -376,6 +401,11 @@
                        showInStore="0">
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_ratepayinvoice" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -428,6 +458,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_ratepayinstall" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Guaranteed Installment</label>
@@ -479,6 +514,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_alipayxborder" translate="label" type="text" sortOrder="10"
                    showInDefault="1" showInWebsite="1" showInStore="1">
@@ -514,6 +554,11 @@
                        showInStore="0">
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_poipia" translate="label" type="text" sortOrder="10"
@@ -556,6 +601,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_masterpass" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway Masterpass</label>
@@ -593,6 +643,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
             <group id="wirecard_elasticengine_unionpayinternational" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Wirecard Payment Gateway UnionPay International</label>
@@ -629,6 +684,11 @@
                        showInStore="0">
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send additional Information</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>
