@@ -323,6 +323,26 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <merchant_account_id>8bc8ed6d-81a8-43be-bd7b-75b008f89fa6</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
             </wirecard_elasticengine_masterpass>
+            <wirecard_elasticengine_unionpayinternational>
+                <title>Wirecard UnionPay International</title>
+                <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APILUHN-CARD</http_user>
+                <http_pass>8mhwavKVb91T</http_pass>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>UnionPayInternationalFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>authorize</payment_action>
+                <merchant_account_id>c6e9331c-5c1f-4fc6-8a08-ef65ce09ddb0</merchant_account_id>
+                <secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</secret>
+            </wirecard_elasticengine_unionpayinternational>
         </payment>
     </default>
 </config>

@@ -52,6 +52,7 @@ class ConfigProvider implements ConfigProviderInterface
     const ALIPAYXBORDER_CODE = 'wirecard_elasticengine_alipayxborder';
     const POIPIA_CODE = 'wirecard_elasticengine_poipia';
     const MASTERPASS_CODE = 'wirecard_elasticengine_masterpass';
+    const UPI_CODE = 'wirecard_elasticengine_unionpayinternational';
 
     /**
      * @var Repository
@@ -113,7 +114,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForRatepay(self::RATEPAYINSTALL_CODE) +
                 $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE) +
                 $this->getConfigForPaymentMethod(self::POIPIA_CODE) +
-                $this->getConfigForPaymentMethod(self::MASTERPASS_CODE)
+                $this->getConfigForPaymentMethod(self::MASTERPASS_CODE) +
+                $this->getConfigForUpi(self::UPI_CODE)
         ];
     }
 
@@ -171,6 +173,22 @@ class ConfigProvider implements ConfigProviderInterface
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale), true)
+            ]
+        ];
+    }
+
+    /**
+     * @param $paymentMethodName
+     * @return array
+     */
+    private function getConfigForUpi($paymentMethodName)
+    {
+        $locale = $this->store->getLocale();
+        $transactionService = $this->transactionServiceFactory->create('unionpayinternational');
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'seamless_request_data' => json_decode($transactionService->getDataForUpiUi($locale), true)
             ]
         ];
     }
