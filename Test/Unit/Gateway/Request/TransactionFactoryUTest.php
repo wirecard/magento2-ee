@@ -160,4 +160,23 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
         $transactionFactory->create($this->commandSubject);
     }
+
+    public function testCreateWithAdditionalInformation()
+    {
+        $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
+
+        $transactionMock = $this->getMock(Transaction::class);
+        $transactionMock->method('setDescriptor')->willReturn('Testshop');
+        $transactionMock->method('setAccountHolder')->willReturn(new AccountHolder());
+        $transactionMock->method('setShipping')->willReturn(new AccountHolder());
+        $transactionMock->method('setOrderNumber')->willReturn('1');
+        $transactionMock->method('setBasket')->willReturn(new Basket());
+        $transactionMock->method('setIpAddress')->willReturn('127.0.0.1');
+        $transactionMock->method('setConsumerId')->willReturn('1');
+
+        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock,
+            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+
+        $transactionFactory->create($this->commandSubject);
+    }
 }
