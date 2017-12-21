@@ -180,10 +180,22 @@ class TransactionFactory
 
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
-        /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
-
-        $this->transaction->setParentTransactionId($transaction->getTxnId());
+        $transactions = $transactionList->getItems();
+        $authTransaction = null;
+        if(is_array($transactions)) {
+            foreach ($transactions as $id => $item) {
+                if ($item->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION) {
+                    /** @var MageTransaction $transaction */
+                    $authTransaction = $item;
+                }
+            }
+            if ($authTransaction === null) {
+                throw new \InvalidArgumentException('No valid Parenttransaction available.');
+            }
+        } else {
+            $authTransaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+        }
+        $this->transaction->setParentTransactionId($authTransaction->getTxnId());
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
