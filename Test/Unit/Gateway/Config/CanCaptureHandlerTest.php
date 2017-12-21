@@ -50,7 +50,7 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
         $transactionExtensionInterface = $this->getMockBuilder(TransactionExtensionInterface::class)->disableOriginalConstructor()->getMock();
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $transactionList->method('getLastItem')->willReturn($this->transaction);
-        $transactions = array($this->transaction);
+        $transactions = [$this->transaction];
         $transactionList->method('getItems')->willReturn($transactions);
         $this->transaction->method('getTxnType')->willReturn('authorization');
         $this->transaction->method('setExtensionAttributes')->with($transactionExtensionInterface)->willReturn($this->transaction);

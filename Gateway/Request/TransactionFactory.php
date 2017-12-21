@@ -182,7 +182,7 @@ class TransactionFactory
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         $transactions = $transactionList->getItems();
         $authTransaction = null;
-        if(is_array($transactions)) {
+        if (is_array($transactions)) {
             foreach ($transactions as $id => $item) {
                 if ($item->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION) {
                     /** @var MageTransaction $transaction */
