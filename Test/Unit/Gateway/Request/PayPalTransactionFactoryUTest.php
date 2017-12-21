@@ -235,24 +235,9 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         return $expected;
     }
 
-    public function testCreateSetsDescriptor()
-    {
-        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
-
-        $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setDescriptor('My shop n ' . self::ORDER_ID);
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
-    }
-
     public function testCreateSetsBasket()
     {
-        $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
+        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
 
         $transaction = new PayPalTransaction();
         $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,

@@ -48,8 +48,10 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory;
+use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
@@ -73,6 +75,8 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $order;
 
     private $commandSubject;
+
+    private $basketFactory;
 
     private $accountHolderFactory;
 
@@ -99,6 +103,9 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->storeManager->method('getStore')->willReturn($store);
 
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
+
+        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
+        $this->basketFactory->method('create')->willReturn(new Basket());
 
         $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
         $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
@@ -147,7 +154,7 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testRefundOperationSetter()
     {
         $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new AlipayCrossborderTransaction(), $this->accountHolderFactory, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            new AlipayCrossborderTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -156,7 +163,7 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new AlipayCrossborderTransaction();
         $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->accountHolderFactory, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -210,7 +217,7 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction->setParentTransactionId('123456PARENT');
 
         $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->accountHolderFactory, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }

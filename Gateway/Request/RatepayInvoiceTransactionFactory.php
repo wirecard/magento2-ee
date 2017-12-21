@@ -58,24 +58,6 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
      * @var RatepayInvoiceTransaction
      */
     protected $transaction;
-    /**
-     * @var BasketFactory
-     */
-    private $basketFactory;
-    /**
-     * @var AccountHolderFactory
-     */
-    private $accountHolderFactory;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
 
     /**
      * @var Session
@@ -109,12 +91,7 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         FilterBuilder $filterBuilder,
         Session $session
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction);
-
-        $this->storeManager = $storeManager;
-        $this->basketFactory = $basketFactory;
-        $this->accountHolderFactory = $accountHolderFactory;
-        $this->methodConfig = $methodConfig;
+        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
 
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;

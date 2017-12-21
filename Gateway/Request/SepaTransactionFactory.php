@@ -60,51 +60,35 @@ class SepaTransactionFactory extends TransactionFactory
     protected $transaction;
 
     /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var AccountHolderFactory
-     */
-    private $accountHolderFactory;
-
-    /**
      * SepaTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
+     * @param BasketFactory $basketFactory
+     * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
      * @param Repository $transactionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
-     * @param AccountHolderFactory $accountHolderFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
+        BasketFactory $basketFactory,
+        AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
-        AccountHolderFactory $accountHolderFactory
+        FilterBuilder $filterBuilder
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction);
+        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
 
-        $this->storeManager = $storeManager;
-        $this->methodConfig = $methodConfig;
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
-        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**
