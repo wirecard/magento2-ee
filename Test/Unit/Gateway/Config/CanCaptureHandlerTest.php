@@ -15,6 +15,7 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Api\Data\TransactionExtensionInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
@@ -49,6 +50,8 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
         $transactionExtensionInterface = $this->getMockBuilder(TransactionExtensionInterface::class)->disableOriginalConstructor()->getMock();
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $transactionList->method('getLastItem')->willReturn($this->transaction);
+        $transactions = array($this->transaction);
+        $transactionList->method('getItems')->willReturn($transactions);
         $this->transaction->method('getTxnType')->willReturn('authorization');
         $this->transaction->method('setExtensionAttributes')->with($transactionExtensionInterface)->willReturn($this->transaction);
         $transactionList->method('getItemById')->willReturn($this->transaction);
@@ -72,6 +75,10 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
+        $orderPayment = $this->getMockBuilder(OrderPaymentInterface::class)->disableOriginalConstructor()->getMock();
+        $orderPayment->method('getAmountPaid')->willReturn(1.0);
+        $orderPayment->method('getAmountOrdered')->willReturn(2.0);
+        $this->payment->method('getPayment')->willReturn($orderPayment);
         $this->canCaptureHandler->handle(['payment' => $this->payment]);
     }
 }
