@@ -823,12 +823,17 @@
     <virtualType name="CreditCardTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\CreditCardTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\CreditCardTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="SepaTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
         </arguments>
     </virtualType>
@@ -836,6 +841,8 @@
     <virtualType name="SofortTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SofortTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SofortTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardSofortConfig</argument>
         </arguments>
     </virtualType>
@@ -843,6 +850,9 @@
     <virtualType name="IdealTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\IdealTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\IdealTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardIdealConfig</argument>
         </arguments>
     </virtualType>
 
@@ -867,6 +877,7 @@
     <virtualType name="AlipayXBorderTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardAlipayXBorderConfig</argument>
         </arguments>
@@ -875,6 +886,7 @@
     <virtualType name="PoiPiaTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PoiPiaTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\PoiPiaTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardPoiPiaConfig</argument>
         </arguments>
@@ -883,6 +895,7 @@
     <virtualType name="MasterpassTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\MasterpassTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\MasterpassTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
         </arguments>
@@ -891,6 +904,9 @@
     <virtualType name="UnionPayInternationalTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\UnionPayInternationalTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\UpiTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardUpiConfig</argument>
         </arguments>
     </virtualType>
 

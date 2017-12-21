@@ -35,6 +35,7 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
@@ -58,16 +59,14 @@ class CreditCardTransactionFactory extends TransactionFactory
     protected $transaction;
 
     /**
-     * @var AccountHolderFactory
-     */
-    protected $accountHolderFactory;
-
-    /**
      * CreditCardTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
+     * @param BasketFactory $basketFactory
+     * @param AccountHolderFactory $accountHolderFactory
+     * @param ConfigInterface $methodConfig
      * @param Repository $transactionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
@@ -78,17 +77,18 @@ class CreditCardTransactionFactory extends TransactionFactory
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
+        BasketFactory $basketFactory,
+        AccountHolderFactory $accountHolderFactory,
+        ConfigInterface $methodConfig,
         Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
-        AccountHolderFactory $accountHolderFactory
+        FilterBuilder $filterBuilder
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction);
+        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
 
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
-        $this->accountHolderFactory = $accountHolderFactory;
     }
 
     /**

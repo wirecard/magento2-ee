@@ -56,24 +56,6 @@ class PayPalTransactionFactory extends TransactionFactory
      * @var PayPalTransaction
      */
     protected $transaction;
-    /**
-     * @var BasketFactory
-     */
-    private $basketFactory;
-    /**
-     * @var AccountHolderFactory
-     */
-    private $accountHolderFactory;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
 
     /**
      * PayPalTransactionFactory constructor.
@@ -100,12 +82,7 @@ class PayPalTransactionFactory extends TransactionFactory
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction);
-
-        $this->storeManager = $storeManager;
-        $this->basketFactory = $basketFactory;
-        $this->accountHolderFactory = $accountHolderFactory;
-        $this->methodConfig = $methodConfig;
+        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
 
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -139,13 +116,6 @@ class PayPalTransactionFactory extends TransactionFactory
 
         if ($this->methodConfig->getValue('send_shopping_basket')) {
             $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction, true));
-        }
-
-        if ($this->methodConfig->getValue('send_descriptor')) {
-            $this->transaction->setDescriptor(sprintf('%s %s',
-                substr($this->storeManager->getStore()->getName(), 0, 9),
-                $this->orderId
-            ));
         }
 
         return $this->transaction;
