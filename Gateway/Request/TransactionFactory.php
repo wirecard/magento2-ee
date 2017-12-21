@@ -195,7 +195,14 @@ class TransactionFactory
         } else {
             $authTransaction = $transactionList->getItemById(max($transactionList->getAllIds()));
         }
+        //Subtotal for capture_partial
+        $captureAmount = $commandSubject[self::AMOUNT];
+        $order = $payment->getOrder();
+        $amount = new Amount($captureAmount, $order->getCurrencyCode());
+
         $this->transaction->setParentTransactionId($authTransaction->getTxnId());
+        $this->transaction->setAmount($amount);
+
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
