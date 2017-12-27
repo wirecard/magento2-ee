@@ -43,6 +43,7 @@ use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
@@ -80,9 +81,9 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $payment;
 
-    private $order;
+    private $paymentDo;
 
-    private $paymentInfo;
+    private $order;
 
     private $commandSubject;
 
@@ -131,38 +132,24 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
-        $this->paymentInfo = $this->getMock(InfoInterface::class);
-
-        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
+        $additionalInfo = [
+            'customerDob' => '1973-12-07'
+        ];
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
+        $this->payment->method('getAdditionalInformation')->willReturn($additionalInfo);
+        $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->payment->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getPayment')->willReturn($this->payment);
 
-        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
-
-        $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
-        $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
-        $transactionList = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
-        $transactionList->method('getAllIds')->willReturn([1, 2]);
+        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
 
         $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
             ->getMock();
-        $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
-        $this->searchCriteriaBuilder->method('addSortOrder')->willReturn($this->searchCriteriaBuilder);
-        $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
-
         $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $this->repository->method('getList')->willReturn($transactionList);
-
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
-        $this->transaction->method('getTxnId')->willReturn('123456PARENT');
-        $transactionList->method('getItemById')->willReturn($this->transaction);
-        $transactionList->method('getLastItem')->willReturn($this->transaction);
-
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
-        $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
-        $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
-        $this->filterBuilder->method('create')->willReturn($filter);
-
         $this->session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
     }
 
@@ -242,17 +229,6 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     private function minimumExpectedTransaction()
     {
-        $additionalInfo = [
-            'customerDob' => '1973-12-07'
-        ];
-        $this->payment->expects(static::once())
-            ->method('getPayment')
-            ->willReturn($this->paymentInfo);
-
-        $this->paymentInfo->expects(static::once())
-            ->method('getAdditionalInformation')
-            ->willReturn($additionalInfo);
-
         $expected = new RatepayInvoiceTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
@@ -301,7 +277,6 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedRefundTransaction()
     {
         $expected = new RatepayInvoiceTransaction();
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
