@@ -37,7 +37,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -70,9 +70,9 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $payment;
 
-    private $order;
+    private $paymentDo;
 
-    private $paymentInfo;
+    private $order;
 
     private $commandSubject;
 
@@ -109,15 +109,16 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getShippingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
-        $this->paymentInfo = $this->getMock(InfoInterface::class);
+
         $addInfo = ['bankBic' => IdealBic::INGBNL2A];
-        $this->paymentInfo->method('getAdditionalInformation')->willReturn($addInfo);
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
+        $this->payment->method('getAdditionalInformation')->willReturn($addInfo);
+        $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)->disableOriginalConstructor()->getMock();
+        $this->paymentDo->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getPayment')->willReturn($this->payment);
 
-        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)->disableOriginalConstructor()->getMock();
-        $this->payment->method('getOrder')->willReturn($this->order);
-        $this->payment->method('getPayment')->willReturn($this->paymentInfo);
-
-        $this->commandSubject = ['payment' => $this->payment];
+        $this->commandSubject = ['payment' => $this->paymentDo];
     }
 
     public function testCreateMinimum()

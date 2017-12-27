@@ -31,9 +31,7 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteria;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
@@ -41,9 +39,9 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
-use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -75,6 +73,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $config;
 
     private $payment;
+
+    private $paymentDo;
 
     private $order;
 
@@ -121,36 +121,20 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
-        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
+        $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->payment->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getPayment')->willReturn($this->payment);
 
-        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
-
-        $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
-        $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
-        $transactionList = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
-        $transactionList->method('getAllIds')->willReturn([1, 2]);
+        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
 
         $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
             ->getMock();
-
-        $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
-        $this->searchCriteriaBuilder->method('addSortOrder')->willReturn($this->searchCriteriaBuilder);
-        $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
-
         $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $this->repository->method('getList')->willReturn($transactionList);
-
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
-        $this->transaction->method('getTxnId')->willReturn('123456PARENT');
-        $transactionList->method('getItemById')->willReturn($this->transaction);
-        $transactionList->method('getLastItem')->willReturn($this->transaction);
-
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
-        $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
-        $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
-        $this->filterBuilder->method('create')->willReturn($filter);
     }
 
     public function testCreateMinimum()
@@ -250,7 +234,6 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedRefundTransaction()
     {
         $expected = new MasterpassTransaction();
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
