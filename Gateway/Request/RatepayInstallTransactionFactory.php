@@ -32,13 +32,10 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -73,9 +70,6 @@ class RatepayInstallTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param Repository $transactionRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param FilterBuilder $filterBuilder
      * @param Session $session
      */
     public function __construct(
@@ -86,16 +80,10 @@ class RatepayInstallTransactionFactory extends TransactionFactory
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig,
-        Repository $transactionRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
         Session $session
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
 
-        $this->transactionRepository = $transactionRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterBuilder = $filterBuilder;
         $this->checkoutSession = $session;
     }
 

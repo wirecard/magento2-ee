@@ -31,8 +31,6 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
@@ -41,7 +39,6 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -77,12 +74,6 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $order;
 
     private $commandSubject;
-
-    private $repository;
-
-    private $searchCriteriaBuilder;
-
-    private $filterBuilder;
 
     private $transaction;
 
@@ -143,18 +134,13 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
 
-        $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
-            ->getMock();
-        $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
-        $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
     }
 
     public function testRefundOperationSetter()
     {
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new SepaTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder);
+            new SepaTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
         $expected = Operation::CREDIT;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -163,8 +149,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -175,8 +160,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -187,8 +171,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedRefundTransaction();
 
@@ -200,8 +183,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
         $transaction = new SepaTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository,
-            $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
         $expected->setBic('WIREDEMMXXX');

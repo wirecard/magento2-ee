@@ -31,15 +31,12 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
@@ -78,21 +75,6 @@ class TransactionFactory
      * @var string
      */
     protected $orderId;
-
-    /**
-     * @var Repository $transactionRepository
-     */
-    protected $transactionRepository;
-
-    /**
-     * @var SearchCriteriaBuilder $searchCriteriaBuilder
-     */
-    protected $searchCriteriaBuilder;
-
-    /**
-     * @var FilterBuilder $filterBuilder
-     */
-    protected $filterBuilder;
 
     /**
      * @var string

@@ -68,9 +68,6 @@ class SepaTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param Repository $transactionRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -79,16 +76,9 @@ class SepaTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig,
-        Repository $transactionRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        ConfigInterface $methodConfig
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
-
-        $this->transactionRepository = $transactionRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterBuilder = $filterBuilder;
     }
 
     /**
