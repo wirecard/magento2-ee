@@ -40,8 +40,10 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)->disableOriginalConstructor()->getMock();
         $item = $this->getMockBuilder(OrderItemInterface::class)->disableOriginalConstructor()->getMock();
         $item->method('getPriceInclTax')->willReturn(1.0);
+        $zeroItem = $this->getMockBuilder(OrderItemInterface::class)->disableOriginalConstructor()->getMock();
+        $zeroItem->method('getPriceInclTax')->willReturn(0.0);
         $this->order->method('getItems')->willReturn([
-            $item
+            $item, $zeroItem
         ]);
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
