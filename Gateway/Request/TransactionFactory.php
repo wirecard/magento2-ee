@@ -36,10 +36,10 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction as MageTransaction;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
-use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
@@ -163,6 +163,8 @@ class TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
+
+        /** @var OrderAdapterInterface $order */
         $order = $payment->getOrder();
 
         $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
@@ -203,42 +205,20 @@ class TransactionFactory
             throw new \InvalidArgumentException('Payment data object should be provided.');
         }
 
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $this->orderId = $payment->getOrder()->getId();
+        /** @var PaymentDataObjectInterface $paymentDo */
+        $paymentDo = $commandSubject[self::PAYMENT];
 
-        $orderIdFilter = $this->filterBuilder->setField('order_id')
-            ->setValue($this->orderId)
-            ->create();
+        /** @var OrderAdapterInterface $order */
+        $order = $paymentDo->getOrder();
 
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter($orderIdFilter)
-            ->addSortOrder('order_id', 'ASC')
-            ->create();
+        /** @var Payment $payment */
+        $payment = $paymentDo->getPayment();
 
-        /** @var Collection $transactionList */
-        $transactionList = $this->transactionRepository->getList($searchCriteria);
-        $transactions = $transactionList->getItems();
-        $authTransaction = null;
-        if (is_array($transactions)) {
-            foreach ($transactions as $id => $item) {
-                if ($item->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION) {
-                    /** @var MageTransaction $transaction */
-                    $authTransaction = $item;
-                }
-            }
-            if ($authTransaction === null) {
-                throw new \InvalidArgumentException('No valid Parenttransaction available.');
-            }
-        } else {
-            $authTransaction = $transactionList->getItemById(max($transactionList->getAllIds()));
-        }
-        //Subtotal for capture_partial
+        $this->orderId = $order->getId();
         $captureAmount = $commandSubject[self::AMOUNT];
-        $order = $payment->getOrder();
         $amount = new Amount($captureAmount, $order->getCurrencyCode());
 
-        $this->transaction->setParentTransactionId($authTransaction->getTxnId());
+        $this->transaction->setParentTransactionId($payment->getParentTransactionId());
         $this->transaction->setAmount($amount);
 
         $this->transaction->setEntryMode('ecommerce');
@@ -262,31 +242,20 @@ class TransactionFactory
             throw new \InvalidArgumentException('Payment data object should be provided.');
         }
 
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $this->orderId = $payment->getOrder()->getId();
+        /** @var PaymentDataObjectInterface $paymentDo */
+        $paymentDo = $commandSubject[self::PAYMENT];
 
-        $orderIdFilter = $this->filterBuilder->setField('order_id')
-            ->setValue($this->orderId)
-            ->create();
+        /** @var OrderAdapterInterface $order */
+        $order = $paymentDo->getOrder();
 
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter($orderIdFilter)
-            ->addSortOrder('order_id', 'ASC')
-            ->create();
+        /** @var Payment $payment */
+        $payment = $paymentDo->getPayment();
 
-        /** @var Collection $transactionList */
-        $transactionList = $this->transactionRepository->getList($searchCriteria);
-        /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
-        $this->transactionId = $transaction->getTxnId();
-
+        $this->orderId = $order->getId();
+        $this->transactionId = $payment->getParentTransactionId();
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount($commandSubject['amount'], $payment->getOrder()->getCurrencyCode()));
-
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+        $this->transaction->setAmount(new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode()));
 
         return $this->transaction;
     }

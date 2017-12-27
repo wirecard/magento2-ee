@@ -87,6 +87,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -135,6 +136,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -160,6 +162,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
@@ -228,6 +231,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -254,6 +258,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -280,6 +285,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -322,6 +328,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
@@ -343,6 +350,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
