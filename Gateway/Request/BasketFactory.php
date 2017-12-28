@@ -35,6 +35,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -136,6 +137,73 @@ class BasketFactory
 
             $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
                     2);
+            $shippingItem->setDescription($orderObject->getShippingDescription());
+            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
+            $shippingItem->setTaxRate($taxRate);
+            $basket->add($shippingItem);
+        }
+        return $basket;
+    }
+
+    public function capture($order, $transaction)
+    {
+        if (!$order instanceof OrderAdapterInterface) {
+            throw new \InvalidArgumentException('Order data obj should be provided.');
+        }
+
+        $orderId = $order->getId();
+
+        /** @var Order $orderObject */
+        $orderObject = $this->orderFactory->create();
+        if (!is_null($orderObject)) {
+            $orderObject->load($orderId);
+        }
+
+        if (is_null($orderObject)) {
+            throw new NoSuchEntityException(__('No such order found.'));
+        }
+
+        $basket = new Basket();
+        $basket->setVersion($transaction);
+        $items = $order->getItems();
+        $discountAmount = 0;
+
+        /** @var Order\Item $item*/
+        foreach ($items as $item) {
+            $origQty = $item->getOrigData('qty_invoiced');
+            $newQty = $item->getQtyInvoiced();
+            $qty = $newQty - $origQty;
+            if ($item->getBaseRowInvoiced() == 0 || $qty == 0) {
+                continue;
+            }
+            $basket->add($this->itemFactory->capture($item, $order->getCurrencyCode(), $qty));
+            $origDiscount = $item->getOrigData('discount_invoiced');
+            $newDiscount = $item->getDiscountInvoiced();
+            $discount = $origDiscount - $newDiscount;
+            $discountAmount += $discount;
+        }
+
+        if ($discount < 0) {
+            $discountItem = new Item(
+                'Discount',
+                new Amount($discountAmount, $order->getCurrencyCode()),
+                1
+            );
+            $discountItem->setDescription('Discount');
+            $discountItem->setArticleNumber('Discount');
+            $discountItem->setTaxRate(number_format(0, 2));
+            $basket->add($discountItem);
+        }
+
+        if ($orderObject->getShippingInclTax() > 0) {
+            $shippingItem = new Item(
+                'Shipping',
+                new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                1
+            );
+
+            $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                2);
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
             $shippingItem->setTaxRate($taxRate);

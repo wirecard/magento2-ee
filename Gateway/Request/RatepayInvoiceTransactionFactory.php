@@ -131,10 +131,10 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
 
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $amount = new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode());
 
         $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $this->transaction->setBasket($this->basketFactory->capture($order, $this->transaction));
 
         return $this->transaction;
     }

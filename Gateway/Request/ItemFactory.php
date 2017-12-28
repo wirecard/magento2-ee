@@ -32,6 +32,7 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Model\Order;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -66,6 +67,29 @@ class ItemFactory
             $qty = 1;
             $taxAmount = $magentoItemObj->getTaxAmount();
         }
+
+        $taxRate = $taxAmount / $amount;
+        $item = new Item(
+            $name,
+            new Amount($amount, $currency),
+            $qty
+        );
+        $item->setDescription($magentoItemObj->getDescription());
+        $item->setArticleNumber($magentoItemObj->getSku());
+        $item->setTaxRate(number_format($taxRate * 100, 2));
+
+        return $item;
+    }
+
+    public function capture($magentoItemObj, $currency, $qty)
+    {
+        if (!$magentoItemObj instanceof Order\Item) {
+            throw new \InvalidArgumentException('Item data object should be provided.');
+        }
+
+        $amount = $magentoItemObj->getBaseRowInvoiced()/$magentoItemObj->getQtyInvoiced();
+        $name = $magentoItemObj->getName();
+        $taxAmount = $magentoItemObj->getTaxInvoiced();
 
         $taxRate = $taxAmount / $amount;
         $item = new Item(
