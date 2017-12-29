@@ -100,6 +100,7 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
         $this->basketFactory->method('create')->willReturn(new Basket());
+        $this->basketFactory->method('capture')->willReturn(new Basket());
 
         $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
         $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());

@@ -133,7 +133,7 @@ class RatepayInstallTransactionFactory extends TransactionFactory
         $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
 
         $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $this->transaction->setBasket($this->basketFactory->capture($order, $this->transaction));
 
         return $this->transaction;
     }
