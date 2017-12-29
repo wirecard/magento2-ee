@@ -155,7 +155,7 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
 
         $this->transaction->setParentTransactionId($this->transactionId);
         $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $this->transaction->setBasket($this->basketFactory->refund($order, $this->transaction));
 
         return $this->transaction;
     }
