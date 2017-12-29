@@ -225,6 +225,13 @@ class BasketFactory
         return $basket;
     }
 
+    /**
+     * @param OrderAdapterInterface $order
+     * @param Transaction $transaction
+     * @return Basket
+     * @throws \InvalidArgumentException
+     * @throws NoSuchEntityException
+     */
     public function refund($order, $transaction)
     {
         if (!$order instanceof OrderAdapterInterface) {

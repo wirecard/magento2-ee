@@ -112,13 +112,19 @@ class ItemFactory
         return $item;
     }
 
+    /**
+     * @param Order\Item $magentoItemObj
+     * @param string $currency
+     * @param int $qty
+     * @return Item
+     */
     public function refund($magentoItemObj, $currency, $qty)
     {
         if (!$magentoItemObj instanceof Order\Item) {
             throw new \InvalidArgumentException('Item data object should be provided.');
         }
 
-        //Invoiceamount per quantity
+        //Refundamount per quantity
         $amount = $magentoItemObj->getBaseAmountRefunded()/$magentoItemObj->getQtyRefunded();
         $name = $magentoItemObj->getName();
         $taxAmount = $magentoItemObj->getTaxRefunded();
