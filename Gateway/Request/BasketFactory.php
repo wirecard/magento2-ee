@@ -41,6 +41,7 @@ use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class BasketFactory
@@ -145,6 +146,13 @@ class BasketFactory
         return $basket;
     }
 
+    /**
+     * @param OrderAdapterInterface $order
+     * @param Transaction $transaction
+     * @return Basket
+     * @throws \InvalidArgumentException
+     * @throws NoSuchEntityException
+     */
     public function capture($order, $transaction)
     {
         if (!$order instanceof OrderAdapterInterface) {
@@ -170,6 +178,7 @@ class BasketFactory
 
         /** @var Order\Item $item*/
         foreach ($items as $item) {
+            //Current quantity for item
             $origQty = $item->getOrigData('qty_invoiced');
             $newQty = $item->getQtyInvoiced();
             $qty = $newQty - $origQty;
@@ -177,6 +186,7 @@ class BasketFactory
                 continue;
             }
             $basket->add($this->itemFactory->capture($item, $order->getCurrencyCode(), $qty));
+            //Current discount for item
             $origDiscount = $item->getOrigData('discount_invoiced');
             $newDiscount = $item->getDiscountInvoiced();
             $discount = $origDiscount - $newDiscount;
@@ -195,18 +205,21 @@ class BasketFactory
             $basket->add($discountItem);
         }
 
-        if ($orderObject->getShippingInclTax() > 0) {
+        //Current shipping
+        $origShipping = $orderObject->getOrigData('shipping_invoiced');
+        $newShipping = $orderObject->getShippingInvoiced();
+        $shipping = $newShipping - $origShipping;
+
+        if ($shipping > 0) {
             $shippingItem = new Item(
                 'Shipping',
-                new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                new Amount($shipping, $order->getCurrencyCode()),
                 1
             );
 
-            $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
-                2);
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate($taxRate);
+            $shippingItem->setTaxRate(number_format(0,2));
             $basket->add($shippingItem);
         }
         return $basket;

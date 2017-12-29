@@ -81,12 +81,20 @@ class ItemFactory
         return $item;
     }
 
+    /**
+     * @param Order\Item $magentoItemObj
+     * @param string $currency
+     * @param int $qty
+     * @return Item
+     * @throws \InvalidArgumentException
+     */
     public function capture($magentoItemObj, $currency, $qty)
     {
         if (!$magentoItemObj instanceof Order\Item) {
             throw new \InvalidArgumentException('Item data object should be provided.');
         }
 
+        //Invoiceamount per quantity
         $amount = $magentoItemObj->getBaseRowInvoiced()/$magentoItemObj->getQtyInvoiced();
         $name = $magentoItemObj->getName();
         $taxAmount = $magentoItemObj->getTaxInvoiced();
