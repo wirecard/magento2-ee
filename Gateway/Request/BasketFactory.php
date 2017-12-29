@@ -193,7 +193,7 @@ class BasketFactory
             $discountAmount += $discount;
         }
 
-        if ($discount < 0) {
+        if ($discountAmount < 0) {
             $discountItem = new Item(
                 'Discount',
                 new Amount($discountAmount, $order->getCurrencyCode()),
