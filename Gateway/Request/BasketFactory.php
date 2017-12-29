@@ -207,7 +207,7 @@ class BasketFactory
 
         //Current shipping
         $origShipping = $orderObject->getOrigData('shipping_invoiced');
-        $newShipping = $orderObject->getShippingInvoiced();
+        $newShipping = $orderObject->getShippingInclTax();
         $shipping = $newShipping - $origShipping;
 
         if ($shipping > 0) {
