@@ -35,10 +35,13 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $this->item->method('getName')->willReturn('One Plus 5');
         $this->item->method('getBaseRowInvoiced')->willReturn(120.0);
+        $this->item->method('getBaseAmountRefunded')->willReturn(120.0);
         $this->item->method('getQtyInvoiced')->willReturn(1);
+        $this->item->method('getQtyRefunded')->willReturn(1);
         $this->item->method('getDescription')->willReturn(self::DESCRIPTION);
         $this->item->method('getSku')->willReturn(self::SKU);
         $this->item->method('getTaxInvoiced')->willReturn(20.00);
+        $this->item->method('getTaxRefunded')->willReturn(20.00);
     }
 
     public function testCreate()
@@ -96,5 +99,27 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $itemFactory = new ItemFactory();
         $itemFactory->capture(null, 'EUR', 1);
+    }
+
+    public function testRefund()
+    {
+        $this->item->method('getBaseAmountRefunded')->willReturn(120.00);
+        $itemFactory = new ItemFactory();
+
+        $expected = new Item('One Plus 5', new Amount(120.0, 'EUR'), 1);
+        $expected->setDescription(self::DESCRIPTION);
+        $expected->setArticleNumber(self::SKU);
+        $expected->setTaxRate(number_format((100 * 20 / 120), 2));
+
+        $this->assertEquals($expected, $itemFactory->refund($this->item, 'EUR', 1));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRefundThrowsException()
+    {
+        $itemFactory = new ItemFactory();
+        $itemFactory->refund(null, 'EUR', 1);
     }
 }
