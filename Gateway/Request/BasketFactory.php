@@ -219,7 +219,7 @@ class BasketFactory
 
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate(number_format(0,2));
+            $shippingItem->setTaxRate(number_format(0, 2));
             $basket->add($shippingItem);
         }
         return $basket;
