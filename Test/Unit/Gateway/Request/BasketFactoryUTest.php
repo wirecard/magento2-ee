@@ -47,6 +47,9 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $item->method('getQtyInvoiced')->willReturn(2);
         $item->method('getDiscountInvoiced')->willReturn(2.0);
         $item->method('getBaseRowInvoiced')->willReturn(1);
+        $item->method('getQtyRefunded')->willReturn(2);
+        $item->method('getDiscountRefunded')->willReturn(2.0);
+        $item->method('getBaseAmountRefunded')->willReturn(1);
         $zeroItem = $this->getMockBuilder(OrderItemInterface::class)
             ->disableOriginalConstructor()
             ->setMethods(['getOrigData', 'getQtyInvoiced'])
@@ -55,6 +58,9 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $zeroItem->method('getOrigData')->willReturn(0);
         $zeroItem->method('getQtyInvoiced')->willReturn(0);
         $zeroItem->method('getDiscountInvoiced')->willReturn(0);
+        $zeroItem->method('getQtyRefunded')->willReturn(0);
+        $zeroItem->method('getDiscountRefunded')->willReturn(0);
+        $zeroItem->method('getBaseAmountRefunded')->willReturn(0);
         $this->order->method('getItems')->willReturn([
             $item, $zeroItem
         ]);
@@ -63,6 +69,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->itemFactory = $this->getMockBuilder(ItemFactory::class)->getMock();
         $this->itemFactory->method('create')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
         $this->itemFactory->method('capture')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
+        $this->itemFactory->method('refund')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
 
         $this->orderFactory = $this->getMockBuilder(OrderFactory::class)->disableOriginalConstructor()
             ->setMethods(['create'])->getMock();
@@ -107,6 +114,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->orderObject->method('getShippingMethod')->willReturn('flatrate_flatrate');
         $this->orderObject->method('getShippingTaxAmount')->willReturn(0.0);
         $this->orderObject->method('getShippingInvoiced')->willReturn(5.0);
+        $this->orderObject->method('getShippingRefunded')->willReturn(5.0);
 
         $this->orderFactory->method('create')->willReturn($this->orderObject);
 
@@ -217,5 +225,49 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->setUpWithQuoteData();
         $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
         $basketFactory->capture($this->order, $this->transaction);
+    }
+
+    public function testRefund()
+    {
+        $this->setUpWithoutQuoteData();
+
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+
+        $expected = new Basket();
+        $expected->setVersion($this->transaction);
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
+
+        $discount = new Item('Discount', new Amount(-1.0, 'EUR'), 1);
+        $discount->setDescription('Discount');
+        $discount->setArticleNumber('Discount');
+        $discount->setTaxRate(0.00);
+        $expected->add($discount);
+
+        $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
+        $shipping->setDescription('Fixed Flat Rate');
+        $shipping->setArticleNumber('flatrate_flatrate');
+        $shipping->setTaxRate(0.00);
+        $expected->add($shipping);
+
+        $this->assertEquals($expected, $basketFactory->refund($this->order, $this->transaction));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRefundThrowsException()
+    {
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory->refund(null, null);
+    }
+
+    /**
+     * @expectedException Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function testRefundThrowsNoOrderException()
+    {
+        $this->setUpWithQuoteData();
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory->refund($this->order, $this->transaction);
     }
 }
