@@ -906,7 +906,7 @@
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\UpiTransaction</argument>
             <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardUpiConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
         </arguments>
     </virtualType>
 

@@ -31,19 +31,14 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use Magento\Framework\Api\Filter;
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteria;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
-use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -72,6 +67,8 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $payment;
 
+    private $paymentDo;
+
     private $order;
 
     private $commandSubject;
@@ -79,12 +76,6 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $basketFactory;
 
     private $accountHolderFactory;
-
-    private $repository;
-
-    private $searchCriteriaBuilder;
-
-    private $filterBuilder;
 
     private $transaction;
 
@@ -121,40 +112,22 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getBillingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
-        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
+        $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->payment->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getPayment')->willReturn($this->payment);
 
-        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
-
-        $filter = $this->getMockBuilder(Filter::class)->disableOriginalConstructor()->getMock();
-        $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
-        $transactionList = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
-        $transactionList->method('getAllIds')->willReturn([1,2]);
-
-        $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()
-            ->getMock();
-        $this->searchCriteriaBuilder->method('addFilter')->willReturn($this->searchCriteriaBuilder);
-        $this->searchCriteriaBuilder->method('addSortOrder')->willReturn($this->searchCriteriaBuilder);
-        $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
-
-        $this->repository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $this->repository->method('getList')->willReturn($transactionList);
+        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
-        $this->transaction->method('getTxnId')->willReturn('123456PARENT');
-        $transactionList->method('getItemById')->willReturn($this->transaction);
-
-        $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
-        $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
-        $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
-        $this->filterBuilder->method('create')->willReturn($filter);
     }
 
     public function testRefundOperationSetter()
     {
         $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new AlipayCrossborderTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            new AlipayCrossborderTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -163,7 +136,7 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new AlipayCrossborderTransaction();
         $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -202,7 +175,6 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new AlipayCrossborderTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setLocale('en');
@@ -217,7 +189,7 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction->setParentTransactionId('123456PARENT');
 
         $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->repository, $this->searchCriteriaBuilder, $this->filterBuilder);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }

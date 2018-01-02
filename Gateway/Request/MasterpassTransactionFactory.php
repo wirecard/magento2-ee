@@ -31,13 +31,10 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -58,11 +55,6 @@ class MasterpassTransactionFactory extends TransactionFactory
     protected $transaction;
 
     /**
-     * @var FilterBuilder $filterBuilder
-     */
-    protected $filterBuilder;
-
-    /**
      * MasterpassTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
@@ -71,9 +63,6 @@ class MasterpassTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param FilterBuilder $filterBuilder
-     * @param Repository $transactionRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -82,16 +71,9 @@ class MasterpassTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig,
-        Repository $transactionRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        ConfigInterface $methodConfig
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
-
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->transactionRepository = $transactionRepository;
-        $this->filterBuilder = $filterBuilder;
     }
 
     /**

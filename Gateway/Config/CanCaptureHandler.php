@@ -37,7 +37,6 @@ use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 
 class CanCaptureHandler implements ValueHandlerInterface
@@ -83,9 +82,16 @@ class CanCaptureHandler implements ValueHandlerInterface
 
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
-        /** @var Transaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
-
-        return $transaction->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION;
+        $transactions = $transactionList->getItems();
+        $authTransaction = null;
+        foreach ($transactions as $id => $item) {
+            if ($item->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION) {
+                $authTransaction = $item;
+            }
+        }
+        if ($authTransaction === null) {
+            return false;
+        }
+        return $paymentDO->getPayment()->getAmountPaid() !== $paymentDO->getPayment()->getAmountOrdered();
     }
 }

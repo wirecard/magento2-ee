@@ -32,13 +32,10 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -73,9 +70,6 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param Repository $transactionRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param FilterBuilder $filterBuilder
      * @param Session $session
      */
     public function __construct(
@@ -86,16 +80,10 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig,
-        Repository $transactionRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
         Session $session
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
 
-        $this->transactionRepository = $transactionRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterBuilder = $filterBuilder;
         $this->checkoutSession = $session;
     }
 
@@ -118,7 +106,7 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         $dob = $additionalInfo['customerDob'];
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, $dob));
         $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction, true));
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
 
         if (strlen($this->checkoutSession->getData('invoiceDeviceIdent'))) {
             $deviceIdent = $this->checkoutSession->getData('invoiceDeviceIdent');
@@ -143,10 +131,10 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
 
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $amount = new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode());
 
         $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $this->transaction->setBasket($this->basketFactory->capture($order, $this->transaction));
 
         return $this->transaction;
     }
@@ -163,11 +151,11 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
 
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $amount = new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode());
 
         $this->transaction->setParentTransactionId($this->transactionId);
         $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $this->transaction->setBasket($this->basketFactory->refund($order, $this->transaction));
 
         return $this->transaction;
     }
