@@ -80,13 +80,12 @@ class BasketFactory
     /**
      * @param OrderAdapterInterface $order
      * @param Transaction $transaction
-     * @param Boolean $isCreate
      * @return Basket
      * @throws \InvalidArgumentException
      * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
      */
-    public function create($order, $transaction, $isCreate = false)
+    public function create($order, $transaction)
     {
         if (!$order instanceof OrderAdapterInterface) {
             throw new \InvalidArgumentException('Order data obj should be provided.');
@@ -105,17 +104,6 @@ class BasketFactory
         }
 
         $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
-        if (!$isCreate) {
-            $orderId = $order->getId();
-            $orderObject = $this->orderFactory->create();
-            if (!is_null($orderObject)) {
-                $orderObject->load($orderId);
-            }
-        }
-
-        if (is_null($orderObject)) {
-            throw new NoSuchEntityException(__('No such order found.'));
-        }
 
         if ($orderObject->getDiscountAmount() < 0) {
             $discountItem = new Item(

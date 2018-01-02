@@ -60,14 +60,12 @@ class ItemFactory
         $qty = $magentoItemObj->getQtyOrdered();
         $name = $magentoItemObj->getName();
         $taxAmount = $magentoItemObj->getTaxAmount()/$magentoItemObj->getQtyOrdered();
-
         if ($amount * $qty !== $magentoItemObj->getBaseRowTotalInclTax()) {
             $amount = $magentoItemObj->getBaseRowTotalInclTax();
             $name .= ' x' . $qty;
             $qty = 1;
             $taxAmount = $magentoItemObj->getTaxAmount();
         }
-
         $taxRate = $taxAmount / $amount;
         $item = new Item(
             $name,
@@ -77,7 +75,6 @@ class ItemFactory
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
         $item->setTaxRate(number_format($taxRate * 100, 2));
-
         return $item;
     }
 
@@ -97,7 +94,7 @@ class ItemFactory
         //Invoiceamount per quantity
         $amount = $magentoItemObj->getBaseRowInvoiced()/$magentoItemObj->getQtyInvoiced();
         $name = $magentoItemObj->getName();
-        $taxAmount = $magentoItemObj->getTaxInvoiced();
+        $taxAmount = $magentoItemObj->getTaxInvoiced()/$magentoItemObj->getQtyInvoiced();
 
         $taxRate = $taxAmount / $amount;
         $item = new Item(
@@ -127,7 +124,7 @@ class ItemFactory
         //Refundamount per quantity
         $amount = $magentoItemObj->getBaseAmountRefunded()/$magentoItemObj->getQtyRefunded();
         $name = $magentoItemObj->getName();
-        $taxAmount = $magentoItemObj->getTaxRefunded();
+        $taxAmount = $magentoItemObj->getTaxRefunded()/$magentoItemObj->getQtyRefunded();
 
         $taxRate = $taxAmount / $amount;
         $item = new Item(

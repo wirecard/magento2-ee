@@ -143,7 +143,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
 
-        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction, true));
+        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction));
     }
 
     /**
@@ -153,34 +153,6 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
         $basketFactory->create(null, null);
-    }
-
-    /**
-     * @expectedException Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function testCreateThrowsNoOrderException()
-    {
-        $this->setUpWithQuoteData();
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
-        $basketFactory->create($this->order, $this->transaction, false);
-    }
-
-    public function testCreateWithoutSession()
-    {
-        $this->setUpWithoutQuoteData();
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
-
-        $expected = new Basket();
-        $expected->setVersion($this->transaction);
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
-
-        $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
-        $shipping->setDescription('Fixed Flat Rate');
-        $shipping->setArticleNumber('flatrate_flatrate');
-        $shipping->setTaxRate(0.0);
-        $expected->add($shipping);
-
-        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction, false));
     }
 
     public function testCapture()

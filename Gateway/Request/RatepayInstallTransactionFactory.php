@@ -106,7 +106,7 @@ class RatepayInstallTransactionFactory extends TransactionFactory
         $dob = $additionalInfo['customerDob'];
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, $dob));
         $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction, true));
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
         if (strlen($this->checkoutSession->getData('installmentDeviceIdent'))) {
             $deviceIdent = $this->checkoutSession->getData('installmentDeviceIdent');
             $device = new \Wirecard\PaymentSdk\Entity\Device();
