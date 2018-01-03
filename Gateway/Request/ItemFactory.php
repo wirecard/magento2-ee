@@ -90,11 +90,20 @@ class ItemFactory
         }
 
         //Invoiceamount per quantity
-        $amount = $magentoItemObj->getBaseRowInvoiced()/$magentoItemObj->getQtyInvoiced();
-        $name = $magentoItemObj->getName();
-        $taxAmount = $magentoItemObj->getTaxInvoiced()/$magentoItemObj->getQtyInvoiced();
+        $qtyAmount = $magentoItemObj->getBaseRowInvoiced() / $magentoItemObj->getQtyInvoiced();
+        $qtyTax = $magentoItemObj->getTaxInvoiced() / $magentoItemObj->getQtyInvoiced();
+        $qtyDiscount = $magentoItemObj->getDiscountInvoiced() / $magentoItemObj->getQtyInvoiced();
 
-        $taxRate = $taxAmount / $amount;
+        $amount = $qtyAmount + $qtyTax - $qtyDiscount;
+        $name = $magentoItemObj->getName();
+
+        if ($qtyTax * $magentoItemObj->getQtyInvoiced() != $magentoItemObj->getTaxInvoiced()) {
+            $amount = number_format($amount * $qty, 2);
+            $name .= ' x' . $qty;
+            $qtyTax = $qtyTax * $qty;
+            $qty = 1;
+        }
+        $taxRate = $qtyTax / $amount;
         $item = new Item(
             $name,
             new Amount($amount, $currency),
