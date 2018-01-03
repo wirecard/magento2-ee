@@ -24,11 +24,12 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->orderItem->method('getName')->willReturn('One Plus 5');
-        $this->orderItem->method('getPriceInclTax')->willReturn(120.0);
+        $this->orderItem->method('getPrice')->willReturn(100.0);
         $this->orderItem->method('getQtyOrdered')->willReturn(1);
         $this->orderItem->method('getDescription')->willReturn(self::DESCRIPTION);
         $this->orderItem->method('getSku')->willReturn(self::SKU);
         $this->orderItem->method('getTaxAmount')->willReturn(20.00);
+        $this->orderItem->method('getDiscountAmount')->willReturn(0.00);
 
         $this->item = $this->getMockBuilder(\Magento\Sales\Model\Order\Item::class)
             ->disableOriginalConstructor()
@@ -46,26 +47,12 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $this->orderItem->method('getBaseRowTotalInclTax')->willReturn(120.00);
         $itemFactory = new ItemFactory();
 
         $expected = new Item('One Plus 5', new Amount(120.0, 'EUR'), 1);
         $expected->setDescription(self::DESCRIPTION);
         $expected->setArticleNumber(self::SKU);
         $expected->setTaxRate(number_format((100 * 20 / 120), 2));
-
-        $this->assertEquals($expected, $itemFactory->create($this->orderItem, 'EUR'));
-    }
-
-    public function testCreateRoundingIssue()
-    {
-        $this->orderItem->method('getBaseRowTotalInclTax')->willReturn(100.00);
-        $itemFactory = new ItemFactory();
-
-        $expected = new Item('One Plus 5 x1', new Amount(100.0, 'EUR'), 1);
-        $expected->setDescription(self::DESCRIPTION);
-        $expected->setArticleNumber(self::SKU);
-        $expected->setTaxRate(number_format((100 * 20 / 100), 2));
 
         $this->assertEquals($expected, $itemFactory->create($this->orderItem, 'EUR'));
     }
