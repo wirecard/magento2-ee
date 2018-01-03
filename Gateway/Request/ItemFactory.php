@@ -56,17 +56,15 @@ class ItemFactory
             throw new \InvalidArgumentException('Item data object should be provided.');
         }
 
-        $amount = $magentoItemObj->getPriceInclTax();
         $qty = $magentoItemObj->getQtyOrdered();
+        $qtyAmount = $magentoItemObj->getPrice();
+        $qtyTax = $magentoItemObj->getTaxAmount() / $qty;
+        $qtyDiscount = $magentoItemObj->getDiscountAmount() / $qty;
+
+        $amount = $qtyAmount + $qtyTax - $qtyDiscount;
         $name = $magentoItemObj->getName();
-        $taxAmount = $magentoItemObj->getTaxAmount()/$magentoItemObj->getQtyOrdered();
-        if ($amount * $qty !== $magentoItemObj->getBaseRowTotalInclTax()) {
-            $amount = $magentoItemObj->getBaseRowTotalInclTax();
-            $name .= ' x' . $qty;
-            $qty = 1;
-            $taxAmount = $magentoItemObj->getTaxAmount();
-        }
-        $taxRate = $taxAmount / $amount;
+
+        $taxRate = $qtyTax / $amount;
         $item = new Item(
             $name,
             new Amount($amount, $currency),
