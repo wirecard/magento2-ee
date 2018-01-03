@@ -18,6 +18,8 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $item;
 
+    private $itemUnround;
+
     public function setUp()
     {
         $this->orderItem = $this->getMockBuilder(OrderItemInterface::class)
@@ -35,7 +37,7 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->item->method('getName')->willReturn('One Plus 5');
-        $this->item->method('getBaseRowInvoiced')->willReturn(120.0);
+        $this->item->method('getBaseRowInvoiced')->willReturn(100.0);
         $this->item->method('getBaseAmountRefunded')->willReturn(120.0);
         $this->item->method('getQtyInvoiced')->willReturn(1);
         $this->item->method('getQtyRefunded')->willReturn(1);
@@ -43,6 +45,21 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->item->method('getSku')->willReturn(self::SKU);
         $this->item->method('getTaxInvoiced')->willReturn(20.00);
         $this->item->method('getTaxRefunded')->willReturn(20.00);
+        $this->item->method('getDiscountInvoiced')->willReturn(0.00);
+
+        $this->itemUnround = $this->getMockBuilder(\Magento\Sales\Model\Order\Item::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->itemUnround->method('getName')->willReturn('One Plus 5');
+        $this->itemUnround->method('getBaseRowInvoiced')->willReturn(101.60);
+        $this->itemUnround->method('getBaseAmountRefunded')->willReturn(120.0);
+        $this->itemUnround->method('getQtyInvoiced')->willReturn(3);
+        $this->itemUnround->method('getQtyRefunded')->willReturn(1);
+        $this->itemUnround->method('getDescription')->willReturn(self::DESCRIPTION);
+        $this->itemUnround->method('getSku')->willReturn(self::SKU);
+        $this->itemUnround->method('getTaxInvoiced')->willReturn(21.5757);
+        $this->itemUnround->method('getTaxRefunded')->willReturn(20.00);
+        $this->itemUnround->method('getDiscountInvoiced')->willReturn(0.00);
     }
 
     public function testCreate()
@@ -68,7 +85,6 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCapture()
     {
-        $this->item->method('getBaseRowInvoiced')->willReturn(120.00);
         $itemFactory = new ItemFactory();
 
         $expected = new Item('One Plus 5', new Amount(120.0, 'EUR'), 1);
@@ -77,6 +93,16 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setTaxRate(number_format((100 * 20 / 120), 2));
 
         $this->assertEquals($expected, $itemFactory->capture($this->item, 'EUR', 1));
+    }
+
+    public function testCaptureRoundingIssue()
+    {
+        $itemFactory = new ItemFactory();
+        $expected = new Item('One Plus 5 x3', new Amount(123.18, 'EUR'), 1);
+        $expected->setDescription(self::DESCRIPTION);
+        $expected->setArticleNumber(self::SKU);
+        $expected->setTaxRate(number_format((100 * 21.5757 / 123.1757), 2));
+        $this->assertEquals($expected, $itemFactory->capture($this->itemUnround, 'EUR', 3));
     }
 
     /**

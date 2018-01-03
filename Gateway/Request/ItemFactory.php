@@ -97,7 +97,8 @@ class ItemFactory
         $amount = $qtyAmount + $qtyTax - $qtyDiscount;
         $name = $magentoItemObj->getName();
 
-        if ($qtyTax * $magentoItemObj->getQtyInvoiced() != $magentoItemObj->getTaxInvoiced()) {
+        //Rounding issue
+        if (strlen(substr(strrchr((string)$amount, "."), 1)) > 2) {
             $amount = number_format($amount * $qty, 2);
             $name .= ' x' . $qty;
             $qtyTax = $qtyTax * $qty;
