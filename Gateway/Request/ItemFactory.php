@@ -130,11 +130,21 @@ class ItemFactory
         }
 
         //Refundamount per quantity
-        $amount = $magentoItemObj->getBaseAmountRefunded()/$magentoItemObj->getQtyRefunded();
-        $name = $magentoItemObj->getName();
-        $taxAmount = $magentoItemObj->getTaxRefunded()/$magentoItemObj->getQtyRefunded();
+        $qtyAmount = $magentoItemObj->getAmountRefunded() / $magentoItemObj->getQtyRefunded();
+        $qtyTax = $magentoItemObj->getTaxRefunded() / $magentoItemObj->getQtyRefunded();
+        $qtyDiscount = $magentoItemObj->getDiscountRefunded() / $magentoItemObj->getQtyRefunded();
 
-        $taxRate = $taxAmount / $amount;
+        $amount = $qtyAmount + $qtyTax - $qtyDiscount;
+        $name = $magentoItemObj->getName();
+
+        //Rounding issue
+        if (strlen(substr(strrchr((string)$amount, "."), 1)) > 2) {
+            $amount = number_format($amount * $qty, 2);
+            $name .= ' x' . $qty;
+            $qtyTax = $qtyTax * $qty;
+            $qty = 1;
+        }
+        $taxRate = $qtyTax / $amount;
         $item = new Item(
             $name,
             new Amount($amount, $currency),

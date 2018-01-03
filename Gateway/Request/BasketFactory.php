@@ -211,7 +211,6 @@ class BasketFactory
         $basket = new Basket();
         $basket->setVersion($transaction);
         $items = $order->getItems();
-        $discountAmount = 0;
 
         /** @var Order\Item $item*/
         foreach ($items as $item) {
@@ -223,23 +222,6 @@ class BasketFactory
                 continue;
             }
             $basket->add($this->itemFactory->refund($item, $order->getCurrencyCode(), $qty));
-            //Current discount for item
-            $origDiscount = $item->getOrigData('discount_refunded');
-            $newDiscount = $item->getDiscountRefunded();
-            $discount = $origDiscount - $newDiscount;
-            $discountAmount += $discount;
-        }
-
-        if ($discountAmount < 0) {
-            $discountItem = new Item(
-                'Discount',
-                new Amount($discountAmount, $order->getCurrencyCode()),
-                1
-            );
-            $discountItem->setDescription('Discount');
-            $discountItem->setArticleNumber('Discount');
-            $discountItem->setTaxRate(number_format(0, 2));
-            $basket->add($discountItem);
         }
 
         //Current shipping
