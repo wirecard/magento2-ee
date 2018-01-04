@@ -197,12 +197,6 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setVersion($this->transaction);
         $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
 
-        $discount = new Item('Discount', new Amount(-1.0, 'EUR'), 1);
-        $discount->setDescription('Discount');
-        $discount->setArticleNumber('Discount');
-        $discount->setTaxRate(0.00);
-        $expected->add($discount);
-
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
         $shipping->setArticleNumber('flatrate_flatrate');
