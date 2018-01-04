@@ -32,6 +32,7 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Model\Order;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -55,19 +56,95 @@ class ItemFactory
             throw new \InvalidArgumentException('Item data object should be provided.');
         }
 
-        $amount = $magentoItemObj->getPriceInclTax();
         $qty = $magentoItemObj->getQtyOrdered();
-        $name = $magentoItemObj->getName();
-        $taxAmount = $magentoItemObj->getTaxAmount()/$magentoItemObj->getQtyOrdered();
+        $qtyAmount = $magentoItemObj->getPrice();
+        $qtyTax = $magentoItemObj->getTaxAmount() / $qty;
+        $qtyDiscount = $magentoItemObj->getDiscountAmount() / $qty;
 
-        if ($amount * $qty !== $magentoItemObj->getBaseRowTotalInclTax()) {
-            $amount = $magentoItemObj->getBaseRowTotalInclTax();
-            $name .= ' x' . $qty;
-            $qty = 1;
-            $taxAmount = $magentoItemObj->getTaxAmount();
+        $amount = $qtyAmount + $qtyTax - $qtyDiscount;
+        $name = $magentoItemObj->getName();
+
+        $taxRate = $qtyTax / $amount;
+        $item = new Item(
+            $name,
+            new Amount($amount, $currency),
+            $qty
+        );
+        $item->setDescription($magentoItemObj->getDescription());
+        $item->setArticleNumber($magentoItemObj->getSku());
+        $item->setTaxRate(number_format($taxRate * 100, 2));
+        return $item;
+    }
+
+    /**
+     * @param Order\Item $magentoItemObj
+     * @param string $currency
+     * @param int $qty
+     * @return Item
+     * @throws \InvalidArgumentException
+     */
+    public function capture($magentoItemObj, $currency, $qty)
+    {
+        if (!$magentoItemObj instanceof Order\Item) {
+            throw new \InvalidArgumentException('Item data object should be provided.');
         }
 
-        $taxRate = $taxAmount / $amount;
+        //Invoiceamount per quantity
+        $qtyAmount = $magentoItemObj->getBaseRowInvoiced() / $magentoItemObj->getQtyInvoiced();
+        $qtyTax = $magentoItemObj->getTaxInvoiced() / $magentoItemObj->getQtyInvoiced();
+        $qtyDiscount = $magentoItemObj->getDiscountInvoiced() / $magentoItemObj->getQtyInvoiced();
+
+        $amount = $qtyAmount + $qtyTax - $qtyDiscount;
+        $name = $magentoItemObj->getName();
+
+        //Rounding issue
+        if (strlen(substr(strrchr((string)$amount, "."), 1)) > 2) {
+            $amount = number_format($amount * $qty, 2);
+            $name .= ' x' . $qty;
+            $qtyTax = $qtyTax * $qty;
+            $qty = 1;
+        }
+        $taxRate = $qtyTax / $amount;
+        $item = new Item(
+            $name,
+            new Amount($amount, $currency),
+            $qty
+        );
+        $item->setDescription($magentoItemObj->getDescription());
+        $item->setArticleNumber($magentoItemObj->getSku());
+        $item->setTaxRate(number_format($taxRate * 100, 2));
+
+        return $item;
+    }
+
+    /**
+     * @param Order\Item $magentoItemObj
+     * @param string $currency
+     * @param int $qty
+     * @return Item
+     */
+    public function refund($magentoItemObj, $currency, $qty)
+    {
+        if (!$magentoItemObj instanceof Order\Item) {
+            throw new \InvalidArgumentException('Item data object should be provided.');
+        }
+
+        //Refundamount per quantity
+        $qtyAmount = $magentoItemObj->getAmountRefunded() / $magentoItemObj->getQtyRefunded();
+        $qtyTax = $magentoItemObj->getTaxRefunded() / $magentoItemObj->getQtyRefunded();
+        $qtyDiscount = $magentoItemObj->getDiscountRefunded() / $magentoItemObj->getQtyRefunded();
+
+        $amount = $qtyAmount + $qtyTax - $qtyDiscount;
+        $name = $magentoItemObj->getName();
+
+        //Rounding issue
+        if (strlen(substr(strrchr((string)$amount, "."), 1)) > 2) {
+            $amount = number_format($amount * $qty, 2);
+            $name .= ' x' . $qty;
+            $qtyTax = $qtyTax * $qty;
+            $qty = 1;
+        }
+        $taxRate = $qtyTax / $amount;
         $item = new Item(
             $name,
             new Amount($amount, $currency),

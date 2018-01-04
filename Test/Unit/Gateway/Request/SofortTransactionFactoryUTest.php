@@ -37,6 +37,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -67,6 +68,8 @@ class SofortTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $config;
 
     private $payment;
+
+    private $paymentDo;
 
     private $order;
 
@@ -105,11 +108,14 @@ class SofortTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getBillingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
-        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
+        $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->payment->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getPayment')->willReturn($this->payment);
 
-        $this->commandSubject = ['payment' => $this->payment];
+        $this->commandSubject = ['payment' => $this->paymentDo];
     }
 
     public function testCreateMinimum()
