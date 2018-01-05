@@ -32,13 +32,10 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -58,24 +55,6 @@ class RatepayInstallTransactionFactory extends TransactionFactory
      * @var RatepayInstallmentTransaction
      */
     protected $transaction;
-    /**
-     * @var BasketFactory
-     */
-    private $basketFactory;
-    /**
-     * @var AccountHolderFactory
-     */
-    private $accountHolderFactory;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
 
     /**
      * @var Session
@@ -91,9 +70,6 @@ class RatepayInstallTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param Repository $transactionRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param FilterBuilder $filterBuilder
      * @param Session $session
      */
     public function __construct(
@@ -104,21 +80,10 @@ class RatepayInstallTransactionFactory extends TransactionFactory
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig,
-        Repository $transactionRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
         Session $session
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction);
+        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
 
-        $this->storeManager = $storeManager;
-        $this->basketFactory = $basketFactory;
-        $this->accountHolderFactory = $accountHolderFactory;
-        $this->methodConfig = $methodConfig;
-
-        $this->transactionRepository = $transactionRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterBuilder = $filterBuilder;
         $this->checkoutSession = $session;
     }
 
@@ -141,7 +106,7 @@ class RatepayInstallTransactionFactory extends TransactionFactory
         $dob = $additionalInfo['customerDob'];
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, $dob));
         $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction, true));
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
         if (strlen($this->checkoutSession->getData('installmentDeviceIdent'))) {
             $deviceIdent = $this->checkoutSession->getData('installmentDeviceIdent');
             $device = new \Wirecard\PaymentSdk\Entity\Device();
@@ -165,10 +130,10 @@ class RatepayInstallTransactionFactory extends TransactionFactory
 
         $payment = $commandSubject[self::PAYMENT];
         $order = $payment->getOrder();
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $amount = new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode());
 
         $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $this->transaction->setBasket($this->basketFactory->capture($order, $this->transaction));
 
         return $this->transaction;
     }

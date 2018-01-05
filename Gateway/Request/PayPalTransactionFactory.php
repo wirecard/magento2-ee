@@ -31,13 +31,10 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -56,24 +53,6 @@ class PayPalTransactionFactory extends TransactionFactory
      * @var PayPalTransaction
      */
     protected $transaction;
-    /**
-     * @var BasketFactory
-     */
-    private $basketFactory;
-    /**
-     * @var AccountHolderFactory
-     */
-    private $accountHolderFactory;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $methodConfig;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
 
     /**
      * PayPalTransactionFactory constructor.
@@ -84,9 +63,6 @@ class PayPalTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param Repository $transactionRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -95,21 +71,9 @@ class PayPalTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig,
-        Repository $transactionRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        ConfigInterface $methodConfig
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction);
-
-        $this->storeManager = $storeManager;
-        $this->basketFactory = $basketFactory;
-        $this->accountHolderFactory = $accountHolderFactory;
-        $this->methodConfig = $methodConfig;
-
-        $this->transactionRepository = $transactionRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterBuilder = $filterBuilder;
+        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
     }
 
     /**
@@ -138,14 +102,7 @@ class PayPalTransactionFactory extends TransactionFactory
         ));
 
         if ($this->methodConfig->getValue('send_shopping_basket')) {
-            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction, true));
-        }
-
-        if ($this->methodConfig->getValue('send_descriptor')) {
-            $this->transaction->setDescriptor(sprintf('%s %s',
-                substr($this->storeManager->getStore()->getName(), 0, 9),
-                $this->orderId
-            ));
+            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
         }
 
         return $this->transaction;

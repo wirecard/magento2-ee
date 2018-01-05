@@ -105,6 +105,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             );
             return $config;
         }
+
         $methodConfig = $this->methodConfigs[$paymentCode];
 
         $config = new Config(

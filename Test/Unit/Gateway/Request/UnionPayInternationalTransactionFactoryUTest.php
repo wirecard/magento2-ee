@@ -34,7 +34,6 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
@@ -43,18 +42,17 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
-use Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory;
+use Wirecard\ElasticEngine\Gateway\Request\UnionPayInternationalTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
-use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\SepaTransaction;
+use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 
-class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
+class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
     const REDIRECT_URL = 'http://magen.to/frontend/redirect';
     const ORDER_ID = '1234567';
@@ -103,34 +101,20 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
 
-        $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $address->method('getEmail')->willReturn('test@example.com');
-        $address->method('getFirstname')->willReturn('Joe');
-        $address->method('getLastname')->willReturn('Doe');
-
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
-        $this->order->method('getBillingAddress')->willReturn($address);
-        $this->order->method('getShippingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
-        $additionalInfo = [
-            'bankBic' => 'WIREDEMMXXX',
-            'bankAccountIban' => 'DE42512308000000060004',
-            'accountFirstName' => 'Jane',
-            'accountLastName' => 'Doe',
-            'mandateId' => '1234'
-        ];
-
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
-        $this->payment->method('getAdditionalInformation')->willReturn($additionalInfo);
+        $this->payment->method('getAdditionalInformation')->willReturn('mypersonaltoken');
+
         $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->paymentDo->method('getOrder')->willReturn($this->order);
         $this->paymentDo->method('getPayment')->willReturn($this->payment);
+        $this->paymentDo->method('getOrder')->willReturn($this->order);
 
         $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
 
@@ -139,16 +123,16 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new SepaTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
-        $expected = Operation::CREDIT;
+        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            new UpiTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $expected = Operation::REFUND;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
     public function testCreateMinimum()
     {
-        $transaction = new SepaTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+        $transaction = new UpiTransaction();
+        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedTransaction();
@@ -158,8 +142,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCaptureMinimum()
     {
-        $transaction = new SepaTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+        $transaction = new UpiTransaction();
+        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $expected = $this->minimumExpectedCaptureTransaction();
@@ -167,67 +151,47 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $transactionFactory->capture($this->commandSubject));
     }
 
-    public function testRefundMinimum()
+    public function testRefund()
     {
-        $transaction = new SepaTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+        $transaction = new UpiTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
-        $expected = $this->minimumExpectedRefundTransaction();
-
-        $this->assertEquals($expected, $transactionFactory->refund($this->commandSubject));
-    }
-
-    public function testCreateSetsBic()
-    {
-        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
-        $transaction = new SepaTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setBic('WIREDEMMXXX');
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+        $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }
 
     /**
-     * @return SepaTransaction
+     * @return UpiTransaction
      */
     private function minimumExpectedTransaction()
     {
-        $expected = new SepaTransaction();
-
+        $expected = new UpiTransaction();
+        $expected->setTokenId('mypersonaltoken');
+        $expected->setTermUrl(self::REDIRECT_URL);
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
+            self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            self::REDIRECT_URL));
+
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
-        $mandate = new Mandate('1234');
-
-        $accountHolder = new AccountHolder();
-        $accountHolder->setFirstName('Jane');
-        $accountHolder->setLastName('Doe');
-        $expected->setAccountHolder($accountHolder);
-        $expected->setIban('DE42512308000000060004');
-        $expected->setMandate($mandate);
-
         return $expected;
     }
 
     /**
-     * @return SepaTransaction
+     * @return UpiTransaction
      */
     private function minimumExpectedCaptureTransaction()
     {
-        $expected = new SepaTransaction();
+        $expected = new UpiTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setParentTransactionId('123456PARENT');
         $expected->setAmount(new Amount(1.0, 'EUR'));
@@ -239,11 +203,11 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return SepaTransaction
+     * @return UpiTransaction
      */
     private function minimumExpectedRefundTransaction()
     {
-        $expected = new SepaTransaction();
+        $expected = new UpiTransaction();
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAccountHolder(new AccountHolder());

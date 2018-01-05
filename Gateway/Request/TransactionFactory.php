@@ -31,14 +31,13 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Sales\Model\Order\Payment\Transaction as MageTransaction;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
-use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
+use Magento\Sales\Model\Order\Payment;
+use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -78,39 +77,56 @@ class TransactionFactory
     protected $orderId;
 
     /**
-     * @var Repository $transactionRepository
-     */
-    protected $transactionRepository;
-
-    /**
-     * @var SearchCriteriaBuilder $searchCriteriaBuilder
-     */
-    protected $searchCriteriaBuilder;
-
-    /**
-     * @var FilterBuilder $filterBuilder
-     */
-    protected $filterBuilder;
-
-    /**
      * @var string
      */
     protected $transactionId;
+
+    /**
+     * @var ConfigInterface
+     */
+    protected $methodConfig;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var AccountHolderFactory
+     */
+    protected $accountHolderFactory;
+
+    /**
+     * @var BasketFactory
+     */
+    protected $basketFactory;
 
     /**
      * TransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param Transaction $transaction
+     * @param ConfigInterface $methodConfig
+     * @param StoreManagerInterface $storeManager
+     * @param AccountHolderFactory $accountHolderFactory
+     * @param BasketFactory $basketFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ResolverInterface $resolver,
-        Transaction $transaction
+        Transaction $transaction,
+        ConfigInterface $methodConfig,
+        StoreManagerInterface $storeManager,
+        AccountHolderFactory $accountHolderFactory,
+        BasketFactory $basketFactory
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->resolver = $resolver;
         $this->transaction = $transaction;
+        $this->methodConfig = $methodConfig;
+        $this->storeManager = $storeManager;
+        $this->accountHolderFactory = $accountHolderFactory;
+        $this->basketFactory = $basketFactory;
     }
 
     /**
@@ -129,6 +145,8 @@ class TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];
+
+        /** @var OrderAdapterInterface $order */
         $order = $payment->getOrder();
 
         $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
@@ -150,6 +168,10 @@ class TransactionFactory
             $wdBaseUrl . 'frontend/redirect'));
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
 
+        if ($this->methodConfig->getValue('send_additional')) {
+            $this->setAdditionalInformation($order);
+        }
+
         return $this->transaction;
     }
 
@@ -165,25 +187,22 @@ class TransactionFactory
             throw new \InvalidArgumentException('Payment data object should be provided.');
         }
 
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $this->orderId = $payment->getOrder()->getId();
+        /** @var PaymentDataObjectInterface $paymentDo */
+        $paymentDo = $commandSubject[self::PAYMENT];
 
-        $orderIdFilter = $this->filterBuilder->setField('order_id')
-            ->setValue($this->orderId)
-            ->create();
+        /** @var OrderAdapterInterface $order */
+        $order = $paymentDo->getOrder();
 
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter($orderIdFilter)
-            ->addSortOrder('order_id', 'ASC')
-            ->create();
+        /** @var Payment $payment */
+        $payment = $paymentDo->getPayment();
 
-        /** @var Collection $transactionList */
-        $transactionList = $this->transactionRepository->getList($searchCriteria);
-        /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
+        $this->orderId = $order->getId();
+        $captureAmount = $commandSubject[self::AMOUNT];
+        $amount = new Amount($captureAmount, $order->getCurrencyCode());
 
-        $this->transaction->setParentTransactionId($transaction->getTxnId());
+        $this->transaction->setParentTransactionId($payment->getParentTransactionId());
+        $this->transaction->setAmount($amount);
+
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
@@ -205,31 +224,20 @@ class TransactionFactory
             throw new \InvalidArgumentException('Payment data object should be provided.');
         }
 
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $this->orderId = $payment->getOrder()->getId();
+        /** @var PaymentDataObjectInterface $paymentDo */
+        $paymentDo = $commandSubject[self::PAYMENT];
 
-        $orderIdFilter = $this->filterBuilder->setField('order_id')
-            ->setValue($this->orderId)
-            ->create();
+        /** @var OrderAdapterInterface $order */
+        $order = $paymentDo->getOrder();
 
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter($orderIdFilter)
-            ->addSortOrder('order_id', 'ASC')
-            ->create();
+        /** @var Payment $payment */
+        $payment = $paymentDo->getPayment();
 
-        /** @var Collection $transactionList */
-        $transactionList = $this->transactionRepository->getList($searchCriteria);
-        /** @var MageTransaction $transaction */
-        $transaction = $transactionList->getItemById(max($transactionList->getAllIds()));
-        $this->transactionId = $transaction->getTxnId();
-
+        $this->orderId = $order->getId();
+        $this->transactionId = $payment->getParentTransactionId();
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount($commandSubject['amount'], $payment->getOrder()->getCurrencyCode()));
-
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+        $this->transaction->setAmount(new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode()));
 
         return $this->transaction;
     }
@@ -240,5 +248,22 @@ class TransactionFactory
     public function getRefundOperation()
     {
         return self::REFUND_OPERATION;
+    }
+
+    public function setAdditionalInformation($order)
+    {
+        $this->transaction->setDescriptor(sprintf('%s %s',
+            substr($this->storeManager->getStore()->getName(), 0, 9),
+            $this->orderId
+        ));
+        $billingAddress = $order->getBillingAddress();
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
+        $this->transaction->setOrderNumber($this->orderId);
+        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $this->transaction->setIpAddress($order->getRemoteIp());
+        $this->transaction->setConsumerId($order->getCustomerId());
+
+        return $this->transaction;
     }
 }

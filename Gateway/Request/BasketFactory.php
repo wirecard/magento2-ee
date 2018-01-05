@@ -35,11 +35,13 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class BasketFactory
@@ -78,12 +80,12 @@ class BasketFactory
     /**
      * @param OrderAdapterInterface $order
      * @param Transaction $transaction
-     * @param Boolean $isCreate
      * @return Basket
      * @throws \InvalidArgumentException
+     * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
      */
-    public function create($order, $transaction, $isCreate = false)
+    public function create($order, $transaction)
     {
         if (!$order instanceof OrderAdapterInterface) {
             throw new \InvalidArgumentException('Order data obj should be provided.');
@@ -95,33 +97,13 @@ class BasketFactory
 
         /** @var OrderItemInterface $item*/
         foreach ($items as $item) {
+            if ($item->getPriceInclTax() == 0) {
+                continue;
+            }
             $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
         }
 
         $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
-        if (!$isCreate) {
-            $orderId = $order->getId();
-            $orderObject = $this->orderFactory->create();
-            if (!is_null($orderObject)) {
-                $orderObject->load($orderId);
-            }
-        }
-
-        if (is_null($orderObject)) {
-            throw new NoSuchEntityException(__('No such order found.'));
-        }
-
-        if ($orderObject->getDiscountAmount() < 0) {
-            $discountItem = new Item(
-                'Discount',
-                new Amount($orderObject->getDiscountAmount(), $order->getCurrencyCode()),
-                1
-            );
-            $discountItem->setDescription('Discount');
-            $discountItem->setArticleNumber('Discount');
-            $discountItem->setTaxRate(number_format(0, 2));
-            $basket->add($discountItem);
-        }
 
         if ($orderObject->getShippingInclTax() > 0) {
             $shippingItem = new Item(
@@ -135,6 +117,128 @@ class BasketFactory
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
             $shippingItem->setTaxRate($taxRate);
+            $basket->add($shippingItem);
+        }
+        return $basket;
+    }
+
+    /**
+     * @param OrderAdapterInterface $order
+     * @param Transaction $transaction
+     * @return Basket
+     * @throws \InvalidArgumentException
+     * @throws NoSuchEntityException
+     */
+    public function capture($order, $transaction)
+    {
+        if (!$order instanceof OrderAdapterInterface) {
+            throw new \InvalidArgumentException('Order data obj should be provided.');
+        }
+
+        $orderId = $order->getId();
+
+        /** @var Order $orderObject */
+        $orderObject = $this->orderFactory->create();
+        if (!is_null($orderObject)) {
+            $orderObject->load($orderId);
+        }
+
+        if (is_null($orderObject)) {
+            throw new NoSuchEntityException(__('No such order found.'));
+        }
+
+        $basket = new Basket();
+        $basket->setVersion($transaction);
+        $items = $order->getItems();
+
+        /** @var Order\Item $item*/
+        foreach ($items as $item) {
+            //Current quantity for item
+            $origQty = $item->getOrigData('qty_invoiced');
+            $newQty = $item->getQtyInvoiced();
+            $qty = $newQty - $origQty;
+            if ($item->getBaseRowInvoiced() == 0 || $qty == 0) {
+                continue;
+            }
+            $basket->add($this->itemFactory->capture($item, $order->getCurrencyCode(), $qty));
+        }
+
+        //Current shipping
+        $origShipping = $orderObject->getOrigData('shipping_invoiced');
+        $newShipping = $orderObject->getShippingInclTax();
+        $shipping = $newShipping - $origShipping;
+
+        if ($shipping > 0) {
+            $shippingItem = new Item(
+                'Shipping',
+                new Amount($shipping, $order->getCurrencyCode()),
+                1
+            );
+
+            $shippingItem->setDescription($orderObject->getShippingDescription());
+            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
+            $shippingItem->setTaxRate(number_format(0, 2));
+            $basket->add($shippingItem);
+        }
+        return $basket;
+    }
+
+    /**
+     * @param OrderAdapterInterface $order
+     * @param Transaction $transaction
+     * @return Basket
+     * @throws \InvalidArgumentException
+     * @throws NoSuchEntityException
+     */
+    public function refund($order, $transaction)
+    {
+        if (!$order instanceof OrderAdapterInterface) {
+            throw new \InvalidArgumentException('Order data obj should be provided.');
+        }
+
+        $orderId = $order->getId();
+
+        /** @var Order $orderObject */
+        $orderObject = $this->orderFactory->create();
+        if (!is_null($orderObject)) {
+            $orderObject->load($orderId);
+        }
+
+        if (is_null($orderObject)) {
+            throw new NoSuchEntityException(__('No such order found.'));
+        }
+
+        $basket = new Basket();
+        $basket->setVersion($transaction);
+        $items = $order->getItems();
+
+        /** @var Order\Item $item*/
+        foreach ($items as $item) {
+            //Current quantity for item
+            $origQty = $item->getOrigData('qty_refunded');
+            $newQty = $item->getQtyRefunded();
+            $qty = $newQty - $origQty;
+            if ($item->getBaseAmountRefunded() == 0 || $qty == 0) {
+                continue;
+            }
+            $basket->add($this->itemFactory->refund($item, $order->getCurrencyCode(), $qty));
+        }
+
+        //Current shipping
+        $origShipping = $orderObject->getOrigData('shipping_refunded');
+        $newShipping = $orderObject->getShippingRefunded();
+        $shipping = $newShipping - $origShipping;
+
+        if ($shipping > 0) {
+            $shippingItem = new Item(
+                'Shipping',
+                new Amount($shipping, $order->getCurrencyCode()),
+                1
+            );
+
+            $shippingItem->setDescription($orderObject->getShippingDescription());
+            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
+            $shippingItem->setTaxRate(number_format(0, 2));
             $basket->add($shippingItem);
         }
         return $basket;

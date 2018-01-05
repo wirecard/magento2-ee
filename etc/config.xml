@@ -87,7 +87,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -97,7 +99,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <merchant_account_id>2a0e9351-24ed-4110-9a1b-fd0fee6bec26</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
                 <send_shopping_basket>1</send_shopping_basket>
-                <send_descriptor>1</send_descriptor>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_paypal>
             <wirecard_elasticengine_creditcard>
                 <title>Wirecard Credit Card</title>
@@ -108,7 +110,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -123,6 +127,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <ssl_max_limit>100.0</ssl_max_limit>
                 <three_d_min_limit>50.0</three_d_min_limit>
                 <default_currency>EUR</default_currency>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_creditcard>
             <wirecard_elasticengine_maestro>
                 <title>Wirecard Maestro</title>
@@ -133,6 +138,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -147,6 +153,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <ssl_max_limit>0.0</ssl_max_limit>
                 <three_d_min_limit></three_d_min_limit>
                 <default_currency>EUR</default_currency>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_maestro>
             <wirecard_elasticengine_sepa>
                 <title>Wirecard SEPA</title>
@@ -157,7 +164,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -169,6 +178,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
                 <enable_bic>0</enable_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_sepa>
             <wirecard_elasticengine_sofortbanking>
                 <title>Wirecard Pay now.</title>
@@ -180,6 +190,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_capture>0</can_capture>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_void>0</can_void>
                 <can_invoice>1</can_invoice>
                 <can_use_checkout>1</can_use_checkout>
@@ -190,6 +201,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <payment_action>debit</payment_action>
                 <merchant_account_id>c021a23a-49a5-4987-aa39-e8e858d29bad</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_sofortbanking>
             <wirecard_elasticengine_ideal>
                 <title>Wirecard iDEAL</title>
@@ -201,6 +213,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_capture>0</can_capture>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_void>0</can_void>
                 <can_invoice>1</can_invoice>
                 <can_use_checkout>1</can_use_checkout>
@@ -211,6 +224,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <payment_action>debit</payment_action>
                 <merchant_account_id>b4ca14c0-bb9a-434d-8ce3-65fbff2c2267</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_ideal>
             <wirecard_elasticengine_ratepayinvoice>
                 <title>Wirecard Guaranteed Invoice</title>
@@ -222,7 +236,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -236,6 +252,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <allowspecific>1</allowspecific>
                 <specificcountry>AT,DE</specificcountry>
                 <billing_shipping_address_identical>1</billing_shipping_address_identical>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_ratepayinvoice>
             <wirecard_elasticengine_ratepayinstall>
                 <title>Wirecard Guaranteed Installment</title>
@@ -247,7 +264,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -261,6 +280,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <allowspecific>1</allowspecific>
                 <specificcountry>AT,DE</specificcountry>
                 <billing_shipping_address_identical>1</billing_shipping_address_identical>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_ratepayinstall>
             <wirecard_elasticengine_alipayxborder>
                 <title>Wirecard Alipay Cross Border</title>
@@ -271,8 +291,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
-                <can_capture>1</can_capture>
+                <can_capture>0</can_capture>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -281,6 +302,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <payment_action>debit</payment_action>
                 <merchant_account_id>7ca48aa0-ab12-4560-ab4a-af1c477cce43</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_alipayxborder>
             <wirecard_elasticengine_poipia>
                 <title>Wirecard Payment on Invoice / Payment on Advance</title>
@@ -302,6 +324,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <poipia_action>invoice</poipia_action>
                 <merchant_account_id>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_poipia>
             <wirecard_elasticengine_masterpass>
                 <title>Wirecard Masterpass</title>
@@ -312,7 +335,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_initialize>1</can_initialize>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_void>0</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
@@ -322,7 +347,30 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <payment_action>authorize</payment_action>
                 <merchant_account_id>8bc8ed6d-81a8-43be-bd7b-75b008f89fa6</merchant_account_id>
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
+                <send_additional>1</send_additional>
             </wirecard_elasticengine_masterpass>
+            <wirecard_elasticengine_unionpayinternational>
+                <title>Wirecard UnionPay International</title>
+                <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APILUHN-CARD</http_user>
+                <http_pass>8mhwavKVb91T</http_pass>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>UnionPayInternationalFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>authorize</payment_action>
+                <merchant_account_id>c6e9331c-5c1f-4fc6-8a08-ef65ce09ddb0</merchant_account_id>
+                <secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</secret>
+                <send_additional>1</send_additional>
+            </wirecard_elasticengine_unionpayinternational>
         </payment>
     </default>
 </config>
