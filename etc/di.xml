@@ -252,7 +252,10 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">RatepayInstallConfigValueHandler</item>
+                <item name="default" xsi:type="string">RatepayInstallConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -632,7 +635,16 @@
                 <item name="initialize" xsi:type="string">RatepayInvoiceInitializeCommand</item>
                 <item name="capture" xsi:type="string">RatepayInvoiceCaptureCommand</item>
                 <item name="refund" xsi:type="string">RatepayInvoiceRefundCommand</item>
+                <item name="void" xsi:type="string">RatepayInvoiceVoidCommand</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="RatepayInvoiceVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">RatepayInvoiceTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardRatepayInvoiceConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="RatepayInvoiceCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
