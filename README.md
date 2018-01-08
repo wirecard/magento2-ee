@@ -18,4 +18,4 @@ For general information about our plugin please visit our [Magento2 Wirecard Pay
 
 ## Magento2 Wirecard Payment Processing Gateway Installation
 
-Our Magento2 Wirecard Payment Processing Gateway Wiki also provides [Installation](https://github.com/wirecard/magento2-ee/wiki/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Wirecard Payment Processing Gateway Plugin.
+Our Magento2 Wirecard Payment Processing Gateway Wiki also provides [installation](https://github.com/wirecard/magento2-ee/wiki/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Wirecard Payment Processing Gateway Plugin.
