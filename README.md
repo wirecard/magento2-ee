@@ -1,4 +1,4 @@
-# Magento2 Payment Gateway Shop Plugin
+# Magento2 Wirecard Payment Processing Gateway Shop Plugin
 [![Build Status](https://travis-ci.org/wirecard/magento2-ee.svg?branch=master)](https://travis-ci.org/wirecard/magento2-ee)
 [![Build Status](https://saucelabs.com/buildstatus/wirecard-magento2ee-bot)](https://saucelabs.com/open_sauce/user/wirecard-magento2ee-bot)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/magento2-ee/master/LICENSE)
@@ -12,10 +12,10 @@ Before proceeding please read the article [General information](https://github.c
 
 ***
 
-## Magento2 Payment Gateway Wiki
+## Magento2 Wirecard Payment Processing Gateway Wiki
 
-For general information about our plugin please visit our [Magento2 Payment Gateway Wiki](https://github.com/wirecard/magento2-ee/wiki). 
+For general information about our plugin please visit our [Magento2 Wirecard Payment Processing Gateway Wiki](https://github.com/wirecard/magento2-ee/wiki). 
 
-## Magento2 Payment Gateway Installation
+## Magento2 Wirecard Payment Processing Gateway Installation
 
-Our Magento2 Payment Gateway Wiki also provides [Installation](https://github.com/wirecard/magento2-ee/wiki/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Payment Gateway Plugin.
+Our Magento2 Wirecard Payment Processing Gateway Wiki also provides [Installation](https://github.com/wirecard/magento2-ee/wiki/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Wirecard Payment Processing Gateway Plugin.
