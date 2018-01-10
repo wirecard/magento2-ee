@@ -41,9 +41,19 @@ use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 
 class CanVoidHandler implements ValueHandlerInterface
 {
+    private $filterBuilder;
+    private $searchCriteriaBuilder;
+    private $transactionRepository;
+
     public function __construct(
-        ObjectManager $objectManager
+        ObjectManager $objectManager,
+        Payment\Transaction\Repository $transactionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder
     ) {
+        $this->filterBuilder = $filterBuilder;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -59,9 +69,31 @@ class CanVoidHandler implements ValueHandlerInterface
         /** @var PaymentDataObjectInterface $paymentDO */
         $paymentDO = $subject['payment'];
 
-        /** @var Payment $payment */
-        $payment = $paymentDO->getPayment();
+        $order = $paymentDO->getOrder();
 
-        return $payment instanceof Payment && !(bool)$payment->getAmountPaid();
+        $orderIdFilter = $this->filterBuilder->setField('order_id')
+            ->setValue($order->getId())
+            ->create();
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter($orderIdFilter)
+            ->addSortOrder('order_id', 'ASC')
+            ->create();
+
+        /** @var Collection $transactionList */
+        $transactionList = $this->transactionRepository->getList($searchCriteria);
+        $transactions = $transactionList->getItems();
+        $authTransaction = null;
+        foreach ($transactions as $id => $item) {
+            if ($item->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION) {
+                $authTransaction = $item;
+                break;
+            }
+        }
+        if ($authTransaction === null) {
+            return false;
+        }
+
+        return $paymentDO->getPayment()->getAmountPaid() !== $paymentDO->getPayment()->getAmountOrdered();
     }
 }

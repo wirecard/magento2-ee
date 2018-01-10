@@ -154,7 +154,11 @@ class ResponseHandler implements HandlerInterface
         if ($additionalInfo !== []) {
             $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $additionalInfo);
         }
-
-        $payment->addTransaction(TransactionInterface::TYPE_ORDER);
+        if (isset($additionalInfo['transaction-type']) && $additionalInfo['transaction-type'] == 'authorization') {
+            $this->logger->debug("you have much to learn my young padavan! \n");
+            $payment->addTransaction(TransactionInterface::TYPE_AUTH);
+        } else {
+            $payment->addTransaction(TransactionInterface::TYPE_ORDER);
+        }
     }
 }

@@ -160,6 +160,7 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PaypalConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -174,6 +175,7 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">CreditCardConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -201,6 +203,8 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">SepaConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -240,6 +244,8 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">RatepayInvoiceConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -280,6 +286,8 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PoiPiaConfigValueHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -293,6 +301,8 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">MasterpassConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -306,6 +316,8 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">UnionPayInternationalConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
+                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -466,6 +478,7 @@
                 <item name="initialize" xsi:type="string">PaypalInitializeCommand</item>
                 <item name="capture" xsi:type="string">PaypalCaptureCommand</item>
                 <item name="refund" xsi:type="string">PaypalRefundCommand</item>
+                <item name="void" xsi:type="string">PaypalVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -493,6 +506,14 @@
             <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="PaypalVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">PayPalTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPaypalConfig</argument>
+        </arguments>
+    </virtualType>
 
     <virtualType name="CreditCardCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
@@ -500,6 +521,7 @@
                 <item name="initialize" xsi:type="string">CreditCardInitializeCommand</item>
                 <item name="capture" xsi:type="string">CreditCardCaptureCommand</item>
                 <item name="refund" xsi:type="string">CreditCardRefundCommand</item>
+                <item name="void" xsi:type="string">CreditCardVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -520,6 +542,14 @@
         </arguments>
     </virtualType>
     <virtualType name="CreditCardInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CreditCardVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
@@ -551,6 +581,7 @@
                 <item name="initialize" xsi:type="string">SepaInitializeCommand</item>
                 <item name="capture" xsi:type="string">SepaCaptureCommand</item>
                 <item name="refund" xsi:type="string">SepaRefundCommand</item>
+                <item name="void" xsi:type="string">SepaVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -571,6 +602,14 @@
         </arguments>
     </virtualType>
     <virtualType name="SepaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SepaVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
@@ -678,6 +717,7 @@
                 <item name="initialize" xsi:type="string">RatepayInstallInitializeCommand</item>
                 <item name="capture" xsi:type="string">RatepayInstallCaptureCommand</item>
                 <item name="refund" xsi:type="string">RatepayInstallRefundCommand</item>
+                <item name="void" xsi:type="string">RatepayInstallVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -698,6 +738,14 @@
         </arguments>
     </virtualType>
     <virtualType name="RatepayInstallInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="RatepayInstallVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
@@ -736,6 +784,7 @@
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">PoiPiaInitializeCommand</item>
                 <item name="refund" xsi:type="string">PoiPiaRefundCommand</item>
+                <item name="void" xsi:type="string">PoiPiaVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -755,12 +804,22 @@
             <argument name="methodConfig" xsi:type="object">WirecardPoiPiaConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="PoiPiaVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">PoiPiaTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardPoiPiaConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="MasterpassCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">MasterpassInitializeCommand</item>
                 <item name="capture" xsi:type="string">MasterpassCaptureCommand</item>
                 <item name="refund" xsi:type="string">MasterpassRefundCommand</item>
+                <item name="void" xsi:type="string">MasterpassVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -788,12 +847,21 @@
             <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
         </arguments>
     </virtualType>
+    <virtualType name="MasterpassVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="UnionPayInternationalCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">UnionPayInternationalInitializeCommand</item>
                 <item name="capture" xsi:type="string">UnionPayInternationalCaptureCommand</item>
                 <item name="refund" xsi:type="string">UnionPayInternationalRefundCommand</item>
+                <item name="void" xsi:type="string">UnionPayInternationalVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -814,6 +882,14 @@
         </arguments>
     </virtualType>
     <virtualType name="UnionPayInternationalInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
+        <arguments>
+            <argument name="transactionFactory" xsi:type="object">UnionPayInternationalTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnionPayInternationalVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
         <arguments>
             <argument name="transactionFactory" xsi:type="object">UnionPayInternationalTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
