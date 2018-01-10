@@ -79,8 +79,14 @@ class WirecardVoidCommand implements CommandInterface
      */
     private $methodConfig;
 
+    /**
+     * @var SearchCriteriaBuilder
+     */
     private $searchCriteriaBuilder;
 
+    /**
+     * @var OrderRepositoryInterface
+     */
     private $orderRepository;
     /**
      * WirecardCommand constructor.
@@ -93,17 +99,13 @@ class WirecardVoidCommand implements CommandInterface
     public function __construct(
         TransactionFactory $transactionFactory,
         TransactionServiceFactory $transactionServiceFactory,
-        OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
         HandlerInterface $handler,
         ConfigInterface $methodConfig
     ) {
         $this->transactionFactory = $transactionFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
-        $this->orderRepository = $orderRepository;
         $this->logger = $logger;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->handler = $handler;
         $this->methodConfig = $methodConfig;
     }

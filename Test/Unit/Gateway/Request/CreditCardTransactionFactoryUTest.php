@@ -161,6 +161,17 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }
 
+    public function testVoidOperationMinimum()
+    {
+        $transaction = new CreditCardTransaction();
+        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $expected = $this->minimumExpectedVoidTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->void($this->commandSubject));
+    }
+
     /**
      * @return CreditCardTransaction
      */
@@ -210,6 +221,21 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAccountHolder(new AccountHolder());
+        $expected->setAmount(new Amount(1.0, 'EUR'));
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return CreditCardTransaction
+     */
+    private function minimumExpectedVoidTransaction()
+    {
+        $expected = new CreditCardTransaction();
+        $expected->setParentTransactionId('123456PARENT');
+
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');

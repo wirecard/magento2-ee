@@ -37,6 +37,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -63,6 +64,8 @@ class PoiPiaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $config;
 
     private $payment;
+
+    private $paymentDo;
 
     private $order;
 
@@ -105,11 +108,16 @@ class PoiPiaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getBillingAddress')->willReturn($address);
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
-        $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->payment->method('getOrder')->willReturn($this->order);
 
-        $this->commandSubject = ['payment' => $this->payment, 'amount' => '1.0'];
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
+
+        $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->paymentDo->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getPayment')->willReturn($this->payment);
+
+        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
     }
 
     public function testCreateMinimum()
@@ -121,6 +129,17 @@ class PoiPiaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = $this->minimumExpectedTransaction();
 
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+    }
+
+    public function testVoidOperationMinimum()
+    {
+        $transaction = new PoiPiaTransaction();
+        $transactionFactory = new PoiPiaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $expected = $this->minimumExpectedVoidTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->void($this->commandSubject));
     }
 
     /**
@@ -141,6 +160,21 @@ class PoiPiaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setAccountHolder(new AccountHolder());
         $expected->setCustomFields($customFields);
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return PoiPiaTransaction
+     */
+    private function minimumExpectedVoidTransaction()
+    {
+        $expected = new PoiPiaTransaction();
+        $expected->setParentTransactionId('123456PARENT');
+
+        $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
