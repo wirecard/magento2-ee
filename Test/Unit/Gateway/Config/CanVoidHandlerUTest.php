@@ -19,7 +19,6 @@ use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Api\Data\TransactionExtensionInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
-use Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler;
 use Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler;
 
 class CanVoidHandlerUTest extends \PHPUnit_Framework_TestCase
