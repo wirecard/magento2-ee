@@ -87,7 +87,7 @@ class WirecardVoidCommand implements CommandInterface
      */
     private $orderRepository;
     /**
-     * WirecardCommand constructor.
+     * WirecardVoidCommand constructor.
      * @param TransactionFactory $transactionFactory
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param LoggerInterface $logger
