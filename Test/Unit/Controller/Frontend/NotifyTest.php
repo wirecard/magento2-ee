@@ -240,6 +240,22 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->controller->execute();
     }
 
+    public function testExecuteWithSuccessResponseAndAuthorization()
+    {
+        $this->setDefaultOrder();
+
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
+        $successResponse->method('isValidSignature')->willReturn(true);
+        $successResponse->method('getTransactionType')->willReturn('authorization');
+        $this->transactionService->expects($this->once())->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
+
+        $this->order->expects($this->once())->method('setStatus')->with('processing');
+        $this->order->expects($this->once())->method('setState')->with('processing');
+        $this->controller->execute();
+    }
+
     private function setDefaultOrder()
     {
         $this->orderSearchResult->method('getItems')->willReturn([$this->order]);

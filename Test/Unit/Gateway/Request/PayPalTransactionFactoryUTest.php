@@ -268,6 +268,20 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->create([]));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVoidWithWrongCommandSubject()
+    {
+        $transaction = new PayPalTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->void([]));
+    }
+
     public function testRefund()
     {
         $transaction = new PayPalTransaction();

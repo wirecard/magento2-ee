@@ -81,7 +81,7 @@ class CanVoidHandlerUTest extends \PHPUnit_Framework_TestCase
         $transactionRepository = $this->getMockBuilder(Transaction\Repository::class)->disableOriginalConstructor()->getMock();
         $transactionRepository->method('getList')->willReturn($invalidTransactionList);
 
-        $this->canNotVoidHandler = new CanCaptureHandler($objectManager, $transactionRepository, $searchCriteriaBuilder, $filterBuilder);
+        $this->canNotVoidHandler = new CanVoidHandler($objectManager, $transactionRepository, $searchCriteriaBuilder, $filterBuilder);
 
         $orderAdapterInterface = $this->getMockBuilder(OrderAdapterInterface::class)->disableOriginalConstructor()->getMock();
         $orderAdapterInterface->method('getId')->willReturn(1);

@@ -180,4 +180,18 @@ class PoiPiaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         return $expected;
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVoidWithWrongCommandSubject()
+    {
+        $transaction = new PoiPiaTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new PoiPiaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $this->assertEquals($this->minimumExpectedVoidTransaction(), $transactionFactory->void([]));
+    }
 }

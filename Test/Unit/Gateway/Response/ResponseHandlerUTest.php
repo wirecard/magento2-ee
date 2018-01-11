@@ -64,6 +64,11 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     private $paymentData;
 
     /**
+     * @var Array
+     */
+    private $paymentDataAuthorization;
+
+    /**
      * @var UrlInterface
      */
     private $urlBuilder;
@@ -77,6 +82,17 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->paymentData = [
+            'providerTransactionId' => 1234,
+            'transaction-type' => 'authorization',
+            'providerTransactionReferenceId' => 1234567,
+            'requestId' => '1-2-3',
+            'maskedAccountNumber' => '5151***5485',
+            'authorizationCode' => '1515',
+            'cardholderAuthenticationStatus' => 'Y',
+            'creditCardToken' => '0123456CARDTOKEN'
+        ];
+
+        $this->paymentDataAuthorization = [
             'providerTransactionId' => 1234,
             'providerTransactionReferenceId' => 1234567,
             'requestId' => '1-2-3',
@@ -105,6 +121,20 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $response = $this->getMockBuilder(InteractionResponse::class)->disableOriginalConstructor()->getMock();
         $response->method('getRedirectUrl')->willReturn('http://redir.ect');
         $response->method(self::GET_DATA)->willReturn($this->paymentData);
+
+        /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
+        $sessionMock->expects($this->once())->method(self::SET_REDIRECT_URL)->with('http://redir.ect');
+        $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
+    }
+
+    public function testHandlingAutorization()
+    {
+        $sessionMock = $this->session;
+        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder);
+
+        $response = $this->getMockBuilder(InteractionResponse::class)->disableOriginalConstructor()->getMock();
+        $response->method('getRedirectUrl')->willReturn('http://redir.ect');
+        $response->method(self::GET_DATA)->willReturn($this->paymentDataAuthorization);
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock->expects($this->once())->method(self::SET_REDIRECT_URL)->with('http://redir.ect');

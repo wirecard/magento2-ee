@@ -141,13 +141,6 @@ class SepaTransactionFactory extends TransactionFactory
         return $this->transaction;
     }
 
-    public function void($commandSubject)
-    {
-        parent::void($commandSubject);
-
-        return $this->transaction;
-    }
-
     /**
      * @return string
      */

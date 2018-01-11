@@ -242,4 +242,18 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         return $expected;
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVoidWithWrongCommandSubject()
+    {
+        $transaction = new CreditCardTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $this->assertEquals($this->minimumExpectedVoidTransaction(), $transactionFactory->void([]));
+    }
 }

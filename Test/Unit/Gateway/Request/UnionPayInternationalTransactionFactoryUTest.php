@@ -245,4 +245,18 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
 
         return $expected;
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVoidWithWrongCommandSubject()
+    {
+        $transaction = new UpiTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $this->assertEquals($this->minimumExpectedVoidTransaction(), $transactionFactory->void([]));
+    }
 }
