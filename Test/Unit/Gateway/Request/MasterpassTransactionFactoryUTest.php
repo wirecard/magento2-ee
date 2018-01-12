@@ -166,6 +166,17 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
+    public function testVoidOperationMinimum()
+    {
+        $transaction = new MasterpassTransaction();
+        $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $expected = $this->minimumExpectedRefundTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->void($this->commandSubject));
+    }
+
     /**
      * @return MasterpassTransaction
      */
@@ -224,5 +235,19 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setEntryMode('ecommerce');
 
         return $expected;
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVoidWithWrongCommandSubject()
+    {
+        $transaction = new MasterpassTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->void([]));
     }
 }

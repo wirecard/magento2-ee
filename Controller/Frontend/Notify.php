@@ -237,6 +237,9 @@ class Notify extends Action
         if ($transactionType == 'check-payer-response') {
             $transactionType = 'payment';
         }
+        if ($transactionType == 'authorization') {
+            $payment->setIsTransactionClosed(false);
+        }
         $payment->addTransaction($transactionType);
 
         return $payment;

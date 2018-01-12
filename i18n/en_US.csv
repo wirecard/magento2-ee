@@ -43,6 +43,6 @@
 "I have read and accepted the SEPA Direct Debit Mandate information.","I have read and accepted the SEPA Direct Debit Mandate information."
 "Amount:","Amount:"
 "Date:","Date:"
-"The maximum order amount in your default currency to initialize SSL transactions.","Maximum order amount in your default currency to initialize SSL transactions."
-"The minimum order amount in your default currency to initialize 3D transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>","Minimum order amount in your default currency to initialize 3D transactions."
+"The maximum order amount in your default currency to initialize Non 3-D Secure transactions.","Maximum order amount in your default currency to initialize Non 3-D Secure transactions."
+"The minimum order amount in your default currency to initialize 3-D Secure transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: Non 3-D Secure Max Limit and 3-D Secure Min Limit</a>","Minimum order amount in your default currency to initialize 3-D Secure transactions."
 "The elastic engine base url. (e.g. https://api.wirecard.com)","The Wirecard Payment Processing Gateway base url. (e.g. https://api.wirecard.com)"

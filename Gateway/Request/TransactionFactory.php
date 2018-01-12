@@ -242,6 +242,33 @@ class TransactionFactory
         return $this->transaction;
     }
 
+    public function void($commandSubject)
+    {
+        if (!isset($commandSubject[self::PAYMENT])
+            || !$commandSubject[self::PAYMENT] instanceof PaymentDataObjectInterface
+        ) {
+            throw new \InvalidArgumentException('Payment data object should be provided.');
+        }
+
+        /** @var PaymentDataObjectInterface $paymentDo */
+        $paymentDo = $commandSubject[self::PAYMENT];
+
+        /** @var OrderAdapterInterface $order */
+        $order = $paymentDo->getOrder();
+
+        /** @var Payment $payment */
+        $payment = $paymentDo->getPayment();
+
+        $this->orderId = $order->getId();
+        $this->transactionId = $payment->getParentTransactionId();
+        $this->transaction->setEntryMode('ecommerce');
+        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+        $this->transaction->setAmount(new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode()));
+        $this->transaction->setParentTransactionId($this->transactionId);
+
+        return $this->transaction;
+    }
+
     /**
      * @return string
      */

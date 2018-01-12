@@ -162,6 +162,19 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }
 
+    public function testVoidOperationMinimum()
+    {
+        $transaction = new UpiTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $expected = $this->minimumExpectedVoidTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->void($this->commandSubject));
+    }
+
     /**
      * @return UpiTransaction
      */
@@ -216,5 +229,34 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $expected->setEntryMode('ecommerce');
 
         return $expected;
+    }
+
+    /**
+     * @return UpiTransaction
+     */
+    private function minimumExpectedVoidTransaction()
+    {
+        $expected = new UpiTransaction();
+        $expected->setParentTransactionId('123456PARENT');
+
+        $expected->setAmount(new Amount(1.0, 'EUR'));
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVoidWithWrongCommandSubject()
+    {
+        $transaction = new UpiTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $this->assertEquals($this->minimumExpectedVoidTransaction(), $transactionFactory->void([]));
     }
 }

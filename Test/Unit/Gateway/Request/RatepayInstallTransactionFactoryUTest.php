@@ -205,6 +205,21 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $transactionFactory->refund($this->commandSubject));
     }
 
+    public function testVoidOperationMinimum()
+    {
+        $transaction = new RatepayInstallmentTransaction();
+        $transaction->setRedirect(new Redirect(
+            self::REDIRECT_URL,
+            'http://magen.to/frontend/cancel',
+            self::REDIRECT_URL));
+        $transactionFactory = new RatepayInstallTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->session);
+
+        $expected = $this->minimumExpectedVoidTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->void($this->commandSubject));
+    }
+
     /**
      * @return RatepayInstallmentTransaction
      */
@@ -266,6 +281,25 @@ class RatepayInstallTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setBasket(new Basket());
+        $expected->setLocale('en');
+        $expected->setEntryMode('ecommerce');
+
+        return $expected;
+    }
+
+    /**
+     * @return RatepayInstallmentTransaction
+     */
+    private function minimumExpectedVoidTransaction()
+    {
+        $expected = new RatepayInstallmentTransaction();
+        $expected->setRedirect(new Redirect(
+            self::REDIRECT_URL,
+            'http://magen.to/frontend/cancel',
+            self::REDIRECT_URL));
+        $expected->setParentTransactionId('123456PARENT');
+
+        $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
