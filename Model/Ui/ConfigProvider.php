@@ -53,6 +53,7 @@ class ConfigProvider implements ConfigProviderInterface
     const POIPIA_CODE = 'wirecard_elasticengine_poipia';
     const MASTERPASS_CODE = 'wirecard_elasticengine_masterpass';
     const UPI_CODE = 'wirecard_elasticengine_unionpayinternational';
+    const CREDITCARD_VAULT_CODE = 'wirecard_elasticengine_cc_vault';
 
     /**
      * @var Repository

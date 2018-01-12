@@ -33,9 +33,10 @@ define(
         'jquery',
         'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
         'mage/translate',
-        'mage/url'
+        'mage/url',
+        'Magento_Vault/js/view/payment/vault-enabler'
     ],
-    function ($, Component, $t, url) {
+    function ($, Component, $t, url, VaultEnabler) {
         'use strict';
         return Component.extend({
             token_id: null,
@@ -50,6 +51,8 @@ define(
                     onSuccess: this.seamlessFormSizeHandler.bind(this),
                     onError: this.seamlessFormInitErrorHandler.bind(this)
                 });
+                this.vaultEnabler = new VaultEnabler();
+                this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
             seamlessFormSubmit: function() {
                 WirecardPaymentPage.seamlessSubmitForm({
@@ -86,10 +89,12 @@ define(
                     iframe.style.height = "415px";
                 }
             },
-            /**
-             * Get payment method data
-             */
+
             getData: function () {
+                var data = this._super();
+
+                this.vaultEnabler.visitAdditionalData(data);
+                //in demo return data
                 return {
                     'method': this.getCode(),
                     'po_number': null,
@@ -134,6 +139,22 @@ define(
                         window.location.replace(data['redirect-url']);
                     }
                 });
+            },
+
+            /**
+             * @returns {String}
+             */
+            getVaultCode: function () {
+                console.log("getValutCode: " + window.checkoutConfig.payment[this.getCode()].vaultCode);
+                return window.checkoutConfig.payment[this.getCode()].vaultCode;
+            },
+
+            /**
+             * @returns {Bool}
+             */
+            isVaultEnabled: function () {
+                console.log("vault enabled: " + this.vaultEnabler.isVaultEnabled());
+                return this.vaultEnabler.isVaultEnabled();
             }
         });
     }

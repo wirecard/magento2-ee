@@ -329,6 +329,11 @@
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_CODE</argument>
         </arguments>
     </virtualType>
+    <virtualType name="WirecardCreditCardVaultConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="WirecardMaestroConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MAESTRO_CODE</argument>
@@ -497,6 +502,7 @@
                 <item name="initialize" xsi:type="string">CreditCardInitializeCommand</item>
                 <item name="capture" xsi:type="string">CreditCardCaptureCommand</item>
                 <item name="refund" xsi:type="string">CreditCardRefundCommand</item>
+                <item name="vault_authorize" xsi:type="string">CreditCardVaultAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -518,6 +524,15 @@
     </virtualType>
     <virtualType name="CreditCardInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
+            <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CreditCardVaultAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">CreditCardVaultAuthorizeRequest</argument>
             <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
@@ -947,6 +962,34 @@
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
             <argument name="moduleList" xsi:type="object">Magento\Framework\Module\ModuleListInterface</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CreditCardCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">CreditCardCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CreditCardVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="config" xsi:type="object">WirecardCreditCardVaultConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">CreditCardValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">CreditCardFacade</argument>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CreditCardValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardCreditCardVaultConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CreditCardValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">CreditCardValueHandler</item>
+            </argument>
         </arguments>
     </virtualType>
 

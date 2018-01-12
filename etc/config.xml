@@ -128,6 +128,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <three_d_min_limit>50.0</three_d_min_limit>
                 <default_currency>EUR</default_currency>
                 <send_additional>1</send_additional>
+                <can_authorize_vault>1</can_authorize_vault>
             </wirecard_elasticengine_creditcard>
             <wirecard_elasticengine_maestro>
                 <title>Wirecard Maestro</title>
@@ -371,6 +372,10 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</secret>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_unionpayinternational>
+            <wirecard_elasticengine_cc_vault>
+                <model>CreditCardVaultFacade</model>
+                <title>Stored Cards</title>
+            </wirecard_elasticengine_cc_vault>
         </payment>
     </default>
 </config>
