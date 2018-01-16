@@ -29,37 +29,48 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Observer;
+namespace Wirecard\ElasticEngine\Model\Ui;
 
-use Magento\Framework\Event\Observer;
-use Magento\Payment\Observer\AbstractDataAssignObserver;
-use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Model\Ui\TokenUiComponentInterface;
+use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
+use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 
-class CreditCardDataAssignObserver extends AbstractDataAssignObserver
+class TokenUiComponentProvider implements TokenUiComponentProviderInterface
 {
-    const TOKEN_ID = 'token_id';
-    const VAULT_ENABLER = 'is_active_payment_token_enabler';
+    /**
+     * @var TokenUiComponentInterfaceFactory
+     */
+    private $componentFactory;
 
     /**
-     * @param Observer $observer
-     * @return void|null
+     * @param TokenUiComponentInterfaceFactory $componentFactory
      */
-    public function execute(Observer $observer)
+    public function __construct(
+        TokenUiComponentInterfaceFactory $componentFactory
+    ) {
+        $this->componentFactory = $componentFactory;
+    }
+
+    /**
+     * Get UI component for token
+     * @param PaymentTokenInterface $paymentToken
+     * @return TokenUiComponentInterface
+     */
+    public function getComponentForToken(PaymentTokenInterface $paymentToken)
     {
-        $data = $this->readDataArgument($observer);
+        $jsonDetails = json_decode($paymentToken->getTokenDetails() ?: '{}', true);
+        $component = $this->componentFactory->create(
+            [
+                'config' => [
+                    'code' => ConfigProvider::CREDITCARD_VAULT_CODE,
+                    TokenUiComponentProviderInterface::COMPONENT_DETAILS => $jsonDetails,
+                    TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => $paymentToken->getPublicHash()
+                ],
+                'name' => 'Wirecard_ElasticEngine/js/view/payment/method-renderer/vault'
+            ]
+        );
 
-        $additionalData = $data->getData(PaymentInterface::KEY_ADDITIONAL_DATA);
-        if (!is_array($additionalData)) {
-            return;
-        }
-
-        $paymentInfo = $this->readPaymentModelArgument($observer);
-
-        if (array_key_exists(self::TOKEN_ID, $additionalData)) {
-            $paymentInfo->setAdditionalInformation(
-                self::TOKEN_ID,
-                $additionalData[self::TOKEN_ID]
-            );
-        }
+        return $component;
     }
 }

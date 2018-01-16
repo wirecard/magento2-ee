@@ -53,6 +53,7 @@ define(
                 });
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
+                //this.vaultEnabler.setPaymentCode('wirecard_elasticengine_cc_vault');
             },
             seamlessFormSubmit: function() {
                 WirecardPaymentPage.seamlessSubmitForm({
@@ -91,15 +92,15 @@ define(
             },
 
             getData: function () {
-                var data = this._super();
+                //var data = this._super();
+                console.log("is_active_payment_token_enabler: " + this.vaultEnabler.isActivePaymentTokenEnabler());
 
-                this.vaultEnabler.visitAdditionalData(data);
-                //in demo return data
                 return {
                     'method': this.getCode(),
                     'po_number': null,
                     'additional_data': {
-                        'token_id': this.token_id
+                        'token_id': this.token_id,
+                        'is_active_payment_token_enabler': this.vaultEnabler.isActivePaymentTokenEnabler()
                     }
                 };
             },

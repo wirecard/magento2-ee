@@ -173,7 +173,8 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale), true)
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale), true),
+                'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE
             ]
         ];
     }

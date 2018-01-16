@@ -974,28 +974,37 @@
     <virtualType name="CreditCardVaultFacade" type="Magento\Vault\Model\Method\Vault">
         <arguments>
             <argument name="config" xsi:type="object">WirecardCreditCardVaultConfig</argument>
-            <argument name="valueHandlerPool" xsi:type="object">CreditCardValueHandlerPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">CreditCardVaultValueHandlerPool</argument>
             <argument name="vaultProvider" xsi:type="object">CreditCardFacade</argument>
             <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_VAULT_CODE</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="CreditCardValueHandler" type="VaultPaymentDefaultValueHandler">
+    <virtualType name="CreditCardVaultValueHandler" type="VaultPaymentDefaultValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">WirecardCreditCardVaultConfig</argument>
         </arguments>
     </virtualType>
-    <virtualType name="CreditCardValueHandlerPool" type="VaultPaymentValueHandlerPool">
+    <virtualType name="CreditCardVaultValueHandlerPool" type="VaultPaymentValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">CreditCardValueHandler</item>
+                <item name="default" xsi:type="string">CreditCardVaultValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
+    <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
+        <arguments>
+            <argument name="tokenUiComponentProviders" xsi:type="array">
+                <item name="creditcard" xsi:type="object">Wirecard\ElasticEngine\Model\Ui\TokenUiComponentProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="Wirecard\ElasticEngine\Controller\Frontend\Notify">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Model\CreditCardTokenFactory</argument>
         </arguments>
     </type>
 

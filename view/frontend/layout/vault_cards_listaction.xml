@@ -1,4 +1,5 @@
-<?php
+<?xml version="1.0"?>
+<!--
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -28,38 +29,14 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
+-->
 
-namespace Wirecard\ElasticEngine\Observer;
-
-use Magento\Framework\Event\Observer;
-use Magento\Payment\Observer\AbstractDataAssignObserver;
-use Magento\Quote\Api\Data\PaymentInterface;
-
-class CreditCardDataAssignObserver extends AbstractDataAssignObserver
-{
-    const TOKEN_ID = 'token_id';
-    const VAULT_ENABLER = 'is_active_payment_token_enabler';
-
-    /**
-     * @param Observer $observer
-     * @return void|null
-     */
-    public function execute(Observer $observer)
-    {
-        $data = $this->readDataArgument($observer);
-
-        $additionalData = $data->getData(PaymentInterface::KEY_ADDITIONAL_DATA);
-        if (!is_array($additionalData)) {
-            return;
-        }
-
-        $paymentInfo = $this->readPaymentModelArgument($observer);
-
-        if (array_key_exists(self::TOKEN_ID, $additionalData)) {
-            $paymentInfo->setAdditionalInformation(
-                self::TOKEN_ID,
-                $additionalData[self::TOKEN_ID]
-            );
-        }
-    }
-}
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <referenceBlock name="vault.cards.list">
+                <block class="Wirecard\ElasticEngine\Block\Customer\CardRenderer" name="wirecard.card.renderer" template="Magento_Vault::customer_account/credit_card.phtml"/>
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>

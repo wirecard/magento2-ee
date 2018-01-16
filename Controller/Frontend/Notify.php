@@ -36,10 +36,15 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
+use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\Status;
@@ -90,6 +95,20 @@ class Notify extends Action
     private $canCaptureInvoice;
 
     /**
+     * @var PaymentTokenInterfaceFactory
+     */
+    protected $paymentTokenFactory;
+
+    /**
+     * @var OrderPaymentExtensionInterfaceFactory
+     */
+    protected $paymentExtensionFactory;
+
+    private $paymentTokenManagement;
+
+    private $encryptor;
+
+    /**
      * Notify constructor.
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
@@ -106,7 +125,11 @@ class Notify extends Action
         LoggerInterface $logger,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         InvoiceService $invoiceService,
-        Transaction $transaction
+        Transaction $transaction,
+        OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
+        PaymentTokenInterfaceFactory $paymentTokenFactory,
+        PaymentTokenManagementInterface $paymentTokenManagement,
+        EncryptorInterface $encryptor
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
@@ -115,6 +138,10 @@ class Notify extends Action
         $this->invoiceService = $invoiceService;
         $this->transaction = $transaction;
         $this->canCaptureInvoice = false;
+        $this->paymentTokenFactory = $paymentTokenFactory;
+        $this->paymentExtensionFactory = $paymentExtensionFactory;
+        $this->paymentTokenManagement = $paymentTokenManagement;
+        $this->encryptor = $encryptor;
 
         parent::__construct($context);
     }
@@ -174,6 +201,10 @@ class Notify extends Action
         }
     }
 
+    /**
+     * @param $order
+     * @param SuccessResponse $response
+     */
     private function handleSuccess($order, $response)
     {
         if ($order->getStatus() !== Order::STATE_COMPLETE) {
@@ -188,9 +219,39 @@ class Notify extends Action
         if ($this->canCaptureInvoice) {
             $this->captureInvoice($order, $response);
         }
+
+        if ($response->getCustomFields()->get('vaultEnabler')) {
+            /** @var PaymentTokenInterface $paymentToken */
+            $paymentToken = $this->paymentTokenFactory->create();
+            $paymentToken->setGatewayToken($response->getCardTokenId());
+            $paymentToken->setExpiresAt(new \DateTime('2019-01-01'));
+            $paymentToken->setIsActive(true);
+            $paymentToken->setIsVisible(true);
+            $paymentToken->setCustomerId($order->getCustomerId());
+            $paymentToken->setPaymentMethodCode($payment->getMethod());
+            $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
+
+            substr($response->getMaskedAccountNumber(), -4);
+            $this->logger->debug("RESPONSE NOTIFY: " . print_r($response, true));
+            //{"type":"MC","maskedCC":"4444","expirationDate":"07\/2019"} fields muss be set else no cc is shown
+            $paymentToken->setTokenDetails(json_encode([
+                'type' => '',
+                'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
+                'expirationDate' => 'xx-xxxx'
+            ]));
+            if (null !== $paymentToken) {
+                $extensionAttributes = $payment->getExtensionAttributes();
+                if (null === $extensionAttributes) {
+                    $extensionAttributes = $this->paymentExtensionFactory->create();
+                    $payment->setExtensionAttributes($extensionAttributes);
+                }
+                $this->paymentTokenManagement->saveTokenWithPaymentLink($paymentToken, $payment);
+                $extensionAttributes->setVaultPaymentToken($paymentToken);
+            }
+        }
+
         $this->orderRepository->save($order);
     }
-
     /**
      * search for an order by id and update the state/status property
      *
@@ -294,5 +355,19 @@ class Notify extends Action
         } else {
             $this->canCaptureInvoice = false;
         }
+    }
+
+    private function generatePublicHash(PaymentTokenInterface $paymentToken)
+    {
+        $hashKey = $paymentToken->getGatewayToken();
+        if ($paymentToken->getCustomerId()) {
+            $hashKey = $paymentToken->getCustomerId();
+        }
+
+        $hashKey .= $paymentToken->getPaymentMethodCode()
+            . $paymentToken->getType()
+            . $paymentToken->getTokenDetails();
+
+        return $this->encryptor->getHash($hashKey);
     }
 }

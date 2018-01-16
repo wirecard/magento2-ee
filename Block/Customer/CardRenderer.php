@@ -29,37 +29,62 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-namespace Wirecard\ElasticEngine\Observer;
+namespace Wirecard\ElasticEngine\Block\Customer;
 
-use Magento\Framework\Event\Observer;
-use Magento\Payment\Observer\AbstractDataAssignObserver;
-use Magento\Quote\Api\Data\PaymentInterface;
+use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Block\AbstractCardRenderer;
 
-class CreditCardDataAssignObserver extends AbstractDataAssignObserver
+class CardRenderer extends AbstractCardRenderer
 {
-    const TOKEN_ID = 'token_id';
-    const VAULT_ENABLER = 'is_active_payment_token_enabler';
+    /**
+     * Can render specified token
+     *
+     * @param PaymentTokenInterface $token
+     * @return boolean
+     */
+    public function canRender(PaymentTokenInterface $token)
+    {
+        return $token->getPaymentMethodCode() === ConfigProvider::CREDITCARD_CODE;
+    }
 
     /**
-     * @param Observer $observer
-     * @return void|null
+     * @return string
      */
-    public function execute(Observer $observer)
+    public function getNumberLast4Digits()
     {
-        $data = $this->readDataArgument($observer);
+        return $this->getTokenDetails()['maskedCC'];
+    }
 
-        $additionalData = $data->getData(PaymentInterface::KEY_ADDITIONAL_DATA);
-        if (!is_array($additionalData)) {
-            return;
-        }
+    /**
+     * @return string
+     */
+    public function getExpDate()
+    {
+        return $this->getTokenDetails()['expirationDate'];
+    }
 
-        $paymentInfo = $this->readPaymentModelArgument($observer);
+    /**
+     * @return string
+     */
+    public function getIconUrl()
+    {
+        return $this->getIconForType($this->getTokenDetails()['type'])['url'];
+    }
 
-        if (array_key_exists(self::TOKEN_ID, $additionalData)) {
-            $paymentInfo->setAdditionalInformation(
-                self::TOKEN_ID,
-                $additionalData[self::TOKEN_ID]
-            );
-        }
+    /**
+     * @return int
+     */
+    public function getIconHeight()
+    {
+        return $this->getIconForType($this->getTokenDetails()['type'])['height'];
+    }
+
+    /**
+     * @return int
+     */
+    public function getIconWidth()
+    {
+        return $this->getIconForType($this->getTokenDetails()['type'])['width'];
     }
 }
