@@ -53,7 +53,6 @@ define(
                 });
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
-                //this.vaultEnabler.setPaymentCode('wirecard_elasticengine_cc_vault');
             },
             seamlessFormSubmit: function() {
                 WirecardPaymentPage.seamlessSubmitForm({
@@ -92,7 +91,6 @@ define(
             },
 
             getData: function () {
-                //var data = this._super();
                 console.log("is_active_payment_token_enabler: " + this.vaultEnabler.isActivePaymentTokenEnabler());
 
                 return {

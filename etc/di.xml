@@ -530,7 +530,7 @@
             <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
         </arguments>
     </virtualType>
-    <virtualType name="CreditCardVaultAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <virtualType name="CreditCardVaultAuthorizeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">CreditCardVaultAuthorizeRequest</argument>
             <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
@@ -992,14 +992,6 @@
             </argument>
         </arguments>
     </virtualType>
-
-    <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
-        <arguments>
-            <argument name="tokenUiComponentProviders" xsi:type="array">
-                <item name="creditcard" xsi:type="object">Wirecard\ElasticEngine\Model\Ui\TokenUiComponentProvider</item>
-            </argument>
-        </arguments>
-    </type>
 
     <type name="Wirecard\ElasticEngine\Controller\Frontend\Notify">
         <arguments>

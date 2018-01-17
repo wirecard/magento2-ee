@@ -30,15 +30,67 @@
 
 define([
     'jquery',
-    'Magento_Vault/js/view/payment/method-renderer/vault'
-], function ($, VaultComponent) {
+    'Magento_Vault/js/view/payment/method-renderer/vault',
+    'mage/url'
+], function ($, VaultComponent, url) {
     'use strict';
 
-    console.log("im loaded");
     return VaultComponent.extend({
         defaults: {
             template: 'Magento_Vault/payment/form'
-        }
+        },
+        /**
+         * Get last 4 digits of card
+         * @returns {String}
+         */
+        getMaskedCard: function () {
+            return this.details.maskedCC;
+        },
 
+        /**
+         * Get expiration date
+         * @returns {String}
+         */
+        getExpirationDate: function () {
+            return this.details.expirationDate;
+        },
+
+        /**
+         * Get card type
+         * @returns {String}
+         */
+        getCardType: function () {
+            return this.details.type;
+        },
+
+        /**
+         * @returns {String}
+         */
+        getToken: function () {
+            return this.publicHash;
+        }/*,
+
+        placeOrder: function () {
+            console.log(this.getToken());
+
+            $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
+                console.log("data:");
+                console.log(data);
+                if (data['form-url']) {
+                    var form = $('<form />', {action: data['form-url'], method: data['form-method']});
+
+                    for (var i = 0; i < data['form-fields'].length; i++) {
+                        form.append($('<input />', {
+                            type: 'hidden',
+                            name: data['form-fields'][i]['key'],
+                            value: data['form-fields'][i]['value']
+                        }));
+                    }
+                    form.appendTo('body').submit();
+                } else {
+                    window.location.replace(data['redirect-url']);
+                }
+            });
+        }*/
     });
 });
