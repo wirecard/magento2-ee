@@ -91,8 +91,6 @@ define(
             },
 
             getData: function () {
-                console.log("is_active_payment_token_enabler: " + this.vaultEnabler.isActivePaymentTokenEnabler());
-
                 return {
                     'method': this.getCode(),
                     'po_number': null,
@@ -144,7 +142,6 @@ define(
              * @returns {String}
              */
             getVaultCode: function () {
-                console.log("getValutCode: " + window.checkoutConfig.payment[this.getCode()].vaultCode);
                 return window.checkoutConfig.payment[this.getCode()].vaultCode;
             },
 
@@ -152,7 +149,6 @@ define(
              * @returns {Bool}
              */
             isVaultEnabled: function () {
-                console.log("vault enabled: " + this.vaultEnabler.isVaultEnabled());
                 return this.vaultEnabler.isVaultEnabled();
             }
         });

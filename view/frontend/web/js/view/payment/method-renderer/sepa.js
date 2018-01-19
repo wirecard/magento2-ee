@@ -50,7 +50,7 @@ define(
             mandate: false,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-sepa',
-                redirectAfterPlaceOrder: false,
+                redirectAfterPlaceOrder: false
             },
             /**
              * Get payment method data

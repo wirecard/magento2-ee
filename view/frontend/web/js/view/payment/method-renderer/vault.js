@@ -31,14 +31,46 @@
 define([
     'jquery',
     'Magento_Vault/js/view/payment/method-renderer/vault',
+    'mage/translate',
     'mage/url'
-], function ($, VaultComponent, url) {
+], function ($, VaultComponent, $t, url) {
     'use strict';
 
     return VaultComponent.extend({
+        token_id: null,
         defaults: {
-            template: 'Magento_Vault/payment/form'
+            template: 'Magento_Vault/payment/form',
+            redirectAfterPlaceOrder: false
         },
+        initialize: function() {
+            this._super();
+            this.config = window.checkoutConfig.payment['wirecard_elasticengine_creditcard'];
+
+            WirecardPaymentPage.seamlessRenderForm({
+                requestData: this.config.seamless_request_data,
+                wrappingDivId: 'wirecard_elasticengine_creditcard_seamless_form'
+            });
+        },
+
+        seamlessFormSubmit: function() {
+            WirecardPaymentPage.seamlessSubmitForm({
+                onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
+                onError: this.seamlessFormSubmitErrorHandler.bind(this),
+                wrappingDivId: 'wirecard_elasticengine_creditcard_seamless_form'
+            });
+        },
+
+        seamlessFormSubmitSuccessHandler: function () {
+            //this.token_id = response.token_id;
+            this.placeOrder();
+        },
+
+        seamlessFormSubmitErrorHandler: function (response) {
+            this.messageContainer.addErrorMessage({message: $t('An error occurred submitting the credit card form.')});
+
+            console.error(response);
+        },
+
         /**
          * Get last 4 digits of card
          * @returns {String}
@@ -68,29 +100,44 @@ define([
          */
         getToken: function () {
             return this.publicHash;
-        }/*,
+        },
 
-        placeOrder: function () {
-            console.log(this.getToken());
+        getTokenFromHash: function () {
+            console.log("publicHash: " + this.getToken());
+            $.get(url.build("wirecard_elasticengine/frontend/vault?hash="+this.getToken()), function (data) {
+                this.token_id = data.token_id;
+            });
 
+        },
+
+        placeOrder: function (data, event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            this.getTokenFromHash();
+
+
+            this.afterPlaceOrder();
+        },
+
+        afterPlaceOrder: function () {
             $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                console.log("data:");
-                console.log(data);
+                data['redirect-url'] = '';
+                data['form-method'] = 'POST';
+                data['form-url'] = 'https://c3-test.wirecard.com/acssim/app/bank';
                 if (data['form-url']) {
                     var form = $('<form />', {action: data['form-url'], method: data['form-method']});
-
-                    for (var i = 0; i < data['form-fields'].length; i++) {
-                        form.append($('<input />', {
-                            type: 'hidden',
-                            name: data['form-fields'][i]['key'],
-                            value: data['form-fields'][i]['value']
-                        }));
-                    }
+                    form.append($('<input />', {
+                        type: 'hidden',
+                        name: 'tokenId',
+                        value: this.token_id
+                    }));
                     form.appendTo('body').submit();
                 } else {
                     window.location.replace(data['redirect-url']);
                 }
             });
-        }*/
+        }
     });
 });
