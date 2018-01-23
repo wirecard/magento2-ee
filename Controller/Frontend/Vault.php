@@ -92,7 +92,7 @@ class Vault extends Action
 
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $result->setData($token->getGatewayToken());
+        $result->setData(["token_id" => $token->getGatewayToken(), "method_code" => $token->getPaymentMethodCode()]);
 
         return $result;
     }

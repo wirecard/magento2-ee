@@ -104,8 +104,14 @@ class Notify extends Action
      */
     protected $paymentExtensionFactory;
 
+    /**
+     * @var PaymentTokenManagementInterface
+     */
     private $paymentTokenManagement;
 
+    /**
+     * @var EncryptorInterface
+     */
     private $encryptor;
 
     /**
@@ -221,33 +227,7 @@ class Notify extends Action
         }
 
         if ($response->getCustomFields()->get('vaultEnabler')) {
-            /** @var PaymentTokenInterface $paymentToken */
-            $paymentToken = $this->paymentTokenFactory->create();
-            $paymentToken->setGatewayToken($response->getCardTokenId());
-            $paymentToken->setExpiresAt(new \DateTime('2019-01-01'));
-            $paymentToken->setIsActive(true);
-            $paymentToken->setIsVisible(true);
-            $paymentToken->setCustomerId($order->getCustomerId());
-            $paymentToken->setPaymentMethodCode($payment->getMethod());
-            $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
-
-            substr($response->getMaskedAccountNumber(), -4);
-            $this->logger->debug("RESPONSE NOTIFY: " . print_r($response, true));
-            //{"type":"MC","maskedCC":"4444","expirationDate":"07\/2019"} fields muss be set else no cc is shown
-            $paymentToken->setTokenDetails(json_encode([
-                'type' => '',
-                'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
-                'expirationDate' => 'xx-xxxx'
-            ]));
-            if (null !== $paymentToken) {
-                $extensionAttributes = $payment->getExtensionAttributes();
-                if (null === $extensionAttributes) {
-                    $extensionAttributes = $this->paymentExtensionFactory->create();
-                    $payment->setExtensionAttributes($extensionAttributes);
-                }
-                $this->paymentTokenManagement->saveTokenWithPaymentLink($paymentToken, $payment);
-                $extensionAttributes->setVaultPaymentToken($paymentToken);
-            }
+            $this->saveCreditCardToken($response, $order->getCustomerId(), $payment);
         }
 
         $this->orderRepository->save($order);
@@ -354,6 +334,34 @@ class Notify extends Action
             $this->canCaptureInvoice = true;
         } else {
             $this->canCaptureInvoice = false;
+        }
+    }
+
+    private function saveCreditCardToken($response, $customerId, $payment)
+    {
+        /** @var PaymentTokenInterface $paymentToken */
+        $paymentToken = $this->paymentTokenFactory->create();
+        $paymentToken->setGatewayToken($response->getCardTokenId());
+        $paymentToken->setIsActive(true);
+        $paymentToken->setIsVisible(true);
+        $paymentToken->setCustomerId($customerId);
+        $paymentToken->setPaymentMethodCode($payment->getMethod());
+        $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
+
+        $paymentToken->setTokenDetails(json_encode([
+            'type' => '',
+            'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
+            'expirationDate' => 'xx-xxxx'
+        ]));
+
+        if (null !== $paymentToken) {
+            $extensionAttributes = $payment->getExtensionAttributes();
+            if (null === $extensionAttributes) {
+                $extensionAttributes = $this->paymentExtensionFactory->create();
+                $payment->setExtensionAttributes($extensionAttributes);
+            }
+            $this->paymentTokenManagement->saveTokenWithPaymentLink($paymentToken, $payment);
+            $extensionAttributes->setVaultPaymentToken($paymentToken);
         }
     }
 
