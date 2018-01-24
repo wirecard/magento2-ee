@@ -106,7 +106,7 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
-                $this->getConfigForCreditCard(self::CREDITCARD_CODE) +
+                $this->getConfigForCreditCardWithVault(self::CREDITCARD_CODE) +
                 $this->getConfigForCreditCard(self::MAESTRO_CODE) +
                 $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
@@ -167,6 +167,22 @@ class ConfigProvider implements ConfigProviderInterface
      * @return array
      */
     private function getConfigForCreditCard($paymentMethodName)
+    {
+        $locale = $this->store->getLocale();
+        $transactionService = $this->transactionServiceFactory->create('creditcard');
+        return [
+            $paymentMethodName => [
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale), true)
+            ]
+        ];
+    }
+
+    /**
+     * @param $paymentMethodName
+     * @return array
+     */
+    private function getConfigForCreditCardWithVault($paymentMethodName)
     {
         $locale = $this->store->getLocale();
         $transactionService = $this->transactionServiceFactory->create('creditcard');

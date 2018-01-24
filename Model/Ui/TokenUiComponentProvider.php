@@ -60,16 +60,14 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
     public function getComponentForToken(PaymentTokenInterface $paymentToken)
     {
         $jsonDetails = json_decode($paymentToken->getTokenDetails() ?: '{}', true);
-        $component = $this->componentFactory->create(
-            [
-                'config' => [
-                    'code' => ConfigProvider::CREDITCARD_VAULT_CODE,
-                    TokenUiComponentProviderInterface::COMPONENT_DETAILS => $jsonDetails,
-                    TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => $paymentToken->getPublicHash()
-                ],
-                'name' => 'Wirecard_ElasticEngine/js/view/payment/method-renderer/vault'
-            ]
-        );
+        $component = $this->componentFactory->create([
+            'config' => [
+                'code' => ConfigProvider::CREDITCARD_VAULT_CODE,
+                TokenUiComponentProviderInterface::COMPONENT_DETAILS => $jsonDetails,
+                TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => $paymentToken->getPublicHash()
+            ],
+            'name' => 'Wirecard_ElasticEngine/js/view/payment/method-renderer/vault'
+        ]);
 
         return $component;
     }

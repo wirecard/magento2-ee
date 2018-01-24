@@ -95,7 +95,12 @@ class CreditCardTransactionFactory extends TransactionFactory
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', $this->orderId));
-        $customFields->add(new CustomField('vaultEnabler', $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)));
+        if ($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)) {
+            $customFields->add(new CustomField('vaultEnabler', $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)));
+        }
+        if ($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)) {
+            $customFields->add(new CustomField('recurring_payment', $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)));
+        }
         $this->transaction->setCustomFields($customFields);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
@@ -113,6 +118,14 @@ class CreditCardTransactionFactory extends TransactionFactory
     public function capture($commandSubject)
     {
         parent::capture($commandSubject);
+       /* $paymentDO = $commandSubject[self::PAYMENT];
+        $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
+
+        $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('orderId', $this->orderId));
+        $customFields->add(new CustomField('vaultEnabler', false));
+        $customFields->add(new CustomField('recurring_payment', $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)));
+        $this->transaction->setCustomFields($customFields);*/
 
         return $this->transaction;
     }
