@@ -225,8 +225,9 @@ class Notify extends Action
         if ($this->canCaptureInvoice) {
             $this->captureInvoice($order, $response);
         }
-
-        if ($response->getCustomFields()->get('vaultEnabler')) {
+        $this->logger->debug("vaultEnabler: " . $response->getCustomFields()->get('vaultEnabler'));
+        if ($response->getCustomFields()->get('vaultEnabler') === "true") {
+            $this->logger->debug("im saving the card");
             $this->saveCreditCardToken($response, $order->getCustomerId(), $payment);
         }
 
@@ -343,6 +344,7 @@ class Notify extends Action
         $paymentToken = $this->paymentTokenFactory->create();
         $paymentToken->setGatewayToken($response->getCardTokenId());
         $paymentToken->setIsActive(true);
+        $paymentToken->setExpiresAt('10-11-2019');
         $paymentToken->setIsVisible(true);
         $paymentToken->setCustomerId($customerId);
         $paymentToken->setPaymentMethodCode($payment->getMethod());

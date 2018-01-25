@@ -40,6 +40,7 @@ use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -118,8 +119,12 @@ class WirecardCommand implements CommandInterface
         $stateObject = $commandSubject[self::STATEOBJECT];
         $stateObject->setData('state', Order::STATE_PENDING_PAYMENT);
 
+        $paymentDO = $commandSubject[TransactionFactory::PAYMENT];
+
         $operation = Operation::PAY;
-        if ($transaction instanceof Reservable && $this->methodConfig->getValue('payment_action') === PaymentAction::AUTHORIZE) {
+        if ($transaction instanceof Reservable
+            && $this->methodConfig->getValue('payment_action') === PaymentAction::AUTHORIZE
+            && !$paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)) {
             $operation = Operation::RESERVE;
         }
 
