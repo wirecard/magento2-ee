@@ -502,7 +502,6 @@
                 <item name="initialize" xsi:type="string">CreditCardInitializeCommand</item>
                 <item name="capture" xsi:type="string">CreditCardCaptureCommand</item>
                 <item name="refund" xsi:type="string">CreditCardRefundCommand</item>
-                <item name="vault_authorize" xsi:type="string">CreditCardVaultAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -524,15 +523,6 @@
     </virtualType>
     <virtualType name="CreditCardInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="CreditCardVaultAuthorizeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
-        <arguments>
-            <argument name="requestBuilder" xsi:type="object">CreditCardVaultAuthorizeRequest</argument>
             <argument name="transactionFactory" xsi:type="object">CreditCardTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
