@@ -87,8 +87,7 @@ define([
                 'method': result.method_code,
                 'po_number': null,
                 'additional_data': {
-                    'token_id': result.token_id,
-                    'recurring_payment' : true
+                    'token_id': result.token_id
                 }
             };
         },

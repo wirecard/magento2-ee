@@ -34,7 +34,6 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
@@ -61,18 +60,15 @@ class Vault extends Action
     /**
      * Callback constructor.
      * @param Context $context
-     * @param RequestInterface $request
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param Session $customerSession
      */
     public function __construct(
         Context $context,
-        RequestInterface $request,
         PaymentTokenManagementInterface $paymentTokenManagement,
         Session $customerSession
     )
     {
-        $this->request = $request;
         $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
         $this->paymentTokenManagement = $paymentTokenManagement;
         $this->customerSession = $customerSession;
@@ -85,7 +81,7 @@ class Vault extends Action
      */
     public function execute()
     {
-        $hash = $this->request->getParam('hash');
+        $hash = $this->getRequest()->getParam('hash');
 
         /** @var PaymentTokenInterface $paymentToken */
         $token = $this->paymentTokenManagement->getByPublicHash($hash, $this->customerSession->getCustomerId());

@@ -69,12 +69,5 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
                 $additionalData[self::VAULT_ENABLER]
             );
         }
-
-        if (array_key_exists(self::RECURRING, $additionalData)) {
-            $paymentInfo->setAdditionalInformation(
-                self::RECURRING,
-                $additionalData[self::RECURRING]
-            );
-        }
     }
 }
