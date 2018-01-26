@@ -82,7 +82,6 @@ class VaultUTest extends \PHPUnit_Framework_TestCase
         $this->context->method('getRequest')->willReturn($httpRequest);
         $this->context->method('getUrl')->willReturn($urlBuilder);
 
-
         $this->customerSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
         $this->customerSession->method('getCustomerId')->willReturn(1);
 

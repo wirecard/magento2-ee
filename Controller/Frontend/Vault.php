@@ -71,8 +71,7 @@ class Vault extends Action
         Context $context,
         PaymentTokenManagementInterface $paymentTokenManagement,
         Session $customerSession
-    )
-    {
+    ) {
         $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
         $this->paymentTokenManagement = $paymentTokenManagement;
         $this->customerSession = $customerSession;

@@ -32,10 +32,10 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 
 use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
+use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 use Wirecard\ElasticEngine\Model\Ui\TokenUiComponentProvider;
-use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
-use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
 
 class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
 {
@@ -79,7 +79,6 @@ class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
         $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->getMock();
         $this->paymentToken->method('getTokenDetails')->willReturn($details);
         $this->paymentToken->method('getPublicHash')->willReturn(self::HASH);
-
     }
 
     public function testGetComponentForToken()
