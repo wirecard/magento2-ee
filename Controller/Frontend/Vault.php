@@ -52,10 +52,14 @@ class Vault extends Action
      */
     private $baseUrl;
 
-    private $request;
-
+    /**
+     * @var PaymentTokenManagementInterface
+     */
     private $paymentTokenManagement;
 
+    /**
+     * @var Session
+     */
     private $customerSession;
     /**
      * Callback constructor.

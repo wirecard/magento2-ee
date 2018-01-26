@@ -32,9 +32,9 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 use Wirecard\ElasticEngine\Model\Ui\TokenUiComponentProvider;
+use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
 
 class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
@@ -51,7 +51,12 @@ class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
      */
     private $paymentToken;
 
-    public function testGetComponentForToken()
+    /**
+     * @var array
+     */
+    private $component;
+
+    public function setUp()
     {
         $details = '{
             "type": "MC",
@@ -59,21 +64,28 @@ class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
             "expirationDate": "xx-xxxx"
         }';
 
-        $this->componentFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TokenUiComponentInterfaceFactory::class);
-        $this->componentFactory->method('create')->willReturn(0);
-
-        $this->paymentToken = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenInterface::class);
-        $this->paymentToken->method('getTokenDetails')->willReturn($details);
-        $this->paymentToken->method('getPublicHash')->willReturn(self::HASH);
-
-        $conf = new TokenUiComponentProvider($this->componentFactory);
-        $this->assertEquals([
+        $this->component = [
             'config' => [
                 'code' => ConfigProvider::CREDITCARD_VAULT_CODE,
-                TokenUiComponentProviderInterface::COMPONENT_DETAILS => $details,
+                TokenUiComponentProviderInterface::COMPONENT_DETAILS => "",
                 TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => self::HASH
             ],
             'name' => 'Wirecard_ElasticEngine/js/view/payment/method-renderer/vault'
-        ], $conf->getComponentForToken($this->paymentToken));
+        ];
+
+        $this->componentFactory = $this->getMockBuilder(TokenUiComponentInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
+        $this->componentFactory->method('create')->willReturn($this->component);
+
+        $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->getMock();
+        $this->paymentToken->method('getTokenDetails')->willReturn($details);
+        $this->paymentToken->method('getPublicHash')->willReturn(self::HASH);
+
+    }
+
+    public function testGetComponentForToken()
+    {
+        $conf = new TokenUiComponentProvider($this->componentFactory);
+
+        $this->assertEquals($this->component, $conf->getComponentForToken($this->paymentToken));
     }
 }
