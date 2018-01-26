@@ -37,9 +37,9 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Translate\InlineInterface;
 use Magento\Framework\UrlInterface;
-use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Vault;
 
 class VaultUTest extends \PHPUnit_Framework_TestCase

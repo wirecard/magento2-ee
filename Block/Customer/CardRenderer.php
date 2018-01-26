@@ -31,9 +31,9 @@
 
 namespace Wirecard\ElasticEngine\Block\Customer;
 
-use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Block\AbstractCardRenderer;
+use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 
 class CardRenderer extends AbstractCardRenderer
 {
