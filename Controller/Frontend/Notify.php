@@ -225,9 +225,8 @@ class Notify extends Action
         if ($this->canCaptureInvoice) {
             $this->captureInvoice($order, $response);
         }
-        $this->logger->debug("vaultEnabler: " . $response->getCustomFields()->get('vaultEnabler'));
+
         if ($response->getCustomFields()->get('vaultEnabler') === "true") {
-            $this->logger->debug("im saving the card");
             $this->saveCreditCardToken($response, $order->getCustomerId(), $payment);
         }
 
@@ -357,6 +356,7 @@ class Notify extends Action
         ]));
 
         if (null !== $paymentToken) {
+            /** @var \Magento\Sales\Api\Data\OrderPaymentExtensionInterface $extensionAttributes */
             $extensionAttributes = $payment->getExtensionAttributes();
             if (null === $extensionAttributes) {
                 $extensionAttributes = $this->paymentExtensionFactory->create();

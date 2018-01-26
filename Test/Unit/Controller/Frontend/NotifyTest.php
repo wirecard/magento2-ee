@@ -40,6 +40,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderSearchResultInterface;
 use Magento\Sales\Api\Data\OrderStatusHistoryInterface;
+use Magento\Sales\Api\Data\OrderPaymentExtensionInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -47,6 +48,7 @@ use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
@@ -123,6 +125,21 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
      */
     private $paymentData;
 
+    /**
+     * @var PaymentTokenInterfaceFactory
+     */
+    private $paymentTokenFactory;
+
+    /**
+     * @var PaymentTokenInterface
+     */
+    private $paymentToken;
+
+    /**
+     * @var
+     */
+    private $paymentExtensionFactory;
+
     public function setUp()
     {
         /**
@@ -176,8 +193,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->logger = $this->getMock(LoggerInterface::class);
 
         $this->customFields = $this->getMock(CustomFieldCollection::class);
-        $this->customFields->method('get')->with($this->equalTo('orderId'))->willReturn(42);
-        $this->customFields->method('get')->with($this->equalTo('vaultEnabler'))->willReturn(true);
+        $this->customFields->method('get')->withConsecutive(['orderId'], ['vaultEnabler'])->willReturnOnConsecutiveCalls(42, "true");
 
         $this->orderSearchResult = $this->getMockForAbstractClass(OrderSearchResultInterface::class);
 
@@ -192,9 +208,16 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $orderSender = $this->getMockWithoutInvokingTheOriginalConstructor(OrderSender::class);
 
-        $paymentExtensionFactory = $this->getMockWithoutInvokingTheOriginalConstructor(OrderPaymentExtensionInterfaceFactory::class);
+        $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->getMock();
+        $this->paymentToken->method('getCustomerId')->willReturn(1);
 
-        $paymentTokenFactory = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenInterfaceFactory::class);
+        $extensionAttributesMock = $this->getMockBuilder(OrderPaymentExtensionInterface::class)->disableOriginalConstructor()->setMethods(['setVaultPaymentToken'])->getMock();
+        $extensionAttributesMock->method('setVaultPaymentToken')->willReturn($this->paymentToken);
+        $this->paymentExtensionFactory = $this->getMockBuilder(OrderPaymentExtensionInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
+        $this->paymentExtensionFactory->method('create')->willReturn($extensionAttributesMock);
+
+        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
+        $this->paymentTokenFactory->method('create')->willReturn($this->paymentToken);
 
         $paymentTokenManagement = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenManagementInterface::class);
 
@@ -203,7 +226,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->controller = new Notify(
             $context, $transactionServiceFactory,
             $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction,
-            $paymentExtensionFactory, $paymentTokenFactory, $paymentTokenManagement, $encryptor,
+            $this->paymentExtensionFactory, $this->paymentTokenFactory, $paymentTokenManagement, $encryptor,
             $orderSender);
     }
 

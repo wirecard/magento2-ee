@@ -67,7 +67,7 @@ class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
         $this->component = [
             'config' => [
                 'code' => ConfigProvider::CREDITCARD_VAULT_CODE,
-                TokenUiComponentProviderInterface::COMPONENT_DETAILS => "",
+                TokenUiComponentProviderInterface::COMPONENT_DETAILS => $details,
                 TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => self::HASH
             ],
             'name' => 'Wirecard_ElasticEngine/js/view/payment/method-renderer/vault'
