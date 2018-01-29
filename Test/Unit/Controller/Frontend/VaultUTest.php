@@ -33,6 +33,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Translate\InlineInterface;
@@ -41,7 +42,6 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Vault;
-use Magento\Framework\App\Request\Http;
 
 class VaultUTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,7 +57,7 @@ class VaultUTest extends \PHPUnit_Framework_TestCase
     private $customerSession;
 
     /**
-     *@var Context
+     * @var Context
      */
     private $context;
 
