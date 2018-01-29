@@ -144,6 +144,17 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
     }
 
+    public function testVoidOperationMinimum()
+    {
+        $transaction = new PayPalTransaction();
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $expected = $this->minimalRefundTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->void($this->commandSubject));
+    }
+
     /**
      * @return PayPalTransaction
      */
@@ -255,6 +266,20 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
         $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->create([]));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testVoidWithWrongCommandSubject()
+    {
+        $transaction = new PayPalTransaction();
+        $transaction->setParentTransactionId('123456PARENT');
+
+        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+
+        $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->void([]));
     }
 
     public function testRefund()

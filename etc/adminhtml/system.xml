@@ -168,21 +168,21 @@
                     <label>Secret Key</label>
                 </field>
                 <field id="three_d_merchant_account_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3D Merchant Account ID</label>
+                    <label>3-D Secure Merchant Account ID</label>
                 </field>
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3D Secret Key</label>
+                    <label>3-D Secure Secret Key</label>
                 </field>
                 <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>SSL Max Limit</label>
-                    <comment>The maximum order amount in your default currency to initialize SSL transactions.</comment>
+                    <label>Non 3-D Secure Max Limit</label>
+                    <comment>The maximum order amount in your default currency to initialize Non 3-D Secure transactions.</comment>
                 </field>
                 <field id="three_d_min_limit" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3D Min Limit</label>
+                    <label>3-D Secure Min Limit</label>
                     <comment>
                         <![CDATA[
-                            The minimum order amount in your default currency to initialize 3D transactions.<br />
-                            <a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>
+                            The minimum order amount in your default currency to initialize 3-D Secure transactions.<br />
+                            <a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: Non 3-D Secure Max Limit and 3-D Secure Min Limit</a>
                         ]]>
                     </comment>
                 </field>
@@ -240,21 +240,21 @@
                     <label>Secret Key</label>
                 </field>
                 <field id="three_d_merchant_account_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3D Merchant Account ID</label>
+                    <label>3-D Secure Merchant Account ID</label>
                 </field>
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3D Secret Key</label>
+                    <label>3-D Secure Secret Key</label>
                 </field>
                 <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>SSL Max Limit</label>
-                    <comment>The maximum order amount in your default currency to initialize SSL transactions.</comment>
+                    <label>Non 3-D Secure Max Limit</label>
+                    <comment>The maximum order amount in your default currency to initialize Non 3-D Secure transactions.</comment>
                 </field>
                 <field id="three_d_min_limit" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3D Min Limit</label>
+                    <label>3-D Secure Min Limit</label>
                     <comment>
                         <![CDATA[
-                            The minimum order amount in your default currency to initialize 3D transactions.<br />
-                            <a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>
+                            The minimum order amount in your default currency to initialize 3-D Secure transactions.<br />
+                            <a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: Non 3-D Secure Max Limit and 3-D Secure Min Limit</a>
                         ]]>
                     </comment>
                 </field>
