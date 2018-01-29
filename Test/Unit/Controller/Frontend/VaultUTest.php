@@ -41,6 +41,7 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Vault;
+use Magento\Framework\App\Request\Http;
 
 class VaultUTest extends \PHPUnit_Framework_TestCase
 {
@@ -69,9 +70,6 @@ class VaultUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        /**
-         * @var $httpRequest Http|\PHPUnit_Framework_MockObject_MockObject
-         */
         $httpRequest = $this->getMockBuilder(Http::class)->disableOriginalConstructor()->setMethods(['getParam'])->getMock();
         $httpRequest->method('getParam')->willReturn(self::HASH);
 
