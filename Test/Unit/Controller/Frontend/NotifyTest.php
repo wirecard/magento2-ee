@@ -208,7 +208,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $orderSender = $this->getMockWithoutInvokingTheOriginalConstructor(OrderSender::class);
 
-        $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->getMock();
+        $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->getMockForAbstractClass();
         $this->paymentToken->method('getCustomerId')->willReturn(1);
 
         $extensionAttributesMock = $this->getMockBuilder(OrderPaymentExtensionInterface::class)->disableOriginalConstructor()->setMethods(['setVaultPaymentToken'])->getMock();
@@ -216,7 +216,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->paymentExtensionFactory = $this->getMockBuilder(OrderPaymentExtensionInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
         $this->paymentExtensionFactory->method('create')->willReturn($extensionAttributesMock);
 
-        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMockForAbstractClass();
+        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
         $this->paymentTokenFactory->method('create')->willReturn($this->paymentToken);
 
         $paymentTokenManagement = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenManagementInterface::class);

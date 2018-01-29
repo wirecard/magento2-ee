@@ -343,7 +343,7 @@ class Notify extends Action
         $paymentToken = $this->paymentTokenFactory->create();
         $paymentToken->setGatewayToken($response->getCardTokenId());
         $paymentToken->setIsActive(true);
-        $paymentToken->setExpiresAt('10-11-2019');
+        $paymentToken->setExpiresAt(date('d-m-Y', strtotime(date('d-m-Y', time()) . " + 1 year")));
         $paymentToken->setIsVisible(true);
         $paymentToken->setCustomerId($customerId);
         $paymentToken->setPaymentMethodCode($payment->getMethod());

@@ -66,6 +66,9 @@ class VaultUTest extends \PHPUnit_Framework_TestCase
      */
     private $paymentTokenInterface;
 
+    /**
+     * @var ResultFactory
+     */
     private $resultFactory;
 
     public function setUp()
