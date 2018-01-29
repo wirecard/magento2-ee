@@ -216,7 +216,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->paymentExtensionFactory = $this->getMockBuilder(OrderPaymentExtensionInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
         $this->paymentExtensionFactory->method('create')->willReturn($extensionAttributesMock);
 
-        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
+        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'], ['getType'])->getMock();
         $this->paymentTokenFactory->method('create')->willReturn($this->paymentToken);
 
         $paymentTokenManagement = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenManagementInterface::class);

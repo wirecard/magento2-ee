@@ -374,7 +374,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_cc_vault>
                 <model>CreditCardVaultFacade</model>
                 <title>Stored Cards</title>
-                <active>1</active>
+                <active>0</active>
             </wirecard_elasticengine_cc_vault>
         </payment>
     </default>
