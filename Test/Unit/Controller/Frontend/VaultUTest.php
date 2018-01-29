@@ -47,27 +47,27 @@ class VaultUTest extends \PHPUnit_Framework_TestCase
 {
     const HASH = "myhash";
     /**
-     * @var PaymentTokenManagementInterface
+     * @var PaymentTokenManagementInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $paymentTokenManagement;
 
     /**
-     * @var Session
+     * @var Session|\PHPUnit_Framework_MockObject_MockObject
      */
     private $customerSession;
 
     /**
-     * @var Context
+     * @var Context|\PHPUnit_Framework_MockObject_MockObject
      */
     private $context;
 
     /**
-     * @var PaymentTokenInterface
+     * @var PaymentTokenInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $paymentTokenInterface;
 
     /**
-     * @var ResultFactory
+     * @var ResultFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $resultFactory;
 
