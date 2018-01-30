@@ -38,6 +38,8 @@ use Magento\Quote\Api\Data\PaymentInterface;
 class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 {
     const TOKEN_ID = 'token_id';
+    const VAULT_ENABLER = 'is_active_payment_token_enabler';
+    const RECURRING = 'recurring_payment';
 
     /**
      * @param Observer $observer
@@ -58,6 +60,20 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
             $paymentInfo->setAdditionalInformation(
                 self::TOKEN_ID,
                 $additionalData[self::TOKEN_ID]
+            );
+        }
+
+        if (array_key_exists(self::VAULT_ENABLER, $additionalData)) {
+            $paymentInfo->setAdditionalInformation(
+                self::VAULT_ENABLER,
+                $additionalData[self::VAULT_ENABLER]
+            );
+        }
+
+        if (array_key_exists(self::RECURRING, $additionalData)) {
+            $paymentInfo->setAdditionalInformation(
+                self::RECURRING,
+                $additionalData[self::RECURRING]
             );
         }
     }

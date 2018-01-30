@@ -342,6 +342,11 @@
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_CODE</argument>
         </arguments>
     </virtualType>
+    <virtualType name="WirecardCreditCardVaultConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="WirecardMaestroConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MAESTRO_CODE</argument>
@@ -1027,9 +1032,38 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="CreditCardCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">CreditCardCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CreditCardVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="config" xsi:type="object">WirecardCreditCardVaultConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">CreditCardVaultValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">CreditCardFacade</argument>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CreditCardVaultValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardCreditCardVaultConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CreditCardVaultValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">CreditCardVaultValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Wirecard\ElasticEngine\Controller\Frontend\Notify">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Model\CreditCardTokenFactory</argument>
         </arguments>
     </type>
 

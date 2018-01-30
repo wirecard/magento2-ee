@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -29,20 +28,63 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Checkout\Model\CompositeConfigProvider">
-        <arguments>
-            <argument name="configProviders" xsi:type="array">
-                <item name="wirecard_elasticengine_config_provider" xsi:type="object">Wirecard\ElasticEngine\Model\Ui\ConfigProvider</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
-        <arguments>
-            <argument name="tokenUiComponentProviders" xsi:type="array">
-                <item name="wirecard_elasticengine_creditcard" xsi:type="object">Wirecard\ElasticEngine\Model\Ui\TokenUiComponentProvider</item>
-            </argument>
-        </arguments>
-    </type>
-</config>
+
+namespace Wirecard\ElasticEngine\Block\Customer;
+
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Block\AbstractCardRenderer;
+use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
+
+class CardRenderer extends AbstractCardRenderer
+{
+    /**
+     * Can render specified token
+     *
+     * @param PaymentTokenInterface $token
+     * @return boolean
+     */
+    public function canRender(PaymentTokenInterface $token)
+    {
+        return $token->getPaymentMethodCode() === ConfigProvider::CREDITCARD_CODE;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumberLast4Digits()
+    {
+        return $this->getTokenDetails()['maskedCC'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpDate()
+    {
+        return $this->getTokenDetails()['expirationDate'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIconUrl()
+    {
+        return $this->getIconForType($this->getTokenDetails()['type'])['url'];
+    }
+
+    /**
+     * @return int
+     */
+    public function getIconHeight()
+    {
+        return $this->getIconForType($this->getTokenDetails()['type'])['height'];
+    }
+
+    /**
+     * @return int
+     */
+    public function getIconWidth()
+    {
+        return $this->getIconForType($this->getTokenDetails()['type'])['width'];
+    }
+}

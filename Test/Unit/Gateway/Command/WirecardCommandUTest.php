@@ -33,7 +33,9 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Command;
 
 use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObject;
 use Magento\Payment\Gateway\Response\HandlerInterface;
+use Magento\Sales\Model\Order\Payment;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Command\WirecardCommand;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
@@ -44,6 +46,7 @@ use Wirecard\PaymentSdk\Entity\StatusCollection;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -53,6 +56,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 {
     const METHOD_CREATE='create';
     const METHOD_PROCESS='process';
+    const RECURRING = true;
+    const NOT_RECURRING = false;
 
     /**
      * @var TransactionFactory
@@ -90,6 +95,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
     private $methodConfig;
 
     /**
+     * @var PaymentDataObject
+     */
+    private $paymentDO;
+
+    /**
      * @var array
      */
     private $commandSubject;
@@ -122,7 +132,17 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         $this->methodConfig->method('getValue')->willReturn('authorize');
 
         $stateObject = $this->getMock(DataObject::class);
-        $this->commandSubject = ['stateObject' => $stateObject];
+
+        $payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $payment->method('getAdditionalInformation')->willReturn(true);
+
+        $this->paymentDO = $this->getMockBuilder(DataObject::class)->disableOriginalConstructor()->setMethods(['getPayment'])->getMock();
+        $this->paymentDO->method('getPayment')->willReturn($payment);
+
+        $this->commandSubject = [
+            'stateObject' => $stateObject,
+            'payment' => $this->paymentDO
+        ];
     }
 
     public function testExecuteCreatesTransactionService()
@@ -149,10 +169,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
     public function transactionDataProvider()
     {
         return [
-            [ Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY],
-            [ Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY],
-            [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE],
-            [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY ]
+            [ Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY, self::RECURRING],
+            [ CreditCardTransaction::class, PaymentAction::AUTHORIZE, Operation::PAY, self::RECURRING],
+            [ Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY, self::RECURRING],
+            [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE, self::NOT_RECURRING],
+            [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY, self::RECURRING]
         ];
     }
 
@@ -162,7 +183,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
      * @param $configuredAction
      * @param $expectedOperation
      */
-    public function testExecuteUsesCorrectOperation($transactionClass, $configuredAction, $expectedOperation)
+    public function testExecuteUsesCorrectOperation($transactionClass, $configuredAction, $expectedOperation, $recurringPayment)
     {
         // Transaction mocks
         $transactionFactoryMock = $this->getMockBuilder(TransactionFactory::class)
@@ -185,6 +206,14 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         // Payment method config mocks
         $methodConfigMock = $this->getMock(ConfigInterface::class);
         $methodConfigMock->method('getValue')->willReturn($configuredAction);
+
+        $payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
+        $payment->method('getAdditionalInformation')->willReturn($recurringPayment);
+
+        $this->paymentDO = $this->getMockBuilder(DataObject::class)->disableOriginalConstructor()->setMethods(['getPayment'])->getMock();
+        $this->paymentDO->method('getPayment')->willReturn($payment);
+
+        $this->commandSubject['payment'] = $this->paymentDO;
 
         /**
          * @var TransactionFactory $transactionFactoryMock
@@ -293,7 +322,11 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         );
 
         $stateObject = $this->getMock(DataObject::class);
-        $commandSubject = ['stateObject' => $stateObject];
+
+        $commandSubject = [
+            'stateObject' => $stateObject,
+            'payment' =>    $this->paymentDO
+        ];
 
         $command->execute($commandSubject);
     }

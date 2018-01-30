@@ -37,6 +37,8 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
+use Wirecard\PaymentSdk\Entity\CustomField;
+use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -89,8 +91,15 @@ class CreditCardTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
-
         $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
+
+        $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('orderId', $this->orderId));
+        if ($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)) {
+            $customFields->add(new CustomField('vaultEnabler', $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)));
+        }
+
+        $this->transaction->setCustomFields($customFields);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect');

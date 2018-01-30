@@ -30,19 +30,13 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Checkout\Model\CompositeConfigProvider">
-        <arguments>
-            <argument name="configProviders" xsi:type="array">
-                <item name="wirecard_elasticengine_config_provider" xsi:type="object">Wirecard\ElasticEngine\Model\Ui\ConfigProvider</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
-        <arguments>
-            <argument name="tokenUiComponentProviders" xsi:type="array">
-                <item name="wirecard_elasticengine_creditcard" xsi:type="object">Wirecard\ElasticEngine\Model\Ui\TokenUiComponentProvider</item>
-            </argument>
-        </arguments>
-    </type>
-</config>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <referenceBlock name="vault.cards.list">
+                <block class="Wirecard\ElasticEngine\Block\Customer\CardRenderer" name="wirecard.card.renderer" template="Magento_Vault::customer_account/credit_card.phtml"/>
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>

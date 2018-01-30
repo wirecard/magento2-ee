@@ -56,6 +56,7 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
     const REDIRECT_URL = 'http://magen.to/frontend/redirect';
     const ORDER_ID = '1234567';
+    const VAULT_ENABLER = 'mypersonaltoken';
 
     private $urlBuilder;
 
@@ -189,6 +190,7 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
+        $customFields->add(new CustomField('vaultEnabler', self::VAULT_ENABLER));
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
