@@ -9,7 +9,7 @@
     "magento/module-payment": ">=100.1.0",
     "magento/module-checkout": ">=100.1.0",
     "magento/module-sales": ">=100.0.0",
-    "magento/module-vault": "100.1.*",
+    "magento/module-vault": ">=100.0.0",
     "wirecard/payment-sdk-php": ">=1.1.1"
   },
   "require-dev": {
