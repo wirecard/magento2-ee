@@ -285,7 +285,9 @@ class TransactionFactory
         ));
         $billingAddress = $order->getBillingAddress();
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
+        if (null != $order->getShippingAddress()) {
+            $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
+        }
         $this->transaction->setOrderNumber($this->orderId);
         $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
         $this->transaction->setIpAddress($order->getRemoteIp());
