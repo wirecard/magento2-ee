@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Api\Data\StoreInterface;
@@ -48,7 +49,6 @@ use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 
 class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
