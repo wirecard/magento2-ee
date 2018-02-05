@@ -254,7 +254,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <billing_shipping_address_identical>1</billing_shipping_address_identical>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_ratepayinvoice>
-            <wirecard_elasticengine_ratepayinstall>
+            <!--<wirecard_elasticengine_ratepayinstall>
                 <title>Wirecard Guaranteed Installment</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
@@ -281,7 +281,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <specificcountry>AT,DE</specificcountry>
                 <billing_shipping_address_identical>1</billing_shipping_address_identical>
                 <send_additional>1</send_additional>
-            </wirecard_elasticengine_ratepayinstall>
+            </wirecard_elasticengine_ratepayinstall>-->
             <wirecard_elasticengine_alipayxborder>
                 <title>Wirecard Alipay Cross Border</title>
                 <active>0</active>
