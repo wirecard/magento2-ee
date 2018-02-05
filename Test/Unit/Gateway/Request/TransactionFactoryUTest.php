@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Api\Data\StoreInterface;
@@ -76,11 +77,17 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->resolver = $this->getMockBuilder(ResolverInterface::class)->disableOriginalConstructor()->getMock();
 
+        $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
+        $address->method('getEmail')->willReturn('test@example.com');
+        $address->method('getFirstname')->willReturn('Joe');
+        $address->method('getLastname')->willReturn('Doe');
+
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
         $this->order->method('getId')->willReturn('1');
+        $this->order->method('getShippingAddress')->willReturn($address);
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->payment->method('getOrder')->willReturn($this->order);
