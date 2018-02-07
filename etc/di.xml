@@ -256,7 +256,6 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">RatepayInstallConfigValueHandler</item>
-                <item name="default" xsi:type="string">RatepayInstallConfigValueHandler</item>
                 <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
                 <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
                 <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
