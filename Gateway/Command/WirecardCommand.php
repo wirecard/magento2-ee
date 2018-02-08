@@ -124,7 +124,7 @@ class WirecardCommand implements CommandInterface
         $operation = Operation::PAY;
         if ($transaction instanceof Reservable
             && $this->methodConfig->getValue('payment_action') === PaymentAction::AUTHORIZE
-            && !$paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)) {
+        ) {
             $operation = Operation::RESERVE;
         }
 
