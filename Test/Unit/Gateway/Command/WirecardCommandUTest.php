@@ -170,7 +170,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [ Transaction::class, PaymentAction::AUTHORIZE, Operation::PAY, self::RECURRING],
-            [ CreditCardTransaction::class, PaymentAction::AUTHORIZE, Operation::PAY, self::RECURRING],
+            [ CreditCardTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE, self::RECURRING],
             [ Transaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY, self::RECURRING],
             [ PayPalTransaction::class, PaymentAction::AUTHORIZE, Operation::RESERVE, self::NOT_RECURRING],
             [ PayPalTransaction::class, PaymentAction::AUTHORIZE_CAPTURE, Operation::PAY, self::RECURRING]

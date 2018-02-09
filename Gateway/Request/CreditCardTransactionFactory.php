@@ -99,6 +99,10 @@ class CreditCardTransactionFactory extends TransactionFactory
             $customFields->add(new CustomField('vaultEnabler', $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)));
         }
 
+        if ($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)) {
+            $this->transaction->setThreeD(false);
+        }
+
         $this->transaction->setCustomFields($customFields);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');

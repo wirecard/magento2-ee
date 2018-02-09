@@ -41,7 +41,6 @@ use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
-use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Reservable;
@@ -124,7 +123,7 @@ class WirecardCommand implements CommandInterface
         $operation = Operation::PAY;
         if ($transaction instanceof Reservable
             && $this->methodConfig->getValue('payment_action') === PaymentAction::AUTHORIZE
-            && !$paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)) {
+        ) {
             $operation = Operation::RESERVE;
         }
 
