@@ -74,6 +74,10 @@ define(
                 this.messageContainer.addErrorMessage({message: $t('An error occurred submitting the credit card form.')});
 
                 console.error(response);
+
+                setTimeout(function(){
+                    location.reload();
+                },3000);
             },
             seamlessFormSizeHandler: function () {
                 window.addEventListener('resize', this.resizeIFrame.bind(this));
