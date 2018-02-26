@@ -7,15 +7,12 @@
 [![Magento v2.2.2](https://img.shields.io/badge/magento-v2.2.2-green.svg)](https://magento.com/)
 
 ***
-### General information 
-Before proceeding please read the article [General information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information) first.
+## General information 
+Before proceeding, we recommend to read [general information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information), as it provides information on Wirecard shop plugins functionality and features.
 
 ***
+## Magento2 documentation - Wiki
 
-## Magento2 Payment Gateway Wiki
-
-For general information about our plugin please visit our [Magento2 Wirecard Payment Gateway Wiki](https://github.com/wirecard/magento2-ee/wiki). 
-
-## Magento2 Wirecard Payment Gateway Installation
-
-Our Magento2 Wirecard Payment Gateway Wiki also provides [installation](https://github.com/wirecard/magento2-ee/wiki/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Wirecard Payment Gateway Plugin.
+[Magento2 Wiki](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical documentation.
+It lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_payment_methods) and [back-end operations](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_back-end_operations).
+Furthermore, it provides extensive instructions how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration).
