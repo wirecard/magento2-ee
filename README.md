@@ -15,4 +15,4 @@ Before proceeding, we recommend to read [general information](https://github.com
 
 [Magento2 Wiki](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical documentation.
 It lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_payment_methods) and [back-end operations](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_back-end_operations).
-Furthermore, it provides extensive instructions how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration).
+Furthermore, it includes extensive instructions how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration).
