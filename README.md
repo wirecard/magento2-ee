@@ -23,15 +23,16 @@ Our Magento2 Wirecard Payment Gateway Wiki also provides [installation](https://
 ## CheckoutPortal
 All Wirecard shop plugins my be downloaded and tested completely **free of charge**. 
 
-For payment processing, you have to conclude a contract with Wirecard. Wirecard CheckoutPortal is a payment portal for small and medium-sized companies and startups which offers credit card payments as well as payment options suited to individual requirements. 
+You are able to use this shop-plugin as open-source and free of charge. However if you want to process real payments via this shop-plugin you may need to conclude a contract with Wirecard. Therefore you can use our Checkout Portal which enables you to order your required payment methods.
+ 
+Please select the country, where your company resides:
 
-To get an idea of **transaction fees and service charges**, please visit Wirecard CheckoutPortal:
-
- * for Germany: https://dashboard.checkoutportal.com/de_DE/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=DEU&merchant_mcc=5964
- * for Spain: https://dashboard.checkoutportal.com/es_ES/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ESP&merchant_mcc=5964
- * for Italy: https://dashboard.checkoutportal.com/it_IT/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ITA&merchant_mcc=5964
- * for France: https://dashboard.checkoutportal.com/fr_FR/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=FRA&merchant_mcc=5964
- * for the Netherlands: https://dashboard.checkoutportal.com/nl_NL/signup/?reseller_id=sadfrrqaasdv&package_id=MagentoNL&merchant_country=NLD&merchant_mcc=5964
- * for UK: https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentogb&merchant_country=GBR&merchant_mcc=5964
- * for Poland: https://dashboard.checkoutportal.com/pl_PL/signup/?reseller_id=sadfrrqaasdv&package_id=magentopl&merchant_country=POL&merchant_mcc=5964
-
+|Country|Link|
+|-------|----|
+|Germany|[Click here](https://dashboard.checkoutportal.com/de_DE/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=DEU&merchant_mcc=5964)|
+|Spain|[Click here](https://dashboard.checkoutportal.com/es_ES/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ESP&merchant_mcc=5964)|
+|Italy|[Click here](https://dashboard.checkoutportal.com/it_IT/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ITA&merchant_mcc=5964)|
+|France|[Click here](https://dashboard.checkoutportal.com/fr_FR/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=FRA&merchant_mcc=5964)|
+|Netherlands|[Click here](https://dashboard.checkoutportal.com/nl_NL/signup/?reseller_id=sadfrrqaasdv&package_id=MagentoNL&merchant_country=NLD&merchant_mcc=5964)|
+|UK|[Click here](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentogb&merchant_country=GBR&merchant_mcc=5964)|
+|Poland|[Click here](https://dashboard.checkoutportal.com/pl_PL/signup/?reseller_id=sadfrrqaasdv&package_id=magentopl&merchant_country=POL&merchant_mcc=5964)|
