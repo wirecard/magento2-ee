@@ -1,4 +1,4 @@
-# Magento2 Wirecard Payment Processing Gateway Shop Plugin
+# Magento 2 Wirecard Payment Processing Gateway Shop Plugin
 [![Build Status](https://travis-ci.org/wirecard/magento2-ee.svg?branch=master)](https://travis-ci.org/wirecard/magento2-ee)
 [![Build Status](https://saucelabs.com/buildstatus/wirecard-magento2ee-bot)](https://saucelabs.com/open_sauce/user/wirecard-magento2ee-bot)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/magento2-ee/master/LICENSE)
@@ -12,11 +12,11 @@ Before proceeding please read the article [General information](https://github.c
 
 ***
 
-## Magento2 Payment Gateway Wiki
+## Magento 2 Payment Gateway Wiki
 
 For general information about our plugin please visit our [Magento2 Wirecard Payment Gateway Wiki](https://github.com/wirecard/magento2-ee/wiki). 
 
-## Magento2 Wirecard Payment Gateway Installation
+## Magento 2 Wirecard Payment Gateway Installation
 
 Our Magento2 Wirecard Payment Gateway Wiki also provides [installation](https://github.com/wirecard/magento2-ee/wiki/Installation),  and [configuration](https://github.com/wirecard/magento2-ee/wiki/Configuration) instructions for the Magento2 Wirecard Payment Gateway Plugin.
 
@@ -29,10 +29,13 @@ Please select the country, where your company resides:
 
 |Country|Link|Link|
 |-------|----|----|
-|Germany|[Deutsch](https://dashboard.checkoutportal.com/de_DE/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=DEU&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=DEU&merchant_mcc=5964)|
-|Spain|[Español](https://dashboard.checkoutportal.com/es_ES/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ESP&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ESP&merchant_mcc=5964)|
-|Italy|[Italiano](https://dashboard.checkoutportal.com/it_IT/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ITA&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ITA&merchant_mcc=5964)|
 |France|[Français](https://dashboard.checkoutportal.com/fr_FR/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=FRA&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=FRA&merchant_mcc=5964)|
+|Germany|[Deutsch](https://dashboard.checkoutportal.com/de_DE/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=DEU&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=DEU&merchant_mcc=5964)|
+|Italy|[Italiano](https://dashboard.checkoutportal.com/it_IT/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ITA&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ITA&merchant_mcc=5964)|
 |Netherlands|[Nederlands](https://dashboard.checkoutportal.com/nl_NL/signup/?reseller_id=sadfrrqaasdv&package_id=MagentoNL&merchant_country=NLD&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=MagentoNL&merchant_country=NLD&merchant_mcc=5964)|
+|Poland|[Polski](https://dashboard.checkoutportal.com/pl_PL/signup/?reseller_id=sadfrrqaasdv&package_id=magentopl&merchant_country=POL&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentopl&merchant_country=POL&merchant_mcc=5964)|
+|Spain|[Español](https://dashboard.checkoutportal.com/es_ES/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ESP&merchant_mcc=5964)|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentodeesitfr&merchant_country=ESP&merchant_mcc=5964)|
 |UK|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentogb&merchant_country=GBR&merchant_mcc=5964)||
-|Poland|[Polski](https://dashboard.checkoutportal.com/pl_PL/signup/?reseller_id=sadfrrqaasdv&package_id=magentopl&merchant_country=POL&merchant_mcc=5964)|[Englisch](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentopl&merchant_country=POL&merchant_mcc=5964)|
+
+
+If you have further questions, are within a country not listed above, or do not want to use the automated sign-up process in our Checkout Portal please contact our support or sales teams.
