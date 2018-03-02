@@ -38,4 +38,4 @@ Please select the country, where your company resides:
 |UK|[English](https://dashboard.checkoutportal.com/en_GB/signup/?reseller_id=sadfrrqaasdv&package_id=magentogb&merchant_country=GBR&merchant_mcc=5964)||
 
 
-If you have further questions, are within a country not listed above, or do not want to use the automated sign-up process in our Checkout Portal please contact our support or sales teams.
+If you have further questions, are within a country not listed above, or do not want to use the automated sign-up process in our Checkout Portal please contact our [support](https://github.com/wirecard/magento2-ee/wiki/Contact-Information) or [sales](https://github.com/wirecard/magento2-ee/wiki/Contact-Information) teams.
