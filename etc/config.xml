@@ -178,6 +178,8 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
                 <enable_bic>0</enable_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
+                <creditor_name>Max Mustermann</creditor_name>
+                <creditor_city>City</creditor_city>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_sepa>
             <wirecard_elasticengine_sofortbanking>
