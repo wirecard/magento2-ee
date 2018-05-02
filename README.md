@@ -7,10 +7,12 @@
 [![Magento v2.2.2](https://img.shields.io/badge/magento-v2.2.2-green.svg)](https://magento.com/)
 
 ***
-### General information 
-Before proceeding please read the article [General information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information) first.
+## General information 
+Before proceeding, we recommend to read [general information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information), as it provides information on Wirecard shop plugins functionality and features.
 
 ***
+## Magento 2 documentation - Wiki
+
 
 ## Magento 2 Payment Gateway Wiki
 
@@ -39,3 +41,7 @@ Please select the country, where your company resides:
 
 
 If you have further questions, are within a country not listed above, or do not want to use the automated sign-up process in our Checkout Portal please contact our [support](https://github.com/wirecard/magento2-ee/wiki/Contact-Information) or [sales](https://github.com/wirecard/magento2-ee/wiki/Contact-Information) teams.
+
+[Magento 2 Wiki](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical documentation.
+It lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_payment_methods) and [back-end operations](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_back-end_operations).
+Furthermore, it includes extensive instructions how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration).
