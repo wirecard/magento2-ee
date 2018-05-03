@@ -1,5 +1,5 @@
 dist: trusty
-sudo: true
+sudo: false
 language: php
 
 cache:
@@ -22,7 +22,6 @@ php:
 - 7
 
 install:
-  - sudo setsebool httpd_can_network_connect=1
   - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
