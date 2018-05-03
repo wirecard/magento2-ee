@@ -100,8 +100,7 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
     public function testExecuteProvider()
     {
         return [
-            ['https://api-test.wirecard.com'],
-            ['http://localhost']
+            ['https://api-test.wirecard.com']
         ];
     }
 
