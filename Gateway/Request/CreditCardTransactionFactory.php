@@ -37,6 +37,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
+use Wirecard\PaymentSdk\Entity\Card;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -92,6 +93,16 @@ class CreditCardTransactionFactory extends TransactionFactory
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
         $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
+
+        $expiration_month = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::EXPIRATION_MONTH);
+        $expiration_year = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::EXPIRATION_YEAR);
+
+        if (strlen($expiration_month) && strlen($expiration_year)) {
+            $card = new Card();
+            $card->setExpirationMonth($expiration_month);
+            $card->setExpirationYear($expiration_year);
+            $this->transaction->setCard($card);
+        }
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', $this->orderId));
