@@ -69,8 +69,9 @@ define(
                     this.token_id = response.card_token.token;
 
                     this.expiration_date = {};
-                    for (var part in ['expiration_month', 'expiration_year']) {
-                        this.expiration_date[part] = response.card[part];
+                    var fields = ['expiration_month', 'expiration_year'];
+                    for (var part in fields) {
+                        this.expiration_date[fields[part]] = response.card[fields[part]];
                     }
                 }
                 this.placeOrder();
