@@ -40,6 +40,7 @@ define(
         'use strict';
         return Component.extend({
             token_id: null,
+            expiration_date: null,
             defaults: {
                 template: 'Wirecard_ElasticEngine/payment/method-creditcard',
                 redirectAfterPlaceOrder: false
@@ -62,7 +63,17 @@ define(
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                this.token_id = response.token_id;
+                if (response.hasOwnProperty('token_id')) {
+					this.token_id = response.token_id;
+				} else if (response.hasOwnProperty('card_token') && response.card_token.hasOwnProperty('token')) {
+                    this.token_id = response.card_token.token;
+
+                    this.expiration_date = {};
+                    var fields = ['expiration_month', 'expiration_year'];
+                    for (var part in fields) {
+                        this.expiration_date[fields[part]] = response.card[fields[part]];
+                    }
+                }
                 this.placeOrder();
             },
             seamlessFormInitErrorHandler: function (response) {
@@ -100,7 +111,8 @@ define(
                     'po_number': null,
                     'additional_data': {
                         'token_id': this.token_id,
-                        'is_active_payment_token_enabler': this.vaultEnabler.isActivePaymentTokenEnabler()
+                        'is_active_payment_token_enabler': this.vaultEnabler.isActivePaymentTokenEnabler(),
+                        'expiration_date': this.expiration_date
                     }
                 };
             },

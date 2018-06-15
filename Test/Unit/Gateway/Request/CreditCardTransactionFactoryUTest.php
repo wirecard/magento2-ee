@@ -46,6 +46,7 @@ use Wirecard\ElasticEngine\Gateway\Request\CreditCardTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
+use Wirecard\PaymentSdk\Entity\Card;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
@@ -178,6 +179,10 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     private function minimumExpectedTransaction()
     {
+        $card = new Card();
+        $card->setExpirationYear('mypersonaltoken');
+        $card->setExpirationMonth('mypersonaltoken');
+
         $expected = new CreditCardTransaction();
         $expected->setTokenId('mypersonaltoken');
         $expected->setTermUrl(self::REDIRECT_URL);
@@ -194,6 +199,7 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
+        $expected->setCard($card);
 
         return $expected;
     }
