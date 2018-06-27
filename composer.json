@@ -10,7 +10,7 @@
     "magento/module-checkout": ">=100.1.0",
     "magento/module-sales": ">=100.0.0",
     "magento/module-vault": ">=100.0.0",
-    "wirecard/payment-sdk-php": ">=2.1.3",
+    "wirecard/payment-sdk-php": "2.1.3",
     "php-http/guzzle6-adapter": ">=1.1.1",
     "nyholm/psr7": "^0.2"
   },
