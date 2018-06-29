@@ -158,7 +158,7 @@ class ConfigProvider implements ConfigProviderInterface
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'ratepay_script' => $this->getRatepayScript($paymentMethodName),
-	            'address_same' => $this->isBillingEqualShippingAddress(self::RATEPAYINVOICE_CODE)
+	            'address_same' => (bool) $this->isBillingEqualShippingAddress(self::RATEPAYINVOICE_CODE)
             ]
         ];
     }
