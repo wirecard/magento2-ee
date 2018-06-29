@@ -157,7 +157,8 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'ratepay_script' => $this->getRatepayScript($paymentMethodName)
+                'ratepay_script' => $this->getRatepayScript($paymentMethodName),
+	            'address_same' => $this->isBillingEqualShippingAddress(self::RATEPAYINVOICE_CODE)
             ]
         ];
     }
@@ -302,4 +303,17 @@ class ConfigProvider implements ConfigProviderInterface
 
         return $script;
     }
+
+	/**
+	 * Return if the billing and shipping address needs to be same
+	 *
+	 * @param string $paymentCode
+	 * @return string
+	 * @since 1.3.7
+	 */
+	private function isBillingEqualShippingAddress($paymentCode)
+	{
+		$method = $this->paymentHelper->getMethodInstance($paymentCode);
+		return $method->getConfigData('billing_shipping_address_identical');
+	}
 }
