@@ -138,10 +138,16 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
                 ],
-                'wirecard_elasticengine_ratepayinvoice' => [
-                    'logo_url' => self::LOGO_URL_PATH,
-                    'ratepay_script' => $ratepayScript
-                ],
+	            'wirecard_elasticengine_ratepayinvoice' => [
+		            'logo_url' => self::LOGO_URL_PATH,
+		            'ratepay_script' => $ratepayScript,
+		            'address_same' => false
+	            ],
+	            'wirecard_elasticengine_ratepayinstall' => [
+		            'logo_url' => self::LOGO_URL_PATH,
+		            'ratepay_script' => $ratepayScript,
+		            'address_same' => false
+	            ],
                 'wirecard_elasticengine_alipayxborder' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
@@ -256,8 +262,14 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_ratepayinvoice' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'ratepay_script' => $ratepayScript
+                    'ratepay_script' => $ratepayScript,
+	                'address_same' => true
                 ],
+	            'wirecard_elasticengine_ratepayinstall' => [
+		            'logo_url' => self::LOGO_URL_PATH,
+		            'ratepay_script' => $ratepayScript,
+		            'address_same' => true
+	            ],
                 'wirecard_elasticengine_alipayxborder' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
