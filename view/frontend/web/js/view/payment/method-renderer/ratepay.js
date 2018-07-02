@@ -69,9 +69,14 @@ define(
                 return this.config.ratepay_script;
             },
             validate: function () {
+                var errorPane = $('#' + this.getCode() + '-dob-error');
                 if (!minAgeValidator.validate(this.customerDob())) {
-                    var errorPane = $('#' + this.getCode() + '-dob-error');
                     errorPane.html($t('You have to be at least 18 years to use this payment method.'));
+                    errorPane.css('display', 'block');
+                    return false;
+                }
+                if (this.config.address_same && $('#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice').is(":checked") === false) {
+                    errorPane.html($t('Shipping and billing address need to be same.'));
                     errorPane.css('display', 'block');
                     return false;
                 }

@@ -946,14 +946,14 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="RatepayInstallTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\RatepayInstallTransactionFactory">
+   <!-- <virtualType name="RatepayInstallTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\RatepayInstallTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction</argument>
             <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
         </arguments>
-    </virtualType>
+    </virtualType>-->
 
     <virtualType name="AlipayXBorderTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory">
         <arguments>
