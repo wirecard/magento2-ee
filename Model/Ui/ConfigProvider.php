@@ -44,7 +44,7 @@ class ConfigProvider implements ConfigProviderInterface
     const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
     const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
     const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
-    const SEPA_CODE = 'wirecard_elasticengine_sepa';
+    const SEPA_CODE = 'wirecard_elasticengine_sepadirectdebit';
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
     const IDEAL_CODE = 'wirecard_elasticengine_ideal';
     const RATEPAYINVOICE_CODE = 'wirecard_elasticengine_ratepayinvoice';

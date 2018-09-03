@@ -155,7 +155,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <default_currency>EUR</default_currency>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_maestro>
-            <wirecard_elasticengine_sepa>
+            <wirecard_elasticengine_sepadirectdebit>
                 <title>Wirecard SEPA</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
@@ -181,7 +181,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <creditor_name>Max Mustermann</creditor_name>
                 <creditor_city>City</creditor_city>
                 <send_additional>1</send_additional>
-            </wirecard_elasticengine_sepa>
+            </wirecard_elasticengine_sepadirectdebit>
             <wirecard_elasticengine_sofortbanking>
                 <title>Wirecard Pay now.</title>
                 <active>0</active>

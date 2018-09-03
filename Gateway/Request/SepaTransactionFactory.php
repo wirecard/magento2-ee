@@ -40,7 +40,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\SepaTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -52,7 +52,7 @@ class SepaTransactionFactory extends TransactionFactory
     const REFUND_OPERATION = Operation::CREDIT;
 
     /**
-     * @var SepaTransaction
+     * @var SepaDirectDebitTransaction
      */
     protected $transaction;
 

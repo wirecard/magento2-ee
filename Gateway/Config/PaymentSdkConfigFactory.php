@@ -42,7 +42,7 @@ use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
-use Wirecard\PaymentSdk\Transaction\SepaTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
 /**
  * Class PaymentSDKConfig
@@ -116,7 +116,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
 
         if ($paymentCode === CreditCardTransaction::NAME) {
             $paymentMethod = $this->getCreditCardConfig($methodConfig);
-        } elseif ($paymentCode === SepaTransaction::NAME) {
+        } elseif ($paymentCode === SepaDirectDebitTransaction::NAME) {
             $paymentMethod = $this->getSepaConfig($methodConfig);
         } else {
             $paymentMethod = $this->getPaymentMethodConfig($methodConfig, $paymentCode);
@@ -193,6 +193,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     private function getSepaConfig($config)
     {
         $methodSdkConfig = new SepaConfig(
+            'sepadirectdebit',
             $config->getValue('merchant_account_id'),
             $config->getValue('secret')
         );
