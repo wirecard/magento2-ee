@@ -119,7 +119,9 @@ class WirecardVoidCommand implements CommandInterface
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
         try {
-            if ($transaction instanceof CreditCardTransaction && $this->methodConfig->getValue('three_d_merchant_account_id') !== '') {
+            if ($transaction instanceof CreditCardTransaction
+                && $this->methodConfig->getValue('three_d_merchant_account_id') !== ''
+            ) {
                 $transaction->setThreeD(false);
             }
             $response = $transactionService->process($transaction, Operation::CANCEL);
