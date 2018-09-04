@@ -63,7 +63,7 @@
                                                                         <item name="wirecard_elasticengine_maestro" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="wirecard_elasticengine_sepa" xsi:type="array">
+                                                                        <item name="wirecard_elasticengine_sepadirectdebit" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="wirecard_elasticengine_sofortbanking" xsi:type="array">

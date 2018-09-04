@@ -912,7 +912,7 @@
 
     <virtualType name="SepaTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory">
         <arguments>
-            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaTransaction</argument>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction</argument>
             <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
@@ -1016,7 +1016,7 @@
             <argument name="methodConfigs" xsi:type="array">
                 <item name="paypal" xsi:type="object">WirecardPaypalConfig</item>
                 <item name="creditcard" xsi:type="object">WirecardCreditCardConfig</item>
-                <item name="sepa" xsi:type="object">WirecardSepaConfig</item>
+                <item name="sepadirectdebit" xsi:type="object">WirecardSepaConfig</item>
                 <item name="sofortbanking" xsi:type="object">WirecardSofortConfig</item>
                 <item name="ideal" xsi:type="object">WirecardIdealConfig</item>
                 <item name="ratepayinvoice" xsi:type="object">WirecardRatepayInvoiceConfig</item>

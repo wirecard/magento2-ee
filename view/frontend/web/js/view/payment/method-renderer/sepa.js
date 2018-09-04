@@ -105,12 +105,12 @@ define(
                             var modal = this;
                             $.get(url.build('wirecard_elasticengine/frontend/sepamandate', {})).done(
                                 function (response) {
-                                    response = response.replace(/%firstname%/g, $("#wirecard_elasticengine_sepa_accountFirstName").val())
-                                        .replace(/%lastname%/g, $("#wirecard_elasticengine_sepa_accountLastName").val())
-                                        .replace(/%bankAccountIban%/g, $("#wirecard_elasticengine_sepa_bankAccountIban").val());
+                                    response = response.replace(/%firstname%/g, $("#wirecard_elasticengine_sepadirectdebit_accountFirstName").val())
+                                        .replace(/%lastname%/g, $("#wirecard_elasticengine_sepadirectdebit_accountLastName").val())
+                                        .replace(/%bankAccountIban%/g, $("#wirecard_elasticengine_sepadirectdebit_bankAccountIban").val());
 
                                     if(self.hasBankBic()) {
-                                    response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepa_bankBic").val());
+                                    response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepadirectdebit_bankBic").val());
                                     } else {
                                         response = response.replace(/%bankBic%/g, '');
                                     }

@@ -113,7 +113,6 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
             $methodConfig->getValue('http_user'),
             $methodConfig->getValue('http_pass')
         );
-
         if ($paymentCode === CreditCardTransaction::NAME) {
             $paymentMethod = $this->getCreditCardConfig($methodConfig);
         } elseif ($paymentCode === SepaDirectDebitTransaction::NAME) {
@@ -193,7 +192,7 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
     private function getSepaConfig($config)
     {
         $methodSdkConfig = new SepaConfig(
-            'sepadirectdebit',
+            SepaDirectDebitTransaction::NAME,
             $config->getValue('merchant_account_id'),
             $config->getValue('secret')
         );

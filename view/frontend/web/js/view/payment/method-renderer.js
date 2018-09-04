@@ -52,7 +52,7 @@ define(
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
             },
             {
-                type: 'wirecard_elasticengine_sepa',
+                type: 'wirecard_elasticengine_sepadirectdebit',
                 component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/sepa'
             },
             {
