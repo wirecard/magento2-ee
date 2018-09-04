@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef9d6460d70d56fa3a88de6ec1236130",
+    "content-hash": "acaea090e99e83b5aead63073179d639",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -52,6 +52,56 @@
             ],
             "description": "Braintree PHP Client Library",
             "time": "2015-11-19T19:14:47+00:00"
+        },
+        {
+            "name": "chillerlan/php-qrcode",
+            "version": "dev-php5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chillerlan/php-qrcode.git",
+                "reference": "ecedd960fdd3b7882cc2ea82109967d3e040f375"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/ecedd960fdd3b7882cc2ea82109967d3e040f375",
+                "reference": "ecedd960fdd3b7882cc2ea82109967d3e040f375",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.3.*"
+            },
+            "suggest": {
+                "chillerlan/php-googleauth": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "chillerlan\\QRCode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Smiley",
+                    "email": "smiley@chillerlan.net"
+                },
+                {
+                    "name": "Kazuhiko Arase",
+                    "homepage": "https://github.com/kazuhikoarase"
+                }
+            ],
+            "description": "A QR code generator. PHP 5.6+, PHP 7",
+            "homepage": "https://github.com/codemasher/php-qrcode",
+            "keywords": [
+                "qr code"
+            ],
+            "time": "2017-02-10T15:18:40+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -143,16 +193,16 @@
         },
         {
             "name": "colinmollenhour/cache-backend-redis",
-            "version": "1.9",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/colinmollenhour/Cm_Cache_Backend_Redis.git",
-                "reference": "6319714bb3a4fe699c5db0edb887f5e8fe40a6dc"
+                "reference": "155f4dc20240aae06dd5cb8747475f37974d053a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/colinmollenhour/Cm_Cache_Backend_Redis/zipball/6319714bb3a4fe699c5db0edb887f5e8fe40a6dc",
-                "reference": "6319714bb3a4fe699c5db0edb887f5e8fe40a6dc",
+                "url": "https://api.github.com/repos/colinmollenhour/Cm_Cache_Backend_Redis/zipball/155f4dc20240aae06dd5cb8747475f37974d053a",
+                "reference": "155f4dc20240aae06dd5cb8747475f37974d053a",
                 "shasum": ""
             },
             "require": {
@@ -175,7 +225,7 @@
             ],
             "description": "Zend_Cache backend using Redis with full support for tags.",
             "homepage": "https://github.com/colinmollenhour/Cm_Cache_Backend_Redis",
-            "time": "2016-05-02T16:23:36+00:00"
+            "time": "2016-10-03T16:55:11+00:00"
         },
         {
             "name": "colinmollenhour/credis",
@@ -634,58 +684,6 @@
             "time": "2017-03-20T17:10:46+00:00"
         },
         {
-            "name": "http-interop/http-factory",
-            "version": "0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/http-interop/http-factory.git",
-                "reference": "c2587cc0a6f74987fefb5b8074acfd32c69a4b0f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/http-interop/http-factory/zipball/c2587cc0a6f74987fefb5b8074acfd32c69a4b0f",
-                "reference": "c2587cc0a6f74987fefb5b8074acfd32c69a4b0f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Interop\\Http\\Factory\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for HTTP message factories",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "psr",
-                "psr-17",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "time": "2017-03-24T14:48:51+00:00"
-        },
-        {
             "name": "justinrainbow/json-schema",
             "version": "1.6.1",
             "source": {
@@ -739,7 +737,7 @@
                     "email": "igor@wiedler.ch"
                 },
                 {
-                    "name": "Robert Sch?nthal",
+                    "name": "Robert Schönthal",
                     "email": "seroscho@googlemail.com"
                 }
             ],
@@ -1135,7 +1133,7 @@
                     "email": "flyingmana@googlemail.com"
                 },
                 {
-                    "name": "J?rg Weller",
+                    "name": "Jörg Weller",
                     "email": "weller@flagbit.de"
                 },
                 {
@@ -1327,59 +1325,6 @@
             "time": "2017-06-28T16:24:08+00:00"
         },
         {
-            "name": "nyholm/psr7",
-            "version": "0.2.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nyholm/psr7.git",
-                "reference": "8df3bb7ec84fb186537beade2ee2e71f2b7dd216"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/8df3bb7ec84fb186537beade2ee2e71f2b7dd216",
-                "reference": "8df3bb7ec84fb186537beade2ee2e71f2b7dd216",
-                "shasum": ""
-            },
-            "require": {
-                "http-interop/http-factory": "^0.3",
-                "php": "^7.0",
-                "php-http/message-factory": "^1.0",
-                "psr/http-message": "^1.0"
-            },
-            "provide": {
-                "psr/http-factory-implementation": "1.0",
-                "psr/http-message-implementation": "1.0"
-            },
-            "require-dev": {
-                "http-interop/http-factory-tests": "^0.3",
-                "php-http/psr7-integration-tests": "dev-master",
-                "phpunit/phpunit": "^5.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nyholm\\Psr7\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tobias Nyholm",
-                    "email": "tobias.nyholm@gmail.com"
-                }
-            ],
-            "description": "A fast PHP7 implementation of PSR-7",
-            "homepage": "http://tnyholm.se",
-            "keywords": [
-                "psr-17",
-                "psr-7"
-            ],
-            "time": "2017-05-22T14:53:34+00:00"
-        },
-        {
             "name": "oyejorge/less.php",
             "version": "v1.7.0.14",
             "source": {
@@ -1489,7 +1434,7 @@
                     "email": "typo3-coding@oliverklee.de"
                 },
                 {
-                    "name": "Roman O?ana",
+                    "name": "Roman Ožana",
                     "email": "ozana@omdesign.cz"
                 }
             ],
@@ -1967,7 +1912,7 @@
                     "role": "Developer"
                 },
                 {
-                    "name": "Hans-J?rgen Petrich",
+                    "name": "Hans-Jürgen Petrich",
                     "email": "petrich@tronic-media.com",
                     "role": "Developer"
                 },
@@ -2727,7 +2672,7 @@
             ],
             "authors": [
                 {
-                    "name": "T?bal Mart?n",
+                    "name": "Túbal Martín",
                     "homepage": "http://tubalmartin.me/"
                 }
             ],
@@ -2744,19 +2689,20 @@
         },
         {
             "name": "wirecard/payment-sdk-php",
-            "version": "2.1.3",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "839edfe4cbfd5506d2bf3500e01d27350d2b1ad8"
+                "reference": "550bdccb5ffeb38dc57a25cfa22f1cbcb2697d30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/839edfe4cbfd5506d2bf3500e01d27350d2b1ad8",
-                "reference": "839edfe4cbfd5506d2bf3500e01d27350d2b1ad8",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/550bdccb5ffeb38dc57a25cfa22f1cbcb2697d30",
+                "reference": "550bdccb5ffeb38dc57a25cfa22f1cbcb2697d30",
                 "shasum": ""
             },
             "require": {
+                "chillerlan/php-qrcode": "dev-php5",
                 "ext-intl": ">=1.0.0",
                 "monolog/monolog": ">=1.16",
                 "myclabs/php-enum": "^1.5.0",
@@ -2768,6 +2714,7 @@
             },
             "require-dev": {
                 "mikey179/vfsstream": "^1.6",
+                "mockery/mockery": "^1.1",
                 "php-http/guzzle6-adapter": ">=1.1.1",
                 "phpunit/phpunit": "^5.7",
                 "squizlabs/php_codesniffer": "^2.7"
@@ -2783,7 +2730,7 @@
                 "GPL-3.0-only"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2018-04-27T11:36:31+00:00"
+            "time": "2018-08-28T13:05:08+00:00"
         },
         {
             "name": "zendframework/zend-code",
@@ -4134,7 +4081,7 @@
             "license": [
                 "BSD-3-Clause"
             ],
-            "description": "a component that aids in manipulating and validating ? Uniform Resource Identifiers (URIs)",
+            "description": "a component that aids in manipulating and validating » Uniform Resource Identifiers (URIs)",
             "homepage": "https://github.com/zendframework/zend-uri",
             "keywords": [
                 "uri",
@@ -4530,7 +4477,7 @@
             ],
             "authors": [
                 {
-                    "name": "Dariusz Rumi?ski",
+                    "name": "Dariusz Rumiński",
                     "email": "dariusz.ruminski@gmail.com"
                 },
                 {
@@ -5300,6 +5247,58 @@
                 "xunit"
             ],
             "time": "2016-04-20T14:39:26+00:00"
+        },
+        {
+            "name": "psr/http-factory",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-factory.git",
+                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
+                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "psr",
+                "psr-17",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2018-07-30T21:54:04+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -6246,7 +6245,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
