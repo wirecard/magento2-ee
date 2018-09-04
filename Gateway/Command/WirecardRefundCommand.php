@@ -39,6 +39,7 @@ use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
@@ -106,6 +107,11 @@ class WirecardRefundCommand implements CommandInterface
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
         try {
+            if ($transaction instanceof CreditCardTransaction
+                && $this->methodConfig->getValue('three_d_merchant_account_id') !== ''
+            ) {
+                $transaction->setThreeD(false);
+            }
             $response = $transactionService->process($transaction, $this->transactionFactory->getRefundOperation());
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
