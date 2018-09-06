@@ -48,7 +48,6 @@ class ConfigProvider implements ConfigProviderInterface
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
     const IDEAL_CODE = 'wirecard_elasticengine_ideal';
     const RATEPAYINVOICE_CODE = 'wirecard_elasticengine_ratepayinvoice';
-    const RATEPAYINSTALL_CODE = 'wirecard_elasticengine_ratepayinstall';
     const ALIPAYXBORDER_CODE = 'wirecard_elasticengine_alipayxborder';
     const POIPIA_CODE = 'wirecard_elasticengine_poipia';
     const MASTERPASS_CODE = 'wirecard_elasticengine_masterpass';
@@ -112,7 +111,6 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
                 $this->getConfigForRatepay(self::RATEPAYINVOICE_CODE) +
-                $this->getConfigForRatepay(self::RATEPAYINSTALL_CODE) +
                 $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE) +
                 $this->getConfigForPaymentMethod(self::POIPIA_CODE) +
                 $this->getConfigForPaymentMethod(self::MASTERPASS_CODE) +
@@ -157,7 +155,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'ratepay_script' => $this->getRatepayScript($paymentMethodName),
+                'ratepay_script' => $this->getRatepayScript(),
                 'address_same' => (bool) $this->isBillingEqualShippingAddress(self::RATEPAYINVOICE_CODE)
             ]
         ];
@@ -174,7 +172,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale), true)
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($locale, null, null, 'tokenize'), true)
             ]
         ];
     }
@@ -264,29 +262,12 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * Set deviceIdent for ratepay script
-     */
-    private function setInstallmentDeviceIdent()
-    {
-        $transactionService = $this->transactionServiceFactory->create('ratepayinstall');
-        if (!strlen($this->checkoutSession->getData('installmentDeviceIdent'))) {
-            $deviceIdent = $transactionService->getRatePayInstallmentDeviceIdent();
-            $this->checkoutSession->setData('installmentDeviceIdent', $deviceIdent);
-        }
-    }
-
-    /**
-     * @param $code
      * @return string
      */
-    private function getRatepayScript($code)
+    private function getRatepayScript()
     {
-        $this->setInstallmentDeviceIdent();
-        $deviceIdent = $this->checkoutSession->getData('installmentDeviceIdent');
-        if ($code == self::RATEPAYINVOICE_CODE) {
-            $this->setInvoiceDeviceIdent();
-            $deviceIdent = $this->checkoutSession->getData('invoiceDeviceIdent');
-        }
+        $this->setInvoiceDeviceIdent();
+        $deviceIdent = $this->checkoutSession->getData('invoiceDeviceIdent');
         $script = '
         <script>
         var di = {t:\'' . $deviceIdent . '\',v:\'WDWL\',l:\'Checkout\'};

@@ -46,9 +46,6 @@
     <event name="payment_method_assign_data_wirecard_elasticengine_ratepayinvoice">
         <observer name="wirecard_elasticengine_ratepay_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\RatepayDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_wirecard_elasticengine_ratepayinstall">
-        <observer name="wirecard_elasticengine_ratepay_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\RatepayDataAssignObserver" />
-    </event>
     <event name="payment_method_assign_data_wirecard_elasticengine_unionpayinternational">
         <observer name="wirecard_elasticengine_unionpayinternational_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver" />
     </event>
