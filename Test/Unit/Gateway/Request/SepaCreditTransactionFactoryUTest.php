@@ -153,7 +153,7 @@ class SepaCreditTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new SepaCreditTransferTransaction();
         $expected->setParentTransactionId('123456PARENT');
 
-        $expected->setAccountHolder(new AccountHolder());
+        $expected->setAccountHolder(null);
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
