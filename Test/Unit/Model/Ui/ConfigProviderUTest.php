@@ -126,7 +126,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $seamlessRequestData
                 ],
-                'wirecard_elasticengine_sepa' => [
+                'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'enable_bic' => false
                 ],
@@ -139,11 +139,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'ideal_bic' => $idealBic
                 ],
                 'wirecard_elasticengine_ratepayinvoice' => [
-                    'logo_url' => self::LOGO_URL_PATH,
-                    'ratepay_script' => $ratepayScript,
-                    'address_same' => false
-                ],
-                'wirecard_elasticengine_ratepayinstall' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript,
                     'address_same' => false
@@ -248,7 +243,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $seamlessRequestData
                 ],
-                'wirecard_elasticengine_sepa' => [
+                'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'enable_bic' => true
                 ],
@@ -261,11 +256,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'ideal_bic' => $idealBic
                 ],
                 'wirecard_elasticengine_ratepayinvoice' => [
-                    'logo_url' => self::LOGO_URL_PATH,
-                    'ratepay_script' => $ratepayScript,
-                    'address_same' => true
-                ],
-                'wirecard_elasticengine_ratepayinstall' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript,
                     'address_same' => true

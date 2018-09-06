@@ -52,7 +52,8 @@ use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\SepaTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
 class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
@@ -140,14 +141,14 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testRefundOperationSetter()
     {
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new SepaTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+            new SepaDirectDebitTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
         $expected = Operation::CREDIT;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
     public function testCreateMinimum()
     {
-        $transaction = new SepaTransaction();
+        $transaction = new SepaDirectDebitTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
@@ -158,7 +159,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCaptureMinimum()
     {
-        $transaction = new SepaTransaction();
+        $transaction = new SepaDirectDebitTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
@@ -169,7 +170,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundMinimum()
     {
-        $transaction = new SepaTransaction();
+        $transaction = new SepaCreditTransferTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
@@ -181,7 +182,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateSetsBic()
     {
         $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
-        $transaction = new SepaTransaction();
+        $transaction = new SepaDirectDebitTransaction();
         $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
@@ -192,11 +193,11 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return SepaTransaction
+     * @return SepaDirectDebitTransaction
      */
     private function minimumExpectedTransaction()
     {
-        $expected = new SepaTransaction();
+        $expected = new SepaDirectDebitTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
@@ -223,11 +224,11 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return SepaTransaction
+     * @return SepaDirectDebitTransaction
      */
     private function minimumExpectedCaptureTransaction()
     {
-        $expected = new SepaTransaction();
+        $expected = new SepaDirectDebitTransaction();
         $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setParentTransactionId('123456PARENT');
         $expected->setAmount(new Amount(1.0, 'EUR'));
@@ -239,11 +240,11 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return SepaTransaction
+     * @return SepaDirectDebitTransaction
      */
     private function minimumExpectedRefundTransaction()
     {
-        $expected = new SepaTransaction();
+        $expected = new SepaDirectDebitTransaction();
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAccountHolder(new AccountHolder());

@@ -44,7 +44,7 @@ use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
-use Wirecard\PaymentSdk\Transaction\SepaTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
 class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 {
@@ -196,15 +196,16 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateAddsSepa()
     {
         /** @var $configFromFactory Config */
-        $configFromFactory = $this->configFactory->create(SepaTransaction::NAME);
+        $configFromFactory = $this->configFactory->create(SepaDirectDebitTransaction::NAME);
         $this->assertInstanceOf(Config::class, $configFromFactory);
 
         $sepaConfig = new SepaConfig(
+            SepaDirectDebitTransaction::NAME,
             'account_id_123',
             'secret_key'
         );
         $sepaConfig->setCreditorId('1234');
-        $this->assertEquals($sepaConfig, $configFromFactory->get(SepaTransaction::NAME));
+        $this->assertEquals($sepaConfig, $configFromFactory->get(SepaDirectDebitTransaction::NAME));
     }
 
     public function testCreateAddsIdeal()
