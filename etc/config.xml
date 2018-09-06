@@ -182,6 +182,24 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <creditor_city>City</creditor_city>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_sepadirectdebit>
+            <wirecard_elasticengine_sepacredit>
+                <title>Wirecard SEPA Credit Transfer</title>
+                <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>16390-testing</http_user>
+                <http_pass>3!3013=D3fD8X7</http_pass>
+                <can_initialize>0</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>0</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>SepaCreditFacade</model>
+                <merchant_account_id>59a01668-693b-49f0-8a1f-f3c1ba025d45</merchant_account_id>
+                <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
+            </wirecard_elasticengine_sepacredit>
             <wirecard_elasticengine_sofortbanking>
                 <title>Wirecard Pay now.</title>
                 <active>0</active>

@@ -42,6 +42,7 @@ use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
 /**
@@ -115,8 +116,9 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         );
         if ($paymentCode === CreditCardTransaction::NAME) {
             $paymentMethod = $this->getCreditCardConfig($methodConfig);
-        } elseif ($paymentCode === SepaDirectDebitTransaction::NAME) {
-            $paymentMethod = $this->getSepaConfig($methodConfig);
+        } elseif (($paymentCode === SepaDirectDebitTransaction::NAME)
+            || ($paymentCode === SepaCreditTransferTransaction::NAME)) {
+            $paymentMethod = $this->getSepaConfig($methodConfig, $paymentCode);
         } else {
             $paymentMethod = $this->getPaymentMethodConfig($methodConfig, $paymentCode);
         }
@@ -187,12 +189,13 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
 
     /**
      * @param \Magento\Payment\Gateway\Config\Config $config
+     * @param string $name
      * @return SepaConfig
      */
-    private function getSepaConfig($config)
+    private function getSepaConfig($config, $name)
     {
         $methodSdkConfig = new SepaConfig(
-            SepaDirectDebitTransaction::NAME,
+            $name,
             $config->getValue('merchant_account_id'),
             $config->getValue('secret')
         );
