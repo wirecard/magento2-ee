@@ -240,11 +240,11 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return SepaDirectDebitTransaction
+     * @return SepaCreditTransferTransaction
      */
     private function minimumExpectedRefundTransaction()
     {
-        $expected = new SepaDirectDebitTransaction();
+        $expected = new SepaCreditTransferTransaction();
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAccountHolder(new AccountHolder());

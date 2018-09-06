@@ -149,7 +149,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             [
                 'paypal' => $methodConfigPayPal,
                 'creditcard' => $methodConfigCreditCard,
-                'sepa' => $methodConfigSepa,
+                'sepadirectdebit' => $methodConfigSepa,
                 'ideal' => $methodConfigIdeal
             ],
             $this->productMetadata,
