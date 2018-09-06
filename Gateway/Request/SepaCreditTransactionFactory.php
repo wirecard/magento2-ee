@@ -60,6 +60,8 @@ class SepaCreditTransactionFactory extends TransactionFactory
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
+     * @param BasketFactory $basketFactory
+     * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
      */
     public function __construct(
@@ -67,9 +69,11 @@ class SepaCreditTransactionFactory extends TransactionFactory
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Transaction $transaction,
+        BasketFactory $basketFactory,
+        AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager);
+        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
     }
 
     /**

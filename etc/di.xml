@@ -355,7 +355,7 @@
     </virtualType>
     <virtualType name="WirecardSepaCreditConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPA_CT_CODE</argument>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPACREDIT_CODE</argument>
         </arguments>
     </virtualType>
     <virtualType name="WirecardSofortConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -737,10 +737,10 @@
     </virtualType>
     <virtualType name="PoiPiaRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">SepaCreditTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="PoiPiaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -876,6 +876,8 @@
     <virtualType name="SepaCreditTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SepaCreditTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
