@@ -30,62 +30,62 @@
 
 define(
     [
-        'uiComponent',
-        'Magento_Checkout/js/model/payment/renderer-list'
+        "uiComponent",
+        "Magento_Checkout/js/model/payment/renderer-list"
     ],
     function (
         Component,
         rendererList
     ) {
-        'use strict';
+        "use strict";
         rendererList.push(
             {
-                type: 'wirecard_elasticengine_paypal',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+                type: "wirecard_elasticengine_paypal",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             },
             {
-                type: 'wirecard_elasticengine_creditcard',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
+                type: "wirecard_elasticengine_creditcard",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard"
             },
             {
-                type: 'wirecard_elasticengine_maestro',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
+                type: "wirecard_elasticengine_maestro",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard"
             },
             {
-                type: 'wirecard_elasticengine_sepadirectdebit',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/sepa'
+                type: "wirecard_elasticengine_sepadirectdebit",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/sepa"
             },
             {
-                type: 'wirecard_elasticengine_sofortbanking',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+                type: "wirecard_elasticengine_sofortbanking",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             },
             {
-                type: 'wirecard_elasticengine_ideal',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ideal'
+                type: "wirecard_elasticengine_ideal",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/ideal"
             },
             {
-                type: 'wirecard_elasticengine_ratepayinvoice',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay'
+                type: "wirecard_elasticengine_ratepayinvoice",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay"
             },
             {
-                type: 'wirecard_elasticengine_ratepayinstall',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay'
+                type: "wirecard_elasticengine_ratepayinstall",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay"
             },
             {
-                type: 'wirecard_elasticengine_alipayxborder',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+                type: "wirecard_elasticengine_alipayxborder",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             },
             {
-                type: 'wirecard_elasticengine_poipia',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+                type: "wirecard_elasticengine_poipia",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             },
             {
-                type: 'wirecard_elasticengine_masterpass',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/default'
+                type: "wirecard_elasticengine_masterpass",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             },
             {
-                type: 'wirecard_elasticengine_unionpayinternational',
-                component: 'Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard'
+                type: "wirecard_elasticengine_unionpayinternational",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard"
             }
         );
         return Component.extend({});

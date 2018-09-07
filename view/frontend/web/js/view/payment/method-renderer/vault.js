@@ -29,15 +29,15 @@
  */
 
 define([
-    'jquery',
-    'Magento_Vault/js/view/payment/method-renderer/vault',
-    'mage/url'
+    "jquery",
+    "Magento_Vault/js/view/payment/method-renderer/vault",
+    "mage/url"
 ], function ($, VaultComponent, url) {
-    'use strict';
+    "use strict";
 
     return VaultComponent.extend({
         defaults: {
-            template: 'Magento_Vault/payment/form'
+            template: "Magento_Vault/payment/form"
         },
 
         /**
@@ -74,9 +74,9 @@ define([
         getData: function () {
             var result = null;
             $.ajax({
-                url: url.build('wirecard_elasticengine/frontend/vault?hash='+this.getToken()),
-                type: 'GET',
-                dataType: 'json',
+                url: url.build("wirecard_elasticengine/frontend/vault?hash="+this.getToken()),
+                type: "GET",
+                dataType: "json",
                 async: false,
                 success: function (data) {
                     result = data;
@@ -84,11 +84,11 @@ define([
             });
 
             return {
-                'method': result.method_code,
-                'po_number': null,
-                'additional_data': {
-                    'token_id': result.token_id,
-                    'recurring_payment' : true
+                "method": result.method_code,
+                "po_number": null,
+                "additional_data": {
+                    "token_id": result.token_id,
+                    "recurring_payment" : true
                 }
             };
         },

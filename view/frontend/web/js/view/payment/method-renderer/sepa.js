@@ -30,26 +30,26 @@
 
 define(
     [
-        'jquery',
-        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
-        'Magento_Checkout/js/model/payment/additional-validators',
-        'mage/url',
-        'Magento_Checkout/js/model/quote',
-        'Magento_Ui/js/modal/modal',
-        'mage/translate',
-        'ko'
+        "jquery",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
+        "Magento_Checkout/js/model/payment/additional-validators",
+        "mage/url",
+        "Magento_Checkout/js/model/quote",
+        "Magento_Ui/js/modal/modal",
+        "mage/translate",
+        "ko"
     ],
     function ($, Component, additionalValidators, url, quote, modal, ko) {
-        'use strict';
+        "use strict";
         return Component.extend({
-            accountFirstName: '',
-            accountLastName: '',
-            bankBic: '',
-            bankAccountIban: '',
-            mandateId: '',
+            accountFirstName: "",
+            accountLastName: "",
+            bankBic: "",
+            bankAccountIban: "",
+            mandateId: "",
             mandate: false,
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-sepa',
+                template: "Wirecard_ElasticEngine/payment/method-sepa",
                 redirectAfterPlaceOrder: false
             },
             /**
@@ -57,14 +57,14 @@ define(
              */
             getData: function () {
                 return {
-                    'method': this.getCode(),
-                    'po_number': null,
-                    'additional_data': {
-                        'accountFirstName': this.accountFirstName,
-                        'accountLastName': this.accountLastName,
-                        'bankBic': this.bankBic,
-                        'bankAccountIban': this.bankAccountIban,
-                        'mandateId': this.mandateId
+                    "method": this.getCode(),
+                    "po_number": null,
+                    "additional_data": {
+                        "accountFirstName": this.accountFirstName,
+                        "accountLastName": this.accountLastName,
+                        "bankBic": this.bankBic,
+                        "bankAccountIban": this.bankAccountIban,
+                        "mandateId": this.mandateId
                     }
                 };
             },
@@ -75,20 +75,20 @@ define(
                 return false;
             },
             validate: function () {
-                var frm = $('#' + this.getCode() + '-form');
-                return frm.validation() && frm.validation('isValid');
+                var frm = $("#" + this.getCode() + "-form");
+                return frm.validation() && frm.validation("isValid");
             },
             beforePlaceOrder: function (data, event) {
                 var self = this;
                 if (this.validate()) {
-                    var sepaMandate = $('#sepaMandate');
+                    var sepaMandate = $("#sepaMandate");
 
                     sepaMandate.modal({
-                        title: $.mage.__('SEPA Direct Debit Mandate Form'),
+                        title: $.mage.__("SEPA Direct Debit Mandate Form"),
                         responsive: true,
                         innerScroll: true,
                         buttons: [{
-                            text: 'Accept',
+                            text: "Accept",
                             click: function() {
                                 self.mandateId = $("input[name=mandateId]", sepaMandate).val();
                                 this.closeModal();
@@ -96,14 +96,14 @@ define(
                             }
                         },
                             {
-                                text: 'Close',
+                                text: "Close",
                                 click: this.closeModal
                             }],
                         opened: function(){
-                                var acceptButton = $("footer button:first", sepaMandate.closest('.modal-inner-wrap'));
-                            acceptButton.addClass('disabled');
+                                var acceptButton = $("footer button:first", sepaMandate.closest(".modal-inner-wrap"));
+                            acceptButton.addClass("disabled");
                             var modal = this;
-                            $.get(url.build('wirecard_elasticengine/frontend/sepamandate', {})).done(
+                            $.get(url.build("wirecard_elasticengine/frontend/sepamandate", {})).done(
                                 function (response) {
                                     response = response.replace(/%firstname%/g, $("#wirecard_elasticengine_sepadirectdebit_accountFirstName").val())
                                         .replace(/%lastname%/g, $("#wirecard_elasticengine_sepadirectdebit_accountLastName").val())
@@ -112,40 +112,40 @@ define(
                                     if(self.hasBankBic()) {
                                     response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepadirectdebit_bankBic").val());
                                     } else {
-                                        response = response.replace(/%bankBic%/g, '');
+                                        response = response.replace(/%bankBic%/g, "");
                                     }
                                     $(modal).html(response);
-                                    $('#sepa-accept', modal).on('change', function(event) {
-                                        if ($('#sepa-accept', modal).prop("checked")) {
-                                            if (acceptButton.hasClass('disabled')) {
-                                                acceptButton.removeClass('disabled');
+                                    $("#sepa-accept", modal).on("change", function(event) {
+                                        if ($("#sepa-accept", modal).prop("checked")) {
+                                            if (acceptButton.hasClass("disabled")) {
+                                                acceptButton.removeClass("disabled");
                                             }
                                         } else {
-                                            acceptButton.addClass('disabled');
+                                            acceptButton.addClass("disabled");
                                         }
 
                                     });
                                 }
                             );
                         }
-                    }).modal('openModal');
+                    }).modal("openModal");
                 }
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    if (data['form-url']) {
-                        var form = $('<form />', {action: data['form-url'], method: data['form-method']});
+                    if (data["form-url"]) {
+                        var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
 
-                        for (var i = 0; i < data['form-fields'].length; i++) {
-                            form.append($('<input />', {
-                                type: 'hidden',
-                                name: data['form-fields'][i]['key'],
-                                value: data['form-fields'][i]['value']
+                        for (var i = 0; i < data["form-fields"].length; i++) {
+                            form.append($("<input />", {
+                                type: "hidden",
+                                name: data["form-fields"][i]["key"],
+                                value: data["form-fields"][i]["value"]
                             }));
                         }
-                        form.appendTo('body').submit();
+                        form.appendTo("body").submit();
                     } else {
-                        window.location.replace(data['redirect-url']);
+                        window.location.replace(data["redirect-url"]);
                     }
                 });
             }

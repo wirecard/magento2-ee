@@ -30,23 +30,23 @@
 
 define(
     [
-        'jquery',
-        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
-        'Wirecard_ElasticEngine/js/validator/min-age-validator',
-        'mage/translate',
-        'mage/url'
+        "jquery",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
+        "Wirecard_ElasticEngine/js/validator/min-age-validator",
+        "mage/translate",
+        "mage/url"
     ],
     function ($, Component, minAgeValidator, $t, url) {
-        'use strict';
+        "use strict";
         return Component.extend({
             customerData: {},
             customerDob: null,
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-ratepay',
+                template: "Wirecard_ElasticEngine/payment/method-ratepay",
                 redirectAfterPlaceOrder: false
             },
             initObservable: function () {
-                this._super().observe('customerDob');
+                this._super().observe("customerDob");
                 return this;
             },
             initialize: function() {
@@ -58,10 +58,10 @@ define(
             },
             getData: function () {
                 return {
-                    'method': this.getCode(),
-                    'po_number': null,
-                    'additional_data': {
-                        'customerDob': this.customerDob()
+                    "method": this.getCode(),
+                    "po_number": null,
+                    "additional_data": {
+                        "customerDob": this.customerDob()
                     }
                 };
             },
@@ -69,35 +69,35 @@ define(
                 return this.config.ratepay_script;
             },
             validate: function () {
-                var errorPane = $('#' + this.getCode() + '-dob-error');
+                var errorPane = $("#" + this.getCode() + "-dob-error");
                 if (!minAgeValidator.validate(this.customerDob())) {
-                    errorPane.html($t('You have to be at least 18 years to use this payment method.'));
-                    errorPane.css('display', 'block');
+                    errorPane.html($t("You have to be at least 18 years to use this payment method."));
+                    errorPane.css("display", "block");
                     return false;
                 }
-                if (this.config.address_same && $('#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice').is(":checked") === false) {
-                    errorPane.html($t('Shipping and billing address need to be same.'));
-                    errorPane.css('display', 'block');
+                if (this.config.address_same && $("#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice").is(":checked") === false) {
+                    errorPane.html($t("Shipping and billing address need to be same."));
+                    errorPane.css("display", "block");
                     return false;
                 }
-                var form = $('#' + this.getCode() + '-form');
-                return $(form).validation() && $(form).validation('isValid');
+                var form = $("#" + this.getCode() + "-form");
+                return $(form).validation() && $(form).validation("isValid");
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    if (data['form-url']) {
-                        var form = $('<form />', {action: data['form-url'], method: data['form-method']});
+                    if (data["form-url"]) {
+                        var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
 
-                        for (var i = 0; i < data['form-fields'].length; i++) {
-                            form.append($('<input />', {
-                                type: 'hidden',
-                                name: data['form-fields'][i]['key'],
-                                value: data['form-fields'][i]['value']
+                        for (var i = 0; i < data["form-fields"].length; i++) {
+                            form.append($("<input />", {
+                                type: "hidden",
+                                name: data["form-fields"][i]["key"],
+                                value: data["form-fields"][i]["value"]
                             }));
                         }
-                        form.appendTo('body').submit();
+                        form.appendTo("body").submit();
                     } else {
-                        window.location.replace(data['redirect-url']);
+                        window.location.replace(data["redirect-url"]);
                     }
                 });
             }
