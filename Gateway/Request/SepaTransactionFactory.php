@@ -39,7 +39,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
