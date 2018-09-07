@@ -138,14 +138,6 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
     }
 
-    public function testRefundOperationSetter()
-    {
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new SepaDirectDebitTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
-        $expected = Operation::CREDIT;
-        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
-    }
-
     public function testCreateMinimum()
     {
         $transaction = new SepaDirectDebitTransaction();
@@ -166,17 +158,6 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = $this->minimumExpectedCaptureTransaction();
 
         $this->assertEquals($expected, $transactionFactory->capture($this->commandSubject));
-    }
-
-    public function testRefundMinimum()
-    {
-        $transaction = new SepaCreditTransferTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedRefundTransaction();
-
-        $this->assertEquals($expected, $transactionFactory->refund($this->commandSubject));
     }
 
     public function testCreateSetsBic()
@@ -233,22 +214,6 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setParentTransactionId('123456PARENT');
         $expected->setAmount(new Amount(1.0, 'EUR'));
 
-        $expected->setLocale('en');
-        $expected->setEntryMode('ecommerce');
-
-        return $expected;
-    }
-
-    /**
-     * @return SepaCreditTransferTransaction
-     */
-    private function minimumExpectedRefundTransaction()
-    {
-        $expected = new SepaCreditTransferTransaction();
-        $expected->setParentTransactionId('123456PARENT');
-
-        $expected->setAccountHolder(new AccountHolder());
-        $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 
