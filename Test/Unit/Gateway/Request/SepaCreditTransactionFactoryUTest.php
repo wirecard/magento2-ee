@@ -112,8 +112,6 @@ class SepaCreditTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
-
-
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
         $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
