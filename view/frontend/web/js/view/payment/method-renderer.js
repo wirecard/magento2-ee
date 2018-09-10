@@ -64,6 +64,10 @@ define(
                 component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/ideal"
             },
             {
+                type: "wirecard_elasticengine_giropay",
+                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/giropay"
+            },
+            {
                 type: "wirecard_elasticengine_ratepayinvoice",
                 component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/ratepay"
             },
