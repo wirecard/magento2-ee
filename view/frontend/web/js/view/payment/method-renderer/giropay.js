@@ -31,7 +31,7 @@
 define(
     [
         "jquery",
-        "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/bicdefault",
         "mage/translate",
         "mage/url"
     ],
@@ -42,24 +42,6 @@ define(
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-giropay",
                 redirectAfterPlaceOrder: false
-            },
-            getData: function () {
-                return {
-                    "method": this.getCode(),
-                    "po_number": null,
-                    "additional_data": {
-                        "bankBic": this.bankBic,
-                    }
-                };
-            },
-            validate: function () {
-                var frm = $("#" + this.getCode() + "-form");
-                return frm.validation() && frm.validation("isValid");
-            },
-            afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    window.location.replace(data["redirect-url"]);
-                });
             }
         });
     }

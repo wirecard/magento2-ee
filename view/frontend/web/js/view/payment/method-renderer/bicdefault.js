@@ -31,7 +31,7 @@
 define(
     [
         "jquery",
-        "Wirecard_ElasticEngine/js/view/payment/method-renderer/bicdefault",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "mage/translate",
         "mage/url"
     ],
@@ -40,11 +40,26 @@ define(
         return Component.extend({
             bankBic: "",
             defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-ideal",
+                template: "Wirecard_ElasticEngine/payment/method-default",
                 redirectAfterPlaceOrder: false
             },
-            getIdealBic: function() {
-                return this.config.ideal_bic;
+            getData: function () {
+                return {
+                    "method": this.getCode(),
+                    "po_number": null,
+                    "additional_data": {
+                        "bankBic": this.bankBic,
+                    }
+                };
+            },
+            validate: function () {
+                var frm = $("#" + this.getCode() + "-form");
+                return frm.validation() && frm.validation("isValid");
+            },
+            afterPlaceOrder: function () {
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
+                    window.location.replace(data["redirect-url"]);
+                });
             }
         });
     }
