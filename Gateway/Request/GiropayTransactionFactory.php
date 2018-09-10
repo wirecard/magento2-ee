@@ -36,6 +36,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\PaymentSdk\Entity\BankAccount;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
@@ -86,7 +87,9 @@ class GiropayTransactionFactory extends TransactionFactory
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
         $additionalInfo = $paymentDO->getPayment()->getAdditionalInformation();
-        $this->transaction->setBic($additionalInfo['bankBic']);
+        $bankAccount = new BankAccount();
+        $bankAccount->setBic($additionalInfo['bankBic']);
+        $this->transaction->setBankAccount($bankAccount);
 
         return $this->transaction;
     }
