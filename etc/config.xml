@@ -246,6 +246,29 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_ideal>
+            <wirecard_elasticengine_giropay>
+                <title>Wirecard Giropay</title>
+                <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>16390-testing</http_user>
+                <http_pass>3!3013=D3fD8X7</http_pass>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>0</can_void>
+                <can_invoice>1</can_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>GiropayFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>debit</payment_action>
+                <merchant_account_id>9b4b0e5f-1bc8-422e-be42-d0bad2eadabc</merchant_account_id>
+                <secret>0c8c6f3a-1534-4fa1-99d9-d1c644d43709</secret>
+                <send_additional>1</send_additional>
+            </wirecard_elasticengine_giropay>
             <wirecard_elasticengine_ratepayinvoice>
                 <title>Wirecard Guaranteed Invoice</title>
                 <active>0</active>
