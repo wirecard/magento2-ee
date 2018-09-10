@@ -31,38 +31,31 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class RatepayInstallTransactionFactory
+ * Class SepaCreditTransactionFactory
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
-class RatepayInstallTransactionFactory extends TransactionFactory
+class SepaCreditTransactionFactory extends TransactionFactory
 {
-    const REFUND_OPERATION = Operation::CANCEL;
+    const REFUND_OPERATION = Operation::CREDIT;
 
     /**
-     * @var RatepayInstallmentTransaction
+     * @var SepaCreditTransferTransaction
      */
     protected $transaction;
 
     /**
-     * @var Session
-     */
-    private $checkoutSession;
-
-    /**
-     * RatepayInstallTransactionFactory constructor.
+     * SepaCreditTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
@@ -70,7 +63,6 @@ class RatepayInstallTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param Session $session
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -79,63 +71,9 @@ class RatepayInstallTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig,
-        Session $session
+        ConfigInterface $methodConfig
     ) {
         parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
-
-        $this->checkoutSession = $session;
-    }
-
-    /**
-     * @param array $commandSubject
-     * @return Transaction
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function create($commandSubject)
-    {
-        parent::create($commandSubject);
-
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $additionalInfo = $payment->getPayment()->getAdditionalInformation();
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $dob = $additionalInfo['customerDob'];
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, $dob));
-        $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
-        if (strlen($this->checkoutSession->getData('installmentDeviceIdent'))) {
-            $deviceIdent = $this->checkoutSession->getData('installmentDeviceIdent');
-            $device = new \Wirecard\PaymentSdk\Entity\Device();
-            $device->setFingerprint($deviceIdent);
-            $this->transaction->setDevice($device);
-            $this->checkoutSession->unsetData('installmentDeviceIdent');
-        }
-
-        return $this->transaction;
-    }
-
-    /**
-     * @param array $commandSubject
-     * @return Transaction
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function capture($commandSubject)
-    {
-        parent::capture($commandSubject);
-
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $amount = new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode());
-
-        $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->capture($order, $this->transaction));
-
-        return $this->transaction;
     }
 
     /**
@@ -148,20 +86,8 @@ class RatepayInstallTransactionFactory extends TransactionFactory
     {
         parent::refund($commandSubject);
 
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
-
+        /** @var PaymentDataObjectInterface $payment */
         $this->transaction->setParentTransactionId($this->transactionId);
-        $this->transaction->setAmount($amount);
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
-
-        return $this->transaction;
-    }
-
-    public function void($commandSubject)
-    {
-        parent::void($commandSubject);
 
         return $this->transaction;
     }

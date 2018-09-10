@@ -28,7 +28,6 @@ install:
 
 script:
   - composer test-coverage
-  - sonar-scanner
   - composer cs-check
 
 after_script:

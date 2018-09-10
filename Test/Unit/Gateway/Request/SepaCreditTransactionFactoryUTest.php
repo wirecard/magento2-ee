@@ -43,17 +43,14 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
-use Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory;
+use Wirecard\ElasticEngine\Gateway\Request\SepaCreditTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
-use Wirecard\PaymentSdk\Entity\CustomField;
-use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
-use Wirecard\PaymentSdk\Entity\Mandate;
-use Wirecard\PaymentSdk\Entity\Redirect;
-use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\Operation;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
-class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
+class SepaCreditTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
     const REDIRECT_URL = 'http://magen.to/frontend/redirect';
     const ORDER_ID = '1234567';
@@ -115,17 +112,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getGrandTotalAmount')->willReturn('1.0');
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
-        $additionalInfo = [
-            'bankBic' => 'WIREDEMMXXX',
-            'bankAccountIban' => 'DE42512308000000060004',
-            'accountFirstName' => 'Jane',
-            'accountLastName' => 'Doe',
-            'mandateId' => '1234'
-        ];
-
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
-        $this->payment->method('getAdditionalInformation')->willReturn($additionalInfo);
         $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->paymentDo->method('getOrder')->willReturn($this->order);
@@ -136,82 +124,35 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
     }
 
-    public function testCreateMinimum()
+    public function testRefundOperationSetter()
     {
-        $transaction = new SepaDirectDebitTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+        $transactionFactory = new SepaCreditTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            new SepaCreditTransferTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $expected = Operation::CREDIT;
+        $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
 
-    public function testCaptureMinimum()
+    public function testRefundMinimum()
     {
-        $transaction = new SepaDirectDebitTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+        $transaction = new SepaCreditTransferTransaction();
+        $transactionFactory = new SepaCreditTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
             $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
 
-        $expected = $this->minimumExpectedCaptureTransaction();
+        $expected = $this->minimumExpectedRefundTransaction();
 
-        $this->assertEquals($expected, $transactionFactory->capture($this->commandSubject));
-    }
-
-    public function testCreateSetsBic()
-    {
-        $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
-        $transaction = new SepaDirectDebitTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
-
-        $expected = $this->minimumExpectedTransaction();
-        $expected->setBic('WIREDEMMXXX');
-
-        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+        $this->assertEquals($expected, $transactionFactory->refund($this->commandSubject));
     }
 
     /**
-     * @return SepaDirectDebitTransaction
+     * @return SepaCreditTransferTransaction
      */
-    private function minimumExpectedTransaction()
+    private function minimumExpectedRefundTransaction()
     {
-        $expected = new SepaDirectDebitTransaction();
-
-        $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
-        $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
-            'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
-        $customFields = new CustomFieldCollection();
-        $customFields->add(new CustomField('orderId', self::ORDER_ID));
-        $expected->setCustomFields($customFields);
-        $expected->setLocale('en');
-        $expected->setEntryMode('ecommerce');
-
-        $mandate = new Mandate('1234');
-
-        $accountHolder = new AccountHolder();
-        $accountHolder->setFirstName('Jane');
-        $accountHolder->setLastName('Doe');
-        $expected->setAccountHolder($accountHolder);
-        $expected->setIban('DE42512308000000060004');
-        $expected->setMandate($mandate);
-
-        return $expected;
-    }
-
-    /**
-     * @return SepaDirectDebitTransaction
-     */
-    private function minimumExpectedCaptureTransaction()
-    {
-        $expected = new SepaDirectDebitTransaction();
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected = new SepaCreditTransferTransaction();
         $expected->setParentTransactionId('123456PARENT');
-        $expected->setAmount(new Amount(1.0, 'EUR'));
 
+        $expected->setAccountHolder(null);
+        $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
 

@@ -10,22 +10,24 @@
     "magento/module-checkout": ">=100.1.0",
     "magento/module-sales": ">=100.0.0",
     "magento/module-vault": ">=100.0.0",
-    "wirecard/payment-sdk-php": "2.1.3",
+    "guzzlehttp/psr7": "1.4.2",
     "php-http/guzzle6-adapter": ">=1.1.1",
-    "nyholm/psr7": "^0.2"
+    "php-http/discovery": "1.3.0",
+    "wirecard/payment-sdk-php": "3.3.1"
   },
   "require-dev": {
     "phpunit/phpunit": "5.3.5",
     "magento/community-edition": ">=2.1.0",
-    "friendsofphp/php-cs-fixer": "^2.2"
+    "friendsofphp/php-cs-fixer": "^2.2",
+    "codacy/coverage": "1.4.2"
   },
   "type": "magento2-module",
   "scripts": {
-    "upload-coverage": "coveralls -v",
+    "upload-coverage": "codacycoverage clover build/coverage/xml",
     "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
     "cs-fix": "php-cs-fixer fix .",
     "test": "phpunit --colors=always",
-    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    "test-coverage": "phpunit --coverage-clover build/coverage/xml"
   },
   "autoload": {
     "psr-4": {

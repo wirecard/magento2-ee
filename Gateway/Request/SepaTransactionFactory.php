@@ -39,8 +39,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\SepaTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -49,10 +48,8 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class SepaTransactionFactory extends TransactionFactory
 {
-    const REFUND_OPERATION = Operation::CREDIT;
-
     /**
-     * @var SepaTransaction
+     * @var SepaDirectDebitTransaction
      */
     protected $transaction;
 
@@ -118,34 +115,5 @@ class SepaTransactionFactory extends TransactionFactory
         parent::capture($commandSubject);
 
         return $this->transaction;
-    }
-
-    /**
-     * @param array $commandSubject
-     * @return Transaction
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function refund($commandSubject)
-    {
-        parent::refund($commandSubject);
-
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setParentTransactionId($this->transactionId);
-
-        return $this->transaction;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRefundOperation()
-    {
-        return self::REFUND_OPERATION;
     }
 }

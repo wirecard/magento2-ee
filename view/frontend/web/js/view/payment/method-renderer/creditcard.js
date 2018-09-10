@@ -30,25 +30,25 @@
 
 define(
     [
-        'jquery',
-        'Wirecard_ElasticEngine/js/view/payment/method-renderer/default',
-        'mage/translate',
-        'mage/url',
-        'Magento_Vault/js/view/payment/vault-enabler'
+        "jquery",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
+        "mage/translate",
+        "mage/url",
+        "Magento_Vault/js/view/payment/vault-enabler"
     ],
     function ($, Component, $t, url, VaultEnabler) {
-        'use strict';
+        "use strict";
         return Component.extend({
             token_id: null,
             expiration_date: null,
             defaults: {
-                template: 'Wirecard_ElasticEngine/payment/method-creditcard',
+                template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
                 WirecardPaymentPage.seamlessRenderForm({
                     requestData: this.config.seamless_request_data,
-                    wrappingDivId: this.getCode() + '_seamless_form',
+                    wrappingDivId: this.getCode() + "_seamless_form",
                     onSuccess: this.seamlessFormSizeHandler.bind(this),
                     onError: this.seamlessFormInitErrorHandler.bind(this)
                 });
@@ -59,17 +59,17 @@ define(
                 WirecardPaymentPage.seamlessSubmitForm({
                     onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
                     onError: this.seamlessFormSubmitErrorHandler.bind(this),
-                    wrappingDivId: this.getCode() + '_seamless_form'
+                    wrappingDivId: this.getCode() + "_seamless_form"
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                if (response.hasOwnProperty('token_id')) {
+                if (response.hasOwnProperty("token_id")) {
 					this.token_id = response.token_id;
-				} else if (response.hasOwnProperty('card_token') && response.card_token.hasOwnProperty('token')) {
+				} else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
                     this.token_id = response.card_token.token;
 
                     this.expiration_date = {};
-                    var fields = ['expiration_month', 'expiration_year'];
+                    var fields = ["expiration_month", "expiration_year"];
                     for (var part in fields) {
                         this.expiration_date[fields[part]] = response.card[fields[part]];
                     }
@@ -77,12 +77,12 @@ define(
                 this.placeOrder();
             },
             seamlessFormInitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t('An error occurred loading the credit card form. Please try again.')});
+                this.messageContainer.addErrorMessage({message: $t("An error occurred loading the credit card form. Please try again.")});
 
                 console.error(response);
             },
             seamlessFormSubmitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t('An error occurred submitting the credit card form.')});
+                this.messageContainer.addErrorMessage({message: $t("An error occurred submitting the credit card form.")});
 
                 console.error(response);
 
@@ -91,11 +91,11 @@ define(
                 },3000);
             },
             seamlessFormSizeHandler: function () {
-                window.addEventListener('resize', this.resizeIFrame.bind(this));
+                window.addEventListener("resize", this.resizeIFrame.bind(this));
                 this.resizeIFrame();
             },
             resizeIFrame: function () {
-                var iframe = document.getElementById(this.getCode() + '_seamless_form').firstElementChild;
+                var iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
                 if (iframe.clientWidth > 768) {
                     iframe.style.height = "267px";
                 } else if (iframe.clientWidth > 460) {
@@ -107,12 +107,12 @@ define(
 
             getData: function () {
                 return {
-                    'method': this.getCode(),
-                    'po_number': null,
-                    'additional_data': {
-                        'token_id': this.token_id,
-                        'is_active_payment_token_enabler': this.vaultEnabler.isActivePaymentTokenEnabler(),
-                        'expiration_date': this.expiration_date
+                    "method": this.getCode(),
+                    "po_number": null,
+                    "additional_data": {
+                        "token_id": this.token_id,
+                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler(),
+                        "expiration_date": this.expiration_date
                     }
                 };
             },
@@ -137,19 +137,19 @@ define(
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    if (data['form-url']) {
-                        var form = $('<form />', {action: data['form-url'], method: data['form-method']});
+                    if (data["form-url"]) {
+                        var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
 
-                        for (var i = 0; i < data['form-fields'].length; i++) {
-                            form.append($('<input />', {
-                                type: 'hidden',
-                                name: data['form-fields'][i]['key'],
-                                value: data['form-fields'][i]['value']
+                        for (var i = 0; i < data["form-fields"].length; i++) {
+                            form.append($("<input />", {
+                                type: "hidden",
+                                name: data["form-fields"][i]["key"],
+                                value: data["form-fields"][i]["value"]
                             }));
                         }
-                        form.appendTo('body').submit();
+                        form.appendTo("body").submit();
                     } else {
-                        window.location.replace(data['redirect-url']);
+                        window.location.replace(data["redirect-url"]);
                     }
                 });
             },

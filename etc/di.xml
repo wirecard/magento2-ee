@@ -73,6 +73,15 @@
             <argument name="commandPool" xsi:type="object">SepaCommandPool</argument>
         </arguments>
     </virtualType>
+    <virtualType name="SepaCreditFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPACREDIT_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">SepaCreditValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">SepaCreditValidatorPool</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="SofortFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SOFORT_CODE</argument>
@@ -101,16 +110,6 @@
             <argument name="valueHandlerPool" xsi:type="object">RatepayInvoiceValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">RatepayInvoiceValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">RatepayInvoiceCommandPool</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="RatepayInstallFacade" type="Magento\Payment\Model\Method\Adapter">
-        <arguments>
-            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::RATEPAYINSTALL_CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
-            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
-            <argument name="valueHandlerPool" xsi:type="object">RatepayInstallValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">RatepayInstallValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">RatepayInstallCommandPool</argument>
         </arguments>
     </virtualType>
     <virtualType name="AlipayXBorderFacade" type="Magento\Payment\Model\Method\Adapter">
@@ -212,6 +211,19 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="SepaCreditValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">SepaCreditConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SepaCreditConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WirecardSepaCreditConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="SofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -250,21 +262,6 @@
     <virtualType name="RatepayInvoiceConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">WirecardRatepayInvoiceConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="RatepayInstallValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">RatepayInstallConfigValueHandler</item>
-                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
-                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
-                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="RatepayInstallConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
-        <arguments>
-            <argument name="configInterface" xsi:type="object">WirecardRatepayInstallConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="AlipayXBorderValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
@@ -356,6 +353,11 @@
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPA_CODE</argument>
         </arguments>
     </virtualType>
+    <virtualType name="WirecardSepaCreditConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPACREDIT_CODE</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="WirecardSofortConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SOFORT_CODE</argument>
@@ -369,11 +371,6 @@
     <virtualType name="WirecardRatepayInvoiceConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::RATEPAYINVOICE_CODE</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="WirecardRatepayInstallConfig" type="Magento\Payment\Gateway\Config\Config">
-        <arguments>
-            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::RATEPAYINSTALL_CODE</argument>
         </arguments>
     </virtualType>
     <virtualType name="WirecardAlipayXBorderConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -425,6 +422,13 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="SepaCreditValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+            </argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="SofortValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
@@ -440,13 +444,6 @@
     </virtualType>
 
     <virtualType name="RatepayInvoiceValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
-        <arguments>
-            <argument name="validators" xsi:type="array">
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="RatepayInstallValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
             </argument>
@@ -596,10 +593,10 @@
     </virtualType>
     <virtualType name="SepaRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">SepaCreditTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="SepaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -621,10 +618,10 @@
     </virtualType>
     <virtualType name="SofortRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">SepaCreditTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="SofortInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -646,10 +643,10 @@
     </virtualType>
     <virtualType name="IdealRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">SepaCreditTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="IdealInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -704,49 +701,6 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="RatepayInstallCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
-        <arguments>
-            <argument name="commands" xsi:type="array">
-                <item name="initialize" xsi:type="string">RatepayInstallInitializeCommand</item>
-                <item name="capture" xsi:type="string">RatepayInstallCaptureCommand</item>
-                <item name="refund" xsi:type="string">RatepayInstallRefundCommand</item>
-                <item name="void" xsi:type="string">RatepayInstallVoidCommand</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="RatepayInstallCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="RatepayInstallRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="RatepayInstallInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="RatepayInstallVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">RatepayInstallTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="AlipayXBorderCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -783,10 +737,10 @@
     </virtualType>
     <virtualType name="PoiPiaRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
         <arguments>
-            <argument name="transactionFactory" xsi:type="object">SepaTransactionFactory</argument>
+            <argument name="transactionFactory" xsi:type="object">SepaCreditTransactionFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="PoiPiaInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
@@ -912,10 +866,19 @@
 
     <virtualType name="SepaTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory">
         <arguments>
-            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaTransaction</argument>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction</argument>
             <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardSepaConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SepaCreditTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SepaCreditTransactionFactory">
+        <arguments>
+            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction</argument>
+            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+            <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
 
@@ -945,15 +908,6 @@
             <argument name="methodConfig" xsi:type="object">WirecardRatepayInvoiceConfig</argument>
         </arguments>
     </virtualType>
-
-   <!-- <virtualType name="RatepayInstallTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\RatepayInstallTransactionFactory">
-        <arguments>
-            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction</argument>
-            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
-            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardRatepayInstallConfig</argument>
-        </arguments>
-    </virtualType>-->
 
     <virtualType name="AlipayXBorderTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\AlipayXBorderTransactionFactory">
         <arguments>
@@ -1016,11 +970,11 @@
             <argument name="methodConfigs" xsi:type="array">
                 <item name="paypal" xsi:type="object">WirecardPaypalConfig</item>
                 <item name="creditcard" xsi:type="object">WirecardCreditCardConfig</item>
-                <item name="sepa" xsi:type="object">WirecardSepaConfig</item>
+                <item name="sepadirectdebit" xsi:type="object">WirecardSepaConfig</item>
+                <item name="sepacredit" xsi:type="object">WirecardSepaCreditConfig</item>
                 <item name="sofortbanking" xsi:type="object">WirecardSofortConfig</item>
                 <item name="ideal" xsi:type="object">WirecardIdealConfig</item>
                 <item name="ratepayinvoice" xsi:type="object">WirecardRatepayInvoiceConfig</item>
-                <item name="ratepayinstall" xsi:type="object">WirecardRatepayInstallConfig</item>
                 <item name="alipay-xborder" xsi:type="object">WirecardAlipayXBorderConfig</item>
                 <item name="wiretransfer" xsi:type="object">WirecardPoiPiaConfig</item>
                 <item name="masterpass" xsi:type="object">WirecardMasterpassConfig</item>

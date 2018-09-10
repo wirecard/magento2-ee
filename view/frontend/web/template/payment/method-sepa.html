@@ -60,7 +60,7 @@
 
             <fieldset data-bind="attr: {class: 'fieldset payment items sepa ' + getCode(), id: 'payment_form_' + getCode()}">
 
-                <input type="hidden" name="payment[sepa_mandateId]" class="input-text" value=""
+                <input type="hidden" name="payment[sepadirectdebit_mandateId]" class="input-text" value=""
                        data-bind="attr: { autocomplete: off, id: getCode() + '_mandateId',
                                     'data-container': getCode() + '-mandateId',
                                     'data-validate': JSON.stringify({'required':true})},
@@ -70,7 +70,7 @@
                         <span><!-- ko i18n: 'First Name'--><!-- /ko --></span>
                     </label>
                     <div class="control">
-                        <input type="text" name="payment[sepa_accountFirstName]" class="input-text" value=""
+                        <input type="text" name="payment[sepadirectdebit_accountFirstName]" class="input-text" value=""
                                data-bind="attr: { autocomplete: off, id: getCode() + '_accountFirstName',
                                     title: $t('First Name'),
                                     'data-container': getCode() + '-accountFirstName',
@@ -84,7 +84,7 @@
                         <span><!-- ko i18n: 'Last Name'--><!-- /ko --></span>
                     </label>
                     <div class="control">
-                        <input type="text" name="payment[sepa_accountLastName]" class="input-text" value=""
+                        <input type="text" name="payment[sepadirectdebit_accountLastName]" class="input-text" value=""
                                data-bind="attr: { autocomplete: off, id: getCode() + '_accountLastName',
                                     title: $t('Last Name'),
                                     'data-container': getCode() + '-accountLastName',
@@ -99,7 +99,7 @@
                         <span><!-- ko i18n: 'Bank BIC'--><!-- /ko --></span>
                     </label>
                     <div class="control">
-                        <input type="text" name="payment[sepa_bankBic]" class="input-text" value=""
+                        <input type="text" name="payment[sepadirectdebit_bankBic]" class="input-text" value=""
                                data-bind="attr: {
                                     autocomplete: off,
                                     id: getCode() + '_bankBic',
@@ -115,7 +115,7 @@
                         <span><!-- ko i18n: 'Bank Account IBAN'--><!-- /ko --></span>
                     </label>
                     <div class="control">
-                        <input type="text" name="payment[sepa_bankAccountIban]" class="input-text" value=""
+                        <input type="text" name="payment[sepadirectdebit_bankAccountIban]" class="input-text" value=""
                                data-bind="attr: {
                                     autocomplete: off,
                                     id: getCode() + '_bankAccountIban',

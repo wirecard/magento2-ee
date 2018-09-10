@@ -155,12 +155,12 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <default_currency>EUR</default_currency>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_maestro>
-            <wirecard_elasticengine_sepa>
+            <wirecard_elasticengine_sepadirectdebit>
                 <title>Wirecard SEPA</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
-                <http_user>70000-APITEST-AP</http_user>
-                <http_pass>qD2wzQ_hrc!8</http_pass>
+                <http_user>16390-testing</http_user>
+                <http_pass>3!3013=D3fD8X7</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
@@ -174,14 +174,32 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <model>SepaFacade</model>
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
-                <merchant_account_id>4c901196-eff7-411e-82a3-5ef6b6860d64</merchant_account_id>
-                <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
+                <merchant_account_id>933ad170-88f0-4c3d-a862-cff315ecfbc0</merchant_account_id>
+                <secret>5caf2ed9-5f79-4e65-98cb-0b70d6f569aa</secret>
                 <enable_bic>0</enable_bic>
                 <creditor_id>DE98ZZZ09999999999</creditor_id>
                 <creditor_name>Max Mustermann</creditor_name>
                 <creditor_city>City</creditor_city>
                 <send_additional>1</send_additional>
-            </wirecard_elasticengine_sepa>
+            </wirecard_elasticengine_sepadirectdebit>
+            <wirecard_elasticengine_sepacredit>
+                <title>Wirecard SEPA Credit Transfer</title>
+                <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>16390-testing</http_user>
+                <http_pass>3!3013=D3fD8X7</http_pass>
+                <can_initialize>0</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>0</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>SepaCreditFacade</model>
+                <merchant_account_id>59a01668-693b-49f0-8a1f-f3c1ba025d45</merchant_account_id>
+                <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
+            </wirecard_elasticengine_sepacredit>
             <wirecard_elasticengine_sofortbanking>
                 <title>Wirecard Pay now.</title>
                 <active>0</active>
@@ -256,34 +274,6 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <billing_shipping_address_identical>1</billing_shipping_address_identical>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_ratepayinvoice>
-            <!--<wirecard_elasticengine_ratepayinstall>
-                <title>Wirecard Guaranteed Installment</title>
-                <active>0</active>
-                <base_url>https://api-test.wirecard.com</base_url>
-                <http_user>70000-APITEST-AP</http_user>
-                <http_pass>qD2wzQ_hrc!8</http_pass>
-                <can_initialize>1</can_initialize>
-                <can_authorize>0</can_authorize>
-                <can_void>1</can_void>
-                <can_capture>1</can_capture>
-                <can_capture_partial>1</can_capture_partial>
-                <can_refund>1</can_refund>
-                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
-                <can_use_checkout>1</can_use_checkout>
-                <is_gateway>1</is_gateway>
-                <sort_order>1</sort_order>
-                <model>RatepayInstallFacade</model>
-                <order_status>processing</order_status>
-                <payment_action>authorize</payment_action>
-                <merchant_account_id>fa02d1d4-f518-4e22-b42b-2abab5867a84</merchant_account_id>
-                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
-                <min_order_total>200</min_order_total>
-                <max_order_total>3500</max_order_total>
-                <allowspecific>1</allowspecific>
-                <specificcountry>AT,DE</specificcountry>
-                <billing_shipping_address_identical>1</billing_shipping_address_identical>
-                <send_additional>1</send_additional>
-            </wirecard_elasticengine_ratepayinstall>-->
             <wirecard_elasticengine_alipayxborder>
                 <title>Wirecard Alipay Cross Border</title>
                 <active>0</active>
