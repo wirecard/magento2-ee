@@ -40,7 +40,7 @@ define(
         "use strict";
         return Component.extend({
             token_id: null,
-            expiration_date: null,
+            expiration_date: {},
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
@@ -112,7 +112,8 @@ define(
                     "additional_data": {
                         "token_id": this.token_id,
                         "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler(),
-                        "expiration_date": this.expiration_date
+                        "expiration_year": this.expiration_date.expiration_year,
+                        "expiration_month": this.expiration_date.expiration_month
                     }
                 };
             },
