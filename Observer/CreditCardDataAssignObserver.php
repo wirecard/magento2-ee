@@ -60,8 +60,6 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
         $paymentInfo = $this->readPaymentModelArgument($observer);
 
-
-
         if (array_key_exists(self::EXPIRATION_YEAR,
                 $additionalData) && $additionalData[self::EXPIRATION_YEAR] != null) {
             $paymentInfo->setAdditionalInformation(
