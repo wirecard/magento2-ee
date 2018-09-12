@@ -50,6 +50,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
      */
     public function execute(Observer $observer)
     {
+
         $data = $this->readDataArgument($observer);
 
         $additionalData = $data->getData(PaymentInterface::KEY_ADDITIONAL_DATA);
@@ -59,15 +60,17 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
         $paymentInfo = $this->readPaymentModelArgument($observer);
 
-        if (array_key_exists(self::EXPIRATION_DATE,
-                $additionalData) && $additionalData[self::EXPIRATION_DATE] != null) {
+
+
+        if (array_key_exists(self::EXPIRATION_YEAR,
+                $additionalData) && $additionalData[self::EXPIRATION_YEAR] != null) {
             $paymentInfo->setAdditionalInformation(
                 self::EXPIRATION_MONTH,
-                $additionalData[self::EXPIRATION_DATE][self::EXPIRATION_MONTH]
+                $additionalData[self::EXPIRATION_MONTH]
             );
             $paymentInfo->setAdditionalInformation(
                 self::EXPIRATION_YEAR,
-                $additionalData[self::EXPIRATION_DATE][self::EXPIRATION_YEAR]
+                $additionalData[self::EXPIRATION_YEAR]
             );
         }
 
