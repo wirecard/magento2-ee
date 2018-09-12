@@ -1,3 +1,4 @@
+<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -28,24 +29,34 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-define(
-    [
-        "jquery",
-        "Wirecard_ElasticEngine/js/view/payment/method-renderer/bicdefault",
-        "mage/translate",
-        "mage/url"
-    ],
-    function ($, Component, $t, url) {
-        "use strict";
-        return Component.extend({
-            bankBic: "",
-            defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-ideal",
-                redirectAfterPlaceOrder: false
-            },
-            getIdealBic: function() {
-                return this.config.ideal_bic;
-            }
-        });
+namespace Wirecard\ElasticEngine\Observer;
+
+use Magento\Framework\Event\Observer;
+use Magento\Payment\Observer\AbstractDataAssignObserver;
+use Magento\Quote\Api\Data\PaymentInterface;
+
+class GiropayDataAssignObserver extends AbstractDataAssignObserver
+{
+    /**
+     * @param Observer $observer
+     * @return void|null
+     */
+    public function execute(Observer $observer)
+    {
+        $data = $this->readDataArgument($observer);
+
+        $additionalData = $data->getData(PaymentInterface::KEY_ADDITIONAL_DATA);
+        if (!is_array($additionalData)) {
+            return;
+        }
+
+        $paymentInfo = $this->readPaymentModelArgument($observer);
+
+        if (array_key_exists('bankBic', $additionalData)) {
+            $paymentInfo->setAdditionalInformation(
+                'bankBic',
+                $additionalData['bankBic']
+            );
+        }
     }
-);
+}

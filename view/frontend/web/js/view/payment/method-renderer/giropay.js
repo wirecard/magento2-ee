@@ -40,11 +40,8 @@ define(
         return Component.extend({
             bankBic: "",
             defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-ideal",
+                template: "Wirecard_ElasticEngine/payment/method-giropay",
                 redirectAfterPlaceOrder: false
-            },
-            getIdealBic: function() {
-                return this.config.ideal_bic;
             }
         });
     }

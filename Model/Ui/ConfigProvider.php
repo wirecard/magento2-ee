@@ -48,6 +48,7 @@ class ConfigProvider implements ConfigProviderInterface
     const SEPACREDIT_CODE = 'wirecard_elasticengine_sepacredit';
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
     const IDEAL_CODE = 'wirecard_elasticengine_ideal';
+    const GIROPAY_CODE = 'wirecard_elasticengine_giropay';
     const RATEPAYINVOICE_CODE = 'wirecard_elasticengine_ratepayinvoice';
     const ALIPAYXBORDER_CODE = 'wirecard_elasticengine_alipayxborder';
     const POIPIA_CODE = 'wirecard_elasticengine_poipia';
@@ -111,6 +112,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
+                $this->getConfigForPaymentMethod(self::GIROPAY_CODE) +
                 $this->getConfigForRatepay(self::RATEPAYINVOICE_CODE) +
                 $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE) +
                 $this->getConfigForPaymentMethod(self::POIPIA_CODE) +

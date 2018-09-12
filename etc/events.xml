@@ -43,6 +43,9 @@
     <event name="payment_method_assign_data_wirecard_elasticengine_ideal">
         <observer name="wirecard_elasticengine_ideal_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\IdealDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_wirecard_elasticengine_giropay">
+        <observer name="wirecard_elasticengine_giropay_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\GiropayDataAssignObserver" />
+    </event>
     <event name="payment_method_assign_data_wirecard_elasticengine_ratepayinvoice">
         <observer name="wirecard_elasticengine_ratepay_gateway_data_assign" instance="Wirecard\ElasticEngine\Observer\RatepayDataAssignObserver" />
     </event>
