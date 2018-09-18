@@ -184,7 +184,7 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $expected->setTokenId('mypersonaltoken');
         $expected->setTermUrl(self::REDIRECT_URL);
         $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
+        $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
