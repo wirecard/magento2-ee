@@ -208,7 +208,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedCaptureTransaction()
     {
         $expected = new SepaDirectDebitTransaction();
-        $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
+        $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setParentTransactionId('123456PARENT');
         $expected->setAmount(new Amount(1.0, 'EUR'));
 
