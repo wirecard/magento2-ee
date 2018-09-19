@@ -166,7 +166,7 @@ class TransactionFactory
             $wdBaseUrl . 'frontend/redirect',
             $wdBaseUrl . 'frontend/cancel',
             $wdBaseUrl . 'frontend/redirect'));
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
+        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify?orderId=' . $this->orderId);
 
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($order);

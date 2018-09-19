@@ -130,7 +130,7 @@ class WirecardCommand implements CommandInterface
 
         try {
             if ($transaction instanceof CreditCardTransaction
-                && $this->methodConfig->getValue('three_d_merchant_account_id') !== ''
+                && $this->methodConfig->getValue('three_d_merchant_account_id') === ''
             ) {
                 $transaction->setThreeD(false);
             }

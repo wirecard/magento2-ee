@@ -179,6 +179,9 @@ class Notify extends Action
 
         //retrieve order id from response
         $orderId = $response->getCustomFields()->get('orderId');
+        if ($orderId == null && isset($_GET['orderId'])) {
+            $orderId = $_GET['orderId'];
+        }
 
         try {
             $order = $this->getOrderByIncrementId($orderId);
