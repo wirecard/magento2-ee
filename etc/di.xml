@@ -696,16 +696,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">GiropayInitializeCommand</item>
-                <item name="refund" xsi:type="string">GiropayRefundCommand</item>
             </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="GiropayRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">SepaCreditTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardSepaCreditConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="GiropayInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
