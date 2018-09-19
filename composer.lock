@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a81dd2923ff2394d17d55e69ca6ca317",
+    "content-hash": "593f14670d4e13259873231e340b1b76",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -2684,17 +2684,51 @@
             "time": "2014-09-22T08:08:50+00:00"
         },
         {
-            "name": "wirecard/payment-sdk-php",
-            "version": "3.3.1",
+            "name": "wirecard/iso-paypal-converter",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "dabcf78de425f0e1358b4b41bf5695601ce01cbe"
+                "url": "https://github.com/wirecard/iso-paypal-converter.git",
+                "reference": "94bf024f71fdbd9b21344c03e14ec99197cf672a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/dabcf78de425f0e1358b4b41bf5695601ce01cbe",
-                "reference": "dabcf78de425f0e1358b4b41bf5695601ce01cbe",
+                "url": "https://api.github.com/repos/wirecard/iso-paypal-converter/zipball/94bf024f71fdbd9b21344c03e14ec99197cf672a",
+                "reference": "94bf024f71fdbd9b21344c03e14ec99197cf672a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7",
+                "squizlabs/php_codesniffer": "^2.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wirecard\\IsoToPayPal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "description": "Converts ISO 3166-2 codes to the codes the PayPal API requires",
+            "time": "2018-09-12T11:59:09+00:00"
+        },
+        {
+            "name": "wirecard/payment-sdk-php",
+            "version": "3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wirecard/paymentSDK-php.git",
+                "reference": "83b0a42a504af5f68eb100eeafc761dc39bdbb27"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/83b0a42a504af5f68eb100eeafc761dc39bdbb27",
+                "reference": "83b0a42a504af5f68eb100eeafc761dc39bdbb27",
                 "shasum": ""
             },
             "require": {
@@ -2706,14 +2740,21 @@
                 "php-http/client-common": "^1",
                 "php-http/client-implementation": "^1.0",
                 "php-http/discovery": "^1",
-                "robrichards/xmlseclibs": "^3.0"
+                "robrichards/xmlseclibs": "^3.0",
+                "symfony/options-resolver": "^3",
+                "wirecard/iso-paypal-converter": "^1.0"
             },
             "require-dev": {
+                "codacy/coverage": "1.4.2",
                 "mikey179/vfsstream": "^1.6",
                 "mockery/mockery": "^1.1",
                 "php-http/guzzle6-adapter": ">=1.1.1",
                 "phpunit/phpunit": "^5.7",
-                "squizlabs/php_codesniffer": "^2.7"
+                "squizlabs/php_codesniffer": "^2.7",
+                "symfony/console": "^3",
+                "symfony/debug": "^3",
+                "symfony/process": "^3",
+                "symfony/yaml": "^3"
             },
             "type": "library",
             "autoload": {
@@ -2726,7 +2767,7 @@
                 "GPL-3.0-only"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2018-09-07T10:13:50+00:00"
+            "time": "2018-09-19T07:16:15+00:00"
         },
         {
             "name": "zendframework/zend-code",
