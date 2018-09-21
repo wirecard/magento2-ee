@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "593f14670d4e13259873231e340b1b76",
+    "content-hash": "cca09a00c61b101c4b4f626f43edf9ec",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -2719,16 +2719,16 @@
         },
         {
             "name": "wirecard/payment-sdk-php",
-            "version": "3.4.0",
+            "version": "3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "83b0a42a504af5f68eb100eeafc761dc39bdbb27"
+                "reference": "bf2a05d19dcb8fa9b482a1304137073ad5aabe7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/83b0a42a504af5f68eb100eeafc761dc39bdbb27",
-                "reference": "83b0a42a504af5f68eb100eeafc761dc39bdbb27",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/bf2a05d19dcb8fa9b482a1304137073ad5aabe7b",
+                "reference": "bf2a05d19dcb8fa9b482a1304137073ad5aabe7b",
                 "shasum": ""
             },
             "require": {
@@ -2741,7 +2741,6 @@
                 "php-http/client-implementation": "^1.0",
                 "php-http/discovery": "^1",
                 "robrichards/xmlseclibs": "^3.0",
-                "symfony/options-resolver": "^3",
                 "wirecard/iso-paypal-converter": "^1.0"
             },
             "require-dev": {
@@ -2767,7 +2766,7 @@
                 "GPL-3.0-only"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2018-09-19T07:16:15+00:00"
+            "time": "2018-09-21T07:37:24+00:00"
         },
         {
             "name": "zendframework/zend-code",
