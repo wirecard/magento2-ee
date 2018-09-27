@@ -93,21 +93,11 @@ class Form extends Generic implements TabInterface
         $form->setUseContainer(true);
 
         $fieldset = $form->addFieldset('form_form', ['legend' => __('Contact Form')]);
-        $fieldset->addField('to', 'select', [
-            self::LABEL => __('To'),
-            self::CLASSCONST => 'required-entry',
-            'required' => true,
-            self::NAME => 'to',
-            'options' => [
-                'support.at@wirecard.com' => 'Support Team Wirecard CEE, Austria',
-                'support@wirecard.com' => 'Support Team Wirecard AG, Germany',
-                'support.sg@wirecard.com' => 'Support Team Wirecard Singapore'
-            ]
-        ]);
 
         $fieldset->addField('replyto', 'text', [
             self::LABEL => __('Your e-mail address'),
             self::CLASSCONST => 'validate-email',
+            'required' => true,
             self::NAME => 'replyto'
         ]);
 
