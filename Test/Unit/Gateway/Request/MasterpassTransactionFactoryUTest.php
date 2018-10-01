@@ -31,6 +31,8 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
@@ -39,11 +41,9 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Sales\Model\Order\Payment\Transaction\Repository;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\FilterBuilder;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\MasterpassTransactionFactory;

@@ -244,7 +244,6 @@ class BasketFactory
         return $basket;
     }
 
-
     /**
      * @param OrderAdapterInterface $order
      * @param Transaction $transaction
