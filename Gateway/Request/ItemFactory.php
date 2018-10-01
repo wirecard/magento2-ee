@@ -68,7 +68,7 @@ class ItemFactory
         $item = new Item(
             $name,
             new Amount($amount, $currency),
-            $qty
+            (double) $qty
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());

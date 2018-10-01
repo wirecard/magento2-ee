@@ -38,6 +38,9 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\FilterBuilder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -102,6 +105,22 @@ class TransactionFactory
     protected $basketFactory;
 
     /**
+     * @var Repository
+     */
+    protected $transactionRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var FilterBuilder
+     */
+    protected $filterBuilder;
+
+
+    /**
      * TransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
@@ -110,6 +129,9 @@ class TransactionFactory
      * @param StoreManagerInterface $storeManager
      * @param AccountHolderFactory $accountHolderFactory
      * @param BasketFactory $basketFactory
+     * @param Repository $transactionRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -118,13 +140,19 @@ class TransactionFactory
         ConfigInterface $methodConfig,
         StoreManagerInterface $storeManager,
         AccountHolderFactory $accountHolderFactory,
-        BasketFactory $basketFactory
+        BasketFactory $basketFactory,
+        Repository $transactionRepository = null,
+        SearchCriteriaBuilder $searchCriteriaBuilder = null,
+        FilterBuilder $filterBuilder = null
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->resolver = $resolver;
         $this->transaction = $transaction;
         $this->methodConfig = $methodConfig;
         $this->storeManager = $storeManager;
+        $this->transactionRepository = $transactionRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->filterBuilder = $filterBuilder;
         $this->accountHolderFactory = $accountHolderFactory;
         $this->basketFactory = $basketFactory;
     }
@@ -199,7 +227,6 @@ class TransactionFactory
         $this->orderId = $order->getId();
         $captureAmount = $commandSubject[self::AMOUNT];
         $amount = new Amount($captureAmount, $order->getCurrencyCode());
-
         $this->transaction->setParentTransactionId($payment->getParentTransactionId());
         $this->transaction->setAmount($amount);
 
@@ -294,5 +321,32 @@ class TransactionFactory
         $this->transaction->setConsumerId($order->getCustomerId());
 
         return $this->transaction;
+    }
+
+    /**
+     * Gets all existing transactions for the specified orders
+     *
+     * @param $order
+     * @param $payment
+     * @return array
+     */
+    protected function getTransactionsForOrder($order, $payment)
+    {
+        if ($this->transactionRepository === null) {
+            return [];
+        }
+
+        $filters[] = $this->filterBuilder->setField('payment_id')
+            ->setValue($payment->getId())
+            ->create();
+
+        $filters[] = $this->filterBuilder->setField('order_id')
+            ->setValue($order->getId())
+            ->create();
+
+        $searchCriteria = $this->searchCriteriaBuilder->addFilters($filters)
+            ->create();
+
+        return $this->transactionRepository->getList($searchCriteria)->toArray();
     }
 }

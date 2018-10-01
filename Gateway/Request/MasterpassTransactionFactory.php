@@ -36,6 +36,9 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\FilterBuilder;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
@@ -63,6 +66,9 @@ class MasterpassTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
+     * @param Repository $transactionRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -71,9 +77,22 @@ class MasterpassTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        Repository $transactionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
+        parent::__construct($urlBuilder,
+            $resolver,
+            $transaction,
+            $methodConfig,
+            $storeManager,
+            $accountHolderFactory,
+            $basketFactory,
+            $transactionRepository,
+            $searchCriteriaBuilder,
+            $filterBuilder
+        );
     }
 
     /**
@@ -103,13 +122,34 @@ class MasterpassTransactionFactory extends TransactionFactory
 
     /**
      * @param array $commandSubject
-     * @return Transaction
+     * @return MasterpassTransaction
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      */
     public function capture($commandSubject)
     {
         parent::capture($commandSubject);
+
+        /** @var PaymentDataObjectInterface $paymentDo */
+        $paymentDo = $commandSubject[self::PAYMENT];
+
+        /** @var OrderAdapterInterface $order */
+        $order = $paymentDo->getOrder();
+
+        /** @var Payment $payment */
+        $payment = $paymentDo->getPayment();
+
+        $transactions = $this->getTransactionsForOrder($order, $payment);
+        $filteredTransactions = array_filter($transactions['items'], function($tx) {
+            if (!key_exists('payment-methods.0.name', $tx)) {
+                return false;
+            }
+
+            return $tx['payment-methods.0.name'] === 'creditcard';
+        });
+        $creditCardTransaction = reset($filteredTransactions);
+
+        $this->transaction->setParentTransactionId($creditCardTransaction['parent-transaction-id']);
 
         return $this->transaction;
     }

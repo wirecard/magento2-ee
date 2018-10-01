@@ -164,6 +164,10 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
     {
         parent::void($commandSubject);
 
+        $payment = $commandSubject[self::PAYMENT];
+        $order = $payment->getOrder();
+        $this->transaction->setBasket($this->basketFactory->void($order, $this->transaction));
+
         return $this->transaction;
     }
 

@@ -41,6 +41,9 @@ use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\FilterBuilder;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\MasterpassTransactionFactory;
@@ -78,6 +81,12 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private $commandSubject;
 
     private $transaction;
+
+    private $transactionRepository;
+
+    private $searchCriteriaBuilder;
+
+    private $filterBuilder;
 
     public function setUp()
     {
@@ -122,13 +131,42 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+
+        $this->transactionRepository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
+        $this->transactionRepository->method('getList')->willReturn([
+            'items' => [
+                [
+                    'transaction-id' => '11111',
+                    'payment-methods.0.name' => 'creditcard',
+                ],
+
+                [
+                    'transaction-id' => '99999',
+                    'payment-methods.0.name' => 'masterpass'
+                ]
+            ]
+        ]);
+
+        $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)
+            ->disableOriginalConstructor()
+            ->setMockClassName(SearchCriteriaBuilder::class)
+            ->getMock();
+
+        $this->searchCriteriaBuilder->method('addFilters')->willReturn($this->searchCriteriaBuilder);
+        $this->searchCriteriaBuilder->method('create')->willReturn($this->searchCriteriaBuilder);
+
+        $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
+        $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
+        $this->filterBuilder->method('setValue')->willReturn($this->filterBuilder);
+        $this->filterBuilder->method('create')->willReturn($this->filterBuilder);
     }
 
     public function testCreateMinimum()
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->transactionRepository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -139,7 +177,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->transactionRepository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -150,7 +189,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->transactionRepository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedRefundTransaction();
 
@@ -161,7 +201,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->transactionRepository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -170,7 +211,8 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $transaction = new MasterpassTransaction();
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->transactionRepository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $expected = $this->minimumExpectedRefundTransaction();
 
@@ -246,8 +288,23 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction->setParentTransactionId('123456PARENT');
 
         $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->transactionRepository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
 
         $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->void([]));
+    }
+
+    public function testCorrectDeterminationOfCaptureTransaction()
+    {
+        $transaction = new MasterpassTransaction();
+
+        $transactionFactory = new MasterpassTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
+            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->transactionRepository,
+            $this->searchCriteriaBuilder, $this->filterBuilder);
+
+        $captureTransaction = $transactionFactory->capture($this->commandSubject);
+        $parentTransactionId = $captureTransaction->getParentTransactionId();
+
+        $this->assertEquals('11111', $parentTransactionId);
     }
 }
