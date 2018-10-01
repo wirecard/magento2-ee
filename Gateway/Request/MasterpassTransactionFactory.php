@@ -31,14 +31,14 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
@@ -140,7 +140,7 @@ class MasterpassTransactionFactory extends TransactionFactory
         $payment = $paymentDo->getPayment();
 
         $transactions = $this->getTransactionsForOrder($order, $payment);
-        $filteredTransactions = array_filter($transactions['items'], function($tx) {
+        $filteredTransactions = array_filter($transactions['items'], function ($tx) {
             if (!key_exists('payment-methods.0.name', $tx)) {
                 return false;
             }
@@ -169,10 +169,6 @@ class MasterpassTransactionFactory extends TransactionFactory
         return $this->transaction;
     }
 
-    /**
-     * @param $commandSubject
-     * @return MasterpassTransaction|Transaction
-     */
     public function void($commandSubject)
     {
         parent::void($commandSubject);
