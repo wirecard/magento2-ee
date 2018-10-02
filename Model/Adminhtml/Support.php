@@ -218,13 +218,9 @@ class Support
      */
     public function sendrequest($postObject)
     {
-        if (!filter_var($postObject->getData('to'), FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception(__('Please enter a valid e-mail address.'));
-        }
-
         if (strlen(trim($postObject->getData('replyto')))) {
             if (!filter_var($postObject->getData('replyto'), FILTER_VALIDATE_EMAIL)) {
-                throw new \Exception(__('Please enter a valid e-mail address (reply to).'));
+                throw new \Exception(__('Please enter a valid e-mail address.'));
             }
             $this->_transportBuilder->setReplyTo(trim($postObject->getData('replyto')));
         }
@@ -235,7 +231,7 @@ class Support
         ];
 
         if (!strlen($sender['email'])) {
-            throw new \Exception('Please set your shop e-mail address!');
+            throw new \Exception(__('Please enter a valid e-mail address.'));
         }
 
         $modules = [];
@@ -291,7 +287,7 @@ class Support
                 'versioninfo' => $versioninfo
             ])
             ->setFrom($sender)
-            ->addTo($postObject->getData('to'))
+            ->addTo('shop-systems-support@wirecard.com')
             ->getTransport();
 
         $transport->sendMessage();

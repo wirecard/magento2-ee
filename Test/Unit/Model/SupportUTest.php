@@ -130,7 +130,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage Please enter a valid e-mail address (reply to).
+     * @expectedExceptionMessage Please enter a valid e-mail address.
      */
     public function testInvalidReplytoEmail()
     {
@@ -148,7 +148,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage Please set your shop e-mail address!
+     * @expectedExceptionMessage Please enter a valid e-mail address.
      */
     public function testMissingShopEmail()
     {
