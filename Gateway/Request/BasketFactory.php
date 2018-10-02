@@ -243,4 +243,59 @@ class BasketFactory
         }
         return $basket;
     }
+
+    /**
+     * @param OrderAdapterInterface $order
+     * @param Transaction $transaction
+     * @return Basket
+     * @throws \InvalidArgumentException
+     * @throws NoSuchEntityException
+     * @throws MandatoryFieldMissingException
+     */
+    public function void($order, $transaction)
+    {
+        if (!$order instanceof OrderAdapterInterface) {
+            throw new \InvalidArgumentException('Order data obj should be provided.');
+        }
+
+        $orderId = $order->getId();
+
+        /** @var Order $orderObject */
+        $orderObject = $this->orderFactory->create();
+        if (!is_null($orderObject)) {
+            $orderObject->load($orderId);
+        }
+
+        if (is_null($orderObject)) {
+            throw new NoSuchEntityException(__('No such order found.'));
+        }
+
+        $basket = new Basket();
+        $basket->setVersion($transaction);
+        $items = $order->getItems();
+
+        /** @var OrderItemInterface $item*/
+        foreach ($items as $item) {
+            if ($item->getPriceInclTax() == 0) {
+                continue;
+            }
+            $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
+        }
+
+        if ($orderObject->getShippingInclTax() > 0) {
+            $shippingItem = new Item(
+                'Shipping',
+                new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                "1"
+            );
+
+            $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                2);
+            $shippingItem->setDescription($orderObject->getShippingDescription());
+            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
+            $shippingItem->setTaxRate($taxRate);
+            $basket->add($shippingItem);
+        }
+        return $basket;
+    }
 }

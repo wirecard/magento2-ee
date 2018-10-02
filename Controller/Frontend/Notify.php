@@ -284,6 +284,9 @@ class Notify extends Action
         if ($transactionType == 'authorization') {
             $payment->setIsTransactionClosed(false);
         }
+        if ($transactionType == 'void-authorization') {
+            $transactionType = 'void';
+        }
         $payment->addTransaction($transactionType);
 
         return $payment;

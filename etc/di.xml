@@ -992,6 +992,9 @@
             <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
+            <argument name="transactionRepository" xsi:type="object">Magento\Sales\Model\Order\Payment\Transaction\Repository</argument>
+            <argument name="searchCriteriaBuilder" xsi:type="object">Magento\Framework\Api\SearchCriteriaBuilder</argument>
+            <argument name="filterBuilder" xsi:type="object">Magento\Framework\Api\FilterBuilder</argument>
         </arguments>
     </virtualType>
 
