@@ -46,11 +46,11 @@ if ($this->isPia()) {
             <td><?php echo $this->getAmount() ?></td>
         </tr>
         <tr style="background-color: rgba(0,0,0,0.1)">
-            <td>IBAN</td>
+            <td><?php echo __('IBAN') ?></td>
             <td><?php echo $merchantAccount['iban'] ?></td>
         </tr>
         <tr>
-            <td>BIC</td>
+            <td><?php echo __('BIC') ?></td>
             <td><?php echo $merchantAccount['bic'] ?></td>
         </tr>
         <tr style="background-color: rgba(0,0,0,0.1)">
