@@ -332,7 +332,7 @@ class ConfigProvider implements ConfigProviderInterface
         }
         try {
             $supportedLang = json_decode(file_get_contents($baseUrl . '/engine/includes/i18n/languages/hpplanguages.json'));
-            if(key_exists(substr($locale, 0, strlen($supportedLang)), $supportedLang)) {
+            if (key_exists(substr($locale, 0, strlen($supportedLang)), $supportedLang)) {
                 $lang = substr($locale, 0, strlen($supportedLang));
             }
         } catch (\Exception $exception) {
