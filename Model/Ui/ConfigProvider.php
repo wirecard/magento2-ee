@@ -36,7 +36,9 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
+use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\IdealBic;
 
 class ConfigProvider implements ConfigProviderInterface
@@ -82,20 +84,27 @@ class ConfigProvider implements ConfigProviderInterface
     private $store;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * ConfigProvider constructor.
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param Repository $assetRepo
      * @param Data $paymentHelper
      * @param Session $session
      * @param Resolver $store
+     * @param StoreManagerInterface $storeManager
      */
-    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper, Session $session, Resolver $store)
+    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper, Session $session, Resolver $store, StoreManagerInterface $storeManager)
     {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->assetRepository = $assetRepo;
         $this->paymentHelper = $paymentHelper;
         $this->checkoutSession = $session;
         $this->store = $store;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -174,10 +183,11 @@ class ConfigProvider implements ConfigProviderInterface
         $baseUrl = $method->getConfigData('base_url');
         $transactionService = $this->transactionServiceFactory->create('creditcard');
         $language = $this->getSupportedHppLangCode($baseUrl);
+        $amount = new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode());
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($language, null, null, 'tokenize'), true)
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($language, $amount, null, 'tokenize'), true)
             ]
         ];
     }
@@ -192,10 +202,11 @@ class ConfigProvider implements ConfigProviderInterface
         $baseUrl = $method->getConfigData('base_url');
         $language = $this->getSupportedHppLangCode($baseUrl);
         $transactionService = $this->transactionServiceFactory->create('creditcard');
+        $amount = new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode());
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($language), true),
+                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($language, $amount, null, 'tokenize'), true),
                 'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE
             ]
         ];
@@ -211,10 +222,11 @@ class ConfigProvider implements ConfigProviderInterface
         $baseUrl = $method->getConfigData('base_url');
         $language = $this->getSupportedHppLangCode($baseUrl);
         $transactionService = $this->transactionServiceFactory->create('unionpayinternational');
+        $amount = new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode());
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForUpiUi($language), true)
+                'seamless_request_data' => json_decode($transactionService->getDataForUpiUi($language, $amount, null, 'tokenize'), true)
             ]
         ];
     }

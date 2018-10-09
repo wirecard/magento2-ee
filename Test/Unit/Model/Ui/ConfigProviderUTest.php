@@ -32,10 +32,13 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 
 use Magento\Checkout\Model\Session;
+use Magento\Directory\Model\Currency;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\MethodInterface;
+use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManager;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 use Wirecard\PaymentSdk\Entity\IdealBic;
@@ -53,6 +56,15 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 
         $store = $this->getMockWithoutInvokingTheOriginalConstructor(Resolver::class);
         $store->method('getLocale')->willReturn('en');
+
+        $currency = $this->getMockWithoutInvokingTheOriginalConstructor(Currency::class);
+        $currency->method('getCode')->willReturn('EUR');
+
+        $storeModel = $this->getMockWithoutInvokingTheOriginalConstructor(Store::class);
+        $storeModel->method('getCurrentCurrency')->willReturn($currency);
+
+        $storeManager = $this->getMockWithoutInvokingTheOriginalConstructor(StoreManager::class);
+        $storeManager->method('getStore')->willReturn($storeModel);
 
         $seamlessRequestData = [
             'key' => 'value'
@@ -110,7 +122,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store, $storeManager);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
@@ -175,6 +187,15 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $store = $this->getMockWithoutInvokingTheOriginalConstructor(Resolver::class);
         $store->method('getLocale')->willReturn('en');
 
+        $currency = $this->getMockWithoutInvokingTheOriginalConstructor(Currency::class);
+        $currency->method('getCode')->willReturn('EUR');
+
+        $storeModel = $this->getMockWithoutInvokingTheOriginalConstructor(Store::class);
+        $storeModel->method('getCurrentCurrency')->willReturn($currency);
+
+        $storeManager = $this->getMockWithoutInvokingTheOriginalConstructor(StoreManager::class);
+        $storeManager->method('getStore')->willReturn($storeModel);
+
         $seamlessRequestData = [
             'key' => 'value'
         ];
@@ -231,7 +252,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store);
+        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store, $storeManager);
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
