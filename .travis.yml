@@ -42,5 +42,5 @@ notifications:
       - "%{repository}#%{build_number} (%{branch} : %{author}): %{message}"
       - "Change view : %{compare_url}"
       - "Build details : %{build_url}"
-    on_success: always
+    on_success: change
     on_failure: always
