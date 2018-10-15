@@ -32,3 +32,15 @@ script:
 
 after_script:
   - composer upload-coverage
+
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: UeWeWim+bjLyPCSsvmJQ2XPnnZcjyOTI+QTUXeDnSWfI4r/5NN4f1c/DEqNb0l7bsIvSmX2r9tBBXWdo602813DvARMx2MpvsOiUBo0YxhM11X4/vpO8fq9XEr+UbALAYucIrlQ1AYvOGPYDVobuYhOOa7r0Jxt9V2aBQPrG+TxR7LPNdtkXdqyAzN0Yi7X9N8xldLjgI6kgRI1tqy62fjSOJwrzY3+qlDGdZ+xWAjOOYHfVMe7duW/E6WR/hVHcI338V8bS7byfwUlq5nHHZYsTw+gSX+pulLkb4v3B+KeN6BNU17uAVi45M6YfGGWRDcBJ0bWAq135w5ZmbifAVBoP9dWDBNyUqY/Bzi8A+8gp9CiTzCSuLfCxz/df4AdZe4f5EHRoa7PmdKiot0LeVnrteodyV3fVRmlv9tl03Xd1+IlVtTKx+KKR7pOA9AhgZaX4jc0prhPvFF6bQG7VowrYk4LpIA5FLpVR2LynTcEG6WF1Qyf363w0mNQQA2daB4B3nlqZhhDvSBphg7J8qND5E/udinvXD1Y2EyunfVWPwWRvszxOXKQFkwokM0YJCUHwRUQlxhduzEYWOX6VMYqDzyjAFU5VBFDw0DtheVXGXgGB/NvZkzPb4xdga4O2KluwQenkP4MxFEJSZ0DZAoUlLHFhUZn90an1T9wFNWA=
+    template:
+      - "%{repository}#%{build_number} (%{branch} : %{author}): %{message}"
+      - "Change view : %{compare_url}"
+      - "Build details : %{build_url}"
+    on_success: always
+    on_failure: always
