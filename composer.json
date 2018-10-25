@@ -5,7 +5,7 @@
   "minimum-stability": "beta",
   "prefer-stable": true,
   "require": {
-    "php": ">=7",
+    "php": ">=7.0",
     "magento/module-payment": ">=100.1.0",
     "magento/module-checkout": ">=100.1.0",
     "magento/module-sales": ">=100.0.0",
@@ -19,10 +19,14 @@
     "phpunit/phpunit": "5.3.5",
     "magento/community-edition": ">=2.1.0",
     "friendsofphp/php-cs-fixer": "^2.2",
-    "codacy/coverage": "1.4.2"
+    "codacy/coverage": "1.4.2",
+    "symfony/yaml": "^3"
   },
   "type": "magento2-module",
   "scripts": {
+    "make-readme-badge": "@php .bin/version-helper.php -r",
+    "make-wiki-notes": "@php .bin/version-helper.php -w",
+    "make-release-notes": "@php .bin/version-helper.php",
     "upload-coverage": "codacycoverage clover build/coverage/xml",
     "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
     "cs-fix": "php-cs-fixer fix .",
