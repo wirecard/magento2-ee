@@ -8,5 +8,6 @@
 
     <!-- Paths to check -->
     <file>.</file>
+    <exclude-pattern>./.bin/*</exclude-pattern>
     <exclude-pattern>./vendor/*</exclude-pattern>
 </ruleset>

@@ -44,3 +44,19 @@ notifications:
       - "Build details : %{build_url}"
     on_success: change
     on_failure: change
+
+before_deploy:
+  - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
+  - export RELEASE_NOTES=$(composer make-release-notes)
+  - bash .bin/generate-wiki-notes.sh
+  - bash .bin/generate-readme-badge.sh
+
+deploy:
+  provider: releases
+  api_key:
+    secure: mYcNEo0+Bwg7qaaaMrMq114QNGAqMDSJBBxiB7TGheHJsiIdt4evAQIC4A0CQtbyJlImxahrdaHKQo707xTm0DNctZ7h1bb+vej5w5h6ZQ4XbYRnXkWZfDAYoFdevOPByh2fdgCaersmzqoGhsUVos8CgvWAu54RnhC/1T1oJrnygjqBHLsfQ7CPtXLv3/YaFhbc+Wu6mByTXtymvtdLYfp6n9rbL4gZwsGxv5ZkWhcRHrtrRsRMc0ACFpMLM9EuFdlYjOC75i1S4tUDbUzu8Fd6E5h6E2S1MaiuTx8DqTqwwJBoqMu5LnMUbyONp8av1+s1JvGsvw/4N9p8b1dFbh7jx5j28iAR3pXozsbCvb1mG667ct3xRMLAUbn3mOiJy4DaNSN9zB0BGt2SyVzpGBAbfiDZe34f2hg6Tfi4iP7Ci4TGbzBVK8Ip+o4EPgdqrTEXHYi0H6yneoE+9E6uT9SgwH1Yd6IYuAdX3lmdksqEVYtwujg+LLSTmIC0eEsJUOLWT4Ia2hJ+GVlJm1apZ5+rf4I49OkoF7aIs47h8qBoQCWIRfdojYgCrBOQ0bflwd3WxNCJZ/dLzTYQ0AbodLSVP3V/g3Yqg9CQf9y3Qkda2VRVsbTwCJusf3LMvyG/YhoTzkVAmhokyZ6aVPZkjpHKImAA1B6C7SkZrtEWbPQ=
+  body: "${RELEASE_NOTES}"
+  skip_cleanup: true
+  on:
+    repo: ${TRAVIS_REPO_SLUG}
+    tags: true
