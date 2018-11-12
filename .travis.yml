@@ -32,6 +32,7 @@ script:
 
 after_script:
   - composer upload-coverage
+  - bash .bin/generate-tag.sh
 
 notifications:
   email: false
