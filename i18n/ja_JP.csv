@@ -63,7 +63,7 @@
 "The minimum order amount in your default currency to initialize 3-D Secure transactions.<br /><a href='https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL'>Overview: Non 3-D Secure Max Limit and 3-D Secure Min Limit</a>","3-D Secure取引を開始するデフォルト通貨での最低注文金額。"
 "The elastic engine base url. (e.g. https://api.wirecard.com)","Wirecard決済ゲートウェイベースURL。(例: https://api.wirecard.com)"
 "Provider transaction reference id","提供者参照ID"
-"The minimum order amount in your default currency to initialize 3-D Secure transactions.","Jumlah pesanan minimum dalam mata uang default anda untuk melakukan transaksi 3-D Secure."
+"The minimum order amount in your default currency to initialize 3-D Secure transactions.","3-D Secure取引を開始するデフォルト通貨での最低注文金額。"
 "Support Request","サポートリクエストを送信する"
 "Contact Form","サポートリクエストを送信する"
 "Send support request","送信する"
