@@ -26,7 +26,7 @@
 "Settings","設定"
 "Default Currency","デフォルト通貨"
 "Enabled","有効"
-"Merchant Account Id","MAID"
+"Merchant Account ID","MAID"
 "Secret Key","Secret Key"
 "Final state of transaction could not be determined.","取引の最終状態を判定できませんでした。"
 "Invalid request to success redirect page.","ページのリダイレクトを成功させる無効な要求です。"
