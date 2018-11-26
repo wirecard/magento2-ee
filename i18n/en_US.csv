@@ -26,7 +26,7 @@
 "Settings","Settings"
 "Default Currency","Default Currency"
 "Enabled","Enabled"
-"Merchant Account Id","MAID"
+"Merchant Account ID","MAID"
 "Secret Key","Secret Key"
 "3-D Secure Merchant Account ID","3-D Secure MAID"
 "Final state of transaction could not be determined.","Final state of transaction could not be determined."
@@ -105,3 +105,4 @@
 "Choose your bank...","Select your bank"
 "First Name","First Name"
 "Last Name","Last Name"
+"3-D Secure Secret Key","3-D Secure Secret Key"
