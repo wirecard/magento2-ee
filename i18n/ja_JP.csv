@@ -104,3 +104,5 @@
 "Non 3-D Secure Max Limit","3-D セキュアの最大限度ではない"
 "3-D Secure Merchant Account ID","3-Dセキュア MAID"
 "3-D Secure Secret Key","3-Dセキュア Secret Key"
+"On Invoice","請求書払い"
+"In Advance","前払い"
