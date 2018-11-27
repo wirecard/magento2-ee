@@ -74,7 +74,7 @@ class AccountHolderFactory
 
         if ($firstName != null) {
             $accountHolder->setFirstName($firstName);
-        } else if ($firstName == null && $lastName == null) {
+        } elseif ($firstName == null && $lastName == null) {
             // The else-if here exists primarily so we don't use the billing name
             // if the seamless first name was left empty.
             $accountHolder->setFirstName($magentoAddressObj->getFirstname());
