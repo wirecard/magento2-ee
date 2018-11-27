@@ -104,3 +104,5 @@
 "Non 3-D Secure Max Limit","非 3-D 安全最大限制"
 "3-D Secure Merchant Account ID","3-D 安全 MAID"
 "3-D Secure Secret Key","3-D 安全 Secret Key"
+"On Invoice","发票付款方式"
+"In Advance","预付方式"
