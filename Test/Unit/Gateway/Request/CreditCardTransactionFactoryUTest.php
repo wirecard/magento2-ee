@@ -184,8 +184,6 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $card->setExpirationMonth('mypersonaltoken');
 
         $accountHolder = new AccountHolder();
-        $accountHolder->setFirstName('mypersonaltoken');
-        $accountHolder->setLastName('mypersonaltoken');
 
         $expected = new CreditCardTransaction();
         $expected->setTokenId('mypersonaltoken');
