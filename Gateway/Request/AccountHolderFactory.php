@@ -57,10 +57,12 @@ class AccountHolderFactory
     /**
      * @param AddressAdapterInterface $magentoAddressObj
      * @param string $customerBirthdate
+     * @param string $firstName
+     * @param string $lastName
      * @return AccountHolder
      * @throws \InvalidArgumentException
      */
-    public function create($magentoAddressObj, $customerBirthdate = null)
+    public function create($magentoAddressObj, $customerBirthdate = null, $firstName = null, $lastName = null)
     {
         if (!$magentoAddressObj instanceof AddressAdapterInterface) {
             throw new \InvalidArgumentException('Address data object should be provided.');
@@ -69,9 +71,25 @@ class AccountHolderFactory
         $accountHolder = new AccountHolder();
         $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         $accountHolder->setEmail($magentoAddressObj->getEmail());
-        $accountHolder->setFirstName($magentoAddressObj->getFirstname());
-        $accountHolder->setLastName($magentoAddressObj->getLastname());
+
+        if ($firstName != null) {
+            $accountHolder->setFirstName($firstName);
+        } else if ($firstName == null && $lastName == null) {
+            // The else-if here exists primarily so we don't use the billing name
+            // if the seamless first name was left empty.
+            $accountHolder->setFirstName($magentoAddressObj->getFirstname());
+        }
+
+        if ($lastName != null) {
+            $accountHolder->setLastName($lastName);
+        } else {
+            // No need for an else-if here because if the last name is required by
+            // our seamless form.
+            $accountHolder->setLastName($magentoAddressObj->getLastname());
+        }
+
         $accountHolder->setPhone($magentoAddressObj->getTelephone());
+
         if ($customerBirthdate != null) {
             $accountHolder->setDateOfBirth(new \DateTime($customerBirthdate));
         }
