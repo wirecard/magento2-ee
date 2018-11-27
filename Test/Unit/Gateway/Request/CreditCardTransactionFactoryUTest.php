@@ -183,10 +183,16 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $card->setExpirationYear('mypersonaltoken');
         $card->setExpirationMonth('mypersonaltoken');
 
+        $accountHolder = new AccountHolder();
+        $accountHolder->setFirstName('mypersonaltoken');
+        $accountHolder->setLastName('mypersonaltoken');
+
         $expected = new CreditCardTransaction();
         $expected->setTokenId('mypersonaltoken');
         $expected->setTermUrl(self::REDIRECT_URL);
         $expected->setAmount(new Amount(1.0, 'EUR'));
+        $expected->setThreeD(false);
+        $expected->setAccountHolder($accountHolder);
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
