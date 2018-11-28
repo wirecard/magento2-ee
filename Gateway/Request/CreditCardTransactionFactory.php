@@ -114,6 +114,13 @@ class CreditCardTransactionFactory extends TransactionFactory
             $this->transaction->setThreeD(false);
         }
 
+        $firstName = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::FIRST_NAME);
+        $lastName = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::LAST_NAME);
+
+        $order = $paymentDO->getOrder();
+        $billingAddress = $order->getBillingAddress();
+
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, null, $firstName, $lastName));
         $this->transaction->setCustomFields($customFields);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
@@ -149,7 +156,10 @@ class CreditCardTransactionFactory extends TransactionFactory
         $order = $payment->getOrder();
         $billingAddress = $order->getBillingAddress();
 
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $firstName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::FIRST_NAME);
+        $lastName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::LAST_NAME);
+
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, null, $firstName, $lastName));
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;

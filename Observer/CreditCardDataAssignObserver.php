@@ -43,6 +43,8 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
     const EXPIRATION_DATE = 'expiration_date';
     const EXPIRATION_YEAR = 'expiration_year';
     const EXPIRATION_MONTH = 'expiration_month';
+    const FIRST_NAME = 'first_name';
+    const LAST_NAME = 'last_name';
 
     /**
      * @param Observer $observer
@@ -91,6 +93,20 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
             $paymentInfo->setAdditionalInformation(
                 self::RECURRING,
                 $additionalData[self::RECURRING]
+            );
+        }
+
+        if (array_key_exists(self::FIRST_NAME, $additionalData)) {
+            $paymentInfo->setAdditionalInformation(
+                self::FIRST_NAME,
+                $additionalData[self::FIRST_NAME]
+            );
+        }
+
+        if (array_key_exists(self::LAST_NAME, $additionalData)) {
+            $paymentInfo->setAdditionalInformation(
+                self::LAST_NAME,
+                $additionalData[self::LAST_NAME]
             );
         }
     }

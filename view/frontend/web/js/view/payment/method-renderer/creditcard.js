@@ -65,6 +65,8 @@ define(
             seamlessFormSubmitSuccessHandler: function (response) {
                 if (response.hasOwnProperty("token_id")) {
 					this.token_id = response.token_id;
+					this.first_name = response.first_name;
+					this.last_name = response.last_name;
 				} else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
                     this.token_id = response.card_token.token;
 
@@ -113,7 +115,9 @@ define(
                         "token_id": this.token_id,
                         "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler(),
                         "expiration_year": this.expiration_date.expiration_year,
-                        "expiration_month": this.expiration_date.expiration_month
+                        "expiration_month": this.expiration_date.expiration_month,
+                        "first_name": this.first_name,
+                        "last_name": this.last_name
                     }
                 };
             },
