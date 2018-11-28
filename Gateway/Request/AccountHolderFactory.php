@@ -57,8 +57,8 @@ class AccountHolderFactory
     /**
      * @param AddressAdapterInterface $magentoAddressObj
      * @param string $customerBirthdate
-     * @param string $firstName
-     * @param string $lastName
+     * @param string|null $firstName
+     * @param string|null $lastName
      * @return AccountHolder
      * @throws \InvalidArgumentException
      */
@@ -72,19 +72,16 @@ class AccountHolderFactory
         $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         $accountHolder->setEmail($magentoAddressObj->getEmail());
 
-        if ($firstName != null) {
-            $accountHolder->setFirstName($firstName);
-        } elseif ($firstName == null && $lastName == null) {
-            // The else-if here exists primarily so we don't use the billing name
-            // if the seamless first name was left empty.
-            $accountHolder->setFirstName($magentoAddressObj->getFirstname());
-        }
-
+        // This is a special case for credit card / UPI.
+        // If we get a last name (and maybe first name) from the seamless form, that is our actual account holder.
         if ($lastName != null) {
             $accountHolder->setLastName($lastName);
+
+            if ($firstName != null) {
+                $accountHolder->setFirstName($firstName);
+            }
         } else {
-            // No need for an else-if here because if the last name is required by
-            // our seamless form.
+            $accountHolder->setFirstName($magentoAddressObj->getFirstname());
             $accountHolder->setLastName($magentoAddressObj->getLastname());
         }
 
