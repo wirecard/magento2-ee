@@ -108,7 +108,7 @@ define(
             },
 
             getData: function () {
-                return {
+                var data = {
                     "method": this.getCode(),
                     "po_number": null,
                     "additional_data": {
@@ -120,6 +120,11 @@ define(
                         "last_name": this.last_name
                     }
                 };
+
+                this.first_name = "";
+                this.last_name = "";
+
+                return data;
             },
             selectPaymentMethod: function () {
                 this._super();
