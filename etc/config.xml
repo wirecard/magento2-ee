@@ -132,9 +132,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_maestro>
                 <title>Wirecard Maestro</title>
                 <active>0</active>
-                <base_url>https://api-test.wirecard.com</base_url>
-                <http_user>70000-APITEST-AP</http_user>
-                <http_pass>qD2wzQ_hrc!8</http_pass>
+                <base_url>https://api-wdcee-test.wirecard.com</base_url>
+                <http_user>wdcee-customer-test</http_user>
+                <http_pass>0c2i9h4s</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
@@ -146,10 +146,10 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <model>MaestroFacade</model>
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
-                <merchant_account_id>53f2895a-e4de-4e82-a813-0d87a10e55e6</merchant_account_id>
-                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
-                <three_d_merchant_account_id>508b8896-b37d-4614-845c-26bf8bf2c948</three_d_merchant_account_id>
-                <three_d_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</three_d_secret>
+                <merchant_account_id>4945f0ef-51e0-43af-972f-885405320842</merchant_account_id>
+                <secret>822e87ea-dcc3-4d01-861c-e39f14a0ab6c</secret>
+                <three_d_merchant_account_id>4945f0ef-51e0-43af-972f-885405320842</three_d_merchant_account_id>
+                <three_d_secret>822e87ea-dcc3-4d01-861c-e39f14a0ab6c</three_d_secret>
                 <ssl_max_limit>0.0</ssl_max_limit>
                 <three_d_min_limit></three_d_min_limit>
                 <default_currency>EUR</default_currency>

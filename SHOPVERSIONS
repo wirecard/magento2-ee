@@ -1,5 +1,14 @@
 [
- {
+  {
+    "release": "1.3.13",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.2.6",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Use credit card owner as account holder"
+    ]
+  },
+  {
     "release": "1.3.12",
     "shopsystem": "Magento Community Edition",
     "tested": "2.2.6",
