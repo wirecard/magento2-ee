@@ -1,4 +1,4 @@
-# Magento 2 Wirecard Payment Processing Gateway Shop Plugin
+# Magento 2 Wirecard Payment Processing Gateway Shop Extension
 [![Build Status](https://travis-ci.org/wirecard/magento2-ee.svg?branch=master)](https://travis-ci.org/wirecard/magento2-ee)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/magento2-ee/master/LICENSE)
 [![PHP v5.6](https://img.shields.io/badge/php-v5.6-yellow.svg)](http://www.php.net)
@@ -8,12 +8,9 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/f56924dce81a4e79bc803f426c678abe)](https://www.codacy.com/app/Wirecard/magento2-ee?utm_source=github.com&utm_medium=referral&utm_content=wirecard/magento2-ee&utm_campaign=Badge_Coverage)
 
 ***
-## General information 
-Before proceeding, we recommend to read [general information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information), as it provides information on Wirecard shop plugins functionality and features.
+## General Information 
+Before you proceed, please read our [General Information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information) for more details on Wirecard Shop Extension functionality and features.
 
 ***
-## Magento 2 documentation - Wiki
-
-[Magento 2 Wiki](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical documentation.
-It lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_payment_methods) and [back-end operations](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_back-end_operations).
-Furthermore, it includes extensive instructions how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration).
+## Documentation
+Our [documentation](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical information: it includes extensive instructions on how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration) the extension. It also lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_payment_methods) and post-processing operations.
