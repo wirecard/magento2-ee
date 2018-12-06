@@ -13,4 +13,4 @@ Before you proceed, please read our [General Information](https://github.com/wir
 
 ***
 ## Documentation
-Our [documentation](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical information: it includes extensive instructions on how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration) the extension. It also lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki/Home#Supported_payment_methods) and post-processing operations.
+Our [documentation](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical information: it includes extensive instructions on how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration) the extension. It also lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki#Supported_payment_methods) and post-processing operations.
