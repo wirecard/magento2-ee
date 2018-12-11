@@ -82,7 +82,8 @@ class MasterpassTransactionFactory extends TransactionFactory
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder
     ) {
-        parent::__construct($urlBuilder,
+        parent::__construct(
+            $urlBuilder,
             $resolver,
             $transaction,
             $methodConfig,

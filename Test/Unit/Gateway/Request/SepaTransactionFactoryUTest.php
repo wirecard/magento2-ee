@@ -139,8 +139,15 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new SepaDirectDebitTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new SepaTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -150,8 +157,15 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCaptureMinimum()
     {
         $transaction = new SepaDirectDebitTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new SepaTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -162,8 +176,15 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
         $transaction = new SepaDirectDebitTransaction();
-        $transactionFactory = new SepaTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new SepaTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
         $expected->setBic('WIREDEMMXXX');
@@ -183,7 +204,8 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             'http://magen.to/frontend/redirect',
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            'http://magen.to/frontend/redirect'
+        ));
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $expected->setCustomFields($customFields);

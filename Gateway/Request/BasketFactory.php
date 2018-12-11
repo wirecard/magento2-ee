@@ -112,8 +112,10 @@ class BasketFactory
                 1
             );
 
-            $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
-                    2);
+            $taxRate = number_format(
+                ($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                    2
+            );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
             $shippingItem->setTaxRate($taxRate);
@@ -144,7 +146,7 @@ class BasketFactory
         }
 
         if (is_null($orderObject)) {
-            throw new NoSuchEntityException(__('No such order found.'));
+            throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
         $basket = new Basket();
@@ -205,7 +207,7 @@ class BasketFactory
         }
 
         if (is_null($orderObject)) {
-            throw new NoSuchEntityException(__('No such order found.'));
+            throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
         $basket = new Basket();
@@ -267,7 +269,7 @@ class BasketFactory
         }
 
         if (is_null($orderObject)) {
-            throw new NoSuchEntityException(__('No such order found.'));
+            throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
         $basket = new Basket();
@@ -289,8 +291,10 @@ class BasketFactory
                 "1"
             );
 
-            $taxRate = number_format(($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
-                2);
+            $taxRate = number_format(
+                ($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                2
+            );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
             $shippingItem->setTaxRate($taxRate);

@@ -306,7 +306,7 @@ class Notify extends Action
         $result = $this->orderRepository->getList($searchCriteria);
 
         if (empty($result->getItems())) {
-            throw new NoSuchEntityException(__('No such order.'));
+            throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
         $orders = $result->getItems();
@@ -330,7 +330,7 @@ class Notify extends Action
         $transactionSave = $transactionSave->addObject($invoice->getOrder());
         $transactionSave->save();
         $order->addStatusHistoryComment(
-            __('Captured amount of %1 online. Transaction ID: %2.', $order->getGrandTotal(), $response->getTransactionId())
+            __('capture_invoice_comment', $order->getGrandTotal(), $response->getTransactionId())
         )->setIsCustomerNotified(true);
     }
 

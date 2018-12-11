@@ -59,7 +59,7 @@ class Form extends Generic implements TabInterface
      */
     public function getTabTitle()
     {
-        return __('Support Request');
+        return __('support_email_title');
     }
 
     /**
@@ -81,7 +81,8 @@ class Form extends Generic implements TabInterface
     protected function _prepareForm()
     {
         /** @var \Magento\Framework\Data\Form $form */
-        $form = $this->_formFactory->create([
+        $form = $this->_formFactory->create(
+            [
                 'data' => [
                     'id' => 'edit_form',
                     'action' => $this->getUrl('*/*/sendrequest', ['id' => $this->getRequest()->getParam('id')]),
@@ -92,17 +93,17 @@ class Form extends Generic implements TabInterface
 
         $form->setUseContainer(true);
 
-        $fieldset = $form->addFieldset('form_form', ['legend' => __('Contact Form')]);
+        $fieldset = $form->addFieldset('form_form', ['legend' => __('support_email_title')]);
 
         $fieldset->addField('replyto', 'text', [
-            self::LABEL => __('Your e-mail address'),
+            self::LABEL => __('config_email'),
             self::CLASSCONST => 'validate-email',
             'required' => true,
             self::NAME => 'replyto'
         ]);
 
         $fieldset->addField('description', 'textarea', [
-            self::LABEL => __('Your message'),
+            self::LABEL => __('config_message'),
             self::CLASSCONST => 'required-entry',
             'required' => true,
             self::NAME => 'description',

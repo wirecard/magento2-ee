@@ -54,7 +54,7 @@ class Contact extends Action
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
         $resultPage->setActiveMenu('Magento_Backend::system_store');
-        $resultPage->getConfig()->getTitle()->prepend(__('Wirecard Payment Gateway Support Request'));
+        $resultPage->getConfig()->getTitle()->prepend(__('text_support'));
 
         return $resultPage;
     }

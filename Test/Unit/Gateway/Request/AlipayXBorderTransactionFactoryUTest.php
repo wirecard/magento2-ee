@@ -126,8 +126,15 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new AlipayCrossborderTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new AlipayXBorderTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            new AlipayCrossborderTransaction(),
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -135,8 +142,15 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new AlipayCrossborderTransaction();
-        $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new AlipayXBorderTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -155,7 +169,8 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             'http://magen.to/frontend/redirect',
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            'http://magen.to/frontend/redirect'
+        ));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
@@ -188,8 +203,15 @@ class AlipayXBorderTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new AlipayCrossborderTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new AlipayXBorderTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new AlipayXBorderTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }

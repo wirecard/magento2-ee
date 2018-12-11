@@ -42,11 +42,11 @@ class PoiPiaActionUTest extends \PHPUnit_Framework_TestCase
         $actionArray = [
             [
                 'value' => 'invoice',
-                'label' => 'On Invoice'
+                'label' => 'Payment on Invoice'
             ],
             [
                 'value' => 'advance',
-                'label' => 'In Advance'
+                'label' => 'Payment in Advance'
             ]
         ];
 
