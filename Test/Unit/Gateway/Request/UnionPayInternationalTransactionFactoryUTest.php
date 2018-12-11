@@ -123,8 +123,15 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new UpiTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new UnionPayInternationalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            new UpiTransaction(),
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
         $expected = Operation::REFUND;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -132,8 +139,15 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
     public function testCreateMinimum()
     {
         $transaction = new UpiTransaction();
-        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new UnionPayInternationalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -143,8 +157,15 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
     public function testCaptureMinimum()
     {
         $transaction = new UpiTransaction();
-        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new UnionPayInternationalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -156,8 +177,15 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $transaction = new UpiTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new UnionPayInternationalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }
@@ -167,8 +195,15 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $transaction = new UpiTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new UnionPayInternationalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedVoidTransaction();
 
@@ -191,7 +226,8 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
+            self::REDIRECT_URL
+        ));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
@@ -257,8 +293,15 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $transaction = new UpiTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new UnionPayInternationalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new UnionPayInternationalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimumExpectedVoidTransaction(), $transactionFactory->void([]));
     }

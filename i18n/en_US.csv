@@ -1,108 +1,94 @@
-"Wirecard Payment Gateway","Wirecard Payment Processing Gateway"
-"Wirecard Payment Gateway Alipay Cross Border","Wirecard Alipay Cross-border"
-"Wirecard Payment Gateway Pay now.","Wirecard Sofort."
-"Wirecard Payment Gateway SEPA","Wirecard SEPA Direct Debit"
-"Wirecard Payment Gateway SEPA Credit Transfer","Wirecard SEPA Credit Transfer"
-"Wirecard Payment Gateway Guaranteed Installment","Wirecard Guaranteed Installment"
-"Wirecard Payment Gateway Masterpass","Wirecard Masterpass"
-"Wirecard Payment Gateway Payment on Invoice / Payment on Advance","Wirecard Payment on Invoice / Payment in Advance"
-"Wirecard Payment Gateway PayPal","Wirecard PayPal"
-"Wirecard Payment Gateway Giropay","Wirecard giropay"
-"Wirecard Payment Gateway Guaranteed Invoice","Wirecard Guaranteed Invoice by Wirecard"
-"Wirecard Payment Gateway iDEAL","Wirecard iDEAL"
-"Wirecard Payment Gateway UnionPay International","Wirecard UnionPay International"
-"Wirecard Payment Gateway recurring Credit Card","Wirecard recurring Credit Card"
-"Wirecard Payment Gateway Credit Card","Wirecard Credit Card"
-"Wirecard Payment Gateway Maestro","Wirecard Maestro"
-"General Information regarding Wirecard Shop Plugins","General Information regarding Wirecard Shop Plugins"
-"Credentials","Credentials"
-"Base Url","Wirecard Server Address"
-"Http User","HTTP User"
-"Http Password","HTTP Password"
-"Test Credentials","Test Credentials"
-"Please check your credentials.","Test failed, please check your credentials."
-"An error occurred during the payment process. Please try again.","An error occurred during the payment process. Please try again."
-"Credentials correct.","Merchant configuration was successfully tested."
-"Settings","Settings"
-"Default Currency","Default Currency"
-"Enabled","Enabled"
-"Merchant Account ID","MAID"
-"Secret Key","Secret Key"
-"3-D Secure Merchant Account ID","3-D Secure MAID"
-"Final state of transaction could not be determined.","Final state of transaction could not be determined."
-"Invalid request to success redirect page.","Invalid request to success redirect page."
-"No such order.","No such order."
-"The payment process was not finished successful.","The payment process was not finished successful."
-"You have canceled the payment process.","You have canceled the payment process."
-"Authorize","Authorization"
-"Capture","Purchase"
-"An error occurred loading the credit card form. Please try again.","An error occurred loading the credit card form. Please try again."
-"An error occurred submitting the credit card form.","An error occurred submitting the credit card form."
-"SEPA Direct Debit Mandate Form","SEPA Direct Debit Mandate Form"
-"Creditor","Creditor"
-"Creditor ID:","Creditor ID"
-"Mandate reference:","Mandate ID"
-"Debtor","Debtor"
-"Account owner","Account Owner"
-"Birthdate:","Date of Birth"
-"Bank Account IBAN","IBAN"
-"IBAN:","IBAN"
-"Bank BIC","BIC"
-"Bank Bic","BIC"
-"BIC:","BIC"
-"I authorize the creditor ","I authorize the creditor "
-" to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor ","to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor "
-"sepamandatetextextra","."
-"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.","Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited."
-"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %s my full name, address and date of birth.","I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor %s my full name, address and date of birth."
-"I have read and accepted the SEPA Direct Debit Mandate information.","I have read and accepted the SEPA Direct Debit Mandate information."
-"Amount:","Amount"
-"Date:","Date"
-"The maximum order amount in your default currency to initialize Non 3-D Secure transactions.","Maximum order amount in your default currency to initialize Non 3-D Secure transactions."
-"The minimum order amount in your default currency to initialize 3-D Secure transactions.","Minimum order amount in your default currency to initialize 3-D Secure transactions."
-"The elastic engine base url. (e.g. https://api.wirecard.com)","The Wirecard Payment Processing Gateway base url. (e.g. https://api.wirecard.com)"
-"SEPA Direct Debit Mandate Form","SEPA Direct Debit Mandate"
-"Amount","Amount"
-"Date:","Date"
-"Provider transaction reference id","Provider Transaction Reference ID"
-"Support Request","Send support request"
-"Contact Form","Send support request"
-"Send support request","Send"
-"Your e-mail address","Your email address"
-"Your message","Your message"
-"Please enter a valid e-mail address.","Email delivery error."
-"Please set your shop e-mail address!","Email delivery error."
-"Wirecard Payment Gateway Support Request","Support"
-"Support request sent successfully!","Email sent successfully."
-"Public Key","Public Key"
-"Title","Title"
-"Payment Action","Payment Action"
-"Shopping Basket","Shopping Basket"
-"Sort Order","Sort Order"
-"Send additional Information","Send Additional Information"
-"Non 3-D Secure Max Limit","Non 3-D Secure Max. Limit"
-"3-D Secure Min Limit","3-D Secure Min. Limit"
-"Default Currency for Limitdetection","Default Currency"
-"BIC enabled","BIC enabled"
-"Creditor ID","Creditor ID"
-"Creditor Name","Creditor Name"
-"Creditor name will be shown in SEPA Direct Debit Mandate","SEPA Direct Debit requires a Creditor Name for the SEPA Direct Debit Mandate page."
-"Creditor City","Creditor City"
-"Creditor city will be shown in SEPA Direct Debit Mandate","SEPA Direct Debit requires a Creditor City for the SEPA Direct Debit Mandate page."
-"Minimum Order Total","Minimum Amount"
-"Maximum Order Total","Maximum Amount"
-"Payment from Applicable Countries",""
-"Payment from Specific Countries",""
-"Billing/Shipping Address must be identical","Identical Billing/Shipping Address"
-"Payment","Payment"
-"No such order found.","No such order found."
-"Please transfer the amount using the following data:","Please transfer the amount using the following data:"
-"IBAN","IBAN"
-"BIC","BIC"
-"Creditor","Creditor"
-"Account owner:","Account Owner"
-"Save for later use.","Save for later use."
-"Choose your bank...","Select your bank"
-"First Name","First Name"
-"Last Name","Last Name"
-"3-D Secure Secret Key","3-D Secure Secret Key"
+amount,Amount
+bank_label,Bank
+bic,BIC
+birthdate_input,Date of Birth
+canceled_payment_process,You have canceled the payment process.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
+config_additional_info,Send Additional Information
+config_base_url,Wirecard Server Address
+config_base_url_desc,The Wirecard Server Address (e.g. https://api.wirecard.com).
+config_basket_max,Maximum Amount
+config_basket_min,Minimum Amount
+config_billing_shipping,Identical Billing/Shipping Address
+config_creditor_city,Creditor City
+config_creditor_city_desc,SEPA Direct Debit requires a Creditor City for the SEPA Direct Debit Mandate page.
+config_creditor_id,Creditor ID
+config_creditor_name,Creditor Name
+config_creditor_name_desc,SEPA Direct Debit requires a Creditor Name for the SEPA Direct Debit Mandate page.
+config_email,Your email address
+config_enable_bic,BIC enabled
+config_http_password,HTTP Password
+config_http_user,HTTP User
+config_limit_desc,Amount in default shop currency
+config_merchant_account_id,MAID
+config_merchant_public,Public Key
+config_merchant_secret,Secret Key
+config_message,Your message
+config_payment_action,Payment Action
+config_shopping_basket,Shopping Basket
+config_sort_order,Sort Order
+config_ssl_max_limit,Non 3-D Secure Max. Limit
+config_three_d_merchant_account_id,3-D Secure MAID
+config_three_d_merchant_secret,3-D Secure Secret Key
+config_three_d_min_limit,3-D Secure Min. Limit
+config_title,Title
+config_vault,One-Click Checkout
+creditor,Creditor
+creditor_id_input,Creditor ID
+creditor_mandate_id,Mandate ID
+credit_card_form_loading_error,An error occurred loading the credit card form. Please try again.
+credit_card_form_submitting_error,An error occurred submitting the credit card form.
+debtor,Debtor
+debtor_acc_owner,Account Owner
+default_currency,Default Currency
+enter_valid_email_error,Please enter a valid e-mail address
+error_credentials,"Test failed, please check your credentials."
+first_name_input,First Name
+heading_title_alipay_crossborder,Wirecard Alipay Cross-border
+heading_title_creditcard,Wirecard Credit Card
+heading_title_giropay,Wirecard Giropay
+heading_title_ideal,Wirecard iDEAL
+heading_title_maestro,Wirecard Maestro SecureCode
+heading_title_masterpass,Wirecard Masterpass
+heading_title_paypal,Wirecard PayPal
+heading_title_poi_pia,Wirecard Payment on Invoice / Payment in Advance,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Wirecard Guaranteed Invoice by Wirecard
+heading_title_sepact,Wirecard SEPA Credit Transfer
+heading_title_sepadd,Wirecard SEPA Direct Debit
+heading_title_sofortbanking,Wirecard Sofort.
+heading_title_upi,Wirecard UnionPay International
+iban,IBAN
+ideal_legend,Select your bank
+last_name_input,Last Name
+module_display_name,Wirecard Payment Processing Gateway
+no_such_order_error,No such order.
+order_error,An error occurred during the payment process. Please try again.
+payment_from_applicable_countries,Payment from Applicable Countries
+payment_from_specific_countries,Payment from Specific Countries
+place_order,Place Order
+ptrid,Provider Transaction Reference ID
+public_certificate_desc,"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers."
+send_email,Send
+sepa_mandate,SEPA Mandate
+sepa_text_1,I authorize the creditor
+sepa_text_2,to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor
+sepa_text_2b,.
+sepa_text_3,"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited."
+sepa_text_4,"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor"
+sepa_text_5,"my full name, address and date of birth."
+sepa_text_6,I have read and accepted the SEPA Direct Debit Mandate information.
+success_credentials,Merchant configuration was successfully tested.
+success_email,Email sent successfully.
+support_email_title,Send support request
+terms_of_use,Terms of Use
+test_credentials,Test Credentials
+text_enabled,Enabled
+text_payment_action_pay,Purchase
+text_payment_action_reserve,Authorization
+text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_settings,Settings
+text_support,Support,: classes/admin/class-wirecard-settings.php:98
+transfer_notice,Please transfer the amount using the following data:
+vault_save_text,Save for later use.
+vault_use_existing_text,Use saved credit card

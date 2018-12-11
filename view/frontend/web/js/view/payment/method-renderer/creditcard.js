@@ -79,12 +79,12 @@ define(
                 this.placeOrder();
             },
             seamlessFormInitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t("An error occurred loading the credit card form. Please try again.")});
+                this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
 
                 console.error(response);
             },
             seamlessFormSubmitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t("An error occurred submitting the credit card form.")});
+                this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
 
                 console.error(response);
 

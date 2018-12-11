@@ -192,7 +192,8 @@ class TransactionFactory
         $this->transaction->setRedirect(new Redirect(
             $wdBaseUrl . 'frontend/redirect',
             $wdBaseUrl . 'frontend/cancel',
-            $wdBaseUrl . 'frontend/redirect'));
+            $wdBaseUrl . 'frontend/redirect'
+        ));
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify?orderId=' . $this->orderId);
 
         if ($this->methodConfig->getValue('send_additional')) {
@@ -305,7 +306,8 @@ class TransactionFactory
 
     public function setAdditionalInformation($order)
     {
-        $this->transaction->setDescriptor(sprintf('%s %s',
+        $this->transaction->setDescriptor(sprintf(
+            '%s %s',
             substr($this->storeManager->getStore()->getName(), 0, 9),
             $this->orderId
         ));

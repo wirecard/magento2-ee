@@ -42,11 +42,11 @@ class PaymentActionUTest extends \PHPUnit_Framework_TestCase
         $actionArray = [
             [
                 'value' => 'authorize',
-                'label' => 'Authorize'
+                'label' => 'text_payment_action_reserve'
             ],
             [
                 'value' => 'authorize_capture',
-                'label' => 'Capture'
+                'label' => 'text_payment_action_pay'
             ]
         ];
 

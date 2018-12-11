@@ -46,11 +46,11 @@ class PaymentAction implements ArrayInterface
         return [
             [
                 'value' => self::AUTHORIZE,
-                'label' => __('Authorize')
+                'label' => __('text_payment_action_reserve')
             ],
             [
                 'value' => self::AUTHORIZE_CAPTURE,
-                'label' => __('Capture')
+                'label' => __('text_payment_action_pay')
             ]
         ];
     }

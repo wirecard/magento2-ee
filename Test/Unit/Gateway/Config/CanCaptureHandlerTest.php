@@ -73,8 +73,12 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
 
         $objectManager = $this->getMockBuilder(ObjectManager::class)->disableOriginalConstructor()->getMock();
 
-        $this->canCaptureHandler = new CanCaptureHandler($objectManager, $transactionRepository, $searchCriteriaBuilder,
-            $filterBuilder);
+        $this->canCaptureHandler = new CanCaptureHandler(
+            $objectManager,
+            $transactionRepository,
+            $searchCriteriaBuilder,
+            $filterBuilder
+        );
 
         $invalidTransactionList->method('getLastItem')->willReturn($this->notAuthTransaction);
         $invalidTransactionList->method('getItems')->willReturn([$this->notAuthTransaction]);

@@ -1,108 +1,94 @@
-"Wirecard Payment Gateway","Wirecard 支付流程网关"
-"Wirecard Payment Gateway Pay now.","Wirecard Sofort."
-"Wirecard Payment Gateway Alipay Cross Border","Wirecard 支付宝跨境交易"
-"Wirecard Payment Gateway SEPA","Wirecard SEPA 直接付款"
-"Wirecard Payment Gateway SEPA Credit Transfer","Wirecard SEPA 信用转账"
-"Wirecard Payment Gateway Guaranteed Installment","Wirecard Guaranteed Installment"
-"Wirecard Payment Gateway Masterpass","Wirecard Masterpass"
-"Wirecard Payment Gateway Payment on Invoice / Payment on Advance","Wirecard 发票付款方式 / Wirecard 预付方式"
-"Wirecard Payment Gateway PayPal","Wirecard PayPal"
-"Wirecard Payment Gateway Giropay","Wirecard giropay"
-"Wirecard Payment Gateway Guaranteed Invoice","Wirecard 担保发票"
-"Wirecard Payment Gateway iDEAL","Wirecard iDEAL"
-"Wirecard Payment Gateway UnionPay International","Wirecard 国际银联"
-"Wirecard Payment Gateway recurring Credit Card","Wirecard recurring Credit Card"
-"Wirecard Payment Gateway Credit Card","Wirecard 信用卡"
-"Wirecard Payment Gateway Maestro","Wirecard Maestro 安全码"
-"General Information regarding Wirecard Shop Plugins","Wirecard 商店插件的常规信息"
-"Credentials","凭证"
-"Base Url","基础 URL"
-"Http User","Http 用户"
-"Http Password","Http 密码"
-"Test Credentials","测试凭证"
-"Please check your credentials.","请检查您的凭证。"
-"An error occurred during the payment process. Please try again.","在支付流程中发生了错误。请重试。"
-"Credentials correct.","凭证正确。"
-"Settings","设置"
-"Default Currency","默认货币"
-"Enabled","已启用"
-"Merchant Account ID","MAID"
-"Secret Key","Secret Key"
-"Final state of transaction could not be determined.","交易的最终状态无法确定。"
-"Invalid request to success redirect page.","成功跳转页面的无效申请。"
-"No such order.","无此订单。"
-"The payment process was not finished successful.","支付流程未能成功完成。"
-"You have canceled the payment process.","您已经取消了支付流程。"
-"Authorize","授权"
-"Capture","捕捉"
-"An error occurred loading the credit card form. Please try again.","在载入信用卡表单时发生错误。请重试。"
-"An error occurred submitting the credit card form.","在提交信用卡表单时发生错误。"
-"SEPA Direct Debit Mandate Form","SEPA 直接扣款授权令表单"
-"Creditor","贷方"
-"Creditor ID:","贷方 ID："
-"Mandate reference:","批准参考："
-"Debtor","借方"
-"Account owner","账户所有人"
-"Birthdate:","生日"
-"Bank Account IBAN","IBAN"
-"Bank Account Iban","IBAN"
-"IBAN:","IBAN"
-"Bank BIC","BIC"
-"Bank Bic","BIC"
-"BIC:","BIC"
-"I authorize the creditor ","我授权该贷方 "
-" to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor "," 向我的银行发送指示，以便从我的账户中直接收取一笔账目。与此同时，我指派我的银行根据贷方的指示在我的账户上记录相应的债务。"
-"sepamandatetextextra","."
-"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.","备注：作为我权力的一部分，根据我与银行之间协议的使用条款，我应当获得退款。该退款必须在我账户计入债务起的 8 周内索取。"
-"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor ","我不可撤销地同意，当无法如期执行直接扣款或是直接扣款受到阻碍时，我的银行可以向贷方"
-" my full name, address and date of birth.","公布我的全名、地址以及出生日期。"
-"I have read and accepted the SEPA Direct Debit Mandate information.","我已经阅读并接受 SEPA 直接扣款授权令的信息。"
-"Amount","金额"
-"Date:","日期："
-"The maximum order amount in your default currency to initialize Non 3-D Secure transactions.","发起非 3-D 安全交易的最大订单金额（以您的默认货币为单位）。"
-"The minimum order amount in your default currency to initialize 3-D Secure transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: Non 3-D Secure Max Limit and 3-D Secure Min Limit</a>","发起非 3-D 安全交易的最小订单金额（以您的默认货币为单位）。"
-"The elastic engine base url. (e.g. https://api.wirecard.com)","Wirecard 支付流程网关基础 URL。（例如 https://api.wirecard.com）"
-"Provider transaction reference id","供应商交易参考 ID"
-"The minimum order amount in your default currency to initialize 3-D Secure transactions.","发起非 3-D 安全交易的最小订单金额（以您的默认货币为单位）。"
-"Support Request","提交支持请求"
-"Contact Form","提交支持请求"
-"Send support request","提交"
-"Your e-mail address","您的电子邮件地址"
-"Your message","您的消息"
-"Please enter a valid e-mail address.","请输入有效的邮箱地址。"
-"Please set your shop e-mail address!","电子邮件发送出现错误"
-"Wirecard Payment Gateway Support Request","Wirecard 支付网关支持请求"
-"Support request sent successfully!","电子邮件已发送成功"
-"Public Key","公钥"
-"Title","名称"
-"Payment Action","付款操作"
-"Shopping Basket","购物篮"
-"Sort Order","订单排序"
-"Send additional Information","发送附加信息"
-"Creditor ID","债权人 ID"
-"Creditor Name","债权人名字"
-"Minimum Order Total","最小金额"
-"Maximum Order Total","最大金额"
-"Payment from Applicable Countries","来自可适用国家的付款"
-"Payment from Specific Countries","来自特定国家的付款"
-"Billing/Shipping Address must be identical","账单/收货地址必须相同"
-"Payment","付款方式"
-"Save for later use.","保存以备后用。"
-"Place Order","生成订单"
-"First Name","名"
-"Last Name","姓"
-"An error occurred during the payment process. Please try again.","付款过程发生错误。请重试。"
-"Default Currency for Limitdetection","默认货币"
-"Choose your bank...","银行"
-"Account owner:","账户所有人"
-"Please transfer the amount using the following data:","请使用以下数据转账："
-"Creditor city will be shown in SEPA Direct Debit Mandate","SEPA 要求在 SEPA 直接借记授权页面上显示债权人所处城市。"
-"Creditor name will be shown in SEPA Direct Debit Mandate","SEPA 要求在 SEPA 直接借记授权页面上显示债权人名字。"
-"Creditor City","债权人所处城市"
-"BIC enabled","银行识别码已启用"
-"3-D Secure Min Limit","3-D 安全最小限制"
-"Non 3-D Secure Max Limit","非 3-D 安全最大限制"
-"3-D Secure Merchant Account ID","3-D 安全 MAID"
-"3-D Secure Secret Key","3-D 安全 Secret Key"
-"On Invoice","发票付款方式"
-"In Advance","预付方式"
+amount,Amount
+bank_label,银行
+bic,BIC:
+birthdate_input,出生日期
+canceled_payment_process,您已取消付款过程。,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
+config_additional_info,发送附加信息
+config_base_url,基准 URL
+config_base_url_desc,Wirecard 基准 URL。（例如 https://api.wirecard.com）
+config_basket_max,最大金额
+config_basket_min,最小金额
+config_billing_shipping,账单/收货地址必须相同
+config_creditor_city,债权人所处城市
+config_creditor_city_desc,SEPA 要求在 SEPA 直接借记授权页面上显示债权人所处城市。
+config_creditor_id,债权人 ID
+config_creditor_name,债权人名字
+config_creditor_name_desc,SEPA 要求在 SEPA 直接借记授权页面上显示债权人名字。
+config_email,您的电子邮件地址
+config_enable_bic,银行识别码已启用
+config_http_password,HTTP 密码
+config_http_user,HTTP 用户
+config_limit_desc,默认商店货币金额
+config_merchant_account_id,商家账户 ID
+config_merchant_public,公钥
+config_merchant_secret,密钥
+config_message,您的消息
+config_payment_action,付款操作
+config_shopping_basket,购物篮
+config_sort_order,订单排序
+config_ssl_max_limit,非 3-D 安全最大限制
+config_three_d_merchant_account_id,3-D 安全商家账户 ID
+config_three_d_merchant_secret,3-D 安全密钥
+config_three_d_min_limit,3-D 安全最小限制
+config_title,名称
+config_vault,一键支付
+creditor,贷方
+creditor_id_input,贷方 ID：
+creditor_mandate_id,授权 ID
+credit_card_form_loading_error,在载入信用卡表单时发生错误。请重试。
+credit_card_form_submitting_error,在提交信用卡表单时发生错误。
+debtor,借方
+debtor_acc_owner,账户所有人
+default_currency,默认货币
+enter_valid_email_error,请输入有效的邮箱地址。
+error_credentials,测试失败，请检查您的凭证。
+first_name_input,名
+heading_title_alipay_crossborder,Wirecard 支付宝跨境
+heading_title_creditcard,Wirecard 信用卡
+heading_title_giropay,Wirecard giropay
+heading_title_ideal,Wirecard iDEAL
+heading_title_maestro,Wirecard Maestro 安全码
+heading_title_masterpass,Wirecard Masterpass
+heading_title_paypal,Wirecard PayPal
+heading_title_poi_pia,Wirecard 发票付款/提前付款,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Wirecard 保证发票
+heading_title_sepact,Wirecard SEPA Credit Transfer
+heading_title_sepadd,Wirecard SEPA Direct Debit
+heading_title_sofortbanking,Wirecard Sofort。
+heading_title_upi,Wirecard 银联国际
+iban,IBAN:
+ideal_legend,选择您的银行
+last_name_input,姓
+module_display_name,Wirecard 支付流程网关
+no_such_order_error,无此订单。
+order_error,付款过程发生错误。请重试。
+payment_from_applicable_countries,来自可适用国家的付款
+payment_from_specific_countries,来自特定国家的付款
+place_order,生成订单
+ptrid,供应商交易参考 ID
+public_certificate_desc,"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers."
+send_email,提交
+sepa_mandate,SEPA 授权
+sepa_text_1,我授权该贷方
+sepa_text_2,向我的银行发送指示，以便从我的账户中直接收取一笔账目。与此同时，我指派我的银行根据贷方的指示在我的账户上记录相应的债务。
+sepa_text_2b,。
+sepa_text_3,备注：作为我权力的一部分，根据我与银行之间协议的使用条款，我应当获得退款。该退款必须在我账户计入债务起的 8 周内索取。
+sepa_text_4,我不可撤销地同意，当无法如期执行直接扣款或是直接扣款受到阻碍时，我的银行可以向贷方
+sepa_text_5,公布我的全名、地址以及出生日期。
+sepa_text_6,我已经阅读并接受 SEPA 直接扣款授权令的信息。
+success_credentials,商家配置已成功通过测试。
+success_email,电子邮件已发送成功
+support_email_title,提交支持请求
+terms_of_use,使用条款
+test_credentials,测试
+text_enabled,已启用
+text_payment_action_pay,Purchase
+text_payment_action_reserve,Authorization
+text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_settings,设置
+text_support,Support,: classes/admin/class-wirecard-settings.php:98
+transfer_notice,请使用以下数据转账：
+vault_save_text,保存以备后用。
+vault_use_existing_text,使用保存的信用卡

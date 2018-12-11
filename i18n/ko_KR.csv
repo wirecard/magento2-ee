@@ -1,107 +1,94 @@
-"Wirecard Payment Gateway","와이어카드 지불 프로세스 게이트웨이"
-"Wirecard Payment Gateway Pay now.","Wirecard Sofort."
-"Wirecard Payment Gateway Alipay Cross Border","Wirecard 알리페이 크로스보더"
-"Wirecard Payment Gateway SEPA","Wirecard SEPA 자동 이체"
-"Wirecard Payment Gateway SEPA Credit Transfer","Wirecard SEPA 계좌 이체"
-"Wirecard Payment Gateway Guaranteed Installment","Wirecard Guaranteed Installment"
-"Wirecard Payment Gateway Masterpass","Wirecard Masterpass"
-"Wirecard Payment Gateway Payment on Invoice / Payment on Advance","Wirecard 사전 결제 / Wirecard 송장 결제"
-"Wirecard Payment Gateway PayPal","Wirecard PayPal"
-"Wirecard Payment Gateway Giropay","Wirecard Giropay"
-"Wirecard Payment Gateway Guaranteed Invoice","Wirecard에 의한 Wirecard 보증 송장"
-"Wirecard Payment Gateway iDEAL","Wirecard iDEAL"
-"Wirecard Payment Gateway UnionPay International","Wirecard UnionPay International"
-"Wirecard Payment Gateway recurring Credit Card","Wirecard recurring Credit Card"
-"Wirecard Payment Gateway Credit Card","Wirecard 신용카드"
-"Wirecard Payment Gateway Maestro","Wirecard Maestro SecureCode"
-"General Information regarding Wirecard Shop Plugins","와이어카드 상점 플러그인의 기본 정보"
-"Credentials","자격 증명"
-"Base Url","기본 URL"
-"Http User","HTTP 사용자"
-"Http Password","HTTP 비밀번호"
-"Test Credentials","시험 자격 증명"
-"Please check your credentials.","자격 증명을 확인하세요."
-"An error occurred during the payment process. Please try again.","결제 처리 중 오류가 발생했습니다. 다시 시도하세요."
-"Credentials correct.","자격 증명이 정확합니다."
-"Settings","설정"
-"Default Currency","기본 통화"
-"Enabled","가능"
-"Merchant Account ID","MAID"
-"Secret Key","Secret Key"
-"Final state of transaction could not be determined.","최종 거래 상태를 확정할 수 없습니다."
-"Invalid request to success redirect page.","리디렉션 페이지 성공에 대한 요청이 유효하지 않습니다."
-"No such order.","해당 명령을 찾을 수 없습니다."
-"The payment process was not finished successful.","결제를 성공적으로 완료하지 못했습니다."
-"You have canceled the payment process.","결제 프로세스를 취소하셨습니다."
-"Authorize","허가"
-"Capture","캡쳐"
-"An error occurred loading the credit card form. Please try again.","신용카드 양식을 불러오는 중 오류가 발생했습니다. 다시 시도하세요."
-"An error occurred submitting the credit card form.","신용카드 양식을 제출하는 중 오류가 발생했습니다."
-"SEPA Direct Debit Mandate Form","SEPA 자동 이체 신청서"
-"Creditor","채권자"
-"Creditor ID:","채권자 ID:"
-"Mandate reference:","자동 인출 참조:"
-"Debtor","채무자"
-"Account owner","계좌 소유자"
-"Birthdate:","생년월일"
-"Bank Account IBAN","IBAN"
-"Bank Account Iban","IBAN"
-"IBAN:","IBAN"
-"Bank BIC","BIC"
-"Bank Bic","BIC"
-"BIC:","BIC"
-"I authorize the creditor ","본인은 채권자가 본인의 계좌에서"
-" to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor "," 한 건의 자동 이체를 수취할 수 있도록 은행에 요청합니다. 또한, 본인은 채권자의 지시에 따라 계좌에서 금액을 인출하도록 은행에 요청합니다."
-"sepamandatetextextra","."
-"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.","참고: 본인은 권리의 일부로서, 은행 이용 약관에 따라 환불받을 권리가 있습니다. 환불은 본인 계좌에서 인출된 날로부터 8주 이내에 청구되어야 합니다."
-"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor ","본인의 계좌에서 금액이 이체되지 않거나 계좌 이체에 이의가 제기될 경우, 은행은 채권자"
-" my full name, address and date of birth.","에게 본인의 성명, 주소, 생년월일을 제공합니다."
-"I have read and accepted the SEPA Direct Debit Mandate information.","본인은 SEPA 자동 이체 신청서를 확인했으며 이에 동의합니다."
-"Amount","금액:"
-"Date:","날짜:"
-"The maximum order amount in your default currency to initialize Non 3-D Secure transactions.","비 3-D 보안 결제 초기화를 위한 최대 한도액."
-"The elastic engine base url. (e.g. https://api.wirecard.com)","와이어카드 지불 프로세스 게이트웨이의 기본 URL입니다. (예: https://api.wirecard.com)"
-"Provider transaction reference id","제공자 트랜잭션 참조 ID"
-"The minimum order amount in your default currency to initialize 3-D Secure transactions.","3-D 보안 결제 초기화를 위한 최소 한도액."
-"Support Request","지원 요청 제출"
-"Contact Form","지원 요청 제출"
-"Send support request","제출"
-"Your e-mail address","사용자 이메일 주소"
-"Your message","사용자 메시지"
-"Please enter a valid e-mail address.","유효한 이메일 주소를 입력하십시오."
-"Please set your shop e-mail address!","이메일 전송 중 오류가 발생했습니다"
-"Wirecard Payment Gateway Support Request","Wirecard 결제 게이트웨이 지원 요청"
-"Support request sent successfully!","이메일이 성공적으로 전송됨"
-"Public Key","공개 키"
-"Title","제목"
-"Payment Action","결제 동작"
-"Shopping Basket","쇼핑 장바구니"
-"Sort Order","정렬 순서"
-"Send additional Information","추가 정보 전송"
-"Creditor ID","채권자 ID"
-"Creditor Name","채권자 이름"
-"Minimum Order Total","최소 금액"
-"Maximum Order Total","최대 금액"
-"Payment from Applicable Countries","해당되는 국가에서의 결제"
-"Payment from Specific Countries","특정 국가에서의 결제"
-"Billing/Shipping Address must be identical","청구지/배송지 주소는 동일해야 합니다"
-"Payment","결제 유형"
-"Save for later use.","이후 사용을 위해 저장"
-"Place Order","발주"
-"First Name","이름"
-"Last Name","성"
-"An error occurred during the payment process. Please try again.","결제 프로세스 중 오류 발생. 다시 시도하십시오."
-"Default Currency for Limitdetection","기본 통화"
-"Choose your bank...","은행"
-"Account owner:","계좌 소유자"
-"Please transfer the amount using the following data:","다음 데이터를 이용하여 금액을 이체하십시오:"
-"Creditor city will be shown in SEPA Direct Debit Mandate","SEPA는 SEPA 자동 이체 위임 페이지 위에 표시할 채권자 도시를 요구합니다."
-"Creditor name will be shown in SEPA Direct Debit Mandate","SEPA는 SEPA 자동 이체 위임 페이지에 표시할 채권자 이름을 요구합니다."
-"Creditor City","채권자 도시"
-"BIC enabled","BIC 사용 설정됨"
-"3-D Secure Min Limit","3-D 보안 최소. 한계"
-"Non 3-D Secure Max Limit","비 3-D 보안 최대. 한계"
-"3-D Secure Merchant Account ID","3-D 보안 MAID"
-"3-D Secure Secret Key","3-D 보안 Secret Key"
-"On Invoice","사전 결제"
-"In Advance","송장 결제"
+amount,Amount
+bank_label,은행
+bic,BIC:
+birthdate_input,생년월일
+canceled_payment_process,결제 프로세스를 취소하셨습니다.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
+config_additional_info,추가 정보 전송
+config_base_url,베이스 URL
+config_base_url_desc,Wirecard 베이스 URL. (예: https://api.wirecard.com)
+config_basket_max,최대 금액
+config_basket_min,최소 금액
+config_billing_shipping,청구지/배송지 주소는 동일해야 합니다
+config_creditor_city,채권자 도시
+config_creditor_city_desc,SEPA는 SEPA 자동 이체 위임 페이지 위에 표시할 채권자 도시를 요구합니다.
+config_creditor_id,채권자 ID
+config_creditor_name,채권자 이름
+config_creditor_name_desc,SEPA는 SEPA 자동 이체 위임 페이지에 표시할 채권자 이름을 요구합니다.
+config_email,사용자 이메일 주소
+config_enable_bic,BIC 사용 설정됨
+config_http_password,HTTP 비밀번호
+config_http_user,HTTP 사용자
+config_limit_desc,기본 매장 통화로 표시된 금액
+config_merchant_account_id,상인 계정 ID
+config_merchant_public,공개 키
+config_merchant_secret,비밀 키
+config_message,사용자 메시지
+config_payment_action,결제 동작
+config_shopping_basket,쇼핑 장바구니
+config_sort_order,정렬 순서
+config_ssl_max_limit,비 3-D 보안 최대. 한계
+config_three_d_merchant_account_id,3-D 보안 상인 계정 ID
+config_three_d_merchant_secret,3-D 보안 비밀 키
+config_three_d_min_limit,3-D 보안 최소. 한계
+config_title,제목
+config_vault,원클릭 체크아웃
+creditor,채권자
+creditor_id_input,채권자 ID:
+creditor_mandate_id,위임서 ID
+credit_card_form_loading_error,신용카드 양식을 불러오는 중 오류가 발생했습니다. 다시 시도하세요.
+credit_card_form_submitting_error,신용카드 양식을 제출하는 중 오류가 발생했습니다.
+debtor,채무자
+debtor_acc_owner,계좌 소유자
+default_currency,기본 통화
+enter_valid_email_error,유효한 이메일 주소를 입력하십시오.
+error_credentials,"테스트 실패함, 자격증명을 확인하십시오."
+first_name_input,이름
+heading_title_alipay_crossborder,Wirecard Alipay Crossborder
+heading_title_creditcard,Wirecard 신용카드
+heading_title_giropay,Wirecard Giropay
+heading_title_ideal,Wirecard iDEAL
+heading_title_maestro,Wirecard Maestro SecureCode
+heading_title_masterpass,Wirecard Masterpass
+heading_title_paypal,Wirecard PayPal
+heading_title_poi_pia,Wirecard 송장 결제 / 사전 결제,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Wirecard Guaranteed Invoice
+heading_title_sepact,Wirecard SEPA Credit Transfer
+heading_title_sepadd,Wirecard SEPA Direct Debit
+heading_title_sofortbanking,Wirecard Sofort.
+heading_title_upi,Wirecard Unionpay International
+iban,IBAN:
+ideal_legend,은행을 선택하세요
+last_name_input,성
+module_display_name,와이어카드 지불 프로세스 게이트웨이
+no_such_order_error,해당 명령을 찾을 수 없습니다.
+order_error,결제 프로세스 중 오류 발생. 다시 시도하십시오.
+payment_from_applicable_countries,해당되는 국가에서의 결제
+payment_from_specific_countries,특정 국가에서의 결제
+place_order,발주
+ptrid,제공자 트랜잭션 참조 ID
+public_certificate_desc,"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers."
+send_email,제출
+sepa_mandate,SEPA 위임서
+sepa_text_1,본인은 채권자가 본인의 계좌에서
+sepa_text_2,"한 건의 자동 이체를 수취할 수 있도록 은행에 요청합니다. 또한, 본인은 채권자의 지시에 따라 계좌에서 금액을 인출하도록 은행에 요청합니다"
+sepa_text_2b,.
+sepa_text_3,"참고: 본인은 권리의 일부로서, 은행 이용 약관에 따라 환불받을 권리가 있습니다. 환불은 본인 계좌에서 인출된 날로부터 8주 이내에 청구되어야 합니다."
+sepa_text_4,"본인의 계좌에서 금액이 이체되지 않거나 계좌 이체에 이의가 제기될 경우, 은행은 채권자"
+sepa_text_5,"에게 본인의 성명, 주소, 생년월일을 제공합니다."
+sepa_text_6,본인은 SEPA 자동 이체 신청서를 확인했으며 이에 동의합니다.
+success_credentials,상인 구성이 성공적으로 테스트되었습니다.
+success_email,이메일이 성공적으로 전송됨
+support_email_title,지원 요청 전송
+terms_of_use,이용 약관
+test_credentials,테스트
+text_enabled,활성화됨
+text_payment_action_pay,Purchase
+text_payment_action_reserve,Authorization
+text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_settings,설정
+text_support,Support,: classes/admin/class-wirecard-settings.php:98
+transfer_notice,다음 데이터를 이용하여 금액을 이체하십시오:
+vault_save_text,이후 사용을 위해 저장
+vault_use_existing_text,저장된 신용카드 사용

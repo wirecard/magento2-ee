@@ -224,10 +224,19 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $encryptor = $this->getMockWithoutInvokingTheOriginalConstructor(EncryptorInterface::class);
 
         $this->controller = new Notify(
-            $context, $transactionServiceFactory,
-            $this->orderRepository, $this->logger, $searchCriteriaBuilder, $this->invoiceService, $transaction,
-            $this->paymentExtensionFactory, $this->paymentTokenFactory, $paymentTokenManagement, $encryptor,
-            $orderSender);
+            $context,
+            $transactionServiceFactory,
+            $this->orderRepository,
+            $this->logger,
+            $searchCriteriaBuilder,
+            $this->invoiceService,
+            $transaction,
+            $this->paymentExtensionFactory,
+            $this->paymentTokenFactory,
+            $paymentTokenManagement,
+            $encryptor,
+            $orderSender
+        );
     }
 
     public function testExecuteWithSuccessResponse()
@@ -399,7 +408,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $this->payment->expects($this->once())->method('setParentTransactionId')->with(999);
         $this->payment->expects($this->once())->method('setTransactionAdditionalInfo')->with(
-            'raw_details_info', [
+            'raw_details_info',
+            [
                 'providerTransactionId' => 1234,
                 'providerTransactionReferenceId' => 1234567,
                 'requestId' => '1-2-3',

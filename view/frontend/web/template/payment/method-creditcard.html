@@ -64,7 +64,7 @@
                    class="checkbox"
                    data-bind="attr: {'id': getCode() + '_enable_vault'}, checked: vaultEnabler.isActivePaymentTokenEnabler"/>
             <label class="label" data-bind="attr: {'for': getCode() + '_enable_vault'}">
-                <span><!-- ko i18n: 'Save for later use.'--><!-- /ko --></span>
+                <span><!-- ko i18n: 'vault_save_text'--><!-- /ko --></span>
             </label>
         </div>
         <!-- /ko -->
@@ -75,9 +75,9 @@
                         type="submit"
                         data-bind="
                         click: placeOrder,
-                        attr: {'id': getCode() + '_submit', title: $t('Place Order')}
+                        attr: {'id': getCode() + '_submit', title: $t('place_order')}
                         ">
-                    <span data-bind="i18n: 'Place Order'"></span>
+                    <span data-bind="i18n: 'place_order'"></span>
                 </button>
             </div>
         </div>
