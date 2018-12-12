@@ -1,113 +1,94 @@
-"Credentials","Zugangsdaten"
-"Base Url","Wirecard Server Address"
-"Http User","HTTP Benutzer"
-"Http Password","HTTP Passwort"
-"Test Credentials","Zugangsdaten testen"
-"Please check your credentials.","Der Konfigurationstest ist fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten."
-"Credentials correct.","Die Konfigurationseinstellungen wurden erfolgreich getestet."
-"Settings","Einstellungen"
-"Default Currency","Standard Währung"
-"Enabled","Aktiviert"
-"Merchant Account ID","MAID"
-"Secret Key","Secret Key"
-"Authorize","Authorization"
-"Capture","Purchase"
-"An error occurred during the payment process. Please try again.","Während des Bezahlprozesses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
-"Final state of transaction could not be determined.","Finaler Status der Transaktion konnte nicht festgestellt werden."
-"Invalid request to success redirect page.","Ungültige Weiterleitung."
-"No such order.","Keine Bestellung gefunden."
-"The payment process was not finished successful.","Der Bezahlprozess konnte nicht erfolgreich abgeschlossen werden."
-"You have canceled the payment process.","Der Bezahlprozess wurde abgebrochen."
-"Wirecard Payment Gateway","Wirecard Payment Processing Gateway"
-"Wirecard Payment Gateway Credit Card","Wirecard Kreditkarte"
-"Wirecard Payment Gateway Pay now.","Wirecard Sofort."
-"Wirecard Payment Gateway Guaranteed Invoice","Wirecard Garantierter Kauf auf Rechnung by Wirecard"
-"Wirecard Payment Gateway Guaranteed Installment","Wirecard Garantierter Kauf auf Raten"
-"Wirecard Payment Gateway Alipay Cross Border","Wirecard Alipay Cross-border"
-"Wirecard Payment Gateway SEPA","Wirecard SEPA-Lastschrift"
-"Wirecard Payment Gateway SEPA Credit Transfer","Wirecard SEPA Credit Transfer"
-"Wirecard Payment Gateway Masterpass","Wirecard Masterpass"
-"Wirecard Payment Gateway Payment on Invoice / Payment on Advance","Wirecard Kauf auf Rechnung / Vorauskasse"
-"Wirecard Payment Gateway PayPal","Wirecard PayPal"
-"Wirecard Payment Gateway Giropay","Wirecard giropay"
-"Wirecard Payment Gateway iDEAL","Wirecard iDEAL"
-"Wirecard Payment Gateway UnionPay International","Wirecard UnionPay International"
-"Wirecard Payment Gateway recurring Credit Card","Wirecard wiederkehrende Kreditkarte"
-"Wirecard Payment Gateway Maestro","Wirecard Maestro"
-"Creditor City","Creditor Stadt"
-"BIC enabled","BIC aktivieren"
-"Descriptor","Deskriptor"
-"3-D Secure Merchant Account ID","3-D Secure MAID"
-"3-D Secure Secret Key","3-D Secure Secret Key"
-"Non 3-D Secure Max Limit","Non 3-D Secure Maximal Limit"
-"3-D Secure Min Limit","3-D Secure Minimum Limit"
-"Default Currency for Limitdetection","Standard Währung"
-"Default Currency","Standard Währung"
-"Creditor name will be shown in SEPA Direct Debit Mandate","Creditor Name wird im SEPA Lastschrift Mandat angezeigt"
-"Creditor city will be shown in SEPA Direct Debit Mandate","Creditor Stadt wird im SEPA Lastschrift Mandat angezeigt"
-"Birthdate:","Geburtsdatum"
-"Choose your bank...","Finanzinstitut"
-"Bank BIC","BIC"
-"Bank Bic","BIC"
-"Bank Account IBAN","IBAN"
-"Bank Account Iban","IBAN"
-"The minimum order amount in your default currency to initialize 3-D Secure transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: Non 3-D Secure Max Limit and 3-D Secure Min Limit</a>",
-"Minimum Summe für Bestellung in your default currency to initialize 3-D Secure transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: Non 3-D Secure Max Limit and 3-D Secure Min Limit</a>"
-"Creditor","Zahlungsempfänger"
-"Creditor ID:","Creditor ID:"
-"Mandate reference:","Mandatsreferenz:"
-"Mandate reference","Mandatsreferenz"
-"Debtor","Zahlungspflichtiger"
-"Account owner:","Kontoinhaber:"
-"Account owner","Kontoinhaber"
-"IBAN:","IBAN"
-"BIC:","BIC"
-"I authorize the creditor ","Ich ermächtige die Firma "
-" to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor "," einmalig eine Zahlung von meinem Konto mittels SEPA Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die von der Firma "
-"sepamandatetextextra"," auf mein Konto gezogene SEPA Lastschrift einzulösen."
-"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.","Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen."
-"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor ","Für den Fall der Nichteinlösung der Lastschrift oder des Widerspruchs gegen die Lastschrift weise ich meine Bank unwiderruflich an, der Firma "
-" my full name, address and date of birth."," oder Dritten auf Anforderung meinen Namen, Adresse und Geburtsdatum vollständig mitzuteilen."
-"I have read and accepted the SEPA Direct Debit Mandate information.","Ich bestätige, den oben stehenden Text verstanden und akzeptiert zu haben."
-"An error occurred loading the credit card form. Please try again.","Beim Laden des Kreditkartenformulares ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
-"An error occurred submitting the credit card form.","Beim Senden der Kreditkartendaten ist ein Fehler aufgetreten."
-"The maximum order amount in your default currency to initialize Non 3-D Secure transactions.","Maximum order amount in your default currency to initialize Non 3-D Secure transactions."
-"The minimum order amount in your default currency to initialize 3D transactions.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Overview: SSL Max Limit and 3D Min Limit</a>","Mindestbestellwert in Ihrer Standardwährung zur Initialisierung von 3D-Transaktionen.<br /><a href="https://github.com/wirecard/magento2-ee/wiki/Credit-Card%3A-3D-Secure-and-SSL">Überblick: Non 3-D Secure Höchstbetrag und Non 3-D Secure Mindestbetrag</a>"
-"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers","Wird ein öffentliches Zertifikat zur Verfügung gestellt, wird es zur SSL-Zertifikat-Überprüfung bei Antworten von Wirecard-Servern verwendet."
-"Please transfer the amount using the following data:","Bitte den Betrag mithilfe folgender Daten überweisen:"
-"The elastic engine base url. (e.g. https://api.wirecard.com)","Die Wirecard Payment Processing Gateway base url. (z.B. https://api.wirecard.com)"
-"SEPA Direct Debit Mandate Form","SEPA Lastschrift Mandat"
-"Amount","Betrag"
-"Amount:","Betrag"
-"Date:","Datum"
-"Provider transaction reference id","Zahlungsreferenz"
-"General Information regarding Wirecard Shop Plugins","Allgemeine Informationen zu Wirecard Shop Plugins"
-"Support Request","E-Mail an Support"
-"Contact Form","E-Mail an Support"
-"Send support request","Senden"
-"Your e-mail address","Ihre E-Mail-Adresse"
-"Your message","Ihre Nachricht"
-"Please enter a valid e-mail address.","E-Mail-Versand fehlgeschlagen. Bitte versuchen Sie es erneut."
-"Please set your shop e-mail address!","E-Mail-Versand fehlgeschlagen. Bitte versuchen Sie es erneut."
-"Wirecard Payment Gateway Support Request","Wirecard Payment Gateway Support Anfrage"
-"Support request sent successfully!","E-Mail wurde erfolgreich versendet."
-"Public Key",""
-"Title","Titel"
-"Payment Action","Zahlungsaktion"
-"Shopping Basket","Warenkorb"
-"Sort Order","Reihenfolge"
-"Send additional Information","Zusätzliche Informationen senden"
-"Creditor ID","Creditor ID"
-"Creditor Name","Creditor Name"
-"Minimum Order Total","Minimaler Betrag"
-"Maximum Order Total","Maximaler Betrag"
-"Payment from Applicable Countries",""
-"Payment from Specific Countries",""
-"Billing/Shipping Address must be identical","Übereinstimmende Rechnungsadresse/Versandadresse"
-"Payment","Zahlungsart"
-"Save for later use.","Speichern für One-click-checkout."
-"Place Order","Bestellen"
-"First Name","Vorname"
-"Last Name","Nachname"
-"On Invoice","Auf Rechnung"
-"In Advance","Vorrauskasse"
+amount,Amount
+bank_label,Bank
+bic,BIC:
+birthdate_input,Geburtsdatum
+canceled_payment_process,Der Bezahlprozess wurde abgebrochen.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
+config_additional_info,Zusätzliche Informationen mitsenden
+config_base_url,Base URL
+config_base_url_desc,Wirecard Base URL (z.B. https://api.wirecard.com).
+config_basket_max,Maximaler Betrag
+config_basket_min,Minimaler Betrag
+config_billing_shipping,Rechnungsadresse und Versandadresse müssen übereinstimmen
+config_creditor_city,Creditor Stadt
+config_creditor_city_desc,Für das SEPA-Lastschrift-Mandat wird die Stadt des Zahlungsempfängers (Creditor) benötigt.
+config_creditor_id,Creditor ID
+config_creditor_name,Creditor Name
+config_creditor_name_desc,Für das SEPA-Lastschrift-Mandat wird der Name des Zahlungsempfängers (Creditor) benötigt.
+config_email,E-Mail Adresse
+config_enable_bic,BIC aktivieren
+config_http_password,HTTP Passwort
+config_http_user,HTTP Benutzer
+config_limit_desc,Betrag in Standard Shop Währung.
+config_merchant_account_id,Händler-Konto-ID
+config_merchant_public,Public Key
+config_merchant_secret,Geheimschlüssel
+config_message,Ihre Nachricht
+config_payment_action,Zahlungsaktion
+config_shopping_basket,Warenkorb
+config_sort_order,Reihenfolge
+config_ssl_max_limit,Non 3-D Secure Maximal Limit
+config_three_d_merchant_account_id,3-D Secure Händler-Konto-ID
+config_three_d_merchant_secret,3-D Secure Geheimschlüssel
+config_three_d_min_limit,3-D Secure Minimum Limit
+config_title,Titel
+config_vault,One-Click Checkout
+creditor,Zahlungsempfänger
+creditor_id_input,Creditor ID:
+creditor_mandate_id,Mandate ID
+credit_card_form_loading_error,Beim Laden des Kreditkartenformulares ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+credit_card_form_submitting_error,Beim Senden der Kreditkartendaten ist ein Fehler aufgetreten.
+debtor,Zahlungspflichtiger
+debtor_acc_owner,Kontoinhaber:
+default_currency,Standard Währung
+enter_valid_email_error,E-Mail-Versand fehlgeschlagen. Bitte versuchen Sie es erneut.
+error_credentials,Der Konfigurationstest ist fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.
+first_name_input,First name
+heading_title_alipay_crossborder,Wirecard Alipay Cross-border
+heading_title_creditcard,Wirecard Kreditkarte
+heading_title_giropay,Wirecard giropay
+heading_title_ideal,Wirecard iDEAL
+heading_title_maestro,Wirecard Maestro SecureCode
+heading_title_masterpass,Wirecard Masterpass
+heading_title_paypal,Wirecard PayPal
+heading_title_poi_pia,Wirecard Kauf auf Rechnung / Vorauskasse,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Wirecard Garantierter Kauf auf Rechnung
+heading_title_sepact,Wirecard SEPA Credit Transfer
+heading_title_sepadd,Wirecard SEPA-Lastschrift
+heading_title_sofortbanking,Wirecard Sofort.
+heading_title_upi,Wirecard UnionPay International
+iban,IBAN:
+ideal_legend,Wählen Sie Ihre Bank aus:
+last_name_input,Last name
+module_display_name,Wirecard Payment Processing Gateway
+no_such_order_error,Keine Bestellung gefunden.
+order_error,Während des Zahlungsprozesses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+payment_from_applicable_countries,Payment from Applicable Countries
+payment_from_specific_countries,Payment from Specific Countries
+place_order,Bestellen
+ptrid,Provider Transaction Reference ID
+public_certificate_desc,"Wird ein öffentliches Zertifikat zur Verfügung gestellt, wird es zur SSL-Zertifikat-Überprüfung bei Antworten von Wirecard-Servern verwendet."
+send_email,Senden
+sepa_mandate,SEPA Mandate
+sepa_text_1,Ich ermächtige die Firma
+sepa_text_2,"einmalig eine Zahlung von meinem Konto mittels SEPA Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die von der Firma"
+sepa_text_2b,auf mein Konto gezogene SEPA Lastschrift einzulösen.
+sepa_text_3,"Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen."
+sepa_text_4,"Für den Fall der Nichteinlösung der Lastschrift oder des Widerspruchs gegen die Lastschrift weise ich meine Bank unwiderruflich an, der Firma"
+sepa_text_5,"oder Dritten auf Anforderung meinen Namen, Adresse und Geburtsdatum vollständig mitzuteilen."
+sepa_text_6,"Ich bestätige, den oben stehenden Text verstanden und akzeptiert zu haben."
+success_credentials,Die Konfigurationseinstellungen wurden erfolgreich getestet.
+success_email,E-Mail wurde erfolgreich versendet.
+support_email_title,E-Mail an Support
+terms_of_use,Nutzungsbedingungen
+test_credentials,Test
+text_enabled,Aktiviert
+text_payment_action_pay,Purchase
+text_payment_action_reserve,Authorization
+text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_settings,Einstellungen
+text_support,Support,: classes/admin/class-wirecard-settings.php:98
+transfer_notice,Bitte den Betrag mithilfe folgender Daten überweisen:
+vault_save_text,Speichern für One-click-checkout
+vault_use_existing_text,Gespeicherte Kreditkarte verwenden

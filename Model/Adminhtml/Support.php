@@ -220,7 +220,7 @@ class Support
     {
         if (strlen(trim($postObject->getData('replyto')))) {
             if (!filter_var($postObject->getData('replyto'), FILTER_VALIDATE_EMAIL)) {
-                throw new \Exception(__('Please enter a valid e-mail address.'));
+                throw new \Exception(__('enter_valid_email_error'));
             }
             $this->_transportBuilder->setReplyTo(trim($postObject->getData('replyto')));
         }
@@ -231,7 +231,7 @@ class Support
         ];
 
         if (!strlen($sender['email'])) {
-            throw new \Exception(__('Please enter a valid e-mail address.'));
+            throw new \Exception(__('enter_valid_email_error'));
         }
 
         $modules = [];

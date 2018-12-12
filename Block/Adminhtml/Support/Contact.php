@@ -53,11 +53,13 @@ class Contact extends Container
         $this->buttonList->add(
             'sendrequest',
             [
-                'label' => __('Send support request'),
+                'label' => __('send_email'),
                 'class' => 'save',
                 'onclick' => 'jQuery("#edit_form").submit();',
             ],
-            -100, 0, 'footer'
+            -100,
+            0,
+            'footer'
         );
     }
 }

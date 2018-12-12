@@ -61,13 +61,13 @@
 
                 <div class="field bankBic">
                     <label data-bind="attr: {for: getCode() + '_bankBic'}" class="label">
-                        <span><!-- ko i18n: 'Choose your bank...'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'ideal_legend'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <select name="payment[ideal_bankBic]" class="input-select"
                                data-bind="attr: {
                                     id: getCode() + '_bankBic',
-                                    title: $t('Bank Bic'),
+                                    title: $t('bank_label'),
                                     'data-container': getCode() + '-bankBic'},
                                     value: bankBic,
                                     options: getIdealBic(),
@@ -85,9 +85,9 @@
                         type="submit"
                         data-bind="
                         click: placeOrder,
-                        attr: {'id': getCode() + '_submit', title: $t('Place Order')}
+                        attr: {'id': getCode() + '_submit', title: $t('place_order')}
                         ">
-                    <span data-bind="i18n: 'Place Order'"></span>
+                    <span data-bind="i18n: 'place_order'"></span>
                 </button>
             </div>
         </div>

@@ -67,12 +67,12 @@
                               value: mandateId"/>
                 <div class="field accountFirstName required">
                     <label data-bind="attr: {for: getCode() + '_accountFirstName'}" class="label">
-                        <span><!-- ko i18n: 'First Name'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'first_name_input'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input type="text" name="payment[sepadirectdebit_accountFirstName]" class="input-text" value=""
                                data-bind="attr: { autocomplete: off, id: getCode() + '_accountFirstName',
-                                    title: $t('First Name'),
+                                    title: $t('first_name_input'),
                                     'data-container': getCode() + '-accountFirstName',
                                     'data-validate': JSON.stringify({'required':true})},
                               value: accountFirstName"/>
@@ -81,12 +81,12 @@
 
                 <div class="field accountLastName required">
                     <label data-bind="attr: {for: getCode() + '_accountLastName'}" class="label">
-                        <span><!-- ko i18n: 'Last Name'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'last_name_input'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input type="text" name="payment[sepadirectdebit_accountLastName]" class="input-text" value=""
                                data-bind="attr: { autocomplete: off, id: getCode() + '_accountLastName',
-                                    title: $t('Last Name'),
+                                    title: $t('last_name_input'),
                                     'data-container': getCode() + '-accountLastName',
                                     'data-validate': JSON.stringify({'required':true})},
                               value: accountLastName"/>
@@ -96,14 +96,14 @@
                 <!-- ko if: hasBankBic() -->
                 <div class="field bankBic">
                     <label data-bind="attr: {for: getCode() + '_bankBic'}" class="label">
-                        <span><!-- ko i18n: 'Bank BIC'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'bic'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input type="text" name="payment[sepadirectdebit_bankBic]" class="input-text" value=""
                                data-bind="attr: {
                                     autocomplete: off,
                                     id: getCode() + '_bankBic',
-                                    title: $t('Bank Bic'),
+                                    title: $t('bic'),
                                     'data-container': getCode() + '-bankBic'},
                                     value: bankBic "/>
                     </div>
@@ -112,14 +112,14 @@
 
                 <div class="field bankAccountIban required">
                     <label data-bind="attr: {for: getCode() + '_bankAccountIban'}" class="label">
-                        <span><!-- ko i18n: 'Bank Account IBAN'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'iban'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input type="text" name="payment[sepadirectdebit_bankAccountIban]" class="input-text" value=""
                                data-bind="attr: {
                                     autocomplete: off,
                                     id: getCode() + '_bankAccountIban',
-                                    title: $t('Bank Account IBAN'),
+                                    title: $t('iban'),
                                     'data-container': getCode() + '-bankAccountIban',
                                     'data-validate': JSON.stringify({'required':true})},
                               value: bankAccountIban "/>
@@ -135,9 +135,9 @@
                         type="submit"
                         data-bind="
                         click: beforePlaceOrder,
-                        attr: {title: $t('Place Order')}
+                        attr: {title: $t('place_order')}
                         ">
-                    <span data-bind="i18n: 'Place Order'"></span>
+                    <span data-bind="i18n: 'place_order'"></span>
                 </button>
             </div>
         </div>

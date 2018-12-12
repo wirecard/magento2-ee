@@ -84,7 +84,7 @@ define(
                     var sepaMandate = $("#sepaMandate");
 
                     sepaMandate.modal({
-                        title: $.mage.__("SEPA Direct Debit Mandate Form"),
+                        title: $.mage.__("sepa_mandate"),
                         responsive: true,
                         innerScroll: true,
                         buttons: [{

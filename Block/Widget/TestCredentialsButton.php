@@ -93,7 +93,7 @@ class TestCredentialsButton extends Field
         $button = $this->getLayout()->createBlock(Button::class)
             ->setData([
                 'id' => 'button_test_credentials',
-                'label' => __('Test Credentials'),
+                'label' => __('test_credentials'),
             ]);
 
         return $button->toHtml();

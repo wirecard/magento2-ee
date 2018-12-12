@@ -61,12 +61,12 @@
 
                 <div class="field bankBic required">
                     <label data-bind="attr: {for: getCode() + '_bankBic'}" class="label">
-                        <span><!-- ko i18n: 'Bank Bic'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'bic'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input type="text" name="payment[giropay_bankBic]" class="input-text" value=""
                                data-bind="attr: { autocomplete: off, id: getCode() + '_bankBic',
-                                    title: $t('Bank BIC'),
+                                    title: $t('bic'),
                                     'data-container': getCode() + '-bankBic',
                                     'data-validate': JSON.stringify({'required':true})},
                               value: bankBic"/>
@@ -82,9 +82,9 @@
                         type="submit"
                         data-bind="
                         click: placeOrder,
-                        attr: {'id': getCode() + '_submit', title: $t('Place Order')}
+                        attr: {'id': getCode() + '_submit', title: $t('place_order')}
                         ">
-                    <span data-bind="i18n: 'Place Order'"></span>
+                    <span data-bind="i18n: 'place_order'"></span>
                 </button>
             </div>
         </div>

@@ -52,7 +52,7 @@ class FormUTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTabLabel()
     {
-        $this->assertEquals(__('Support Request'), $this->form->getTabLabel());
+        $this->assertEquals(__('support_email_title'), $this->form->getTabLabel());
     }
 
     public function testCanShowTab()

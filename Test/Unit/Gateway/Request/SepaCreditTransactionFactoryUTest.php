@@ -126,8 +126,15 @@ class SepaCreditTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new SepaCreditTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new SepaCreditTransferTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new SepaCreditTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            new SepaCreditTransferTransaction(),
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
         $expected = Operation::CREDIT;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -135,8 +142,15 @@ class SepaCreditTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testRefundMinimum()
     {
         $transaction = new SepaCreditTransferTransaction();
-        $transactionFactory = new SepaCreditTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new SepaCreditTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedRefundTransaction();
 

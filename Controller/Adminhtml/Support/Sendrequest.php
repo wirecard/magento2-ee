@@ -69,7 +69,7 @@ class Sendrequest extends \Magento\Backend\App\Action
 
         try {
             $this->_supportModel->sendrequest($postObject);
-            $this->messageManager->addNoticeMessage(__('Support request sent successfully!'));
+            $this->messageManager->addNoticeMessage(__('success_email'));
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         }

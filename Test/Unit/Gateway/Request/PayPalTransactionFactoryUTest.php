@@ -127,8 +127,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new PayPalTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            new PayPalTransaction(),
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -136,8 +143,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -147,8 +161,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testVoidOperationMinimum()
     {
         $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimalRefundTransaction();
 
@@ -171,7 +192,8 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             'http://magen.to/frontend/redirect',
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            'http://magen.to/frontend/redirect'
+        ));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
@@ -220,8 +242,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->config->expects($this->at(1))->method('getValue')->willReturn(true);
 
         $transaction = new PayPalTransaction();
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
         $expected->setBasket(new Basket());
@@ -234,8 +263,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new PayPalTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->capture($this->commandSubject));
     }
@@ -248,8 +284,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new PayPalTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->capture([]));
     }
@@ -262,8 +305,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new PayPalTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimalCaptureTransaction(), $transactionFactory->create([]));
     }
@@ -276,8 +326,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new PayPalTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->void([]));
     }
@@ -287,8 +344,15 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new PayPalTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new PayPalTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new PayPalTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimalRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }

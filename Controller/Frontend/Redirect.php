@@ -51,7 +51,7 @@ use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
 class Redirect extends Action
 {
     const CHECKOUT_URL = 'checkout/cart';
-    const PAYMENT_ERROR = 'An error occurred during the payment process. Please try again.';
+    const PAYMENT_ERROR = 'order_error';
 
     /**
      * @var Session

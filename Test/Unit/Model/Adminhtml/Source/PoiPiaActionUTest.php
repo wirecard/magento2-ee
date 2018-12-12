@@ -42,11 +42,11 @@ class PoiPiaActionUTest extends \PHPUnit_Framework_TestCase
         $actionArray = [
             [
                 'value' => 'invoice',
-                'label' => 'On Invoice'
+                'label' => 'text_payment_type_poi'
             ],
             [
                 'value' => 'advance',
-                'label' => 'In Advance'
+                'label' => 'text_payment_type_pia'
             ]
         ];
 
