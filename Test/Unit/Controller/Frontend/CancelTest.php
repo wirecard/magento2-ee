@@ -108,7 +108,7 @@ class CancelTest extends \PHPUnit_Framework_TestCase
     {
         $this->order->expects($this->once())->method('cancel');
         $this->redirectResult->expects($this->once())->method('setPath')->with('checkout/cart');
-        $this->messageManager->expects($this->once())->method('addNoticeMessage')->with('You have canceled the payment process.');
+        $this->messageManager->expects($this->once())->method('addNoticeMessage')->with('canceled_payment_process');
         $result = $this->controller->execute();
         $this->assertEquals($result, $this->redirectResult);
     }
