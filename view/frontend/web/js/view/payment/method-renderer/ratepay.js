@@ -49,9 +49,9 @@ define(
             onTermsCheckboxClick: function () {
                 $(".actions-toolbar .primary .action").attr("disabled", !this.termsChecked);
                 if (this.termsChecked) {
-                    $(".actions-toolbar .primary .action").removeClass('disabled');
+                    $(".actions-toolbar .primary .action").removeClass("disabled");
                 } else {
-                    $(".actions-toolbar .primary .action").addClass('disabled');
+                    $(".actions-toolbar .primary .action").addClass("disabled");
                 }
                 return true;
             },
