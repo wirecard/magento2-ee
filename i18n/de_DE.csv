@@ -91,6 +91,7 @@ text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wir
 text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,Einstellungen
 text_support,Support,: classes/admin/class-wirecard-settings.php:98
+text_terms_accept,"Hiermit bestätige ich, dass ich die <a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">Datenschutzhinweise</a> und zusätzliche <a href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"" target=""_blank"">Geschäftsbedingungen</a> für Wirecard-Zahlarten zur Kenntnis genommen habe und mit deren Geltung einverstanden bin."
 transfer_notice,Bitte den Betrag mithilfe folgender Daten überweisen:
 vault_save_text,Speichern für One-click-checkout
 vault_use_existing_text,Gespeicherte Kreditkarte verwenden

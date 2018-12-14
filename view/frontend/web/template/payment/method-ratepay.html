@@ -69,6 +69,9 @@
                     </div>
                     <div class="mage-error" generated="true" style="display: none;" data-bind="attr: {'id': getCode() + '-dob-error'}"></div>
                 </div>
+                <input type="checkbox" data-bind="checked: termsChecked, click: onTermsCheckboxClick"/>
+                <span data-bind="html: $t('text_terms_accept')"></span>
+                
             </fieldset>
         </form>
 
@@ -79,7 +82,9 @@
                         type="submit"
                         data-bind="
                         click: placeOrder,
-                        attr: {'id': getCode() + '_submit', title: $t('place_order')}
+                        attr: {'id': getCode() + '_submit', title: $t('place_order')},
+                        css: {disabled: termsChecked},
+                        enable: termsChecked
                         ">
                     <span data-bind="i18n: 'place_order'"></span>
                 </button>

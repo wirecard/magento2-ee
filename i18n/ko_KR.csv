@@ -89,6 +89,7 @@ text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wir
 text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,설정
 text_support,Support,: classes/admin/class-wirecard-settings.php:98
+text_terms_accept,I herewith confirm that I have read the <a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">privacy notice</a> and <a href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"" target=""_blank"">additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
 transfer_notice,다음 데이터를 이용하여 금액을 이체하십시오:
 vault_save_text,이후 사용을 위해 저장
 vault_use_existing_text,저장된 신용카드 사용
