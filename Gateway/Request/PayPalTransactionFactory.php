@@ -81,6 +81,7 @@ class PayPalTransactionFactory extends TransactionFactory
      * @return Transaction
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function create($commandSubject)
     {

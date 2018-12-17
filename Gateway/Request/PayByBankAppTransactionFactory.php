@@ -84,56 +84,23 @@ class PayByBankAppTransactionFactory extends TransactionFactory
      * @return Transaction
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function create($commandSubject)
     {
         parent::create($commandSubject);
 
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
-        $this->transaction->setOrderNumber($this->orderId);
-
         $customFields = new CustomFieldCollection();
         $this->transaction->setCustomFields($customFields);
 
-        function addCustomField($key, $value) {
-            $customField = new CustomField($key, $value);
-            $customField->setPrefix('zapp.in.');
-            return $customField;
-        }
-
-        $customFields->add(addCustomField('MerchantRtnStrng',
+        $customFields->add($this->makeCustomField('MerchantRtnStrng',
             $this->methodConfig->getValue('zapp_merchant_return_string')));
-        $customFields->add(addCustomField('TxType', 'PAYMT'));
-        $customFields->add(addCustomField('DeliveryType', 'DELTAD'));
+        $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
+        $customFields->add($this->makeCustomField('DeliveryType', 'DELTAD'));
 
         $device = new Device();
         $device->setType('pc');
         $device->setOperatingSystem('windows');
         $this->transaction->setDevice($device);
-
-        if ($this->methodConfig->getValue('send_shopping_basket')) {
-            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
-        }
-
-        return $this->transaction;
-    }
-
-    /**
-     * @param array $commandSubject
-     * @return Transaction
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function capture($commandSubject)
-    {
-        parent::capture($commandSubject);
 
         return $this->transaction;
     }
@@ -150,12 +117,11 @@ class PayByBankAppTransactionFactory extends TransactionFactory
 
         $this->transaction->setParentTransactionId($this->transactionId);
 
-        return $this->transaction;
-    }
+        $customFields = new CustomFieldCollection();
+        $this->transaction->setCustomFields($customFields);
 
-    public function void($commandSubject)
-    {
-        parent::void($commandSubject);
+        $customFields->add($this->makeCustomField('RefundReasonType', 'LATECONFIRMATION'));
+        $customFields->add($this->makeCustomField('RefundMethod', 'BACS'));
 
         return $this->transaction;
     }
@@ -167,4 +133,20 @@ class PayByBankAppTransactionFactory extends TransactionFactory
     {
         return self::REFUND_OPERATION;
     }
+
+    /**
+     * make new customfield with my prefix
+     *
+     * @param $key
+     * @param $value
+     * @return CustomField
+     */
+    protected function makeCustomField($key, $value)
+    {
+        $customField = new CustomField($key, $value);
+        $customField->setPrefix('zapp.in.');
+
+        return $customField;
+    }
+
 }
