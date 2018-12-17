@@ -177,6 +177,7 @@ class TransactionFactory
         $order = $payment->getOrder();
 
         $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        //$amount = new Amount($order->getGrandTotalAmount(), 'GBP');
         $this->transaction->setAmount($amount);
 
         $this->orderId = $order->getOrderIncrementId();
