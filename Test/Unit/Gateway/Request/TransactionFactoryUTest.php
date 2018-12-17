@@ -114,8 +114,15 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateThrowsExceptionWithoutPayment()
     {
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction(),
-            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+        $transactionFactory = new TransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            new PayPalTransaction(),
+            $this->config,
+            $this->storeManager,
+            $this->accountHolderFactory,
+            $this->basketFactory
+        );
         $transactionFactory->create([]);
     }
 
@@ -124,15 +131,29 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testRefundThrowsExceptionWithoutPayment()
     {
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction(),
-            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+        $transactionFactory = new TransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            new PayPalTransaction(),
+            $this->config,
+            $this->storeManager,
+            $this->accountHolderFactory,
+            $this->basketFactory
+        );
         $transactionFactory->refund([]);
     }
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, new PayPalTransaction(),
-            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+        $transactionFactory = new TransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            new PayPalTransaction(),
+            $this->config,
+            $this->storeManager,
+            $this->accountHolderFactory,
+            $this->basketFactory
+        );
         $expected = Operation::CREDIT;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -142,8 +163,15 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionMock = $this->getMock(Transaction::class);
         $transactionMock->expects($this->Once())->method('setAmount')->with($this->equalTo(new Amount('1.0', 'EUR')));
 
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock,
-            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+        $transactionFactory = new TransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $transactionMock,
+            $this->config,
+            $this->storeManager,
+            $this->accountHolderFactory,
+            $this->basketFactory
+        );
         $transactionFactory->create($this->commandSubject);
     }
 
@@ -153,8 +181,15 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $redirect = new Redirect('http://magen.to/frontend/redirect', 'http://magen.to/frontend/cancel', 'http://magen.to/frontend/redirect');
         $transactionMock->expects($this->Once())->method('setRedirect')->with($this->equalTo($redirect));
 
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock,
-            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+        $transactionFactory = new TransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $transactionMock,
+            $this->config,
+            $this->storeManager,
+            $this->accountHolderFactory,
+            $this->basketFactory
+        );
         $transactionFactory->create($this->commandSubject);
     }
 
@@ -163,8 +198,15 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionMock = $this->getMock(Transaction::class);
         $transactionMock->expects($this->Once())->method('setNotificationUrl')->with($this->equalTo('http://magen.to/frontend/notify?orderId='));
 
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock,
-            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+        $transactionFactory = new TransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $transactionMock,
+            $this->config,
+            $this->storeManager,
+            $this->accountHolderFactory,
+            $this->basketFactory
+        );
         $transactionFactory->create($this->commandSubject);
     }
 
@@ -181,8 +223,15 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transactionMock->method('setIpAddress')->willReturn('127.0.0.1');
         $transactionMock->method('setConsumerId')->willReturn('1');
 
-        $transactionFactory = new TransactionFactory($this->urlBuilder, $this->resolver, $transactionMock,
-            $this->config, $this->storeManager, $this->accountHolderFactory, $this->basketFactory);
+        $transactionFactory = new TransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $transactionMock,
+            $this->config,
+            $this->storeManager,
+            $this->accountHolderFactory,
+            $this->basketFactory
+        );
 
         $transactionFactory->create($this->commandSubject);
     }

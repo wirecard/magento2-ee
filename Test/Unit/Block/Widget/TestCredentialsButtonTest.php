@@ -74,8 +74,13 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
         $eventManager = $this->getMock(EventManager::class, ['dispatch'], [], '', false);
         $appState = $this->getMock(State::class, ['getAreaCode'], [], '', false);
         $resolver = $this->getMock(Resolver::class, ['getTemplateFileName'], [], '', false);
-        $validator = $this->getMock(Validator::class, ['isValid'], [], '',
-            false);
+        $validator = $this->getMock(
+            Validator::class,
+            ['isValid'],
+            [],
+            '',
+            false
+        );
         $logger = $this->getMock(Logger::class, ['critical'], [], '', false);
         $urlBuilder = $this->getMock(Url::class, ['getUrl'], [], '', false);
 
@@ -126,12 +131,19 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $element = $this->getMock(AbstractElement::class, ['unScope', 'getHtmlId', 'getScope', 'getLabel'], [], '',
-            false);
+        $element = $this->getMock(
+            AbstractElement::class,
+            ['unScope', 'getHtmlId', 'getScope', 'getLabel'],
+            [],
+            '',
+            false
+        );
 
         /** @var $element AbstractElement */
-        $this->assertEquals('<tr id="row_"><td class="label"><label for=""><span></span></label></td><td class="value"></td><td class=""></td></tr>',
-            $this->instance->render($element));
+        $this->assertEquals(
+            '<tr id="row_"><td class="label"><label for=""><span></span></label></td><td class="value"></td><td class=""></td></tr>',
+            $this->instance->render($element)
+        );
     }
 
     public function testGetAjaxUrl()

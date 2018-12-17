@@ -39,22 +39,22 @@ if ($this->isPia()) {
 
     <table border="0" cellpadding="0" cellspacing="0" style="width:auto;">
         <tr style="background-color: rgba(0,0,0,0.1)">
-            <td colspan="2"><b><?php echo __('Please transfer the amount using the following data:') ?></b></td>
+            <td colspan="2"><b><?php echo __('transfer_notice') ?></b></td>
         </tr>
         <tr>
-            <td><?php echo __('Amount') ?></td>
+            <td><?php echo __('amount') ?></td>
             <td><?php echo $this->getAmount() ?></td>
         </tr>
         <tr style="background-color: rgba(0,0,0,0.1)">
-            <td><?php echo __('IBAN') ?></td>
+            <td><?php echo __('iban') ?></td>
             <td><?php echo $merchantAccount['iban'] ?></td>
         </tr>
         <tr>
-            <td><?php echo __('BIC') ?></td>
+            <td><?php echo __('bic') ?></td>
             <td><?php echo $merchantAccount['bic'] ?></td>
         </tr>
         <tr style="background-color: rgba(0,0,0,0.1)">
-            <td><?php echo __('Provider transaction reference id') ?></td>
+            <td><?php echo __('ptrid') ?></td>
             <td><?php echo $this->getPtrid() ?></td>
         </tr>
     </table>

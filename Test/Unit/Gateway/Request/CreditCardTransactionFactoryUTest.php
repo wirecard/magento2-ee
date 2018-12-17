@@ -124,8 +124,15 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new CreditCardTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new CreditCardTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            new CreditCardTransaction(),
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
         $expected = Operation::REFUND;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -133,8 +140,15 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new CreditCardTransaction();
-        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new CreditCardTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -144,8 +158,15 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCaptureMinimum()
     {
         $transaction = new CreditCardTransaction();
-        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new CreditCardTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -157,8 +178,15 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new CreditCardTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new CreditCardTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
     }
@@ -166,8 +194,15 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testVoidOperationMinimum()
     {
         $transaction = new CreditCardTransaction();
-        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new CreditCardTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedVoidTransaction();
 
@@ -195,7 +230,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
+            self::REDIRECT_URL
+        ));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
@@ -263,8 +299,15 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction = new CreditCardTransaction();
         $transaction->setParentTransactionId('123456PARENT');
 
-        $transactionFactory = new CreditCardTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new CreditCardTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $this->assertEquals($this->minimumExpectedVoidTransaction(), $transactionFactory->void([]));
     }

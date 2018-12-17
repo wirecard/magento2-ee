@@ -140,8 +140,16 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testRefundOperationSetter()
     {
-        $transactionFactory = new RatepayInvoiceTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            new RatepayInvoiceTransaction(), $this->basketFactory, $this->accountHolderFactory, $this->config, $this->session);
+        $transactionFactory = new RatepayInvoiceTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            new RatepayInvoiceTransaction(),
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->session
+        );
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
     }
@@ -149,8 +157,16 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new RatepayInvoiceTransaction();
-        $transactionFactory = new RatepayInvoiceTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->session);
+        $transactionFactory = new RatepayInvoiceTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->session
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -160,8 +176,16 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateWithDevice()
     {
         $transaction = new RatepayInvoiceTransaction();
-        $transactionFactory = new RatepayInvoiceTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->session);
+        $transactionFactory = new RatepayInvoiceTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->session
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -179,9 +203,18 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
-        $transactionFactory = new RatepayInvoiceTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->session);
+            self::REDIRECT_URL
+        ));
+        $transactionFactory = new RatepayInvoiceTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->session
+        );
 
         $expected = $this->minimumExpectedCaptureTransaction();
 
@@ -195,9 +228,18 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
-        $transactionFactory = new RatepayInvoiceTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->session);
+            self::REDIRECT_URL
+        ));
+        $transactionFactory = new RatepayInvoiceTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->session
+        );
 
         $expected = $this->minimumExpectedRefundTransaction();
 
@@ -211,9 +253,18 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $transaction->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
-        $transactionFactory = new RatepayInvoiceTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config, $this->session);
+            self::REDIRECT_URL
+        ));
+        $transactionFactory = new RatepayInvoiceTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->session
+        );
 
         $expected = $this->minimumExpectedVoidTransaction();
 
@@ -232,7 +283,8 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             'http://magen.to/frontend/redirect',
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            'http://magen.to/frontend/redirect'
+        ));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
@@ -256,7 +308,8 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
+            self::REDIRECT_URL
+        ));
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
@@ -276,7 +329,8 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
+            self::REDIRECT_URL
+        ));
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
@@ -296,7 +350,8 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',
-            self::REDIRECT_URL));
+            self::REDIRECT_URL
+        ));
         $expected->setParentTransactionId('123456PARENT');
 
         $expected->setAmount(new Amount(1.0, 'EUR'));

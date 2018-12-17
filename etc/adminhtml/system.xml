@@ -34,15 +34,15 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="wirecard_elasticengine" translate="label" sortOrder="10">
-            <label>Wirecard Payment Gateway</label>
+            <label>module_display_name</label>
         </tab>
         <section id="wirecard_elasticengine" translate="label" type="text" sortOrder="2999" showInDefault="1" showInWebsite="1" showInStore="1">
             <class>seperator-top</class>
-            <label>Wirecard Payment Gateway</label>
+            <label>module_display_name</label>
             <tab>sales</tab>
             <resource>Magento_Sales::config_sales</resource>
             <group id="terms" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>General Information regarding Wirecard Shop Plugins</label>
+                <label>terms_of_use</label>
                 <comment>
                     <![CDATA[
                         <b>Terms of use</b>
@@ -67,16 +67,16 @@
                 <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"/>
             </group>
             <group id="credentials" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Test Credentials</label>
+                <label>test_credentials</label>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="button_test_credentials" translate="label" type="button" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Wirecard\ElasticEngine\Block\Widget\TestCredentialsButton</frontend_model>
@@ -86,490 +86,490 @@
                 </field>
             </group>
             <group id="settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Settings</label>
+                <label>text_settings</label>
                 <field id="public_key" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Public Key</label>
-                    <comment>If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers</comment>
+                    <label>config_merchant_public</label>
+                    <comment>public_certificate_desc</comment>
                 </field>
             </group>
         </section>
         <section id="payment">
             <group id="wirecard_elasticengine_paypal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway PayPal</label>
+                <label>heading_title_paypal</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
+                    <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="send_shopping_basket" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Shopping Basket</label>
+                    <label>config_shopping_basket</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_creditcard" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Credit Card</label>
+                <label>heading_title_creditcard</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="three_d_merchant_account_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3-D Secure Merchant Account ID</label>
+                    <label>config_three_d_merchant_account_id</label>
                 </field>
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3-D Secure Secret Key</label>
+                    <label>config_three_d_merchant_secret</label>
                 </field>
                 <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Non 3-D Secure Max Limit</label>
-                    <comment>The maximum order amount in your default currency to initialize Non 3-D Secure transactions.</comment>
+                    <label>config_ssl_max_limit</label>
+                    <comment>config_limit_desc</comment>
                 </field>
                 <field id="three_d_min_limit" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3-D Secure Min Limit</label>
-                    <comment>The minimum order amount in your default currency to initialize 3-D Secure transactions.</comment>
+                    <label>config_three_d_min_limit</label>
+                    <comment>config_limit_desc</comment>
                 </field>
                 <field id="default_currency" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Default Currency for Limitdetection</label>
+                    <label>default_currency</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
+                    <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_cc_vault" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway recurring Credit Card</label>
+                <label>config_vault</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_maestro" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Maestro</label>
+                <label>heading_title_maestro</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="three_d_merchant_account_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3-D Secure Merchant Account ID</label>
+                    <label>config_three_d_merchant_account_id</label>
                 </field>
                 <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>3-D Secure Secret Key</label>
+                    <label>config_three_d_merchant_secret</label>
                 </field>
                 <field id="default_currency" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Default Currency for Limitdetection</label>
+                    <label>default_currency</label>
                     <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
+                    <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_sepadirectdebit" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway SEPA</label>
+                <label>heading_title_sepadd</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
+                    <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="enable_bic" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>BIC enabled</label>
+                    <label>config_enable_bic</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="creditor_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Creditor ID</label>
+                    <label>creditor_id_input</label>
                 </field>
                 <field id="creditor_name" translate="label comment" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Creditor Name</label>
-                    <comment>Creditor name will be shown in SEPA Direct Debit Mandate</comment>
+                    <label>config_creditor_name</label>
+                    <comment>config_creditor_name_desc</comment>
                 </field>
                 <field id="creditor_city" translate="label comment" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Creditor City</label>
-                    <comment>Creditor city will be shown in SEPA Direct Debit Mandate</comment>
+                    <label>config_creditor_city</label>
+                    <comment>config_creditor_city_desc</comment>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_sepacredit" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway SEPA Credit Transfer</label>
+                <label>heading_title_sepact</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
             </group>
             <group id="wirecard_elasticengine_sofortbanking" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Pay now.</label>
+                <label>heading_title_sofortbanking</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_ideal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway iDEAL</label>
+                <label>heading_title_ideal</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_giropay" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Giropay</label>
+                <label>heading_title_giropay</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_ratepayinvoice" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Guaranteed Invoice</label>
+                <label>heading_title_ratepayinvoice</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="min_order_total" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Minimum Order Total</label>
+                    <label>config_basket_min</label>
                 </field>
                 <field id="max_order_total" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Maximum Order Total</label>
+                    <label>config_basket_max</label>
                 </field>
                 <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-                    <label>Payment from Applicable Countries</label>
+                    <label>payment_from_applicable_countries</label>
                     <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
                 </field>
                 <field id="specificcountry" translate="label" type="multiselect" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Payment from Specific Countries</label>
+                    <label>payment_from_specific_countries</label>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
                 <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Billing/Shipping Address must be identical</label>
+                    <label>config_billing_shipping</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_alipayxborder" translate="label" type="text" sortOrder="10"
                    showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Alipay Cross Border</label>
+                <label>heading_title_alipay_crossborder</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
                        showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
                        showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_poipia" translate="label" type="text" sortOrder="10"
                    showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Payment on Invoice / Payment on Advance</label>
+                <label>heading_title_poi_pia</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
                        showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="poipia_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
@@ -578,104 +578,104 @@
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
                        showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_masterpass" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Masterpass</label>
+                <label>heading_title_masterpass</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
+                    <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="wirecard_elasticengine_unionpayinternational" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway UnionPay International</label>
+                <label>heading_title_upi</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
+                    <label>text_enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="payment_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Payment Action</label>
+                    <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>

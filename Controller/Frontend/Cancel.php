@@ -80,7 +80,7 @@ class Cancel extends Action
         $order->cancel();
         $this->orderRepository->save($order);
         $this->checkoutSession->restoreQuote();
-        $this->messageManager->addNoticeMessage(__('You have canceled the payment process.'));
+        $this->messageManager->addNoticeMessage(__('canceled_payment_process'));
         /**
          * @var $result RedirectResult
          */

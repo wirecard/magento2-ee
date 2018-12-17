@@ -75,9 +75,9 @@ class Credentials extends Action
         $config = new Config($data['baseUrl'], $data['httpUser'], $data['httpPass']);
         $transactionService = new TransactionService($config, $this->logger);
 
-        $message = __('Please check your credentials.');
+        $message = __('error_credentials');
         if ($valid = $transactionService->checkCredentials()) {
-            $message = __('Credentials correct.');
+            $message = __('success_credentials');
         }
 
         $result = $this->resultJsonFactory->create();

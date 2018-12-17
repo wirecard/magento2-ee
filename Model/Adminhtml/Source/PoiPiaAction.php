@@ -46,11 +46,11 @@ class PoiPiaAction implements ArrayInterface
         return [
             [
                 'value' => self::INVOICE,
-                'label' => __('On Invoice')
+                'label' => __('text_payment_type_poi')
             ],
             [
                 'value' => self::ADVANCE,
-                'label' => __('In Advance')
+                'label' => __('text_payment_type_pia')
             ]
         ];
     }

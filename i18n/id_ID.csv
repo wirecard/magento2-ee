@@ -1,111 +1,94 @@
-"Wirecard Payment Gateway","Payment Gateway Wirecard"
-"Wirecard Payment Gateway Pay now.","Sofort. Wirecard"
-"Wirecard Payment Gateway Alipay Cross Border","Alipay Cross-border Wirecard"
-"Wirecard Payment Gateway SEPA","Debit Langsung SEPA Wirecard"
-"Wirecard Payment Gateway SEPA Credit Transfer","Transfer Kredit SEPA Wirecard"
-"Wirecard Payment Gateway Guaranteed Installment","Wirecard Guaranteed Installment"
-"Wirecard Payment Gateway Masterpass","Masterpass Wirecard"
-"Wirecard Payment Gateway Payment on Invoice / Payment on Advance","Pembayaran Berdasarkan Faktur / Pembayaran Di Muka untuk Wirecard"
-"Wirecard Payment Gateway PayPal","PayPal Wirecard"
-"Wirecard Payment Gateway Giropay","giropay Wirecard"
-"Wirecard Payment Gateway Guaranteed Invoice","Faktur Bergaransi Wirecard"
-"Wirecard Payment Gateway iDEAL","iDEAL Wirecard"
-"Wirecard Payment Gateway UnionPay International","UnionPay International Wirecard"
-"Wirecard Payment Gateway recurring Credit Card","Wirecard recurring Credit Card"
-"Wirecard Payment Gateway Credit Card","Kartu Kredit Wirecard"
-"Wirecard Payment Gateway Maestro","Maestro SecureCode Wirecard"
-"Wirecard Payment Gateway PayPal","PayPal Wirecard"
-"General Information regarding Wirecard Shop Plugins","Informasi Umum terkait Shop Plugins Wirecard"
-"Credentials","Kredensial"
-"Base Url","Url Dasar"
-"Http User","Pengguna HTTP"
-"Http Password","Kata Sandi HTTP"
-"Test Credentials","Kredensial Pengujian"
-"Please check your credentials.","Silakan periksa kredensial Anda."
-"An error occurred during the payment process. Please try again.","Kesalahan terjadi pada saat proses pembayaran. Silakan coba lagi."
-"Credentials correct.","Kredensial benar."
-"Settings","Pengaturan"
-"Default Currency","Mata Uang Default"
-"Enabled","Aktif"
-"Merchant Account ID","MAID"
-"Secret Key","Secret Key"
-"Final state of transaction could not be determined.","Status transaksi tidak dapat dipastikan."
-"Invalid request to success redirect page.","Permintaan tidak sah ke halaman pengalihan sukses."
-"No such order.","Perintah tersebut tidak ada."
-"The payment process was not finished successful.","Proses pembayaran tidak dapat diselesaikan."
-"You have canceled the payment process.","Anda telah membatalkan proses pembayaran."
-"Authorize","Otorisasi"
-"Capture","Ambil"
-"An error occurred loading the credit card form. Please try again.","Kesalahan terjadi saat memuat formulir kartu kredit. Silakan coba lagi."
-"An error occurred submitting the credit card form.","Kesalahan terjadi saat mengirimkan formulir kartu kredit."
-"SEPA Direct Debit Mandate Form","Formulir Mandat Direct Debit SEPA"
-"Creditor","Kreditor"
-"Creditor ID:","ID Kreditor:"
-"Mandate reference:","Referensi mandat:"
-"Debtor","Debitur"
-"Account owner","Pemilik akun"
-"Birthdate:","Tanggal Lahir"
-"Bank Account IBAN","IBAN"
-"Bank Account Iban","IBAN"
-"IBAN:","IBAN"
-"IBAN","IBAN"
-"Bank BIC","BIC"
-"Bank Bic","BIC"
-"BIC:","BIC"
-"I authorize the creditor ","Saya mengizinkan kreditur "
-" to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor "," untuk mengirimkan instruksi ke bank saya, untuk mengumpulkan satu direct debit dari akun saya. Pada waktu yang sama saya menginstruksikan bank untuk mendebit akun saya sesuai dengan instruksi dari kreditur."
-"sepamandatetextextra","."
-"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.","Catatan: Sebagai bagian dari hak saya, saya berhak atas pengembalian dana sesuai dengan syarat dan ketentuan perjanjian saya dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu dimulai dari tanggal akun saya didebit."
-"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor ","Saya menyatakan persetujuan yang tidak dapat dibatalkan bahwa jika debit langsung tidak ditanggapi, atau terdapat keberatan atas debit langsung tersebut, bank saya akan mengungkapkan kepada kreditor"
-" my full name, address and date of birth.","nama lengkap, alamat, dan tanggal lahir saya."
-"I have read and accepted the SEPA Direct Debit Mandate information.","Saya telah membaca dan menyetujui informasi mengenai Mandat Direct Debit SEPA."
-"Amount","Jumlah"
-"Amount:","Jumlah"
-"Date:","Tanggal:"
-"Date","Tanggal"
-"The maximum order amount in your default currency to initialize Non 3-D Secure transactions.","Jumlah pesanan maksimum dalam mata uang default anda untuk melakukan transaksi Non 3-D Secure."
-"The minimum order amount in your default currency to initialize 3-D Secure transactions.","Jumlah pesanan minimum dalam mata uang default anda untuk melakukan transaksi 3-D Secure."
-"The elastic engine base url. (e.g. https://api.wirecard.com)","URL dasar Elastic Engine. (misalnya, https://api.wirecard.com)"
-"Provider transaction reference id","Identitas referensi transaksi provider"
-"Support Request","Kirim permintaan bantuan"
-"Contact Form","Kirim permintaan bantuan"
-"Send support request","Kirim"
-"Your e-mail address","Alamat e-mail Anda"
-"Your message","Pesan Anda"
-"Please enter a valid e-mail address.","Silakan masukkan alamat email yang sah."
-"Please set your shop e-mail address!","Kesalahan dalam pengiriman email."
-"Wirecard Payment Gateway Support Request","Permintaan Dukungan Gateway Pembayaran Wirecard"
-"Support request sent successfully!","Email berhasil dikirim"
-"Public Key","Public Key"
-"Title","Judul"
-"Payment Action","Tindakan Pembayaran"
-"Shopping Basket","Keranjang Belanja"
-"Sort Order","Urutan Pesanan"
-"Send additional Information","Kirim informasi tambahan"
-"Creditor ID","Identitas Kreditur"
-"Creditor Name","Nama Kreditur"
-"Minimum Order Total","Jumlah Minimum"
-"Maximum Order Total","Jumlah Maksimum"
-"Payment from Applicable Countries","Pembayaran dari Negara yang valid"
-"Payment from Specific Countries","Pembayaran dari Negara Spesifik"
-"Billing/Shipping Address must be identical","Alamat pengiriman tagihan/barang harus sama"
-"Payment","Jenis Pembayaran"
-"Save for later use.","Simpan untuk digunakan di kemudian hari."
-"Place Order","Lakukan Pemesanan"
-"First Name","Nama depan"
-"Last Name","Nama belakang"
-"An error occurred during the payment process. Please try again.","Kesalahan terjadi saat proses pembayaran. Harap coba lagi."
-"Default Currency for Limitdetection","Mata Uang Default"
-"Choose your bank...","Bank"
-"Account owner:","Pemilik akun"
-"Please transfer the amount using the following data:","Harap transfer jumlah tersebut menggunakan data berikut ini:"
-"Creditor city will be shown in SEPA Direct Debit Mandate","SEPA membutuhkan Kota Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA."
-"Creditor name will be shown in SEPA Direct Debit Mandate","SEPA membutuhkan Nama Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA."
-"Creditor City","Kota Kreditur"
-"BIC enabled","BIC diaktifkan"
-"3-D Secure Min Limit","Batas Minimum untuk 3-D Secure"
-"Non 3-D Secure Max Limit","Batas Maksimum untuk Non 3-D Secure"
-"3-D Secure Merchant Account ID","MAID 3-D Secure"
-"3-D Secure Secret Key","Secret Key 3-D Secure"
-"On Invoice","Pembayaran Berdasarkan Faktur"
-"In Advance","Pembayaran Di Muka"
+amount,Amount
+bank_label,Bank
+bic,BIC:
+birthdate_input,Tanggal lahir
+canceled_payment_process,Anda telah membatalkan proses pembayaran.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
+config_additional_info,Kirim informasi tambahan
+config_base_url,URL Dasar
+config_base_url_desc,"URL dasar Wirecard. (misal, https://api.wirecard.com)"
+config_basket_max,Jumlah Maksimum
+config_basket_min,Jumlah Minimum
+config_billing_shipping,Alamat pengiriman tagihan/barang harus sama
+config_creditor_city,Kota Kreditur
+config_creditor_city_desc,SEPA membutuhkan Kota Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA.
+config_creditor_id,Identitas Kreditur
+config_creditor_name,Nama Kreditur
+config_creditor_name_desc,SEPA membutuhkan Nama Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA.
+config_email,Alamat e-mail Anda
+config_enable_bic,BIC diaktifkan
+config_http_password,Kata Sandi HTTP
+config_http_user,Pengguna HTTP
+config_limit_desc,Jumlah dalam mata uang default toko
+config_merchant_account_id,Identitas Rekening Penjual
+config_merchant_public,Public Key
+config_merchant_secret,Kunci Rahasia
+config_message,Pesan Anda
+config_payment_action,Tindakan Pembayaran
+config_shopping_basket,Keranjang Belanja
+config_sort_order,Urutan Pesanan
+config_ssl_max_limit,Batas Maksimum untuk Non 3-D Secure
+config_three_d_merchant_account_id,ID 3-D Secure Rekening Penjual
+config_three_d_merchant_secret,Kunci Rahasia 3-D Secure
+config_three_d_min_limit,Batas Minimum untuk 3-D Secure
+config_title,Judul
+config_vault,Checkout Satu Klik
+creditor,Kreditor
+creditor_id_input,Identitas Kreditur:
+creditor_mandate_id,Identitas Mandat
+credit_card_form_loading_error,Kesalahan terjadi saat memuat formulir kartu kredit. Silakan coba lagi.
+credit_card_form_submitting_error,Kesalahan terjadi saat mengirimkan formulir kartu kredit.
+debtor,Debitur
+debtor_acc_owner,Pemilik akun:
+default_currency,Mata Uang Default
+enter_valid_email_error,Please enter a valid e-mail address
+error_credentials,"Tes gagal, harap cek kredensial Anda."
+first_name_input,Nama Depan
+heading_title_alipay_crossborder,Alipay Cross-border Wirecard
+heading_title_creditcard,Kartu Kredit Wirecard
+heading_title_giropay,giropay Wirecard
+heading_title_ideal,iDEAL Wirecard
+heading_title_maestro,Maestro SecureCode Wirecard
+heading_title_masterpass,Wirecard Masterpass
+heading_title_paypal,Wirecard PayPal
+heading_title_poi_pia,Pembayaran Berdasarkan Faktur/Pembayaran di Muka Wirecard,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Faktur Bergaransi Wirecard
+heading_title_sepact,SEPA Credit Transfer Wirecard
+heading_title_sepadd,SEPA Direct Debit Wirecard
+heading_title_sofortbanking,Sofort. Wirecard
+heading_title_upi,Unionpay Internasional Wirecard
+iban,IBAN:
+ideal_legend,Pilih bank Anda
+last_name_input,Nama Belakang
+module_display_name,Gateway Pemrosesan Pembayaran Wirecard
+no_such_order_error,Perintah tersebut tidak ada.
+order_error,Kesalahan terjadi saat proses pembayaran. Harap coba lagi.
+payment_from_applicable_countries,Pembayaran dari Negara yang valid
+payment_from_specific_countries,Pembayaran dari Negara Spesifik
+place_order,Lakukan Pemesanan
+ptrid,Identitas referensi transaksi provider
+public_certificate_desc,"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers."
+send_email,Kirim
+sepa_mandate,Mandat SEPA
+sepa_text_1,Saya mengizinkan kreditor
+sepa_text_2,untuk mengirimkan instruksi ke bank saya untuk mengumpulkan satu debit langsung dari akun saya. Pada waktu yang sama saya menginstruksikan bank untuk mendebit akun saya sesuai dengan instruksi dari kreditor
+sepa_text_2b,.
+sepa_text_3,"Catatan: Sebagai bagian dari hak saya, saya berhak atas pengembalian dana sesuai dengan syarat dan ketentuan perjanjian saya dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu dimulai dari tanggal akun saya didebit."
+sepa_text_4,"Saya menyatakan persetujuan yang tidak dapat dibatalkan bahwa jika debit langsung tidak ditanggapi, atau terdapat keberatan atas debit langsung tersebut, bank saya akan mengungkapkan kepada kreditor"
+sepa_text_5,"nama lengkap, alamat, dan tanggal lahir saya."
+sepa_text_6,Saya telah membaca dan menyetujui informasi mengenai Mandat Debit Langsung SEPA.
+success_credentials,Pengujian konfigurasi penjual berhasil.
+success_email,E-Mail berhasil dikirim
+support_email_title,Kirim permintaan bantuan
+terms_of_use,Ketentuan Penggunaan
+test_credentials,Tes
+text_enabled,Aktif
+text_payment_action_pay,Purchase
+text_payment_action_reserve,Authorization
+text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_settings,Pengaturan
+text_support,Support,: classes/admin/class-wirecard-settings.php:98
+transfer_notice,Harap transfer jumlah tersebut menggunakan data berikut ini:
+vault_save_text,Simpan untuk digunakan di kemudian hari.
+vault_use_existing_text,Gunakan Kartu Kredit yang tersimpan

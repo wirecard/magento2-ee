@@ -60,7 +60,7 @@
             <fieldset class="fieldset">
                 <div class="field required">
                     <label class="label" data-bind="attr: {'for': getCode() + '-dob'}">
-                        <span><!-- ko i18n: 'Birthdate:'--><!-- /ko --></span>
+                        <span><!-- ko i18n: 'birthdate_input'--><!-- /ko --></span>
                     </label>
                     <div class="control">
                         <input class="input-text" type="text" name="customerDob" style="width: 120px"
@@ -79,9 +79,9 @@
                         type="submit"
                         data-bind="
                         click: placeOrder,
-                        attr: {'id': getCode() + '_submit', title: $t('Place Order')}
+                        attr: {'id': getCode() + '_submit', title: $t('place_order')}
                         ">
-                    <span data-bind="i18n: 'Place Order'"></span>
+                    <span data-bind="i18n: 'place_order'"></span>
                 </button>
             </div>
         </div>

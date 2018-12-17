@@ -38,10 +38,10 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <i ><?php echo __('Creditor') ?></i><br />
+                        <i ><?php echo __('creditor') ?></i><br />
                         <?php echo $this->getCreditorName() ?>, <?php echo $this->getStoreCity() ?><br />
-                        <?php echo __('Creditor ID:') ?> <?php echo $this->getCreditorId() ?><br />
-                        <?php echo __('Mandate reference:') ?> <?php echo $mandateId ?><br />
+                        <?php echo __('config_creditor_id') ?> <?php echo $this->getCreditorId() ?><br />
+                        <?php echo __('creditor_mandate_id') ?> <?php echo $mandateId ?><br />
                         <input type="hidden" name="mandateId" value="<?php echo $mandateId ?>">
                     </td>
                     <td width="10%">&nbsp;</td>
@@ -54,11 +54,11 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11">
-                        <i><?php echo __('Debtor') ?></i><br />
-                        <?php echo __('Account owner:') ?> %firstname% %lastname%<br />
-                        <?php echo __('IBAN:') ?> %bankAccountIban% <br />
+                        <i><?php echo __('debtor') ?></i><br />
+                        <?php echo __('debtor_acc_owner') ?> %firstname% %lastname%<br />
+                        <?php echo __('iban') ?> %bankAccountIban% <br />
                         <?php if($this->getBankBicEnabled()) {
-                            echo __('BIC:') ?> %bankBic% <br /><?php
+                            echo __('bic') ?> %bankBic% <br /><?php
                                 }
                                 ?>
                     </td>
@@ -72,25 +72,25 @@ $mandateId = $this->getMandateId();
             <table border="0" width="100%">
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('I authorize the creditor ') .
+                        <?php echo __('sepa_text_1') . ' ' .
                             $this->getCreditorName() . ' ' .
-                            __(' to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor ') .
+                            __('sepa_text_2') . ' ' .
                             $this->getCreditorName() .
-                            __('sepamandatetextextra'); ?>
+                            __('sepa_text_2b'); ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited.') ?>
+                        <?php echo __('sepa_text_3') ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor ') .
-                                    $this->getCreditorName() .
-                                    __(' my full name, address and date of birth.'); ?>
+                        <?php echo __('sepa_text_4') . ' ' .
+                                    $this->getCreditorName() . ' ' .
+                                    __('sepa_text_5'); ?>
                     </td>
                     <td width="10%">&nbsp;</td>
                 </tr>
@@ -108,7 +108,7 @@ $mandateId = $this->getMandateId();
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" id="sepa-accept"><label for="sepa-accept"><?php echo __('I have read and accepted the SEPA Direct Debit Mandate information.') ?><label
+                        <input type="checkbox" id="sepa-accept"><label for="sepa-accept"><?php echo __('sepa_text_6') ?><label
                     </td>
                 </tr>
             </table>

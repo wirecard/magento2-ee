@@ -121,8 +121,15 @@ class SofortTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateMinimum()
     {
         $transaction = new SofortTransaction();
-        $transactionFactory = new SofortTransactionFactory($this->urlBuilder, $this->resolver, $this->storeManager,
-            $transaction, $this->basketFactory, $this->accountHolderFactory, $this->config);
+        $transactionFactory = new SofortTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config
+        );
 
         $expected = $this->minimumExpectedTransaction();
 
@@ -142,7 +149,8 @@ class SofortTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setRedirect(new Redirect(
             'http://magen.to/frontend/redirect',
             'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'));
+            'http://magen.to/frontend/redirect'
+        ));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));

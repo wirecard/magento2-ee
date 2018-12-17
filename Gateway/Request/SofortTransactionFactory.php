@@ -85,7 +85,8 @@ class SofortTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
 
-        $this->transaction->setDescriptor(sprintf('%s %s',
+        $this->transaction->setDescriptor(sprintf(
+            '%s %s',
             substr($this->storeManager->getStore()->getName(), 0, 9),
             $this->orderId
         ));

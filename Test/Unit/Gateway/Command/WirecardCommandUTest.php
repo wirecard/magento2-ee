@@ -196,7 +196,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
         // Test if transactionService->process(...) is called with the correct parameters
         $transactionServiceMock->expects($this->Once())->method(self::METHOD_PROCESS)->with(
-            $this->equalTo($this->getMock($transactionClass)), $this->equalTo($expectedOperation)
+            $this->equalTo($this->getMock($transactionClass)),
+            $this->equalTo($expectedOperation)
         );
 
         $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
