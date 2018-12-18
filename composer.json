@@ -2,7 +2,7 @@
   "name": "wirecard/magento2-ee",
   "description": "Magento2 plugin for Wirecard Payment Processing Gateway",
   "license": "GPL-3.0-only",
-  "minimum-stability": "beta",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
     "php": ">=7.0",
@@ -14,7 +14,7 @@
     "php-http/guzzle6-adapter": ">=1.1.1",
     "nyholm/psr7": "^0.2.3",
     "php-http/discovery": "1.4.0",
-    "wirecard/payment-sdk-php": "3.5.2"
+    "wirecard/payment-sdk-php": "3.6.0"
   },
   "require-dev": {
     "phpunit/phpunit": "5.3.5",

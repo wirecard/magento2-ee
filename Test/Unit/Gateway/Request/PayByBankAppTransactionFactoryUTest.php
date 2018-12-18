@@ -31,6 +31,8 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
+use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
@@ -81,6 +83,9 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $accountHolderFactory;
 
+    /** @var RequestInterface|\PHPUnit_Framework_MockObject_MockObject */
+    private $request;
+
     public function setUp()
     {
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
@@ -125,6 +130,9 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
 
+        $this->request = $this->getMockBuilder(Http::class)
+            ->disableOriginalConstructor()->getMock();
+
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
     }
 
@@ -137,7 +145,8 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             new PayByBankAppTransaction(),
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->request
         );
         $expected = Operation::CANCEL;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
@@ -153,7 +162,54 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->request
+        );
+
+        $expected = $this->minimumExpectedTransaction();
+
+        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+    }
+
+    public function testCreateWithUserAgent()
+    {
+        $this->request->method('getServer')->willReturn('User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 6P ' .
+            'Build/MDB08L) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.69 Mobile Safari/537.36');
+        $transaction = new PayByBankAppTransaction();
+        $transactionFactory = new PayByBankAppTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->request
+        );
+
+        $expected = $this->minimumExpectedTransaction();
+
+        $device = new Device();
+        $device->setType('mobile');
+        $device->setOperatingSystem('android');
+        $expected->setDevice($device);
+
+        $this->assertEquals($expected, $transactionFactory->create($this->commandSubject));
+    }
+
+    public function testCreateWithMalformedUserAgent()
+    {
+        $this->request->method('getServer')->willReturn('foo');
+        $transaction = new PayByBankAppTransaction();
+        $transactionFactory = new PayByBankAppTransactionFactory(
+            $this->urlBuilder,
+            $this->resolver,
+            $this->storeManager,
+            $transaction,
+            $this->basketFactory,
+            $this->accountHolderFactory,
+            $this->config,
+            $this->request
         );
 
         $expected = $this->minimumExpectedTransaction();
@@ -173,7 +229,8 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->request
         );
 
         $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
@@ -202,8 +259,8 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setEntryMode('ecommerce');
 
         $device = new Device();
-        $device->setType('pc');
-        $device->setOperatingSystem('windows');
+        $device->setType('other');
+        $device->setOperatingSystem('other');
         $expected->setDevice($device);
 
         return $expected;

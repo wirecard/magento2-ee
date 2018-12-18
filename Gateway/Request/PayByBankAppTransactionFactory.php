@@ -31,10 +31,11 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -53,6 +54,11 @@ class PayByBankAppTransactionFactory extends TransactionFactory
     const REFUND_OPERATION = Operation::CANCEL;
 
     /**
+     * @var Http
+     */
+    protected $request;
+
+    /**
      * @var PayByBankAppTransaction
      */
     protected $transaction;
@@ -60,6 +66,7 @@ class PayByBankAppTransactionFactory extends TransactionFactory
     /**
      * PayByBankAppTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
+     * @param RequestInterface $httpRequest
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
@@ -74,8 +81,10 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        RequestInterface $httpRequest
     ) {
+        $this->request = $httpRequest;
         parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
     }
 
@@ -97,9 +106,17 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
         $customFields->add($this->makeCustomField('DeliveryType', 'DELTAD'));
 
-        $device = new Device();
-        $device->setType('pc');
-        $device->setOperatingSystem('windows');
+        $device = new Device($this->request->getServer('HTTP_USER_AGENT'));
+
+        // fallback to a generic value if detection failed
+        if ($device->getType() === null) {
+            $device->setType('other');
+        }
+
+        if ($device->getOperatingSystem() === null) {
+            $device->setOperatingSystem('other');
+        }
+
         $this->transaction->setDevice($device);
 
         return $this->transaction;
@@ -148,5 +165,4 @@ class PayByBankAppTransactionFactory extends TransactionFactory
 
         return $customField;
     }
-
 }
