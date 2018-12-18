@@ -717,8 +717,8 @@
                 </field>
                 <field id="zapp_merchant_return_string" translate="label" type="text" sortOrder="100" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Merchant Return String</label>
-                    <comment>Merchant Return String to redirect the cConsumer from the mobile banking app to the merchant’s browser or App.</comment>
+                    <label>config_zapp_merchant_return_string</label>
+                    <comment>config_zapp_merchant_return_string_desc</comment>
                 </field>
             </group>
         </section>
