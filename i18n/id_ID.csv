@@ -89,7 +89,7 @@ text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wir
 text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,Pengaturan
 text_support,Support,: classes/admin/class-wirecard-settings.php:98
-text_terms_accept,I herewith confirm that I have read the <a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">privacy notice</a> and <a href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"" target=""_blank"">additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
+text_terms_accept,I herewith confirm that I have read the <a href='https://www.wirecardbank.com/privacy-documents/datenschutzhinweise-fuer-die-wirecard-zahlarten/' target='_blank'>privacy notice</a> and <a href='https://www.wirecardbank.com/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
 transfer_notice,Harap transfer jumlah tersebut menggunakan data berikut ini:
 vault_save_text,Simpan untuk digunakan di kemudian hari.
 vault_use_existing_text,Gunakan Kartu Kredit yang tersimpan
