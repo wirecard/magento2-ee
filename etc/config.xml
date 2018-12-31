@@ -386,6 +386,29 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>16d85b73-79e2-4c33-932a-7da99fb04a9c</secret>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_unionpayinternational>
+            <wirecard_elasticengine_paybybankapp>
+                <title>Wirecard PayByBank App</title>
+                <active>0</active>
+                <base_url>https://api-test.wirecard.com</base_url>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>PayByBankAppFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>debit</payment_action>
+                <merchant_account_id>70055b24-38f1-4500-a3a8-afac4b1e3249</merchant_account_id>
+                <secret>4a4396df-f78c-44b9-b8a0-b72b108ac465</secret>
+                <send_additional>1</send_additional>
+                <zapp_merchant_return_string/>
+            </wirecard_elasticengine_paybybankapp>
             <wirecard_elasticengine_cc_vault>
                 <item name="title" translate="true">vault_use_existing_text</item>
                 <model>CreditCardVaultFacade</model>

@@ -174,6 +174,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $upiSeamlessRequestData
+                ],
+                'wirecard_elasticengine_paybybankapp' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
                 ]
             ]
         ], $prov->getConfig());
@@ -304,6 +308,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'seamless_request_data' => $upiSeamlessRequestData
+                ],
+                'wirecard_elasticengine_paybybankapp' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
                 ]
             ]
         ], $prov->getConfig());

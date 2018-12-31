@@ -31,32 +31,42 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\PaymentSdk\Entity\CustomField;
+use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
+use Wirecard\PaymentSdk\Entity\Device;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\PayByBankAppTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class PayPalTransactionFactory
+ * Class PayByBankAppTransactionFactory
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
-class PayPalTransactionFactory extends TransactionFactory
+class PayByBankAppTransactionFactory extends TransactionFactory
 {
     const REFUND_OPERATION = Operation::CANCEL;
 
     /**
-     * @var PayPalTransaction
+     * @var Http
+     */
+    protected $request;
+
+    /**
+     * @var PayByBankAppTransaction
      */
     protected $transaction;
 
     /**
-     * PayPalTransactionFactory constructor.
+     * PayByBankAppTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
+     * @param RequestInterface $httpRequest
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Transaction $transaction
@@ -71,8 +81,10 @@ class PayPalTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        RequestInterface $httpRequest
     ) {
+        $this->request = $httpRequest;
         parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
     }
 
@@ -81,43 +93,31 @@ class PayPalTransactionFactory extends TransactionFactory
      * @return Transaction
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function create($commandSubject)
     {
         parent::create($commandSubject);
 
-        /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
+        $customFields = new CustomFieldCollection();
+        $this->transaction->setCustomFields($customFields);
 
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
-        $this->transaction->setOrderNumber($this->orderId);
-        $this->transaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $billingAddress->getEmail(),
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        ));
+        $customFields->add($this->makeCustomField('MerchantRtnStrng',
+            $this->methodConfig->getValue('zapp_merchant_return_string')));
+        $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
+        $customFields->add($this->makeCustomField('DeliveryType', 'DELTAD'));
 
-        if ($this->methodConfig->getValue('send_shopping_basket')) {
-            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        $device = new Device($this->request->getServer('HTTP_USER_AGENT'));
+
+        // fallback to a generic value if detection failed
+        if ($device->getType() === null) {
+            $device->setType('other');
         }
 
-        return $this->transaction;
-    }
+        if ($device->getOperatingSystem() === null) {
+            $device->setOperatingSystem('other');
+        }
 
-    /**
-     * @param array $commandSubject
-     * @return Transaction
-     * @throws \InvalidArgumentException
-     * @throws MandatoryFieldMissingException
-     */
-    public function capture($commandSubject)
-    {
-        parent::capture($commandSubject);
+        $this->transaction->setDevice($device);
 
         return $this->transaction;
     }
@@ -134,12 +134,11 @@ class PayPalTransactionFactory extends TransactionFactory
 
         $this->transaction->setParentTransactionId($this->transactionId);
 
-        return $this->transaction;
-    }
+        $customFields = new CustomFieldCollection();
+        $this->transaction->setCustomFields($customFields);
 
-    public function void($commandSubject)
-    {
-        parent::void($commandSubject);
+        $customFields->add($this->makeCustomField('RefundReasonType', 'LATECONFIRMATION'));
+        $customFields->add($this->makeCustomField('RefundMethod', 'BACS'));
 
         return $this->transaction;
     }
@@ -150,5 +149,20 @@ class PayPalTransactionFactory extends TransactionFactory
     public function getRefundOperation()
     {
         return self::REFUND_OPERATION;
+    }
+
+    /**
+     * make new customfield with my prefix
+     *
+     * @param $key
+     * @param $value
+     * @return CustomField
+     */
+    protected function makeCustomField($key, $value)
+    {
+        $customField = new CustomField($key, $value);
+        $customField->setPrefix('zapp.in.');
+
+        return $customField;
     }
 }
