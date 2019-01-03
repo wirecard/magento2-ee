@@ -30,10 +30,12 @@
 
 define(
     [
+        "jquery",
         "uiComponent",
         "Magento_Checkout/js/model/payment/renderer-list"
     ],
     function (
+        $,
         Component,
         rendererList
     ) {
@@ -96,6 +98,21 @@ define(
                 component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             }
         );
+
+        $.mage.__('heading_title_alipay_crossborder');
+        $.mage.__('heading_title_creditcard');
+        $.mage.__('heading_title_giropay');
+        $.mage.__('heading_title_ideal');
+        $.mage.__('heading_title_maestro');
+        $.mage.__('heading_title_masterpass');
+        $.mage.__('heading_title_paypal');
+        $.mage.__('heading_title_poi_pia');
+        $.mage.__('heading_title_ratepayinvoice');
+        $.mage.__('heading_title_sepact');
+        $.mage.__('heading_title_sepadd');
+        $.mage.__('heading_title_sofortbanking');
+        $.mage.__('heading_title_upi');
+
         return Component.extend({});
     }
 );
