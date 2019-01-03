@@ -2,7 +2,7 @@ amount,Amount
 bank_label,銀行
 bic,BIC:
 birthdate_input,出生日期
-canceled_payment_process,您已取消付款過程。,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+canceled_payment_process,您已取消付款過程。
 capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
 config_additional_info,傳送額外資訊
 config_base_url,基底 URL
@@ -51,7 +51,7 @@ heading_title_ideal,Wirecard iDEAL
 heading_title_maestro,Wirecard Maestro SecureCode
 heading_title_masterpass,Wirecard Masterpass
 heading_title_paypal,Wirecard PayPal
-heading_title_poi_pia,Wirecard 發票付款/預付款,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_poi_pia,Wirecard 發票付款/預付款
 heading_title_ratepayinvoice,Wirecard Guaranteed Invoice
 heading_title_sepact,Wirecard SEPA Credit Transfer
 heading_title_sepadd,Wirecard SEPA Direct Debit
@@ -85,10 +85,10 @@ test_credentials,測試
 text_enabled,已啟用
 text_payment_action_pay,Purchase
 text_payment_action_reserve,Authorization
-text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
-text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_payment_type_pia,Payment in Advance
+text_payment_type_poi,Payment on Invoice
 text_settings,設定
-text_support,Support,: classes/admin/class-wirecard-settings.php:98
+text_support,Support
 text_terms_accept,I herewith confirm that I have read the <a href='https://www.wirecardbank.com/privacy-documents/datenschutzhinweise-fuer-die-wirecard-zahlarten/' target='_blank'>privacy notice</a> and <a href='https://www.wirecardbank.com/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
 transfer_notice,請使用以下資料轉賬該金額：
 vault_save_text,儲存以備後用。

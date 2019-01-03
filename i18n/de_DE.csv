@@ -2,7 +2,7 @@ amount,Amount
 bank_label,Bank
 bic,BIC:
 birthdate_input,Geburtsdatum
-canceled_payment_process,Der Bezahlprozess wurde abgebrochen.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+canceled_payment_process,Der Bezahlprozess wurde abgebrochen.
 capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
 config_additional_info,Zusätzliche Informationen mitsenden
 config_base_url,Base URL
@@ -53,7 +53,7 @@ heading_title_ideal,Wirecard iDEAL
 heading_title_maestro,Wirecard Maestro SecureCode
 heading_title_masterpass,Wirecard Masterpass
 heading_title_paypal,Wirecard PayPal
-heading_title_poi_pia,Wirecard Kauf auf Rechnung / Vorauskasse,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_poi_pia,Wirecard Kauf auf Rechnung / Vorauskasse
 heading_title_ratepayinvoice,Wirecard Garantierter Kauf auf Rechnung
 heading_title_sepact,Wirecard SEPA Credit Transfer
 heading_title_sepadd,Wirecard SEPA-Lastschrift
@@ -87,10 +87,10 @@ test_credentials,Test
 text_enabled,Aktiviert
 text_payment_action_pay,Purchase
 text_payment_action_reserve,Authorization
-text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
-text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_payment_type_pia,Payment in Advance
+text_payment_type_poi,Payment on Invoice
 text_settings,Einstellungen
-text_support,Support,: classes/admin/class-wirecard-settings.php:98
+text_support,Support
 text_terms_accept,"Hiermit bestätige ich, dass ich die <a href='https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/' target='_blank'>Datenschutzhinweise</a> und zusätzliche <a href='https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>Geschäftsbedingungen</a> für Wirecard-Zahlarten zur Kenntnis genommen habe und mit deren Geltung einverstanden bin."
 transfer_notice,Bitte den Betrag mithilfe folgender Daten überweisen:
 vault_save_text,Speichern für One-click-checkout

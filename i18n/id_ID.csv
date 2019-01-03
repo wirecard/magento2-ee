@@ -2,7 +2,7 @@ amount,Amount
 bank_label,Bank
 bic,BIC:
 birthdate_input,Tanggal lahir
-canceled_payment_process,Anda telah membatalkan proses pembayaran.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+canceled_payment_process,Anda telah membatalkan proses pembayaran.
 capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
 config_additional_info,Kirim informasi tambahan
 config_base_url,URL Dasar
@@ -51,7 +51,7 @@ heading_title_ideal,iDEAL Wirecard
 heading_title_maestro,Maestro SecureCode Wirecard
 heading_title_masterpass,Wirecard Masterpass
 heading_title_paypal,Wirecard PayPal
-heading_title_poi_pia,Pembayaran Berdasarkan Faktur/Pembayaran di Muka Wirecard,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_poi_pia,Pembayaran Berdasarkan Faktur/Pembayaran di Muka Wirecard
 heading_title_ratepayinvoice,Faktur Bergaransi Wirecard
 heading_title_sepact,SEPA Credit Transfer Wirecard
 heading_title_sepadd,SEPA Direct Debit Wirecard
@@ -85,10 +85,10 @@ test_credentials,Tes
 text_enabled,Aktif
 text_payment_action_pay,Purchase
 text_payment_action_reserve,Authorization
-text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
-text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_payment_type_pia,Payment in Advance
+text_payment_type_poi,Payment on Invoice
 text_settings,Pengaturan
-text_support,Support,: classes/admin/class-wirecard-settings.php:98
+text_support,Support
 text_terms_accept,I herewith confirm that I have read the <a href='https://www.wirecardbank.com/privacy-documents/datenschutzhinweise-fuer-die-wirecard-zahlarten/' target='_blank'>privacy notice</a> and <a href='https://www.wirecardbank.com/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
 transfer_notice,Harap transfer jumlah tersebut menggunakan data berikut ini:
 vault_save_text,Simpan untuk digunakan di kemudian hari.
