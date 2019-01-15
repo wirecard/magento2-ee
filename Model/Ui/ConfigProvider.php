@@ -43,6 +43,8 @@ use Wirecard\PaymentSdk\Entity\IdealBic;
 
 class ConfigProvider implements ConfigProviderInterface
 {
+    const FALLBACK_LOCALE = 'en_US';
+    const LOCALES = array('de_DE', 'en_US', 'id_ID', 'ja_JP', 'ko_KR', 'zh_Hans_CN', 'zh_Hant_TW');
     const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
     const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
     const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
@@ -107,10 +109,8 @@ class ConfigProvider implements ConfigProviderInterface
         $this->store = $store;
         $this->storeManager = $storeManager;
 
-        $locales = array('de_DE', 'en_US', 'id_ID', 'ja_JP', 'ko_KR', 'zh_Hans_CN', 'zh_Hant_TW');
-
-        if (!in_array($store->getLocale(), $locales)) {
-            $this->store->setLocale('en_US');
+        if (!in_array($store->getLocale(), self::LOCALES)) {
+            $this->store->setLocale(self::FALLBACK_LOCALE);
         }
     }
 
