@@ -106,6 +106,12 @@ class ConfigProvider implements ConfigProviderInterface
         $this->checkoutSession = $session;
         $this->store = $store;
         $this->storeManager = $storeManager;
+
+        $locales = array('de_DE', 'en_US', 'id_ID', 'ja_JP', 'ko_KR', 'zh_Hans_CN', 'zh_Hant_TW');
+
+        if (!in_array($store->getLocale(), $locales)) {
+            $this->store->setLocale('en_US');
+        }
     }
 
     /**
