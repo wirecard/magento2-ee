@@ -18,8 +18,32 @@ env:
   global:
   - COMPOSER_ARGS="--no-interaction"
 
-php:
-- 7
+matrix:
+  include:
+  - php: 7.0
+    if: env(PHRASEAPP_PULL) != '1'
+
+  - stage: phraseapp-pull
+    if: env(PHRASEAPP_PULL) = '1'
+    language: ruby
+    ruby: 2.5.3
+    before_install: skip
+    install:
+    - travis_retry bundle install
+    script:
+    - .bin/rake phraseapp:ci_update
+    after_script: skip
+
+  - stage: phraseapp-check-if-in-sync
+    if: branch = master OR type = pull_request
+    language: ruby
+    ruby: 2.5.3
+    before_install: skip
+    install:
+    - travis_retry bundle install
+    script:
+    - .bin/rake phraseapp:ci_check_if_in_sync
+    after_script: skip
 
 install:
   - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0

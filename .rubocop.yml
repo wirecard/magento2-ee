@@ -1,0 +1,12 @@
+# Configuration for RuboCop (Ruby static code analyzer and formatter)
+require:
+  - rubocop-airbnb
+
+AllCops:
+  TargetRubyVersion: 2.5
+
+Metrics/LineLength:
+  Max: 120
+
+Style/SpecialGlobalVars:
+  Enabled: false
