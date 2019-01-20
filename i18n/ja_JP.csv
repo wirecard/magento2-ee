@@ -57,6 +57,7 @@ heading_title_sepact,Wirecard SEPA Credit Transfer
 heading_title_sepadd,Wirecard SEPA Direct Debit
 heading_title_sofortbanking,Wirecard Sofort。
 heading_title_upi,Wirecard UnionPay International
+heading_title_paybybankapp,Wirecard Pay by Bank app
 iban,IBAN:
 ideal_legend,銀行を選択する
 last_name_input,姓

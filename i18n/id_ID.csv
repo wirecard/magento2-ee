@@ -57,6 +57,7 @@ heading_title_sepact,SEPA Credit Transfer Wirecard
 heading_title_sepadd,SEPA Direct Debit Wirecard
 heading_title_sofortbanking,Sofort. Wirecard
 heading_title_upi,Unionpay Internasional Wirecard
+heading_title_paybybankapp,Wirecard Pay by Bank app
 iban,IBAN:
 ideal_legend,Pilih bank Anda
 last_name_input,Nama Belakang

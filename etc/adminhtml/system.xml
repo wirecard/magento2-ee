@@ -680,39 +680,39 @@
                 </field>
             </group>
             <group id="wirecard_elasticengine_paybybankapp" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wirecard Payment Gateway Pay by Bank app</label>
+                <label>heading_title_paybybankapp</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Title</label>
+                    <label>config_title</label>
                 </field>
                 <field id="base_url" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Base Url</label>
-                    <comment>The elastic engine base url. (e.g. https://api.wirecard.com)</comment>
+                    <label>config_base_url</label>
+                    <comment>config_base_url_desc</comment>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http User</label>
+                    <label>config_http_user</label>
                 </field>
                 <field id="http_pass" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Http Password</label>
+                    <label>config_http_password</label>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant Account ID</label>
+                    <label>config_merchant_account_id</label>
                 </field>
                 <field id="secret" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secret Key</label>
+                    <label>config_merchant_secret</label>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Sort Order</label>
+                    <label>config_sort_order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="send_additional" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Send additional Information</label>
+                    <label>config_additional_info</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="zapp_merchant_return_string" translate="label" type="text" sortOrder="100" showInDefault="1"
