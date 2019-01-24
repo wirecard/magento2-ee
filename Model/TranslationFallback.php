@@ -31,8 +31,9 @@ class TranslationFallback extends \Magento\Framework\Phrase\Renderer\Translate
      * @return mixed
      * @throws \Exception
      */
-    public function aroundRender(\Magento\Framework\Phrase\Renderer\Translate $subject, callable $proceed, array $source, array $arguments) {
-        if(!$this->fallbackTranslations) {
+    public function aroundRender(\Magento\Framework\Phrase\Renderer\Translate $subject, callable $proceed, array $source, array $arguments)
+    {
+        if (!$this->fallbackTranslations) {
             $originalLocale = $subject->translator->getLocale();
             $subject->translator->setLocale($this->fallbackLocale);
             $subject->translator->loadData(null, true);
@@ -55,7 +56,7 @@ class TranslationFallback extends \Magento\Framework\Phrase\Renderer\Translate
         $result = $proceed($source, $arguments);
 
         // Check if fallback locale lookup is necessary
-        if($result == $translationKey && array_key_exists($translationKey, $this->fallbackTranslations)) {
+        if ($result == $translationKey && array_key_exists($translationKey, $this->fallbackTranslations)) {
             return $this->fallbackTranslations[$translationKey];
         }
         return $result;
