@@ -387,7 +387,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_unionpayinternational>
             <wirecard_elasticengine_paybybankapp>
-                <title>Wirecard PayByBank App</title>
+                <item name="title" translate="true">heading_title_paybybankapp</item>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>70000-APITEST-AP</http_user>
