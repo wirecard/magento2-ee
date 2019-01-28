@@ -29,6 +29,7 @@ matrix:
     ruby: 2.5.3
     before_install: skip
     install:
+    - travis_retry gem install bundler -v '~> 1.17'
     - travis_retry bundle install
     script:
     - .bin/rake phraseapp:ci_update
@@ -40,6 +41,7 @@ matrix:
     ruby: 2.5.3
     before_install: skip
     install:
+    - travis_retry gem install bundler -v '~> 1.17'
     - travis_retry bundle install
     script:
     - .bin/rake phraseapp:ci_check_if_in_sync
