@@ -4,7 +4,7 @@ require_relative 'const.rb'
 # find translation keys in souce code
 class TranslationHelper
   def self.get_all_keys()
-    keys = Array.new
+    keys = []
 
     get_needed_files('php').each do |file_path|
       get_keys_for_file(file_path, ['__']).each do |key|
@@ -36,15 +36,13 @@ class TranslationHelper
       end
     end
 
-    return keys.uniq
+    keys.uniq
   end
 
   def self.get_keys_for_file(file_path, translation_functions)
-    file = File.open(file_path, 'r')
-    file_string = file.read
-    file.close
+    file_string = File.read(file_path, :encoding => 'utf-8')
 
-    translation_keys = Array.new
+    translation_keys = []
 
     translation_functions.each do |type|
       case type
@@ -80,12 +78,12 @@ class TranslationHelper
       end
     end
 
-    return translation_keys
+    translation_keys
   end
 
   def self.get_needed_files(file_extention)
     dirs = Const::TRANSLATION_DIRS
-    files = Array.new
+    files = []
 
     dirs.each do |dir|
       Dir.glob(dir + '/**/*.' + file_extention) do |file|
@@ -93,6 +91,6 @@ class TranslationHelper
       end
     end
 
-    return files
+    files
   end
 end

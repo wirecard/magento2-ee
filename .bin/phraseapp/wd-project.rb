@@ -21,7 +21,10 @@ class WdProject
 
     @phraseapp_fallback_locale = Const::PHRASEAPP_FALLBACK_LOCALE
     @locale_specific_map = Const::LOCALE_SPECIFIC_MAP
-    @translations_path = File.join(Const::PLUGIN_I18N_DIR, "#{@locale_specific_map[@phraseapp_fallback_locale.to_sym] || @phraseapp_fallback_locale}.csv")
+    @translations_path = File.join(
+      Const::PLUGIN_I18N_DIR,
+      "#{@locale_specific_map[@phraseapp_fallback_locale.to_sym] || @phraseapp_fallback_locale}.csv"
+    )
     @translations_new_path = @translations_path + '.new'
   end
 
@@ -34,11 +37,8 @@ class WdProject
   def csv_generate
     @log.info('Generate new translations csv file for PhraseApp upload')
 
-    source_keys = TranslationHelper.get_all_keys()
-
-    translations_file = File.open(translations_path, 'r')
-    translations_object = CSV.parse(translations_file.read)
-    translations_file.close
+    source_keys = TranslationHelper.get_all_keys
+    translations_object = CSV.parse(File.read(translations_path, :encoding => 'utf-8'))
 
     key_value_object = {}
 
@@ -59,7 +59,7 @@ class WdProject
       end
     end
 
-    CSV.open(translations_new_path, 'w') do |csv|
+    CSV.open(translations_new_path, 'w:utf-8') do |csv|
       key_value_object.each do |key, value|
         csv << [key, value]
       end
@@ -68,11 +68,11 @@ class WdProject
     true
   end
 
-  # Returns all keys of the current fallback local translation file
+  # Returns all keys of the current fallback locale translation file
   def get_translated_keys()
     keys = []
 
-    file = File.open(@translations_path, 'r')
+    file = File.open(@translations_path, 'r:utf-8')
 
     file.each_line do |line|
       split_line = line.split(',')
@@ -83,13 +83,13 @@ class WdProject
 
     file.close
 
-    return keys
+    keys
   end
 
   # Compares the keys from source and PhraseApp and returns true if they have any difference in keys, false otherwise.
   def has_key_changes?
-    source_keys = TranslationHelper.get_all_keys()
-    translated_keys = get_translated_keys()
+    source_keys = TranslationHelper.get_all_keys
+    translated_keys = get_translated_keys
 
     @log.info("Number of unique keys in source: #{source_keys.length}")
     @log.info("Number of keys on PhraseApp: #{translated_keys.length}")
@@ -108,7 +108,7 @@ class WdProject
     end
 
     @log.info('No changes to translatable keys have been detected in the working tree.'.green.bright)
-    return false
+    false
   end
 
   # Adds, commits, pushes to remote any modified/untracked files in the i18n dir. Then creates a PR.
