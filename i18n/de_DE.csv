@@ -59,6 +59,7 @@ heading_title_sepact,Wirecard SEPA Credit Transfer
 heading_title_sepadd,Wirecard SEPA-Lastschrift
 heading_title_sofortbanking,Wirecard Sofort.
 heading_title_upi,Wirecard UnionPay International
+heading_title_paybybankapp,Wirecard Pay by Bank app
 iban,IBAN:
 ideal_legend,Wählen Sie Ihre Bank aus:
 last_name_input,Last name
