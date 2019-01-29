@@ -39,11 +39,17 @@ define(
     function ($, Component, minAgeValidator, $t, url) {
         "use strict";
         return Component.extend({
+            termsChecked: false,
             customerData: {},
             customerDob: null,
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-ratepay",
                 redirectAfterPlaceOrder: false
+            },
+            onTermsCheckboxClick: function () {
+                $(".actions-toolbar .primary .action").attr("disabled", !this.termsChecked);
+                $(".actions-toolbar .primary .action").toggleClass("disabled", !this.termsChecked);
+                return true;
             },
             initObservable: function () {
                 this._super().observe("customerDob");

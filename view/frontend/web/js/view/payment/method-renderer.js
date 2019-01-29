@@ -96,6 +96,7 @@ define(
                 component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             }
         );
+
         return Component.extend({});
     }
 );

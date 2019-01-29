@@ -78,7 +78,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
         </wirecard_elasticengine>
         <payment>
             <wirecard_elasticengine_paypal>
-                <item name="title" translate="true">heading_title_paypal</item>
+                <title>Wirecard PayPal</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>70000-APITEST-AP</http_user>
@@ -102,7 +102,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_paypal>
             <wirecard_elasticengine_creditcard>
-                <item name="title" translate="true">heading_title_creditcard</item>
+                <title>Wirecard Credit Card</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>70000-APITEST-AP</http_user>
@@ -130,7 +130,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_creditcard>
             <wirecard_elasticengine_maestro>
-                <item name="title" translate="true">heading_title_maestro</item>
+                <title>Wirecard Maestro SecureCode</title>
                 <active>0</active>
                 <base_url>https://api-wdcee-test.wirecard.com</base_url>
                 <http_user>wdcee-customer-test</http_user>
@@ -156,7 +156,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_maestro>
             <wirecard_elasticengine_sepadirectdebit>
-                <item name="title" translate="true">heading_title_sepadd</item>
+                <title>Wirecard SEPA Direct Debit</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -183,7 +183,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_sepadirectdebit>
             <wirecard_elasticengine_sepacredit>
-                <item name="title" translate="true">heading_title_sepact</item>
+                <title>Wirecard SEPA Credit Transfer</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -201,7 +201,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</secret>
             </wirecard_elasticengine_sepacredit>
             <wirecard_elasticengine_sofortbanking>
-                <item name="title" translate="true">heading_title_sofortbanking</item>
+                <title>Wirecard Sofort.</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -224,7 +224,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_sofortbanking>
             <wirecard_elasticengine_ideal>
-                <item name="title" translate="true">heading_title_ideal</item>
+                <title>Wirecard iDEAL</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -247,7 +247,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_ideal>
             <wirecard_elasticengine_giropay>
-                <item name="title" translate="true">heading_title_giropay</item>
+                <title>Wirecard Giropay</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -270,7 +270,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_giropay>
             <wirecard_elasticengine_ratepayinvoice>
-                <item name="title" translate="true">heading_title_ratepayinvoice</item>
+                <title>Wirecard Guaranteed Invoice by Wirecard</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -298,7 +298,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_ratepayinvoice>
             <wirecard_elasticengine_alipayxborder>
-                <item name="title" translate="true">heading_title_alipay_crossborder</item>
+                <title>Wirecard Alipay Cross-border</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -320,7 +320,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_alipayxborder>
             <wirecard_elasticengine_poipia>
-                <item name="title" translate="true">heading_title_poi_pia</item>
+                <title>Wirecard Payment on Invoice / Payment in Advance</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>16390-testing</http_user>
@@ -342,7 +342,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_poipia>
             <wirecard_elasticengine_masterpass>
-                <item name="title" translate="true">heading_title_masterpass</item>
+                <title>Wirecard Masterpass</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>70000-APITEST-AP</http_user>
@@ -365,7 +365,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_masterpass>
             <wirecard_elasticengine_unionpayinternational>
-                <item name="title" translate="true">heading_title_upi</item>
+                <title>Wirecard UnionPay International</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>70000-APILUHN-CARD</http_user>
@@ -387,7 +387,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_unionpayinternational>
             <wirecard_elasticengine_paybybankapp>
-                <item name="title" translate="true">heading_title_paybybankapp</item>
+                <title>Wirecard Pay by Bank app</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>70000-APITEST-AP</http_user>
@@ -410,7 +410,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <zapp_merchant_return_string/>
             </wirecard_elasticengine_paybybankapp>
             <wirecard_elasticengine_cc_vault>
-                <item name="title" translate="true">vault_use_existing_text</item>
+                <title>vault_use_existing_text</title>
                 <model>CreditCardVaultFacade</model>
                 <active>0</active>
             </wirecard_elasticengine_cc_vault>
