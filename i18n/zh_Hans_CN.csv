@@ -32,6 +32,7 @@ config_three_d_merchant_account_id,3-D 安全商家账户 ID
 config_three_d_merchant_secret,3-D 安全密钥
 config_three_d_min_limit,3-D 安全最小限制
 config_title,名称
+config_vault,一键支付
 config_zapp_merchant_return_string,Merchant Return String
 config_zapp_merchant_return_string_desc,Merchant Return String to redirect the Consumer from the mobile banking app to the merchant’s browser or App.
 creditor,贷方

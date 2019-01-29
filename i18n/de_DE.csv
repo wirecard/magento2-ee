@@ -32,6 +32,7 @@ config_three_d_merchant_account_id,3-D Secure Händler-Konto-ID
 config_three_d_merchant_secret,3-D Secure Geheimschlüssel
 config_three_d_min_limit,3-D Secure Minimum Limit
 config_title,Titel
+config_vault,One-Click Checkout
 config_zapp_merchant_return_string,Merchant Return String
 config_zapp_merchant_return_string_desc,URL um den Kosumenten von der mobilen Bank-App zum Browser oder zur App umzuleiten.
 creditor,Zahlungsempfänger

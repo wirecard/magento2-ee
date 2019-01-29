@@ -32,6 +32,7 @@ config_three_d_merchant_account_id,ID 3-D Secure Rekening Penjual
 config_three_d_merchant_secret,Kunci Rahasia 3-D Secure
 config_three_d_min_limit,Batas Minimum untuk 3-D Secure
 config_title,Judul
+config_vault,Checkout Satu Klik
 config_zapp_merchant_return_string,Merchant Return String
 config_zapp_merchant_return_string_desc,Merchant Return String to redirect the Consumer from the mobile banking app to the merchant’s browser or App.
 creditor,Kreditor
