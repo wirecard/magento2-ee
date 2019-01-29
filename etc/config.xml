@@ -410,7 +410,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <zapp_merchant_return_string/>
             </wirecard_elasticengine_paybybankapp>
             <wirecard_elasticengine_cc_vault>
-                <title>vault_use_existing_text</title>
+                <title>Stored Cards</title>
                 <model>CreditCardVaultFacade</model>
                 <active>0</active>
             </wirecard_elasticengine_cc_vault>

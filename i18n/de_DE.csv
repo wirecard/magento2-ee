@@ -97,4 +97,3 @@ text_support,Support
 text_terms_accept,"Hiermit bestätige ich, dass ich die <a href='https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/' target='_blank'>Datenschutzhinweise</a> und zusätzliche <a href='https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>Geschäftsbedingungen</a> für Wirecard-Zahlarten zur Kenntnis genommen habe und mit deren Geltung einverstanden bin."
 transfer_notice,Bitte den Betrag mithilfe folgender Daten überweisen:
 vault_save_text,Speichern für One-click-checkout
-vault_use_existing_text,Gespeicherte Kreditkarte verwenden
