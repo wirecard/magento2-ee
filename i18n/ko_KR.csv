@@ -32,7 +32,8 @@ config_three_d_merchant_account_id,3-D 보안 상인 계정 ID
 config_three_d_merchant_secret,3-D 보안 비밀 키
 config_three_d_min_limit,3-D 보안 최소. 한계
 config_title,제목
-config_vault,원클릭 체크아웃
+config_zapp_merchant_return_string,Merchant Return String
+config_zapp_merchant_return_string_desc,Merchant Return String to redirect the Consumer from the mobile banking app to the merchant’s browser or App.
 creditor,채권자
 creditor_id_input,채권자 ID:
 creditor_mandate_id,위임서 ID
@@ -87,6 +88,8 @@ text_enabled,활성화됨
 text_payment_action_pay,Purchase
 text_payment_action_reserve,Authorization
 text_payment_type_pia,Payment in Advance
+text_min_age_notice,"You have to be at least 18 years to use this payment method."
+text_need_same_address_notice,"Shipping and billing address need to be same."
 text_payment_type_poi,Payment on Invoice
 text_settings,설정
 text_support,Support

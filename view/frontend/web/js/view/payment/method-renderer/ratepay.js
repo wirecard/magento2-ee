@@ -77,12 +77,12 @@ define(
             validate: function () {
                 var errorPane = $("#" + this.getCode() + "-dob-error");
                 if (!minAgeValidator.validate(this.customerDob())) {
-                    errorPane.html($t("You have to be at least 18 years to use this payment method."));
+                    errorPane.html($t("text_min_age_notice"));
                     errorPane.css("display", "block");
                     return false;
                 }
                 if (this.config.address_same && $("#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice").is(":checked") === false) {
-                    errorPane.html($t("Shipping and billing address need to be same."));
+                    errorPane.html($t("text_need_same_address_notice"));
                     errorPane.css("display", "block");
                     return false;
                 }

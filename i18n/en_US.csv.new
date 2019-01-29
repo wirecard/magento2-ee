@@ -1,0 +1,99 @@
+test_credentials,Test Credentials
+send_email,Send
+support_email_title,Send support request
+config_email,Your email address
+config_message,Your message
+canceled_payment_process,You have canceled the payment process.
+no_such_order_error,No such order.
+capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
+order_error,An error occurred during the payment process. Please try again.
+error_credentials,"Test failed, please check your credentials."
+success_credentials,Merchant configuration was successfully tested.
+text_support,Support
+success_email,Email sent successfully.
+enter_valid_email_error,Please enter a valid e-mail address
+text_payment_action_reserve,Authorization
+text_payment_action_pay,Purchase
+text_payment_type_poi,Payment on Invoice
+text_payment_type_pia,Payment in Advance
+transfer_notice,Please transfer the amount using the following data:
+amount,Amount
+iban,IBAN
+bic,BIC
+ptrid,Provider Transaction Reference ID
+creditor,Creditor
+config_creditor_id,Creditor ID
+creditor_mandate_id,Mandate ID
+debtor,Debtor
+debtor_acc_owner,Account Owner
+sepa_text_1,I authorize the creditor
+sepa_text_2,to send instructions to my bank to collect one single direct debit from my account. At the same time I instruct my bank to debit my account in accordance with the instructions from the creditor
+sepa_text_2b,.
+sepa_text_3,"Note: As part of my rights, I am entitled to a refund under the terms and conditions of my agreement with my bank. A refund must be claimed within 8 weeks starting from the date on which my account was debited."
+sepa_text_4,"I irrevocably agree that, in the event that the direct debit is not honored, or objection against the direct debit exists, my bank will disclose to the creditor"
+sepa_text_5,"my full name, address and date of birth."
+sepa_text_6,I have read and accepted the SEPA Direct Debit Mandate information.
+birthdate_input,Date of Birth
+text_terms_accept,I herewith confirm that I have read the <a href='https://www.wirecardbank.com/privacy-documents/datenschutzhinweise-fuer-die-wirecard-zahlarten/' target='_blank'>privacy notice</a> and <a href='https://www.wirecardbank.com/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
+place_order,Place Order
+first_name_input,First Name
+last_name_input,Last Name
+ideal_legend,Select your bank
+bank_label,Bank
+vault_save_text,Save for later use.
+text_min_age_notice,""
+text_need_same_address_notice,""
+credit_card_form_loading_error,An error occurred loading the credit card form. Please try again.
+credit_card_form_submitting_error,An error occurred submitting the credit card form.
+sepa_mandate,SEPA Mandate
+module_display_name,Wirecard Payment Processing Gateway
+terms_of_use,Terms of Use
+config_base_url,Wirecard Server Address
+config_http_user,HTTP User
+config_http_password,HTTP Password
+text_settings,Settings
+config_merchant_public,Public Key
+heading_title_paypal,Wirecard PayPal
+text_enabled,Enabled
+config_title,Title
+config_merchant_account_id,MAID
+config_merchant_secret,Secret Key
+config_payment_action,Payment Action
+config_shopping_basket,Shopping Basket
+config_sort_order,Sort Order
+config_additional_info,Send Additional Information
+heading_title_creditcard,Wirecard Credit Card
+config_three_d_merchant_account_id,3-D Secure MAID
+config_three_d_merchant_secret,3-D Secure Secret Key
+config_ssl_max_limit,Non 3-D Secure Max. Limit
+config_three_d_min_limit,3-D Secure Min. Limit
+default_currency,Default Currency
+config_vault,One-Click Checkout
+heading_title_maestro,Wirecard Maestro SecureCode
+heading_title_sepadd,Wirecard SEPA Direct Debit
+config_enable_bic,BIC enabled
+creditor_id_input,Creditor ID
+config_creditor_name,Creditor Name
+config_creditor_city,Creditor City
+heading_title_sepact,Wirecard SEPA Credit Transfer
+heading_title_sofortbanking,Wirecard Sofort.
+heading_title_ideal,Wirecard iDEAL
+heading_title_giropay,Wirecard Giropay
+heading_title_ratepayinvoice,Wirecard Guaranteed Invoice by Wirecard
+config_basket_min,Minimum Amount
+config_basket_max,Maximum Amount
+payment_from_applicable_countries,Payment from Applicable Countries
+payment_from_specific_countries,Payment from Specific Countries
+config_billing_shipping,Identical Billing/Shipping Address
+heading_title_alipay_crossborder,Wirecard Alipay Cross-border
+heading_title_poi_pia,Wirecard Payment on Invoice / Payment in Advance
+heading_title_masterpass,Wirecard Masterpass
+heading_title_upi,Wirecard UnionPay International
+heading_title_paybybankapp,Wirecard Pay by Bank app
+config_zapp_merchant_return_string,Merchant Return String
+config_base_url_desc,The Wirecard Server Address (e.g. https://api.wirecard.com).
+public_certificate_desc,"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers."
+config_limit_desc,Amount in default shop currency
+config_creditor_name_desc,SEPA Direct Debit requires a Creditor Name for the SEPA Direct Debit Mandate page.
+config_creditor_city_desc,SEPA Direct Debit requires a Creditor City for the SEPA Direct Debit Mandate page.
+config_zapp_merchant_return_string_desc,Merchant Return String to redirect the Consumer from the mobile banking app to the merchant’s browser or App.
