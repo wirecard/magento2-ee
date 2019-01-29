@@ -36,7 +36,7 @@ class TranslationHelper
       end
     end
 
-    keys.uniq
+    keys.uniq { |key| key[0] }
   end
 
   def self.get_keys_for_file(file_path, translation_functions)

@@ -88,21 +88,39 @@ class WdProject
 
   # Compares the keys from source and PhraseApp and returns true if they have any difference in keys, false otherwise.
   def has_key_changes?
+    @log.info('Compares the keys from source code and fallback locale translation file')
+
     source_keys = TranslationHelper.get_all_keys
     translated_keys = get_translated_keys
-
-    @log.info("Number of unique keys in source: #{source_keys.length}")
-    @log.info("Number of keys on PhraseApp: #{translated_keys.length}")
 
     has_key_changes = false
     source_keys.each do |key|
       if !translated_keys.index(key[0])
-        @log.warn("Change to translatable key has been detected in the working tree. key: #{key[0]}".yellow.bright)
+        @log.warn("Needed key missing in translation file -> key: #{key[0]}".yellow.bright)
         has_key_changes = true
       end
     end
 
     if has_key_changes || source_keys.length != translated_keys.length
+
+      translated_keys.each do |key|
+        found = false
+
+        source_keys.each do |source_key|
+          if key === source_key[0]
+            found = true
+            break
+          end
+        end
+
+        if !found
+          @log.warn("Not needed key found in translation file -> key: #{key}".yellow.bright)
+        end
+      end
+
+      @log.info("Number of unique keys in source: #{source_keys.length}")
+      @log.info("Number of keys on PhraseApp: #{translated_keys.length}")
+
       @log.warn('Changes to translatable keys have been detected in the working tree.'.yellow.bright)
       return true
     end
