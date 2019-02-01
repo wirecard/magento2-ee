@@ -1,96 +1,99 @@
-amount,Amount
+amount,Amount,: classes/includes/class-wc-gateway-wirecard-poipia.php:263
 bank_label,銀行
-bic,BIC:
-birthdate_input,誕生日
-canceled_payment_process,支払い処理が取り消されました。
+bic,BIC:,": classes/includes/class-wc-gateway-wirecard-eps.php:183, : classes/includes/class-wc-gateway-wirecard-poipia.php:265, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:273"
+birthdate_input,誕生日,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:424
+canceled_payment_process,支払い処理が取り消されました。,: classes/includes/class-wc-wirecard-payment-gateway.php:201
 capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
-config_additional_info,追加情報を送信する
-config_base_url,ベース URL
-config_base_url_desc,Wirecard ベース URL。(例: https://api.wirecard.com)
-config_basket_max,最高額
-config_basket_min,最低額
-config_billing_shipping,請求先/発送先の住所は、同一でなければなりません
-config_creditor_city,債権者の居住する市
-config_creditor_city_desc,SEPA では、SEPA ダイレクト デビット委託ページに債権者の居住する市を表示する必要があります。
-config_creditor_id,債権者 ID
-config_creditor_name,債権者の名前
-config_creditor_name_desc,SEPA では、SEPA ダイレクト デビット委託ページに債権者名を表示する必要があります。
-config_email,お客様のメール アドレス
-config_enable_bic,BIC が有効
-config_http_password,HTTP パスワード
-config_http_user,HTTP ユーザー
-config_limit_desc,デフォルトの店舗通貨での金額
-config_merchant_account_id,販売者アカウント ID
+config_additional_info,追加情報を送信する,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:163, : classes/includes/class-wc-gateway-wirecard-creditcard.php:207, : classes/includes/class-wc-gateway-wirecard-eps.php:167, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:216, : classes/includes/class-wc-gateway-wirecard-ideal.php:167, : classes/includes/class-wc-gateway-wirecard-masterpass.php:176, : classes/includes/class-wc-gateway-wirecard-paypal.php:183, : classes/includes/class-wc-gateway-wirecard-poipia.php:173, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:206, : classes/includes/class-wc-gateway-wirecard-sofort.php:159, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:176"
+config_base_url,ベース URL,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:124, : classes/includes/class-wc-gateway-wirecard-creditcard.php:157, : classes/includes/class-wc-gateway-wirecard-eps.php:128, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:133, : classes/includes/class-wc-gateway-wirecard-ideal.php:128, : classes/includes/class-wc-gateway-wirecard-masterpass.php:126, : classes/includes/class-wc-gateway-wirecard-paypal.php:126, : classes/includes/class-wc-gateway-wirecard-poipia.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:127, : classes/includes/class-wc-gateway-wirecard-sofort.php:126, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
+config_base_url_desc,Wirecard ベース URL。(例: https://api.wirecard.com),": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:126, : classes/includes/class-wc-gateway-wirecard-creditcard.php:159, : classes/includes/class-wc-gateway-wirecard-eps.php:130, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:135, : classes/includes/class-wc-gateway-wirecard-ideal.php:130, : classes/includes/class-wc-gateway-wirecard-masterpass.php:128, : classes/includes/class-wc-gateway-wirecard-paypal.php:128, : classes/includes/class-wc-gateway-wirecard-poipia.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:129, : classes/includes/class-wc-gateway-wirecard-sofort.php:128, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
+config_basket_max,最高額,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
+config_basket_min,最低額,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
+config_billing_shipping,請求先/発送先の住所は、同一でなければなりません,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_creditor_city,債権者の居住する市,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
+config_creditor_city_desc,SEPA では、SEPA ダイレクト デビット委託ページに債権者の居住する市を表示する必要があります。,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
+config_creditor_id,債権者 ID,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156
+config_creditor_name,債権者の名前,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:162
+config_creditor_name_desc,SEPA では、SEPA ダイレクト デビット委託ページに債権者名を表示する必要があります。,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:164
+config_email,お客様のメール アドレス,: classes/admin/class-wirecard-settings.php:226
+config_enable_bic,BIC が有効,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:213
+config_http_password,HTTP パスワード,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:136, : classes/includes/class-wc-gateway-wirecard-creditcard.php:169, : classes/includes/class-wc-gateway-wirecard-eps.php:140, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:145, : classes/includes/class-wc-gateway-wirecard-ideal.php:140, : classes/includes/class-wc-gateway-wirecard-masterpass.php:138, : classes/includes/class-wc-gateway-wirecard-paypal.php:138, : classes/includes/class-wc-gateway-wirecard-poipia.php:135, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:135, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:139, : classes/includes/class-wc-gateway-wirecard-sofort.php:138, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:138"
+config_http_user,HTTP ユーザー,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:130, : classes/includes/class-wc-gateway-wirecard-creditcard.php:163, : classes/includes/class-wc-gateway-wirecard-eps.php:134, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:139, : classes/includes/class-wc-gateway-wirecard-ideal.php:134, : classes/includes/class-wc-gateway-wirecard-masterpass.php:132, : classes/includes/class-wc-gateway-wirecard-paypal.php:132, : classes/includes/class-wc-gateway-wirecard-poipia.php:129, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:129, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:133, : classes/includes/class-wc-gateway-wirecard-sofort.php:132, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:132"
+config_limit_desc,デフォルトの店舗通貨での金額,": classes/includes/class-wc-gateway-wirecard-creditcard.php:142, : classes/includes/class-wc-gateway-wirecard-creditcard.php:148"
+config_merchant_account_id,販売者アカウント ID,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:107, : classes/includes/class-wc-gateway-wirecard-creditcard.php:116, : classes/includes/class-wc-gateway-wirecard-eps.php:111, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:116, : classes/includes/class-wc-gateway-wirecard-ideal.php:111, : classes/includes/class-wc-gateway-wirecard-masterpass.php:109, : classes/includes/class-wc-gateway-wirecard-paypal.php:109, : classes/includes/class-wc-gateway-wirecard-poipia.php:106, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:106, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:110, : classes/includes/class-wc-gateway-wirecard-sofort.php:109, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:109"
 config_merchant_public,公開キー
-config_merchant_secret,秘密鍵
-config_message,メッセージ
-config_payment_action,支払い処理
-config_shopping_basket,ショッピング バスケット
+config_merchant_secret,秘密鍵,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:113, : classes/includes/class-wc-gateway-wirecard-creditcard.php:122, : classes/includes/class-wc-gateway-wirecard-eps.php:117, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:122, : classes/includes/class-wc-gateway-wirecard-ideal.php:117, : classes/includes/class-wc-gateway-wirecard-masterpass.php:115, : classes/includes/class-wc-gateway-wirecard-paypal.php:115, : classes/includes/class-wc-gateway-wirecard-poipia.php:112, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:112, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:116, : classes/includes/class-wc-gateway-wirecard-sofort.php:115, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:115"
+config_message,メッセージ,: classes/admin/class-wirecard-settings.php:234
+config_payment_action,支払い処理,": classes/includes/class-wc-gateway-wirecard-creditcard.php:186, : classes/includes/class-wc-gateway-wirecard-creditcard.php:190, : classes/includes/class-wc-gateway-wirecard-masterpass.php:155, : classes/includes/class-wc-gateway-wirecard-masterpass.php:159, : classes/includes/class-wc-gateway-wirecard-paypal.php:155, : classes/includes/class-wc-gateway-wirecard-paypal.php:159, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:185, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:189, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:155, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:159"
+config_shopping_basket,ショッピング バスケット,: classes/includes/class-wc-gateway-wirecard-paypal.php:169
 config_sort_order,注文を分類する
-config_ssl_max_limit,3-D セキュアの最大限度ではない
-config_three_d_merchant_account_id,3-D セキュア販売者アカウント ID
-config_three_d_merchant_secret,3-D セキュア秘密鍵
-config_three_d_min_limit,3-D セキュアの最小限度
-config_title,タイトル
+config_ssl_max_limit,3-D セキュアの最大限度ではない,: classes/includes/class-wc-gateway-wirecard-creditcard.php:140
+config_three_d_merchant_account_id,3-D セキュア販売者アカウント ID,: classes/includes/class-wc-gateway-wirecard-creditcard.php:128
+config_three_d_merchant_secret,3-D セキュア秘密鍵,: classes/includes/class-wc-gateway-wirecard-creditcard.php:134
+config_three_d_min_limit,3-D セキュアの最小限度,: classes/includes/class-wc-gateway-wirecard-creditcard.php:146
+config_title,タイトル,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:101, : classes/includes/class-wc-gateway-wirecard-creditcard.php:110, : classes/includes/class-wc-gateway-wirecard-eps.php:105, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:110, : classes/includes/class-wc-gateway-wirecard-ideal.php:105, : classes/includes/class-wc-gateway-wirecard-masterpass.php:103, : classes/includes/class-wc-gateway-wirecard-paypal.php:103, : classes/includes/class-wc-gateway-wirecard-poipia.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:104, : classes/includes/class-wc-gateway-wirecard-sofort.php:103, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:103"
 config_vault,ワンクリック注文
-creditor,債権者
-creditor_id_input,債権者ID
+config_zapp_merchant_return_string,Merchant Return URL,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:155
+config_zapp_merchant_return_string_desc,Merchant Return URL to redirect the Consumer from the mobile banking app to the merchant’s browser or App.,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:157
+creditor,債権者,: classes/helper/sepa-template.php:38
+creditor_id_input,債権者ID,: classes/helper/sepa-template.php:40
 creditor_mandate_id,マンデートID
 credit_card_form_loading_error,クレジットカードフォームの読み込み中にエラーが発生しました。再試行してください。
 credit_card_form_submitting_error,クレジットカードフォームの送信中にエラーが発生しました。
-debtor,債務者
-debtor_acc_owner,口座名義人
+debtor,債務者,: classes/helper/sepa-template.php:52
+debtor_acc_owner,口座名義人,: classes/helper/sepa-template.php:53
 default_currency,デフォルト通貨
 enter_valid_email_error,有効なメールアドレスを入力してください。
-error_credentials,テストが失敗しました。信用証明を確認してください。
+error_credentials,テストが失敗しました。信用証明を確認してください。,: classes/includes/class-wc-wirecard-payment-gateway.php:682
 first_name_input,名
-heading_title_alipay_crossborder,Wirecard Alipay Cross-border
-heading_title_creditcard,Wirecard クレジット カード
+heading_title_alipay_crossborder,Wirecard Alipay Cross-border,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:60, : classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:104"
+heading_title_creditcard,Wirecard クレジット カード,": classes/includes/class-wc-gateway-wirecard-creditcard.php:61, : classes/includes/class-wc-gateway-wirecard-creditcard.php:113"
 heading_title_giropay,Wirecard Giropay
-heading_title_ideal,Wirecard iDEAL
+heading_title_ideal,Wirecard iDEAL,": classes/includes/class-wc-gateway-wirecard-ideal.php:63, : classes/includes/class-wc-gateway-wirecard-ideal.php:108"
 heading_title_maestro,Wirecard Maestro SecureCode
-heading_title_masterpass,Wirecard Masterpass
-heading_title_paypal,Wirecard PayPal
-heading_title_poi_pia,Wirecard のインボイスでの支払い / 事前支払い
-heading_title_ratepayinvoice,Wirecard 保証付きインボイス
-heading_title_sepact,Wirecard SEPA Credit Transfer
-heading_title_sepadd,Wirecard SEPA Direct Debit
-heading_title_sofortbanking,Wirecard Sofort。
-heading_title_upi,Wirecard UnionPay International
-heading_title_paybybankapp,Wirecard Pay by Bank app
-iban,IBAN:
+heading_title_masterpass,Wirecard Masterpass,": classes/includes/class-wc-gateway-wirecard-masterpass.php:61, : classes/includes/class-wc-gateway-wirecard-masterpass.php:106"
+heading_title_paybybankapp,Wirecard Pay by Bank app,": classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:60, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:106"
+heading_title_paypal,Wirecard PayPal,": classes/includes/class-wc-gateway-wirecard-paypal.php:61, : classes/includes/class-wc-gateway-wirecard-paypal.php:106"
+heading_title_poi_pia,Wirecard のインボイスでの支払い / 事前支払い,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Wirecard 保証付きインボイス,": classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:63, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:113"
+heading_title_sepact,Wirecard SEPA Credit Transfer,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
+heading_title_sepadd,Wirecard SEPA Direct Debit,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
+heading_title_sofortbanking,Wirecard Sofort。,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
+heading_title_upi,Wirecard UnionPay International,": classes/includes/class-wc-gateway-wirecard-unionpay-international.php:58, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:106"
+iban,IBAN:,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
 ideal_legend,銀行を選択する
 last_name_input,姓
 module_display_name,Wirecard決済ゲートウェイ
 no_such_order_error,このような注文はありません。
-order_error,支払い処理中にエラーが発生しました。もう一度実行してください。
+order_error,支払い処理中にエラーが発生しました。もう一度実行してください。,": classes/includes/class-wc-wirecard-payment-gateway.php:212, : classes/includes/class-wc-wirecard-payment-gateway.php:228, : classes/includes/class-wc-wirecard-payment-gateway.php:340"
 payment_from_applicable_countries,適用される国からの支払い
 payment_from_specific_countries,特定の国からの支払い
 place_order,注文する
-ptrid,プロバイダーのトランザクション参照 ID
+ptrid,プロバイダーのトランザクション参照 ID,: classes/includes/class-wc-gateway-wirecard-poipia.php:266
 public_certificate_desc,"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers."
 send_email,送信する
 sepa_mandate,SEPAマンデート
-sepa_text_1,債権者が
-sepa_text_2,私の口座から1回のダイレクトデビットを回収するように、私の銀行に指示を送信することを許可します。同時に、私は、債権者からの指示に従い、私の銀行が口座から引き落とすように銀行に指示します。
-sepa_text_2b,.
-sepa_text_3,注記：私の権利の一部として、私は、銀行との合意の条項および条件に基づき、返金を受け取る資格があります。返金は、私の口座から引き落としがあった日から起算して8週間以内に請求する必要があります。
-sepa_text_4,私は、取消不能の形式で、ダイレクトデビットが無効になった場合や、ダイレクトデビットに対する異議が存在する場合には、私の銀行が債権者
-sepa_text_5,に対して私の氏名、住所、生年月日を開示することに同意します。
-sepa_text_6,私は、SEPAダイレクトデビットマンデート情報を読んで同意しました。
-success_credentials,販売者構成のテストが成功しました。
-success_email,メールの送信に成功しました
+sepa_text_1,債権者が,: classes/helper/sepa-template.php:69
+sepa_text_2,私の口座から1回のダイレクトデビットを回収するように、私の銀行に指示を送信することを許可します。同時に、私は、債権者からの指示に従い、私の銀行が口座から引き落とすように銀行に指示します。,: classes/helper/sepa-template.php:71
+sepa_text_2b,.,: classes/helper/sepa-template.php:72
+sepa_text_3,注記：私の権利の一部として、私は、銀行との合意の条項および条件に基づき、返金を受け取る資格があります。返金は、私の口座から引き落としがあった日から起算して8週間以内に請求する必要があります。,: classes/helper/sepa-template.php:78
+sepa_text_4,私は、取消不能の形式で、ダイレクトデビットが無効になった場合や、ダイレクトデビットに対する異議が存在する場合には、私の銀行が債権者,: classes/helper/sepa-template.php:84
+sepa_text_5,に対して私の氏名、住所、生年月日を開示することに同意します。,: classes/helper/sepa-template.php:86
+sepa_text_6,私は、SEPAダイレクトデビットマンデート情報を読んで同意しました。,: classes/helper/sepa-template.php:104
+success_credentials,販売者構成のテストが成功しました。,: classes/includes/class-wc-wirecard-payment-gateway.php:680
+success_email,メールの送信に成功しました,: classes/admin/class-wirecard-settings.php:299
 support_email_title,サポートリクエストを送信する
 terms_of_use,使用条件
-test_credentials,テスト
+test_credentials,テスト,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:145, : classes/includes/class-wc-gateway-wirecard-creditcard.php:178, : classes/includes/class-wc-gateway-wirecard-eps.php:149, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:154, : classes/includes/class-wc-gateway-wirecard-ideal.php:149, : classes/includes/class-wc-gateway-wirecard-masterpass.php:147, : classes/includes/class-wc-gateway-wirecard-paypal.php:152, : classes/includes/class-wc-gateway-wirecard-poipia.php:144, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:144, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:148, : classes/includes/class-wc-gateway-wirecard-sofort.php:147, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:147, : woocommerce-wirecard-payment-gateway.php:301"
 text_enabled,有効
-text_payment_action_pay,Purchase
-text_payment_action_reserve,Authorization
-text_payment_type_pia,Payment in Advance
-text_payment_type_poi,Payment on Invoice
+text_min_age_notice,You have to be at least 18 years to use this payment method.
+text_need_same_address_notice,Shipping and billing address need to be same.
+text_payment_action_pay,Purchase,": classes/includes/class-wc-gateway-wirecard-creditcard.php:193, : classes/includes/class-wc-gateway-wirecard-masterpass.php:162, : classes/includes/class-wc-gateway-wirecard-paypal.php:162, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:192, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:162"
+text_payment_action_reserve,Authorization,": classes/includes/class-wc-gateway-wirecard-creditcard.php:192, : classes/includes/class-wc-gateway-wirecard-masterpass.php:161, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:161"
+text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,設定
-text_support,Support
-text_terms_accept,I herewith confirm that I have read the <a href='https://www.wirecardbank.com/privacy-documents/datenschutzhinweise-fuer-die-wirecard-zahlarten/' target='_blank'>privacy notice</a> and <a href='https://www.wirecardbank.com/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
-transfer_notice,以下のデータを使用して金額を送金してください:
-vault_save_text,後で使用するために保存する
-vault_use_existing_text,保存済みのクレジット カードを使用する
+text_support,Support,: classes/admin/class-wirecard-settings.php:98
+text_terms_accept,"I herewith confirm that I have read the <a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">privacy notice</a> and <a target=""_blank"" href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"">additional terms and conditions</a> for Wirecard payment types and that I accept their validity.",: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:436
+transfer_notice,以下のデータを使用して金額を送金してください:,: classes/includes/class-wc-gateway-wirecard-poipia.php:261
+vault_save_text,後で使用するために保存する,: classes/includes/class-wc-gateway-wirecard-creditcard.php:349

@@ -573,7 +573,7 @@
                 </field>
                 <field id="poipia_action" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Payment</label>
+                    <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PoiPiaAction</source_model>
                 </field>
                 <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1"

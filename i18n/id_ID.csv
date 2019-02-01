@@ -1,96 +1,99 @@
-amount,Amount
+amount,Amount,: classes/includes/class-wc-gateway-wirecard-poipia.php:263
 bank_label,Bank
-bic,BIC:
-birthdate_input,Tanggal lahir
-canceled_payment_process,Anda telah membatalkan proses pembayaran.
+bic,BIC:,": classes/includes/class-wc-gateway-wirecard-eps.php:183, : classes/includes/class-wc-gateway-wirecard-poipia.php:265, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:273"
+birthdate_input,Tanggal lahir,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:424
+canceled_payment_process,Anda telah membatalkan proses pembayaran.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
 capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
-config_additional_info,Kirim informasi tambahan
-config_base_url,URL Dasar
-config_base_url_desc,"URL dasar Wirecard. (misal, https://api.wirecard.com)"
-config_basket_max,Jumlah Maksimum
-config_basket_min,Jumlah Minimum
-config_billing_shipping,Alamat pengiriman tagihan/barang harus sama
-config_creditor_city,Kota Kreditur
-config_creditor_city_desc,SEPA membutuhkan Kota Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA.
-config_creditor_id,Identitas Kreditur
-config_creditor_name,Nama Kreditur
-config_creditor_name_desc,SEPA membutuhkan Nama Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA.
-config_email,Alamat e-mail Anda
-config_enable_bic,BIC diaktifkan
-config_http_password,Kata Sandi HTTP
-config_http_user,Pengguna HTTP
-config_limit_desc,Jumlah dalam mata uang default toko
-config_merchant_account_id,Identitas Rekening Penjual
+config_additional_info,Kirim informasi tambahan,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:163, : classes/includes/class-wc-gateway-wirecard-creditcard.php:207, : classes/includes/class-wc-gateway-wirecard-eps.php:167, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:216, : classes/includes/class-wc-gateway-wirecard-ideal.php:167, : classes/includes/class-wc-gateway-wirecard-masterpass.php:176, : classes/includes/class-wc-gateway-wirecard-paypal.php:183, : classes/includes/class-wc-gateway-wirecard-poipia.php:173, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:206, : classes/includes/class-wc-gateway-wirecard-sofort.php:159, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:176"
+config_base_url,URL Dasar,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:124, : classes/includes/class-wc-gateway-wirecard-creditcard.php:157, : classes/includes/class-wc-gateway-wirecard-eps.php:128, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:133, : classes/includes/class-wc-gateway-wirecard-ideal.php:128, : classes/includes/class-wc-gateway-wirecard-masterpass.php:126, : classes/includes/class-wc-gateway-wirecard-paypal.php:126, : classes/includes/class-wc-gateway-wirecard-poipia.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:127, : classes/includes/class-wc-gateway-wirecard-sofort.php:126, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
+config_base_url_desc,"URL dasar Wirecard. (misal, https://api.wirecard.com)",": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:126, : classes/includes/class-wc-gateway-wirecard-creditcard.php:159, : classes/includes/class-wc-gateway-wirecard-eps.php:130, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:135, : classes/includes/class-wc-gateway-wirecard-ideal.php:130, : classes/includes/class-wc-gateway-wirecard-masterpass.php:128, : classes/includes/class-wc-gateway-wirecard-paypal.php:128, : classes/includes/class-wc-gateway-wirecard-poipia.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:129, : classes/includes/class-wc-gateway-wirecard-sofort.php:128, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
+config_basket_max,Jumlah Maksimum,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
+config_basket_min,Jumlah Minimum,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
+config_billing_shipping,Alamat pengiriman tagihan/barang harus sama,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_creditor_city,Kota Kreditur,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
+config_creditor_city_desc,SEPA membutuhkan Kota Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
+config_creditor_id,Identitas Kreditur,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156
+config_creditor_name,Nama Kreditur,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:162
+config_creditor_name_desc,SEPA membutuhkan Nama Kreditur untuk ditampilkan pada halaman Mandat Debit Langsung SEPA.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:164
+config_email,Alamat e-mail Anda,: classes/admin/class-wirecard-settings.php:226
+config_enable_bic,BIC diaktifkan,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:213
+config_http_password,Kata Sandi HTTP,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:136, : classes/includes/class-wc-gateway-wirecard-creditcard.php:169, : classes/includes/class-wc-gateway-wirecard-eps.php:140, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:145, : classes/includes/class-wc-gateway-wirecard-ideal.php:140, : classes/includes/class-wc-gateway-wirecard-masterpass.php:138, : classes/includes/class-wc-gateway-wirecard-paypal.php:138, : classes/includes/class-wc-gateway-wirecard-poipia.php:135, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:135, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:139, : classes/includes/class-wc-gateway-wirecard-sofort.php:138, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:138"
+config_http_user,Pengguna HTTP,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:130, : classes/includes/class-wc-gateway-wirecard-creditcard.php:163, : classes/includes/class-wc-gateway-wirecard-eps.php:134, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:139, : classes/includes/class-wc-gateway-wirecard-ideal.php:134, : classes/includes/class-wc-gateway-wirecard-masterpass.php:132, : classes/includes/class-wc-gateway-wirecard-paypal.php:132, : classes/includes/class-wc-gateway-wirecard-poipia.php:129, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:129, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:133, : classes/includes/class-wc-gateway-wirecard-sofort.php:132, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:132"
+config_limit_desc,Jumlah dalam mata uang default toko,": classes/includes/class-wc-gateway-wirecard-creditcard.php:142, : classes/includes/class-wc-gateway-wirecard-creditcard.php:148"
+config_merchant_account_id,Identitas Rekening Penjual,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:107, : classes/includes/class-wc-gateway-wirecard-creditcard.php:116, : classes/includes/class-wc-gateway-wirecard-eps.php:111, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:116, : classes/includes/class-wc-gateway-wirecard-ideal.php:111, : classes/includes/class-wc-gateway-wirecard-masterpass.php:109, : classes/includes/class-wc-gateway-wirecard-paypal.php:109, : classes/includes/class-wc-gateway-wirecard-poipia.php:106, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:106, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:110, : classes/includes/class-wc-gateway-wirecard-sofort.php:109, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:109"
 config_merchant_public,Public Key
-config_merchant_secret,Kunci Rahasia
-config_message,Pesan Anda
-config_payment_action,Tindakan Pembayaran
-config_shopping_basket,Keranjang Belanja
+config_merchant_secret,Kunci Rahasia,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:113, : classes/includes/class-wc-gateway-wirecard-creditcard.php:122, : classes/includes/class-wc-gateway-wirecard-eps.php:117, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:122, : classes/includes/class-wc-gateway-wirecard-ideal.php:117, : classes/includes/class-wc-gateway-wirecard-masterpass.php:115, : classes/includes/class-wc-gateway-wirecard-paypal.php:115, : classes/includes/class-wc-gateway-wirecard-poipia.php:112, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:112, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:116, : classes/includes/class-wc-gateway-wirecard-sofort.php:115, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:115"
+config_message,Pesan Anda,: classes/admin/class-wirecard-settings.php:234
+config_payment_action,Tindakan Pembayaran,": classes/includes/class-wc-gateway-wirecard-creditcard.php:186, : classes/includes/class-wc-gateway-wirecard-creditcard.php:190, : classes/includes/class-wc-gateway-wirecard-masterpass.php:155, : classes/includes/class-wc-gateway-wirecard-masterpass.php:159, : classes/includes/class-wc-gateway-wirecard-paypal.php:155, : classes/includes/class-wc-gateway-wirecard-paypal.php:159, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:185, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:189, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:155, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:159"
+config_shopping_basket,Keranjang Belanja,: classes/includes/class-wc-gateway-wirecard-paypal.php:169
 config_sort_order,Urutan Pesanan
-config_ssl_max_limit,Batas Maksimum untuk Non 3-D Secure
-config_three_d_merchant_account_id,ID 3-D Secure Rekening Penjual
-config_three_d_merchant_secret,Kunci Rahasia 3-D Secure
-config_three_d_min_limit,Batas Minimum untuk 3-D Secure
-config_title,Judul
+config_ssl_max_limit,Batas Maksimum untuk Non 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:140
+config_three_d_merchant_account_id,ID 3-D Secure Rekening Penjual,: classes/includes/class-wc-gateway-wirecard-creditcard.php:128
+config_three_d_merchant_secret,Kunci Rahasia 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:134
+config_three_d_min_limit,Batas Minimum untuk 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:146
+config_title,Judul,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:101, : classes/includes/class-wc-gateway-wirecard-creditcard.php:110, : classes/includes/class-wc-gateway-wirecard-eps.php:105, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:110, : classes/includes/class-wc-gateway-wirecard-ideal.php:105, : classes/includes/class-wc-gateway-wirecard-masterpass.php:103, : classes/includes/class-wc-gateway-wirecard-paypal.php:103, : classes/includes/class-wc-gateway-wirecard-poipia.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:104, : classes/includes/class-wc-gateway-wirecard-sofort.php:103, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:103"
 config_vault,Checkout Satu Klik
-creditor,Kreditor
-creditor_id_input,Identitas Kreditur:
+config_zapp_merchant_return_string,Merchant Return URL,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:155
+config_zapp_merchant_return_string_desc,Merchant Return URL to redirect the Consumer from the mobile banking app to the merchant’s browser or App.,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:157
+creditor,Kreditor,: classes/helper/sepa-template.php:38
+creditor_id_input,Identitas Kreditur:,: classes/helper/sepa-template.php:40
 creditor_mandate_id,Identitas Mandat
 credit_card_form_loading_error,Kesalahan terjadi saat memuat formulir kartu kredit. Silakan coba lagi.
 credit_card_form_submitting_error,Kesalahan terjadi saat mengirimkan formulir kartu kredit.
-debtor,Debitur
-debtor_acc_owner,Pemilik akun:
+debtor,Debitur,: classes/helper/sepa-template.php:52
+debtor_acc_owner,Pemilik akun:,: classes/helper/sepa-template.php:53
 default_currency,Mata Uang Default
 enter_valid_email_error,Please enter a valid e-mail address
-error_credentials,"Tes gagal, harap cek kredensial Anda."
+error_credentials,"Tes gagal, harap cek kredensial Anda.",: classes/includes/class-wc-wirecard-payment-gateway.php:682
 first_name_input,Nama Depan
-heading_title_alipay_crossborder,Alipay Cross-border Wirecard
-heading_title_creditcard,Kartu Kredit Wirecard
+heading_title_alipay_crossborder,Alipay Cross-border Wirecard,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:60, : classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:104"
+heading_title_creditcard,Kartu Kredit Wirecard,": classes/includes/class-wc-gateway-wirecard-creditcard.php:61, : classes/includes/class-wc-gateway-wirecard-creditcard.php:113"
 heading_title_giropay,giropay Wirecard
-heading_title_ideal,iDEAL Wirecard
+heading_title_ideal,iDEAL Wirecard,": classes/includes/class-wc-gateway-wirecard-ideal.php:63, : classes/includes/class-wc-gateway-wirecard-ideal.php:108"
 heading_title_maestro,Maestro SecureCode Wirecard
-heading_title_masterpass,Wirecard Masterpass
-heading_title_paypal,Wirecard PayPal
-heading_title_poi_pia,Pembayaran Berdasarkan Faktur/Pembayaran di Muka Wirecard
-heading_title_ratepayinvoice,Faktur Bergaransi Wirecard
-heading_title_sepact,SEPA Credit Transfer Wirecard
-heading_title_sepadd,SEPA Direct Debit Wirecard
-heading_title_sofortbanking,Sofort. Wirecard
-heading_title_upi,Unionpay Internasional Wirecard
-heading_title_paybybankapp,Wirecard Pay by Bank app
-iban,IBAN:
+heading_title_masterpass,Wirecard Masterpass,": classes/includes/class-wc-gateway-wirecard-masterpass.php:61, : classes/includes/class-wc-gateway-wirecard-masterpass.php:106"
+heading_title_paybybankapp,Wirecard Pay by Bank app,": classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:60, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:106"
+heading_title_paypal,Wirecard PayPal,": classes/includes/class-wc-gateway-wirecard-paypal.php:61, : classes/includes/class-wc-gateway-wirecard-paypal.php:106"
+heading_title_poi_pia,Pembayaran Berdasarkan Faktur/Pembayaran di Muka Wirecard,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Faktur Bergaransi Wirecard,": classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:63, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:113"
+heading_title_sepact,SEPA Credit Transfer Wirecard,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
+heading_title_sepadd,SEPA Direct Debit Wirecard,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
+heading_title_sofortbanking,Sofort. Wirecard,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
+heading_title_upi,Unionpay Internasional Wirecard,": classes/includes/class-wc-gateway-wirecard-unionpay-international.php:58, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:106"
+iban,IBAN:,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
 ideal_legend,Pilih bank Anda
 last_name_input,Nama Belakang
 module_display_name,Gateway Pemrosesan Pembayaran Wirecard
 no_such_order_error,Perintah tersebut tidak ada.
-order_error,Kesalahan terjadi saat proses pembayaran. Harap coba lagi.
+order_error,Kesalahan terjadi saat proses pembayaran. Harap coba lagi.,": classes/includes/class-wc-wirecard-payment-gateway.php:212, : classes/includes/class-wc-wirecard-payment-gateway.php:228, : classes/includes/class-wc-wirecard-payment-gateway.php:340"
 payment_from_applicable_countries,Pembayaran dari Negara yang valid
 payment_from_specific_countries,Pembayaran dari Negara Spesifik
 place_order,Lakukan Pemesanan
-ptrid,Identitas referensi transaksi provider
+ptrid,Identitas referensi transaksi provider,: classes/includes/class-wc-gateway-wirecard-poipia.php:266
 public_certificate_desc,"If a public certificate is provided, it will be used for ssl certificate pinning for notifications from Wirecard servers."
 send_email,Kirim
 sepa_mandate,Mandat SEPA
-sepa_text_1,Saya mengizinkan kreditor
-sepa_text_2,untuk mengirimkan instruksi ke bank saya untuk mengumpulkan satu debit langsung dari akun saya. Pada waktu yang sama saya menginstruksikan bank untuk mendebit akun saya sesuai dengan instruksi dari kreditor
-sepa_text_2b,.
-sepa_text_3,"Catatan: Sebagai bagian dari hak saya, saya berhak atas pengembalian dana sesuai dengan syarat dan ketentuan perjanjian saya dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu dimulai dari tanggal akun saya didebit."
-sepa_text_4,"Saya menyatakan persetujuan yang tidak dapat dibatalkan bahwa jika debit langsung tidak ditanggapi, atau terdapat keberatan atas debit langsung tersebut, bank saya akan mengungkapkan kepada kreditor"
-sepa_text_5,"nama lengkap, alamat, dan tanggal lahir saya."
-sepa_text_6,Saya telah membaca dan menyetujui informasi mengenai Mandat Debit Langsung SEPA.
-success_credentials,Pengujian konfigurasi penjual berhasil.
-success_email,E-Mail berhasil dikirim
+sepa_text_1,Saya mengizinkan kreditor,: classes/helper/sepa-template.php:69
+sepa_text_2,untuk mengirimkan instruksi ke bank saya untuk mengumpulkan satu debit langsung dari akun saya. Pada waktu yang sama saya menginstruksikan bank untuk mendebit akun saya sesuai dengan instruksi dari kreditor,: classes/helper/sepa-template.php:71
+sepa_text_2b,.,: classes/helper/sepa-template.php:72
+sepa_text_3,"Catatan: Sebagai bagian dari hak saya, saya berhak atas pengembalian dana sesuai dengan syarat dan ketentuan perjanjian saya dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu dimulai dari tanggal akun saya didebit.",: classes/helper/sepa-template.php:78
+sepa_text_4,"Saya menyatakan persetujuan yang tidak dapat dibatalkan bahwa jika debit langsung tidak ditanggapi, atau terdapat keberatan atas debit langsung tersebut, bank saya akan mengungkapkan kepada kreditor",: classes/helper/sepa-template.php:84
+sepa_text_5,"nama lengkap, alamat, dan tanggal lahir saya.",: classes/helper/sepa-template.php:86
+sepa_text_6,Saya telah membaca dan menyetujui informasi mengenai Mandat Debit Langsung SEPA.,: classes/helper/sepa-template.php:104
+success_credentials,Pengujian konfigurasi penjual berhasil.,: classes/includes/class-wc-wirecard-payment-gateway.php:680
+success_email,E-Mail berhasil dikirim,: classes/admin/class-wirecard-settings.php:299
 support_email_title,Kirim permintaan bantuan
 terms_of_use,Ketentuan Penggunaan
-test_credentials,Tes
+test_credentials,Tes,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:145, : classes/includes/class-wc-gateway-wirecard-creditcard.php:178, : classes/includes/class-wc-gateway-wirecard-eps.php:149, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:154, : classes/includes/class-wc-gateway-wirecard-ideal.php:149, : classes/includes/class-wc-gateway-wirecard-masterpass.php:147, : classes/includes/class-wc-gateway-wirecard-paypal.php:152, : classes/includes/class-wc-gateway-wirecard-poipia.php:144, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:144, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:148, : classes/includes/class-wc-gateway-wirecard-sofort.php:147, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:147, : woocommerce-wirecard-payment-gateway.php:301"
 text_enabled,Aktif
-text_payment_action_pay,Purchase
-text_payment_action_reserve,Authorization
-text_payment_type_pia,Payment in Advance
-text_payment_type_poi,Payment on Invoice
+text_min_age_notice,You have to be at least 18 years to use this payment method.
+text_need_same_address_notice,Shipping and billing address need to be same.
+text_payment_action_pay,Purchase,": classes/includes/class-wc-gateway-wirecard-creditcard.php:193, : classes/includes/class-wc-gateway-wirecard-masterpass.php:162, : classes/includes/class-wc-gateway-wirecard-paypal.php:162, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:192, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:162"
+text_payment_action_reserve,Authorization,": classes/includes/class-wc-gateway-wirecard-creditcard.php:192, : classes/includes/class-wc-gateway-wirecard-masterpass.php:161, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:161"
+text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,Pengaturan
-text_support,Support
-text_terms_accept,I herewith confirm that I have read the <a href='https://www.wirecardbank.com/privacy-documents/datenschutzhinweise-fuer-die-wirecard-zahlarten/' target='_blank'>privacy notice</a> and <a href='https://www.wirecardbank.com/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/' target='_blank'>additional terms and conditions</a> for Wirecard payment types and that I accept their validity.
-transfer_notice,Harap transfer jumlah tersebut menggunakan data berikut ini:
-vault_save_text,Simpan untuk digunakan di kemudian hari.
-vault_use_existing_text,Gunakan Kartu Kredit yang tersimpan
+text_support,Support,: classes/admin/class-wirecard-settings.php:98
+text_terms_accept,"I herewith confirm that I have read the <a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">privacy notice</a> and <a target=""_blank"" href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"">additional terms and conditions</a> for Wirecard payment types and that I accept their validity.",: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:436
+transfer_notice,Harap transfer jumlah tersebut menggunakan data berikut ini:,: classes/includes/class-wc-gateway-wirecard-poipia.php:261
+vault_save_text,Simpan untuk digunakan di kemudian hari.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:349

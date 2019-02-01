@@ -51,7 +51,6 @@ use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
 class Redirect extends Action
 {
     const CHECKOUT_URL = 'checkout/cart';
-    const PAYMENT_ERROR = 'order_error';
 
     /**
      * @var Session
@@ -93,7 +92,7 @@ class Redirect extends Action
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
             } else {
                 $this->checkoutSession->restoreQuote();
-                $this->messageManager->addNoticeMessage(__(self::PAYMENT_ERROR));
+                $this->messageManager->addNoticeMessage(__('order_error'));
                 $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
             }
         } elseif ($this->getRequest()->isGet() && $this->getRequest()->getParam('request_id')) {
@@ -104,12 +103,12 @@ class Redirect extends Action
                 $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
             } else {
                 $this->checkoutSession->restoreQuote();
-                $this->messageManager->addNoticeMessage(__(self::PAYMENT_ERROR));
+                $this->messageManager->addNoticeMessage(__('order_error'));
                 $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
             }
         } else {
             $this->checkoutSession->restoreQuote();
-            $this->messageManager->addNoticeMessage(__(self::PAYMENT_ERROR));
+            $this->messageManager->addNoticeMessage(__('order_error'));
             $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
         }
 
