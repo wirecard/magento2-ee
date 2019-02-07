@@ -51,14 +51,18 @@ use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Magento\Framework\App\CsrfAwareActionInterface;
+
 
 /**
  * Class Notify
  * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method \Magento\Framework\App\Request\Http getRequest()
  */
-class Notify extends Action
+class Notify extends Action implements CsrfAwareActionInterface
 {
+    use NoCsrfTrait;
+
     /**
      * @var TransactionServiceFactory
      */

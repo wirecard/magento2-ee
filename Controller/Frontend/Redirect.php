@@ -42,14 +42,17 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
+use Magento\Framework\App\CsrfAwareActionInterface;
 
 /**
  * Class Redirect
  * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method Http getRequest()
  */
-class Redirect extends Action
+class Redirect extends Action implements CsrfAwareActionInterface
 {
+    use NoCsrfTrait;
+
     const CHECKOUT_URL = 'checkout/cart';
 
     /**

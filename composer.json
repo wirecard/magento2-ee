@@ -14,7 +14,8 @@
     "php-http/guzzle6-adapter": ">=1.1.1",
     "nyholm/psr7": "^0.2.3",
     "php-http/discovery": "1.4.0",
-    "wirecard/payment-sdk-php": "3.6.0"
+    "wirecard/payment-sdk-php": "3.6.0",
+    "mbretter/magento2-compat": "compat || master"
   },
   "require-dev": {
     "phpunit/phpunit": "5.3.5",
@@ -34,6 +35,12 @@
     "test": "phpunit --colors=always",
     "test-coverage": "phpunit --coverage-clover build/coverage/xml"
   },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/mbretter/magento2-compat"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Wirecard\\ElasticEngine\\": ""
