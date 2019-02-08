@@ -35,12 +35,6 @@
     "test": "phpunit --colors=always",
     "test-coverage": "phpunit --coverage-clover build/coverage/xml"
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/wirecard/magento2-ee-compat"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "Wirecard\\ElasticEngine\\": ""
