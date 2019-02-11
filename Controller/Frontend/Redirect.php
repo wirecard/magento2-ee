@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
@@ -48,8 +49,10 @@ use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
  * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method Http getRequest()
  */
-class Redirect extends Action
+class Redirect extends Action implements CsrfAwareActionInterface
 {
+    use NoCsrfTrait;
+
     const CHECKOUT_URL = 'checkout/cart';
 
     /**

@@ -3212,6 +3212,39 @@
             "time": "2018-09-12T11:59:09+00:00"
         },
         {
+            "name": "wirecard/magento2-ee-compat",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wirecard/magento2-ee-compat.git",
+                "reference": "d537716c2fb2c49b424409f96e490f5d906682d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wirecard/magento2-ee-compat/zipball/d537716c2fb2c49b424409f96e490f5d906682d2",
+                "reference": "d537716c2fb2c49b424409f96e490f5d906682d2",
+                "shasum": ""
+            },
+            "require": {
+                "magento/module-payment": "< 100.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wirecard\\ElasticEngine\\": ""
+                },
+                "files": [
+                    "preload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "description": "Magento2 compatibility package for Wirecard Payment Processing Gateway",
+            "time": "2019-02-08T10:40:47+00:00"
+        },
+        {
             "name": "wirecard/payment-sdk-php",
             "version": "3.6.0",
             "source": {
