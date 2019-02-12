@@ -34,6 +34,7 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -57,8 +58,10 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method \Magento\Framework\App\Request\Http getRequest()
  */
-class Notify extends Action
+class Notify extends Action implements CsrfAwareActionInterface
 {
+    use NoCsrfTrait;
+
     /**
      * @var TransactionServiceFactory
      */
