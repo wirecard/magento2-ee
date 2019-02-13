@@ -31,6 +31,8 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
+use Magento\Bundle\Model\Product\Price;
+use Magento\Catalog\Model\Product\Type;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
@@ -45,6 +47,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class BasketFactory
+ *
  * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class BasketFactory
@@ -97,9 +100,10 @@ class BasketFactory
 
         /** @var OrderItemInterface $item*/
         foreach ($items as $item) {
-            if ($item->getPriceInclTax() == 0) {
+            if (!$this->canAddToBasket($item)) {
                 continue;
             }
+
             $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
         }
 
@@ -301,5 +305,55 @@ class BasketFactory
             $basket->add($shippingItem);
         }
         return $basket;
+    }
+
+    /**
+     * check whether item should be added to the basket
+     * there are two possibilty of price calculation for bundle products:
+     * - fixed: the price is set in the bundle product
+     * - dynamic: the price is calculated based on the bundled products
+     *
+     * For fixed pricing bundle products, the bundle product itself must be added to the basket,
+     * but not the bundled products.
+     *
+     * For dynamic pricing bundle products, only the bundled products must be added.
+     *
+     * @param Order\Item $item
+     *
+     * @return bool
+     */
+    protected function canAddToBasket($item)
+    {
+        // items with no price are excluded
+        if ($item->getPriceInclTax() == 0) {
+            return false;
+        }
+
+        // bundles with dynamic pricing must not be added to the basket
+        // price is dynamically calculated based on the bundled-items
+        if ($item->getProductType() == Type::TYPE_BUNDLE
+            && $item->getProduct()->getPriceType() == Price::PRICE_TYPE_DYNAMIC) {
+            return false;
+        }
+
+        // item has no parent, can be safely added to the basket
+        if ($item->getParentItem() === null) {
+            return true;
+        }
+
+        // if parent is not a product bundle dont add it to the basket
+        if ($item->getParentItem()->getProductType() != Type::TYPE_BUNDLE) {
+            return false;
+        }
+
+        // if item is part of a product bundle with fixed pricing dont add it
+        // price is set directly in the bundle product
+        if ($item->getParentItem()->getProductType() == Type::TYPE_BUNDLE
+            && $item->getParentItem()->getProduct()->getPriceType() == Price::PRICE_TYPE_FIXED
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }
