@@ -3,6 +3,9 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use InvalidArgumentException;
+use Magento\Bundle\Model\Product\Price;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Type;
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
@@ -10,9 +13,6 @@ use Magento\Quote\Model\Quote\Address;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
-use Magento\Catalog\Model\Product;
-use Magento\Bundle\Model\Product\Price;
-use Magento\Catalog\Model\Product\Type;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\ItemFactory;
 use Wirecard\PaymentSdk\Entity\Amount;
