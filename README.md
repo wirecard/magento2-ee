@@ -9,7 +9,7 @@
 
 ***
 ## General Information 
-Before you proceed, please read our [General Information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Plugins-General-Information) for more details on Wirecard Shop Extension functionality and features.
+Before you proceed, please read our [General Information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Extensions-General-Information) for more details on Wirecard Shop Extension functionality and features.
 
 ***
 ## Documentation
