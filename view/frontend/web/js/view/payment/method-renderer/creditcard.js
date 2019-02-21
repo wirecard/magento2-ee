@@ -132,7 +132,7 @@ define(
                     event.preventDefault();
                 }
 
-                    this.seamlessFormSubmit();
+                this.seamlessFormSubmit();
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
