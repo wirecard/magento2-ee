@@ -64,10 +64,10 @@ define(
             },
             seamlessFormSubmitSuccessHandler: function (response) {
                 if (response.hasOwnProperty("token_id")) {
-					this.token_id = response.token_id;
-					this.first_name = response.first_name;
-					this.last_name = response.last_name;
-				} else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
+                    this.token_id = response.token_id;
+                    this.first_name = response.first_name;
+                    this.last_name = response.last_name;
+                } else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
                     this.token_id = response.card_token.token;
 
                     this.expiration_date = {};
@@ -127,18 +127,12 @@ define(
 
                 return true;
             },
-            placeOrder: function (data, event) {
+            placeSeamlessOrder: function (data, event) {
                 if (event) {
                     event.preventDefault();
                 }
 
-                if(!this.token_id) {
                     this.seamlessFormSubmit();
-
-                    return false;
-                }
-
-                return this._super();
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
