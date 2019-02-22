@@ -99,6 +99,12 @@ class ResponseHandler implements HandlerInterface
         /** @var $payment \Magento\Sales\Model\Order\Payment */
         $payment = $paymentDO->getPayment();
 
+        // clear session variables
+        $this->session->unsRedirectUrl();
+        $this->session->unsFormMethod();
+        $this->session->unsFormUrl();
+        $this->session->unsFormFields();
+
         if ($sdkResponse instanceof InteractionResponse) {
             $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
 
