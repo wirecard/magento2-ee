@@ -139,19 +139,17 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
-                <can_void>0</can_void>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
                 <model>MaestroFacade</model>
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
-                <merchant_account_id>4945f0ef-51e0-43af-972f-885405320842</merchant_account_id>
-                <secret>822e87ea-dcc3-4d01-861c-e39f14a0ab6c</secret>
                 <three_d_merchant_account_id>4945f0ef-51e0-43af-972f-885405320842</three_d_merchant_account_id>
                 <three_d_secret>822e87ea-dcc3-4d01-861c-e39f14a0ab6c</three_d_secret>
-                <ssl_max_limit>0.0</ssl_max_limit>
-                <three_d_min_limit></three_d_min_limit>
                 <default_currency>EUR</default_currency>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_maestro>
