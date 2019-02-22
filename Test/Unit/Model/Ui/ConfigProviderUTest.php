@@ -77,6 +77,11 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         ];
         $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
 
+        $maestroSeamlessRequestData = [
+            'key' => 'value'
+        ];
+        $transactionService->method('getCreditCardUiWithData')->willReturn(json_encode($maestroSeamlessRequestData));
+
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
             ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
@@ -210,6 +215,11 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             'key' => 'value'
         ];
         $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
+
+        $maestroSeamlessRequestData = [
+            'key' => 'value'
+        ];
+        $transactionService->method('getCreditCardUiWithData')->willReturn(json_encode($maestroSeamlessRequestData));
 
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],

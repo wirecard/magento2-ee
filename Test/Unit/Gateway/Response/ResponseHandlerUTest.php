@@ -59,12 +59,12 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     private $session;
 
     /**
-     * @var Array
+     * @var array
      */
     private $paymentData;
 
     /**
-     * @var Array
+     * @var array
      */
     private $paymentDataAuthorization;
 
@@ -78,7 +78,8 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $this->logger = $this->getMock(LoggerInterface::class);
         $this->session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
-            ->setMethods([self::SET_REDIRECT_URL, 'setFormMethod', 'setFormUrl', 'setFormFields'])
+            ->setMethods([self::SET_REDIRECT_URL, 'setFormMethod', 'setFormUrl', 'setFormFields',
+                'unsRedirectUrl', 'unsFormMethod', 'unsFormUrl', 'unsFormFields'])
             ->getMock();
 
         $this->paymentData = [
