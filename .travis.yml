@@ -48,7 +48,7 @@ matrix:
     after_script: skip
 
   - stage: deploy
-    if: tag IS present AND branch = master AND type = push
+    if: tag IS present AND type = push
     language: php
     php: 7.0
     before_install: skip
