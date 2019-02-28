@@ -189,7 +189,7 @@ function parseVersionsFile($filePath) {
 $shopVersions = parseVersionsFile(VERSION_FILE);
 
 // Grab the Travis config for parsing the supported PHP versions
-$travisConfig = Yaml::parseFile(TRAVIS_FILE);
+$travisConfig = Yaml::parse(file_get_contents(TRAVIS_FILE));
 $travisMatrix = $travisConfig['matrix'];
 $phpVersions = [];
 foreach  ($travisMatrix["include"] as $version){
