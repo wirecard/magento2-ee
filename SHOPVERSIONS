@@ -1,5 +1,17 @@
 [
-{
+  {
+    "release": "1.4.1",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.0",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Add fr-FR language support",
+      "Handle bundled products",
+      "Improve Credit Card checkout process",
+      "Adapt redirect URL parameters"
+    ]
+  },
+  {
     "release": "1.4.0",
     "shopsystem": "Magento Community Edition",
     "tested": "2.2.6",
