@@ -55,7 +55,7 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
 class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
+    const REDIRECT_URL = 'http://magen.to/frontend/redirect?method=sepadirectdebit';
     const ORDER_ID = '1234567';
 
     private $urlBuilder;
@@ -202,9 +202,9 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
-            'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'
+            'http://magen.to/frontend/redirect?method=sepadirectdebit',
+            'http://magen.to/frontend/cancel?method=sepadirectdebit',
+            'http://magen.to/frontend/redirect?method=sepadirectdebit'
         ));
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));

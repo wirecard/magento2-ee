@@ -100,7 +100,7 @@ class UnionPayInternationalTransactionFactory extends TransactionFactory
         $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect');
+        $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect?method=' . $this->transaction->getConfigKey());
 
         return $this->transaction;
     }

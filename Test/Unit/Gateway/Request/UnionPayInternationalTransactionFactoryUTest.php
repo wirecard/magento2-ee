@@ -54,7 +54,7 @@ use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 
 class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
+    const REDIRECT_URL = 'http://magen.to/frontend/redirect?method=unionpayinternational';
     const ORDER_ID = '1234567';
 
     private $urlBuilder;
@@ -225,7 +225,7 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
+            'http://magen.to/frontend/cancel?method=unionpayinternational',
             self::REDIRECT_URL
         ));
 

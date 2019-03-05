@@ -55,7 +55,7 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 
 class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
+    const REDIRECT_URL = 'http://magen.to/frontend/redirect?method=creditcard';
     const ORDER_ID = '1234567';
     const VAULT_ENABLER = 'mypersonaltoken';
 
@@ -229,7 +229,7 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
+            'http://magen.to/frontend/cancel?method=creditcard',
             self::REDIRECT_URL
         ));
 

@@ -187,12 +187,15 @@ class TransactionFactory
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
+        $cfgkey = $this->transaction->getConfigKey();
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
+        $methodAppend = '?method=' . urlencode($cfgkey);
+
         $this->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect',
-            $wdBaseUrl . 'frontend/cancel',
-            $wdBaseUrl . 'frontend/redirect'
+            $wdBaseUrl . 'frontend/redirect' . $methodAppend,
+            $wdBaseUrl . 'frontend/cancel' . $methodAppend,
+            $wdBaseUrl . 'frontend/redirect' . $methodAppend
         ));
         $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify?orderId=' . $this->orderId);
 

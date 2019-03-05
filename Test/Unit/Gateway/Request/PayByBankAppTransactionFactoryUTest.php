@@ -57,7 +57,7 @@ use Wirecard\PaymentSdk\Transaction\PayByBankAppTransaction;
 
 class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
+    const REDIRECT_URL = 'http://magen.to/frontend/redirect?method=zapp';
     const ORDER_ID = '1234567';
     const RETURNSTRING = 'http://exampl.com/return';
 
@@ -246,7 +246,7 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
-            'http://magen.to/frontend/cancel',
+            'http://magen.to/frontend/cancel?method=zapp',
             self::REDIRECT_URL
         ));
 

@@ -147,9 +147,9 @@ class SofortTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setDescriptor('My shop n ' . self::ORDER_ID);
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
-            'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'
+            'http://magen.to/frontend/redirect?method=sofortbanking',
+            'http://magen.to/frontend/cancel?method=sofortbanking',
+            'http://magen.to/frontend/redirect?method=sofortbanking'
         ));
 
         $customFields = new CustomFieldCollection();

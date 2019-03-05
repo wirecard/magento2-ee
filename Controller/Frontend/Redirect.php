@@ -40,9 +40,6 @@ use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
-use Wirecard\PaymentSdk\Transaction\RatepayInstallmentTransaction;
 
 /**
  * Class Redirect
@@ -87,28 +84,27 @@ class Redirect extends Action implements CsrfAwareActionInterface
          * @var $resultRedirect RedirectResult
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+        $methodName = $this->getRequest()->getParam('method');
+        if ($methodName === null || (!$this->getRequest()->isPost() && !$this->getRequest()->isGet())) {
+            $this->checkoutSession->restoreQuote();
+            $this->messageManager->addNoticeMessage(__('order_error'));
+            $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
+
+            return $resultRedirect;
+        }
+
+        $transactionService = $this->transactionServiceFactory->create($methodName);
+
         if ($this->getRequest()->isPost()) {
-            $method = $this->getPaymentMethod($this->getRequest()->getPost()->toArray());
-            $transactionService = $this->transactionServiceFactory->create($method);
-            $result = $transactionService->handleResponse($this->getRequest()->getPost()->toArray());
-            if ($result instanceof SuccessResponse) {
-                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
-            } else {
-                $this->checkoutSession->restoreQuote();
-                $this->messageManager->addNoticeMessage(__('order_error'));
-                $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
-            }
-        } elseif ($this->getRequest()->isGet() && $this->getRequest()->getParam('request_id')) {
-            //Ideal transaction
-            $transactionService = $this->transactionServiceFactory->create('ideal');
-            $result = $transactionService->handleResponse($this->getRequest()->getParams());
-            if ($result instanceof SuccessResponse) {
-                $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
-            } else {
-                $this->checkoutSession->restoreQuote();
-                $this->messageManager->addNoticeMessage(__('order_error'));
-                $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
-            }
+            $params = $this->getRequest()->getPost()->toArray();
+        } else {
+            $params = $this->getRequest()->getParams();
+        }
+
+        $result = $transactionService->handleResponse($params);
+
+        if ($result instanceof SuccessResponse) {
+            $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
         } else {
             $this->checkoutSession->restoreQuote();
             $this->messageManager->addNoticeMessage(__('order_error'));
@@ -126,26 +122,5 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private function setRedirectPath(RedirectResult $resultRedirect, $path)
     {
         return $resultRedirect->setPath($path, ['_secure' => true]);
-    }
-
-    /**
-     * @param $payload
-     * @return null|string
-     */
-    private function getPaymentMethod($payload)
-    {
-        $paymentName = null;
-
-        if (array_key_exists('MD', $payload) && array_key_exists('PaRes', $payload)) {
-            $paymentName = CreditCardTransaction::NAME;
-        } elseif (array_key_exists('eppresponse', $payload)) {
-            $paymentName = PayPalTransaction::NAME;
-        } elseif (array_key_exists('base64payload', $payload) &&
-            array_key_exists('psp_name', $payload)
-        ) {
-            $paymentName = RatepayInstallmentTransaction::NAME;
-        }
-
-        return $paymentName;
     }
 }

@@ -228,12 +228,6 @@
                 <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>config_http_password</label>
                 </field>
-                <field id="merchant_account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>config_merchant_account_id</label>
-                </field>
-                <field id="secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>config_merchant_secret</label>
-                </field>
                 <field id="three_d_merchant_account_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>config_three_d_merchant_account_id</label>
                 </field>

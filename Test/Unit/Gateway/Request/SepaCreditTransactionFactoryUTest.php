@@ -52,7 +52,7 @@ use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
 class SepaCreditTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 {
-    const REDIRECT_URL = 'http://magen.to/frontend/redirect';
+    const REDIRECT_URL = 'http://magen.to/frontend/redirect?method=sepadirectdebit';
     const ORDER_ID = '1234567';
 
     private $urlBuilder;

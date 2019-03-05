@@ -38,10 +38,12 @@ use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
+use Wirecard\PaymentSdk\Config\MaestroConfig;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
@@ -116,6 +118,8 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
         );
         if ($paymentCode === CreditCardTransaction::NAME) {
             $paymentMethod = $this->getCreditCardConfig($methodConfig);
+        } elseif ($paymentCode === MaestroTransaction::NAME) {
+            $paymentMethod = $this->getMaestroConfig($methodConfig);
         } elseif (($paymentCode === SepaDirectDebitTransaction::NAME)
             || ($paymentCode === SepaCreditTransferTransaction::NAME)) {
             $paymentMethod = $this->getSepaConfig($methodConfig, $paymentCode);
@@ -183,6 +187,22 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
                 $config->getValue('default_currency')
             ));
         }
+
+        return $methodSdkConfig;
+    }
+
+    /**
+     * @param \Magento\Payment\Gateway\Config\Config $config
+     * @return CreditCardConfig
+     */
+    private function getMaestroConfig($config)
+    {
+        $methodSdkConfig = new MaestroConfig();
+
+        $methodSdkConfig->setThreeDCredentials(
+            $config->getValue('three_d_merchant_account_id'),
+            $config->getValue('three_d_secret')
+        );
 
         return $methodSdkConfig;
     }
