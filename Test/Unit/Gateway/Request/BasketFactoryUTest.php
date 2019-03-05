@@ -3,6 +3,9 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use InvalidArgumentException;
+use Magento\Bundle\Model\Product\Price;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Type;
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
@@ -19,55 +22,87 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var \PHPUnit_Framework_MockObject_MockObject|OrderAdapterInterface */
     private $order;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|ItemFactory */
     private $itemFactory;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|Session */
     private $checkoutSession;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|Transaction */
     private $transaction;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|OrderFactory */
     private $orderFactory;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|Address */
     private $shippingAddress;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|Quote */
     private $quote;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|Order */
     private $orderObject;
 
     public function setUp()
     {
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $item = $this->getMockBuilder(OrderItemInterface::class)
+        $item        = $this->getOrderItemMock();
+        $item->method('getName')->willReturn('item');
+
+        $zeroItem = $this->getOrderItemMock(0, 0, 0, 0, 0, 0, 0, 0);
+
+        // bundle product with dynamic pricing, only bundledItem must be added to the basket
+        $bundleDynamic = $this->getOrderItemMock(100.0, 0, 0, 0, 0, 0, 0, 0, Type::TYPE_BUNDLE);
+        $bundleDynamic->method('getName')->willReturn('bundledDynamic');
+
+        $product = $this->getMockBuilder(Product::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getOrigData', 'getQtyInvoiced'])
-            ->getMockForAbstractClass();
-        $item->method('getPriceInclTax')->willReturn(1.0);
-        $item->method('getOrigData')->willReturn(1);
-        $item->method('getQtyInvoiced')->willReturn(2);
-        $item->method('getDiscountInvoiced')->willReturn(2.0);
-        $item->method('getBaseRowInvoiced')->willReturn(1);
-        $item->method('getQtyRefunded')->willReturn(2);
-        $item->method('getDiscountRefunded')->willReturn(2.0);
-        $item->method('getBaseAmountRefunded')->willReturn(1);
-        $zeroItem = $this->getMockBuilder(OrderItemInterface::class)
+            ->setMethods(['getPriceType'])
+            ->getMock();
+        $product->method('getPriceType')->willReturn(Price::PRICE_TYPE_DYNAMIC);
+
+        $bundleDynamic->method('getProduct')->willReturn($product);
+
+        $bundledItem1 = $this->getOrderItemMock();
+        $bundledItem1->method('getName')->willReturn('bundledItem1');
+        $bundledItem1->method('getParentItem')->willReturn($bundleDynamic);
+
+        // bundle product with fixed pricing, only the bundleItem must be added to the basket
+        $bundleFixed = $this->getOrderItemMock(100.0, 1, 2, 2.0, 1, 2, 2.0, 1, Type::TYPE_BUNDLE);
+        $bundleFixed->method('getName')->willReturn('bundleFixed');
+
+        $product = $this->getMockBuilder(Product::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getOrigData', 'getQtyInvoiced'])
-            ->getMockForAbstractClass();
-        $zeroItem->method('getPriceInclTax')->willReturn(0.0);
-        $zeroItem->method('getOrigData')->willReturn(0);
-        $zeroItem->method('getQtyInvoiced')->willReturn(0);
-        $zeroItem->method('getDiscountInvoiced')->willReturn(0);
-        $zeroItem->method('getQtyRefunded')->willReturn(0);
-        $zeroItem->method('getDiscountRefunded')->willReturn(0);
-        $zeroItem->method('getBaseAmountRefunded')->willReturn(0);
+            ->setMethods(['getPriceType'])
+            ->getMock();
+        $product->method('getPriceType')->willReturn(Price::PRICE_TYPE_FIXED);
+
+        $bundleFixed->method('getProduct')->willReturn($product);
+
+        $bundledItem2 = $this->getOrderItemMock();
+        $bundledItem2->method('getParentItem')->willReturn($bundleFixed);
+        $bundledItem2->method('getName')->willReturn('bundledItem2');
+
+        // must not be added to the basket
+        $itemWithParent = $this->getOrderItemMock();
+        $itemWithParent->method('getParentItem')->willReturn($item);
+
         $this->order->method('getItems')->willReturn([
-            $item, $zeroItem
+            $item,
+            $zeroItem,
+            $bundleDynamic,
+            $bundledItem1,
+            $bundleFixed,
+            $bundledItem2,
+            $itemWithParent
         ]);
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
         $this->itemFactory = $this->getMockBuilder(ItemFactory::class)->getMock();
-        $this->itemFactory->method('create')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
+
         $this->itemFactory->method('capture')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
         $this->itemFactory->method('refund')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
 
@@ -78,7 +113,13 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->shippingAddress = $this->getMockBuilder(Address::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getShippingInclTax', 'getShippingDescription', 'getShippingMethod', 'getShippingTaxAmount', 'getDiscountAmount'])
+            ->setMethods([
+                'getShippingInclTax',
+                'getShippingDescription',
+                'getShippingMethod',
+                'getShippingTaxAmount',
+                'getDiscountAmount'
+            ])
             ->getMock();
 
         $this->quote = $this->getMockBuilder(Quote::class)
@@ -90,6 +131,28 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->getMock();
+    }
+
+    protected function getOrderItemMock(
+        $priceInc = 1.0, $origData = 1, $qtyInvoice = 2, $discountInvoices = 2.0,
+        $baseRowInvoiced = 1, $qtyRefunded = 2, $discountRefunded = 2.0, $baseAmountRefunded = 1,
+        $type = Type::TYPE_SIMPLE
+    ) {
+        $item = $this->getMockBuilder(OrderItemInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOrigData', 'getQtyInvoiced', 'getProduct', 'getName'])
+            ->getMockForAbstractClass();
+        $item->method('getPriceInclTax')->willReturn($priceInc);
+        $item->method('getOrigData')->willReturn($origData);
+        $item->method('getQtyInvoiced')->willReturn($qtyInvoice);
+        $item->method('getDiscountInvoiced')->willReturn($discountInvoices);
+        $item->method('getBaseRowInvoiced')->willReturn($baseRowInvoiced);
+        $item->method('getQtyRefunded')->willReturn($qtyRefunded);
+        $item->method('getDiscountRefunded')->willReturn($discountRefunded);
+        $item->method('getBaseAmountRefunded')->willReturn($baseAmountRefunded);
+        $item->method('getProductType')->willReturn($type);
+
+        return $item;
     }
 
     public function setUpWithQuoteData()
@@ -125,19 +188,29 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $this->setUpWithQuoteData();
+
+        $this->itemFactory->expects($this->at(0))->method('create')
+            ->willReturn(new Item('item', new Amount(0.0, 'EUR'), ''));
+        $this->itemFactory->expects($this->at(1))->method('create')
+            ->willReturn(new Item('bundledItem1', new Amount(0.0, 'EUR'), ''));
+        $this->itemFactory->expects($this->at(2))->method('create')
+            ->willReturn(new Item('bundleFixed', new Amount(0.0, 'EUR'), ''));
+
         $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
+        $expected->add(new Item('item', new Amount(0.0, 'EUR'), ''));
+        $expected->add(new Item('bundledItem1', new Amount(0.0, 'EUR'), ''));
+        $expected->add(new Item('bundleFixed', new Amount(0.0, 'EUR'), ''));
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
         $shipping->setArticleNumber('flatrate_flatrate');
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
-
-        $this->assertEquals($expected, $basketFactory->create($this->order, $this->transaction));
+        $basket = $basketFactory->create($this->order, $this->transaction);
+        $this->assertEquals($expected, $basket);
     }
 
     /**
@@ -157,6 +230,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
         $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
@@ -195,6 +269,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
         $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);

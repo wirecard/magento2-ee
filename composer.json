@@ -33,7 +33,8 @@
     "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
     "cs-fix": "php-cs-fixer fix .",
     "test": "phpunit --colors=always",
-    "test-coverage": "phpunit --coverage-clover build/coverage/xml"
+    "test-coverage": "phpunit --coverage-clover build/coverage/xml",
+    "test-reports": "phpunit --coverage-html reports/coverage --coverage-clover reports/clover.xml --coverage-crap4j reports/crap4j.xml --log-junit reports/junit.xml"
   },
   "autoload": {
     "psr-4": {
