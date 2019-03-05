@@ -68,6 +68,7 @@ matrix:
       provider: releases
       api_key:
         secure: "aYQrSZ+YIju+CE/DBIWM1vGpop00HgBPSSr79D7af0kDEY3Xf2bj/Nqy+awayk+Pw3Pt2RHpgRmAbRa4qkR9SAWLEq17rdUiQcNWtHGaJXCkyrQRgt3z2PsQkNPVNU3iHKa9ff/xxdyIe3ftUEFKWXFeu0flnVPiekj152DCjnWobD3t6REMXO0qpo6igULPAehk5L3buT9hNAM1NopwCZsg0/Beoa0e6wBUIZEEYbX+dz4k0pCrrBfmrXtRLiKL4uLaxU6lXnVTo8DPxGfVbjLgS/GyQzjCfvNjXMsvky19ghy2cTWTzqCmm9sN4TS4/652k+3+TPIDwJKbVOW16BrgwiE5AUXvlkmNFKp8s69TO3GChcJlqW9IE92yMQOgYl6TqA4n2DBkn4xM3sOENJ2jNNyIQCTUupEZf4R2kxvwjwKPwkUkla+BR9lsc1yoeBe/kodqVmzOL7HD7RvPOpPRbk6Gdd0/EeaYmBE1TfxmDtWgWddLFvfv+XNllU7RyY9/3x2N6geK/397fyiiNJZEZ56CSsXz2WvubJIsphSFiWSzcRVTWXpdg25N8UTuq6w1ZkQVlKtUdL1ISJcQdLLbZCBQb2swIwjxmRSoOEGZiF4E8RH2BD2AxjpAnwU2VH50gFKK+J0g2z78JSjHQ6zQP4DZFV0NOy3AXP7Rb1M="
+      name: "${REPO_NAME} ${TRAVIS_TAG}"
       body: "${RELEASE_NOTES}"
       skip_cleanup: true
       on:
