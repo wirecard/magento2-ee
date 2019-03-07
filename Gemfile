@@ -9,5 +9,4 @@ gem 'phraseapp-ruby', '~> 2.1'
 gem "highline", "~> 2.0"
 gem "rake", "~> 12.3"
 gem "simple_po_parser", "~> 1.1"
-gem "bundler", "~> 1.17"
 gem "rainbow", "~> 3.0"
