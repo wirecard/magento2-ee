@@ -144,5 +144,4 @@ class WeChatTransactionFactory extends TransactionFactory
     {
         return self::REFUND_OPERATION;
     }
-
 }
