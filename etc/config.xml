@@ -407,6 +407,28 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <send_additional>1</send_additional>
                 <zapp_merchant_return_string/>
             </wirecard_elasticengine_paybybankapp>
+            <wirecard_elasticengine_paylib>
+                <title>Wirecard Paylib</title>
+                <active>0</active>
+                <base_url>https://test-paylib.free.beeceptor.com</base_url>
+                <http_user>HTTP-USER</http_user>
+                <http_pass>HTTP-PASSWORD</http_pass>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_refund>0</can_refund>
+                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <model>PaylibFacade</model>
+                <order_status>processing</order_status>
+                <payment_action>debit</payment_action>
+                <merchant_account_id>f5f399c1-78b5-4559-bc0c-e077cb686ca9</merchant_account_id>
+                <secret>NO-SECRET-PROVIDED</secret>
+                <send_additional>1</send_additional>
+            </wirecard_elasticengine_paylib>
             <wirecard_elasticengine_cc_vault>
                 <title>Stored Cards</title>
                 <model>CreditCardVaultFacade</model>
