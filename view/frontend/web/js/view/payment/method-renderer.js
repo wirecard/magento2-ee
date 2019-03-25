@@ -94,6 +94,10 @@ define(
             {
                 type: "wirecard_elasticengine_paybybankapp",
                 component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
+            },
+            {
+              type: "wirecard_elasticengine_paylib",
+              component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             }
         );
 
