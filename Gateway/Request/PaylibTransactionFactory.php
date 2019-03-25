@@ -35,7 +35,6 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\PaylibTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
