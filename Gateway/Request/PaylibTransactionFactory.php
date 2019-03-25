@@ -45,8 +45,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class PaylibTransactionFactory extends TransactionFactory
 {
-    const REFUND_OPERATION = Operation::REFUND;
-
     /**
      * @var PaylibTransaction
      */
