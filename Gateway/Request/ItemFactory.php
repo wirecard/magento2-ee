@@ -108,7 +108,7 @@ class ItemFactory
         $item = new Item(
             $name,
             new Amount($amount, $currency),
-            $qty
+            (int) $qty
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
@@ -148,7 +148,7 @@ class ItemFactory
         $item = new Item(
             $name,
             new Amount($amount, $currency),
-            $qty
+            (int) $qty
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
