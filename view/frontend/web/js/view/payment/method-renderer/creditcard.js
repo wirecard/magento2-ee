@@ -34,9 +34,11 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "mage/translate",
         "mage/url",
-        "Magento_Vault/js/view/payment/vault-enabler"
+        "Magento_Vault/js/view/payment/vault-enabler",
+        "Magento_Checkout/js/model/quote",
+        'Magento_Checkout/js/checkout-data'
     ],
-    function ($, Component, $t, url, VaultEnabler) {
+    function ($, Component, $t, url, VaultEnabler, quote, checkoutData) {
         "use strict";
         return Component.extend({
             token_id: null,
@@ -46,6 +48,25 @@ define(
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
+                let data = {
+                    'quoteId' : quote.getQuoteId()
+                }
+
+                console.log(checkoutData.getShippingAddressFromData());
+
+                $.ajax({
+                    url : url.build("wirecard_elasticengine/frontend/creditcard"),
+                    type : 'post',
+                    data : data,
+                    success : function(result) {
+                        console.log(result);
+                        this.result = result;
+                    },
+                    error : function(err) {
+                        console.log("Error : "+JSON.stringify(err));
+                    }
+                });
+
                 WirecardPaymentPage.seamlessRenderForm({
                     requestData: this.config.seamless_request_data,
                     wrappingDivId: this.getCode() + "_seamless_form",
