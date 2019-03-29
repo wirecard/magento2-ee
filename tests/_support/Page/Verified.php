@@ -49,6 +49,7 @@ class Verified extends Base
      * @var array
      * @since 1.3.4
      */
+
     public $elements = array(
         'Password' => "//*[@id='password']",
         'Continue' => "//*[@name='authenticate']",
