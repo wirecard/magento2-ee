@@ -48,7 +48,7 @@ class Base
      * @var array
      * @since 1.3.4
      */
-    protected $elements = array();
+    protected $elements = [];
 
     /**
      * @var string
@@ -97,7 +97,6 @@ class Base
      */
     public function fillBillingDetails()
     {
-        ;
     }
 
     /**
@@ -107,7 +106,6 @@ class Base
      */
     public function fillCreditCardDetails()
     {
-        ;
     }
 
     /**

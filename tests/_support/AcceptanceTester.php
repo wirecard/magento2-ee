@@ -49,17 +49,15 @@
  * @SuppressWarnings(PHPMD)
  */
 
-use Helper\PhpBrowserAPITest;
 use Page\Base;
 use Page\Checkout as CheckoutPage;
-use Page\Shop as ShopPage;
 use Page\OrderReceived as OrderReceivedPage;
-use Page\Verified as VerifiedPage;
 use Page\Payment as PaymentPage;
+use Page\Shop as ShopPage;
+use Page\Verified as VerifiedPage;
 
 class AcceptanceTester extends \Codeception\Actor
 {
-
     use _generated\AcceptanceTesterActions;
 
     /**

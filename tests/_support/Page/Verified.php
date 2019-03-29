@@ -50,8 +50,8 @@ class Verified extends Base
      * @since 1.3.4
      */
 
-    public $elements = array(
+    public $elements = [
         'Password' => "//*[@id='password']",
         'Continue' => "//*[@name='authenticate']",
-    );
+    ];
 }

@@ -48,7 +48,7 @@ class Payment extends Base
      * @since 1.3.4
      */
 
-    public $elements = array(
+    public $elements = [
         'Wirecard Credit Card' => "//*[@id='wirecard_elasticengine_creditcard']",
         'Place Order' => "//*[@id='wirecard_elasticengine_creditcard_submit']",
         'Credit Card First Name' => "//*[@id='first_name']",
@@ -57,7 +57,7 @@ class Payment extends Base
         'Credit Card CVV' => "//*[@id='card_security_code']",
         'Credit Card Valid until month' => "//*[@name='expiration_month']",
         'Credit Card Valid until year' => "//*[@name='expiration_year']"
-    );
+    ];
 
     /**
      * Method fillCreditCardDetails

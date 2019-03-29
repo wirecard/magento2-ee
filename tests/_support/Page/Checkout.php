@@ -37,6 +37,7 @@ namespace Page;
 
 class Checkout extends Base
 {
+
     /**
      * @var string
      * @since 1.3.4
@@ -48,7 +49,7 @@ class Checkout extends Base
      * @since 1.3.4
      */
 
-    public $elements = array(
+    public $elements = [
         'First Name' => "//*[@name='firstname']",
         'Last Name' => "//*[@name='lastname']",
         'Email Address' => "//*[@id='customer-email']",
@@ -58,7 +59,7 @@ class Checkout extends Base
         'Phone Number' => "//*[@name='telephone']",
         'Country' => "//*[@name='country_id']",
         'Next' => "//*[@class='button action continue primary']"
-    );
+    ];
 
     /**
      * Method fillBillingDetails

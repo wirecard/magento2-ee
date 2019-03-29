@@ -43,7 +43,6 @@ use Codeception\Lib\Generator\PageObject;
 class Acceptance extends \Codeception\Module
 {
 
-
     /**
      * Method getDataFromDataFile
      * @param string $fileName
