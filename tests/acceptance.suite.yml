@@ -1,0 +1,37 @@
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests.
+# Perform tests in browser using the WebDriver or PhpBrowser.
+# If you need both WebDriver and PHPBrowser tests - create a separate suite.
+
+actor: AcceptanceTester
+modules:
+  enabled:
+    - WebDriver:
+        url: 'https://magento2-230-109-71-apache-postsize.eu.ngrok.io/'
+        browser: chrome # 'chrome' or 'firefox'
+    - \Helper\Acceptance
+
+
+env:
+  ui_test:
+    modules:
+      config:
+        WebDriver:
+#          host: 'hub-cloud.browserstack.com'
+#          port: 80
+          url: 'https://magento2-230-109-71-apache-postsize.eu.ngrok.io/'
+          browser: chrome # 'chrome' or 'firefox'
+          capabilities:
+            'build': '%VERSION%'
+            'project': 'prestashop-ee-%GATEWAY%'
+#            'browserstack.local': 'true'
+#            'browserstack.user': '%BROWSERSTACK_USER%'
+#            'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
+
+#  validator:
+#    modules:
+#      config:
+#        WebDriver:
+#          browser: 'phantomjs'
+#          url: 'https://validator.prestashop.com'
