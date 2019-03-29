@@ -57,7 +57,7 @@ class Base
     protected $tester;
 
     /**
-     * @var AcceptanceTester
+     * @var \AcceptanceTester
      * @since 1.3.4
      */
     public function __construct(\AcceptanceTester $I)
