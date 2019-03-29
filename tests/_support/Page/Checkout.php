@@ -86,7 +86,7 @@ class Checkout extends Base
         $I->waitForElementVisible($this->getElement('Phone Number'));
         $I->fillField($this->getElement('Phone Number'), $data_field_values->phone);
         $I->waitForElementVisible($this->getElement('Next'));
-        $I->wait(5);
+        $I->wait(7);
         $I->click($this->getElement('Next'));
     }
 }
