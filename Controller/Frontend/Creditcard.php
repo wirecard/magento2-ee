@@ -67,11 +67,11 @@ class Creditcard extends Action
 
     protected $quoteIdMaskFactory;
 
+    protected $customerSession;
+
     protected $transactionServiceFactory;
 
     protected $taxCalculation;
-
-    protected $orderDto;
 
     protected $resolver;
 
@@ -103,6 +103,7 @@ class Creditcard extends Action
         \Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory $transactionServiceFactory,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory,
+        \Magento\Customer\Model\Session $customerSession,
         Calculation $taxCalculation,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
@@ -114,9 +115,9 @@ class Creditcard extends Action
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->quoteRepository = $quoteRepository;
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
+        $this->customerSession = $customerSession;
         $this->taxCalculation = $taxCalculation;
         $this->resolver = $resolver;
-        $this->orderDto = new OrderDto();
         $this->storeManager = $storeManager;
         $this->urlBuilder = $urlBuilder;
         $this->paymentHelper = $paymentHelper;
@@ -130,36 +131,63 @@ class Creditcard extends Action
      */
     public function execute()
     {
+        if ($this->customerSession->isLoggedIn()) {
+            return $this->buildErrorResponse('a customer is logged on, no quote available', ['session' => $this->customerSession]);
+        }
 
         $requestQuoteId = $this->getRequest()->getParam('quoteId', null);
-
         if (is_null($requestQuoteId)) {
-            return null;
+            return $this->buildErrorResponse('no quore id given');
         }
 
         $seamlessRequestData = null;
         $quote = $this->fetchQuote($requestQuoteId);
-
         if (is_null($quote)) {
-            return null;
+            return $this->buildErrorResponse('quote not found', ['quoteId' => $requestQuoteId]);
         }
 
         $quote->reserveOrderId();
 
-        $this->orderDto->quote = $quote;
+        $orderDto = new OrderDto();
+        $orderDto->quote = $quote;
         $transactionService = $this->transactionServiceFactory->create(CreditCardTransaction::NAME);
-        $this->orderDto->orderId = $quote->getReservedOrderId();
+        $orderDto->orderId = $quote->getReservedOrderId();
 
         $method = $this->paymentHelper->getMethodInstance('wirecard_elasticengine_creditcard');
         $baseUrl = $method->getConfigData('base_url');
         $language = $this->getSupportedHppLangCode($baseUrl);
 
-        $this->orderDto->config = $transactionService->getConfig()->get(CreditCardTransaction::NAME);
-        $this->processCreditCard();
-        $data = $transactionService->getCreditCardUiWithData($this->orderDto->transaction, 'authorization', $language);
-        $jsonResponse = $this->resultJsonFactory->create();
-        $jsonResponse->setData($data);
+        $orderDto->config = $transactionService->getConfig()->get(CreditCardTransaction::NAME);
+        $this->processCreditCard($orderDto);
+        $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, 'authorization', $language);
+        $decodedData = json_decode($data);
+        if (empty($decodedData)) {
+            return $this->buildErrorResponse('cannot create UI', ['quoteId' => $requestQuoteId, 'raw ui data' => $data]);
+        }
 
+        return $this->buildSuccessResponse($decodedData);
+    }
+
+    private function buildSuccessResponse($uiData) {
+        $jsonResponse = $this->resultJsonFactory->create();
+        $jsonResponse->setData([
+            'status' => 'OK',
+            'uiData' => $uiData
+        ]);
+        return $jsonResponse;
+    }
+
+    private function buildErrorResponse($errMsg, $details = []) {
+        $jsonResponse = $this->resultJsonFactory->create();
+        $errData = [
+            'status' => 'ERR',
+            'errMsg' => $errMsg,
+        ];
+        if (!empty($details)) {
+            $errData['details'] = $details;
+        }
+
+        $jsonResponse->setData($errData);
         return $jsonResponse;
     }
 
@@ -183,63 +211,63 @@ class Creditcard extends Action
         return $quote;
     }
 
-    public function processCreditCard()
+    private function processCreditCard(OrderDTO $orderDto)
     {
-        $this->orderDto->transaction = new CreditCardTransaction();
-        $this->orderDto->transaction->setConfig($this->orderDto->config);
-        $this->orderDto->amount = $this->getAmount($this->orderDto->quote->getGrandTotal());
-        $this->orderDto->transaction->setAmount($this->orderDto->amount);
+        $orderDto->transaction = new CreditCardTransaction();
+        $orderDto->transaction->setConfig($orderDto->config);
+        $currency = $orderDto->quote->getBaseCurrencyCode();
+        $orderDto->amount = new Amount($orderDto->quote->getGrandTotal(), $currency);
+        $orderDto->transaction->setAmount($orderDto->amount);
 
-        $this->orderDto->customFields = new CustomFieldCollection();
-        $this->orderDto->customFields->add(new CustomField('orderId', $this->orderDto->orderId));
-        $this->orderDto->transaction->setCustomFields($this->orderDto->customFields);
+        $orderDto->customFields = new CustomFieldCollection();
+        $orderDto->customFields->add(new CustomField('orderId', $orderDto->orderId));
+        $orderDto->transaction->setCustomFields($orderDto->customFields);
 
-        $this->orderDto->transaction->setEntryMode('ecommerce');
-        $this->orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+        $orderDto->transaction->setEntryMode('ecommerce');
+        $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
-        $cfgkey = $this->orderDto->transaction->getConfigKey();
+        $cfgkey = $orderDto->transaction->getConfigKey();
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
         $methodAppend = '?method=' . urlencode($cfgkey);
 
-        $this->orderDto->transaction->setRedirect(new \Wirecard\PaymentSdk\Entity\Redirect(
+        $orderDto->transaction->setRedirect(new \Wirecard\PaymentSdk\Entity\Redirect(
             $wdBaseUrl . 'frontend/redirect' . $methodAppend,
             $wdBaseUrl . 'frontend/cancel' . $methodAppend,
             $wdBaseUrl . 'frontend/redirect' . $methodAppend
         ));
-        $this->orderDto->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify?orderId=' . $this->orderDto->orderId);
+        $notificationUrl = $wdBaseUrl . 'frontend/notify?orderId=' . $orderDto->orderId;
+        $orderDto->transaction->setNotificationUrl($notificationUrl);
 
         if ($this->methodConfig->getValue('send_additional')) {
-            $this->setAdditionalInformation();
+            $this->setAdditionalInformation($orderDto);
         }
     }
 
-    public function setAdditionalInformation()
+    public function setAdditionalInformation(OrderDto $orderDto)
     {
-        $this->orderDto->basket = new Basket();
+        $orderDto->basket = new Basket();
 
-        $this->orderDto->transaction->setAccountHolder(
-            $this->fetchAccountHolder($this->orderDto->quote->getBillingAddress())
-        );
+        $orderDto->transaction->setAccountHolder($this->fetchAccountHolder($orderDto->quote->getBillingAddress()));
 
-        $shippingAddress = $this->orderDto->quote->getShippingAddress();
+        $shippingAddress = $orderDto->quote->getShippingAddress();
         if (isset($shippingAddress)) {
-            $this->orderDto->transaction->setShipping(
-                $this->fetchAccountHolder($this->orderDto->quote->getShippingAddress())
+            $orderDto->transaction->setShipping(
+                $this->fetchAccountHolder($orderDto->quote->getShippingAddress())
             );
         }
 
-        $this->orderDto->transaction->setDescriptor(sprintf(
+        $orderDto->transaction->setDescriptor(sprintf(
             '%s %s',
             substr($this->storeManager->getStore()->getName(), 0, 9),
-            $this->orderDto->orderId
+            $orderDto->orderId
         ));
 
-        $this->orderDto->transaction->setOrderNumber($this->orderDto->orderId);
-        $this->orderDto->basket = new Basket();
-        $this->addOrderItemsToBasket();
-        $this->orderDto->transaction->setIpAddress($this->orderDto->quote->getRemoteIp());
-        $this->orderDto->transaction->setConsumerId($this->orderDto->quote->getCustomerId());
+        $orderDto->transaction->setOrderNumber($orderDto->orderId);
+        $orderDto->basket = new Basket();
+        $this->addOrderItemsToBasket($orderDto);
+        $orderDto->transaction->setIpAddress($orderDto->quote->getRemoteIp());
+        $orderDto->transaction->setConsumerId($orderDto->quote->getCustomerId());
     }
 
     private function fetchAccountHolder($address) {
@@ -253,21 +281,17 @@ class Creditcard extends Action
         return $accountHolder;
     }
 
-    private function addOrderItemsToBasket() {
-        $items = $this->orderDto->quote->getAllVisibleItems();
-
+    private function addOrderItemsToBasket(OrderDto $orderDto) {
+        $items    = $orderDto->quote->getAllVisibleItems();
+        $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount = $this->getAmount($orderItem->getPriceInclTax());
-            $taxAmount = $this->getAmount($orderItem->getTaxAmount());
+            $amount    = new Amount($orderItem->getPriceInclTax(), $currency);
+            $taxAmount = new Amount($orderItem->getTaxAmount(), $currency);
             $item = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
             $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));
-            $this->orderDto->basket->add($item);
+            $orderDto->basket->add($item);
         }
-    }
-
-    private function getAmount($amount) {
-        return new Amount($amount, $this->orderDto->quote->getBaseCurrencyCode());
     }
 
     private function getSupportedHppLangCode($baseUrl)

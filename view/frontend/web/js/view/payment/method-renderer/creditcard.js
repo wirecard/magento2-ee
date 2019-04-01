@@ -52,27 +52,39 @@ define(
                     'quoteId' : quote.getQuoteId()
                 }
 
-                console.log(checkoutData.getShippingAddressFromData());
+                let wrappingDivId   = this.getCode() + "_seamless_form";
+                let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
+                let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
+                let messageContainer = this.messageContainer;
+
+                console.log("INIT UI with data:");
+                console.log(data);
 
                 $.ajax({
                     url : url.build("wirecard_elasticengine/frontend/creditcard"),
                     type : 'post',
                     data : data,
                     success : function(result) {
+                        console.log("RECEIVE ui data");
                         console.log(result);
-                        this.result = result;
+                        if ('OK' === result.status) {
+                            WirecardPaymentPage.seamlessRenderForm({
+                                requestData:   result.uiData,
+                                wrappingDivId: wrappingDivId,
+                                onSuccess:     formSizeHandler,
+                                onError:       formInitHandler
+                            });
+                        } else {
+                            messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                            console.error("Problem receive UI data");
+                        }
                     },
                     error : function(err) {
-                        console.log("Error : "+JSON.stringify(err));
+                        messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        console.error("Error : "+JSON.stringify(err));
                     }
                 });
 
-                WirecardPaymentPage.seamlessRenderForm({
-                    requestData: this.config.seamless_request_data,
-                    wrappingDivId: this.getCode() + "_seamless_form",
-                    onSuccess: this.seamlessFormSizeHandler.bind(this),
-                    onError: this.seamlessFormInitErrorHandler.bind(this)
-                });
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
@@ -101,7 +113,7 @@ define(
             },
             seamlessFormInitErrorHandler: function (response) {
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-
+                
                 console.error(response);
             },
             seamlessFormSubmitErrorHandler: function (response) {
@@ -119,12 +131,14 @@ define(
             },
             resizeIFrame: function () {
                 var iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
-                if (iframe.clientWidth > 768) {
-                    iframe.style.height = "267px";
-                } else if (iframe.clientWidth > 460) {
-                    iframe.style.height = "341px";
-                } else {
-                    iframe.style.height = "415px";
+                if (iframe) {
+                    if (iframe.clientWidth > 768) {
+                        iframe.style.height = "267px";
+                    } else if (iframe.clientWidth > 460) {
+                        iframe.style.height = "341px";
+                    } else {
+                        iframe.style.height = "415px";
+                    }
                 }
             },
 
