@@ -48,7 +48,7 @@ class Acceptance extends \Codeception\Module
      * @param string $fileName
      * @return string
      *
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public static function getDataFromDataFile($fileName)
     {
@@ -68,7 +68,7 @@ class Acceptance extends \Codeception\Module
      * @param string $dataType
      * @param PageObject $page
      *
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public static function fillFieldsWithData($dataType, $page)
     {

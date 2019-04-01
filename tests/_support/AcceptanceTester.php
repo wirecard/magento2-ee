@@ -62,7 +62,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @var string
-     * @since 1.3.4
+     * @since 1.4.1
      */
     private $currentPage;
 
@@ -72,7 +72,7 @@ class AcceptanceTester extends \Codeception\Actor
      * @param string $name
      * @return Base
      *
-     * @since   1.3.4
+     * @since   1.4.1
      */
     private function selectPage($name)
     {
@@ -107,7 +107,7 @@ class AcceptanceTester extends \Codeception\Actor
      * @param string $elementName
      * @return string
      *
-     * @since   1.3.4
+     * @since   1.4.1
      */
     private function getPageElement($elementName)
     {
@@ -117,7 +117,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Given I am on :page page
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iAmOnPage($page)
     {
@@ -128,7 +128,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I click :object
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iClick($object)
     {
@@ -139,7 +139,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I am redirected to :page page
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iAmRedirectedToPage($page)
     {
@@ -151,7 +151,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I fill fields with :data
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iFillFieldsWith($data)
     {
@@ -160,7 +160,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I enter :fieldValue in field :fieldID
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iEnterInField($fieldValue, $fieldID)
     {
@@ -170,7 +170,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Then I see :text
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iSee($text)
     {
@@ -179,7 +179,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Given I prepare checkout
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iPrepareCheckout()
     {
@@ -191,7 +191,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I check :box
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function iCheck($box)
     {

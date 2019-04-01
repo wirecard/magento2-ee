@@ -39,13 +39,13 @@ class Payment extends Base
 {
     /**
      * @var string
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public $URL = 'index.php/checkout#payment';
 
     /**
      * @var array
-     * @since 1.3.4
+     * @since 1.4.1
      */
 
     public $elements = [
@@ -61,7 +61,7 @@ class Payment extends Base
 
     /**
      * Method fillCreditCardDetails
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function fillCreditCardDetails()
     {
@@ -81,7 +81,7 @@ class Payment extends Base
 
     /**
      * Method switchFrame
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function switchFrame()
     {

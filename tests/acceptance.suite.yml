@@ -28,10 +28,3 @@ env:
 #            'browserstack.local': 'true'
 #            'browserstack.user': '%BROWSERSTACK_USER%'
 #            'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
-
-#  validator:
-#    modules:
-#      config:
-#        WebDriver:
-#          browser: 'phantomjs'
-#          url: 'https://validator.prestashop.com'

@@ -40,13 +40,13 @@ class Checkout extends Base
 
     /**
      * @var string
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public $URL = 'index.php/checkout#shipping';
 
     /**
      * @var array
-     * @since 1.3.4
+     * @since 1.4.1
      */
 
     public $elements = [
@@ -64,7 +64,7 @@ class Checkout extends Base
     /**
      * Method fillBillingDetails
      *
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public function fillBillingDetails()
     {

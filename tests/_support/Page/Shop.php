@@ -40,14 +40,14 @@ class Shop extends Base
 
     /**
      * @var string
-     * @since 1.3.4
+     * @since 1.4.1
      */
     // include url of current page
     public $URL = '/index.php';
 
     /**
      * @var array
-     * @since 1.3.4
+     * @since 1.4.1
      */
     public $elements = [
         'First Product in the Product List' => '//*[@id="maincontent"]/div[3]/div/div[2]/div[3]/div/div/ol/li[1]/div/div/div[3]/div[1]/button'
