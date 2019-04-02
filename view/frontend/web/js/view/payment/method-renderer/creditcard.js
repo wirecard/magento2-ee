@@ -48,25 +48,16 @@ define(
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
-                let data = {
-                    'quoteId' : quote.getQuoteId()
-                }
-
+            	
                 let wrappingDivId   = this.getCode() + "_seamless_form";
                 let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
                 let messageContainer = this.messageContainer;
 
-                console.log("INIT UI with data:");
-                console.log(data);
-
                 $.ajax({
                     url : url.build("wirecard_elasticengine/frontend/creditcard"),
                     type : 'post',
-                    data : data,
                     success : function(result) {
-                        console.log("RECEIVE ui data");
-                        console.log(result);
                         if ('OK' === result.status) {
                             WirecardPaymentPage.seamlessRenderForm({
                                 requestData:   result.uiData,

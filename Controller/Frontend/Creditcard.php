@@ -31,18 +31,21 @@
 
 namespace Wirecard\ElasticEngine\Controller\Frontend;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Tax\Model\Calculation;
-use Magento\Payment\Helper\Data;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
-use Wirecard\ElasticEngine\Gateway\Config\PaymentSdkConfigFactory;
-use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\Config\CreditCardConfig;
+use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Payment\Helper\Data;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Tax\Model\Calculation;
+use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -50,46 +53,49 @@ use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
+use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
-use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
-use Magento\Payment\Gateway\ConfigInterface;
 
 class Creditcard extends Action
 {
-    /**
-     * @var JsonFactory
-     */
+    /** @var JsonFactory Magento2 JsonFactory injected by DI */
     protected $resultJsonFactory;
-    /**
-     * @var \Magento\Quote\Api\CartRepositoryInterface
-     */
-    protected $quoteRepository;
 
-    protected $quoteIdMaskFactory;
+    /** @var CartRepositoryInterface Magento2 cart repository injected by DI */
+    protected $cartRepository;
 
-    protected $customerSession;
+    /** @var Session Magento2 checkout session injected by DI */
+    protected $checkoutSession;
 
+    /** @var TransactionServiceFactory paymentSDK TransactionService injected by DI */
     protected $transactionServiceFactory;
 
+    /** @var Calculation Magneto2 tax calculator injected by DI */
     protected $taxCalculation;
 
+    /** @var ResolverInterface Magento2 Resolver injected by DI */
     protected $resolver;
 
+    /** @var StoreManagerInterface Magento2 StoreManager injected by DI */
     protected $storeManager;
 
+    /** @var UrlInterface Magento2 UrlInterface injected by DI */
     protected $urlBuilder;
 
+    /** @var Data Magento2 PaymentHelper injected by DI */
     protected $paymentHelper;
 
+    /** @var ConfigInterface Magento2 payment method config injected by DI */
     protected $methodConfig;
 
     /**
      * Creditcard constructor.
+     *
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
-     * @param \Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory $transactionServiceFactory
-     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
-     * @param \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory
+     * @param TransactionServiceFactory $transactionServiceFactory
+     * @param CartRepositoryInterface $cartRepository
+     * @param Session $checkoutSession
      * @param Calculation $taxCalculation
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
@@ -100,10 +106,9 @@ class Creditcard extends Action
     public function __construct(
         Context $context,
         JsonFactory $resultJsonFactory,
-        \Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory $transactionServiceFactory,
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory,
-        \Magento\Customer\Model\Session $customerSession,
+        TransactionServiceFactory $transactionServiceFactory,
+        CartRepositoryInterface $quoteRepository,
+        Session $checkoutSession,
         Calculation $taxCalculation,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
@@ -114,8 +119,7 @@ class Creditcard extends Action
         $this->resultJsonFactory = $resultJsonFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->quoteRepository = $quoteRepository;
-        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
-        $this->customerSession = $customerSession;
+        $this->checkoutSession = $checkoutSession;
         $this->taxCalculation = $taxCalculation;
         $this->resolver = $resolver;
         $this->storeManager = $storeManager;
@@ -126,30 +130,30 @@ class Creditcard extends Action
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface|null
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * Execute the command to build the CreditCard UI init data
+     *
+     * Based on the session data about user data and cart information (items, sum)
+     * the request data are build to init the CreditCard UI later in JavaScript.
+     *
+     * The result is JSON with following structure:
+     *
+     * - success case: status=OK, uiData=(raw JSON data)
+     * - error case:   status=ERR, errMsg=error message, optionally details
+     *
+     * @return Json
+     * @throws LocalizedException
      */
     public function execute()
     {
-        if ($this->customerSession->isLoggedIn()) {
-            return $this->buildErrorResponse('a customer is logged on, no quote available', ['session' => $this->customerSession]);
-        }
-
-        $requestQuoteId = $this->getRequest()->getParam('quoteId', null);
-        if (is_null($requestQuoteId)) {
-            return $this->buildErrorResponse('no quore id given');
-        }
-
-        $seamlessRequestData = null;
-        $quote = $this->fetchQuote($requestQuoteId);
+        $quote = $this->checkoutSession->getQuote();
         if (is_null($quote)) {
-            return $this->buildErrorResponse('quote not found', ['quoteId' => $requestQuoteId]);
+            return $this->buildErrorResponse('no quote found');
         }
-
-        $quote->reserveOrderId();
 
         $orderDto = new OrderDto();
+        $quote->reserveOrderId();
         $orderDto->quote = $quote;
+
         $transactionService = $this->transactionServiceFactory->create(CreditCardTransaction::NAME);
         $orderDto->orderId = $quote->getReservedOrderId();
 
@@ -162,22 +166,46 @@ class Creditcard extends Action
         $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, 'authorization', $language);
         $decodedData = json_decode($data);
         if (empty($decodedData)) {
-            return $this->buildErrorResponse('cannot create UI', ['quoteId' => $requestQuoteId, 'raw ui data' => $data]);
+            return $this->buildErrorResponse('cannot create UI', ['raw ui data' => $data]);
         }
 
         return $this->buildSuccessResponse($decodedData);
     }
 
-    private function buildSuccessResponse($uiData) {
+    /**
+     * Generate the SUCCESS JSON result
+     *
+     * The resulting JSON contains two keys:
+     * - 'status': 'OK' to signalize the JavaScript caller handle answer as init data
+     * - 'uiData': the UI init data used by JavaScript code to render the UI
+     *
+     * @param \stdClass $uiData the JSON payload received from backend
+     * @return Json JsonResponse with 'status' and 'uiData'
+     */
+    private function buildSuccessResponse($uiData)
+    {
         $jsonResponse = $this->resultJsonFactory->create();
         $jsonResponse->setData([
             'status' => 'OK',
-            'uiData' => $uiData
+            'uiData' => $uiData,
         ]);
         return $jsonResponse;
     }
 
-    private function buildErrorResponse($errMsg, $details = []) {
+    /**
+     * Generate the ERROR JSON result
+     *
+     * The resulting JSON contains two or three keys:
+     * - 'status': 'ERR' to signalize the JavaScript caller handle answer as error
+     * - 'errMsg': an english human readable message what's happen
+     * - 'details': mapping with additional information (optionally)
+     *
+     * @param string $errMsg error message for caller
+     * @param array $details map with addional information about the problem
+     * @return Json JsonResponse with 'status' and 'errMsg'. Can also contains key 'details'
+     */
+    private function buildErrorResponse($errMsg, $details = [])
+    {
         $jsonResponse = $this->resultJsonFactory->create();
         $errData = [
             'status' => 'ERR',
@@ -191,31 +219,35 @@ class Creditcard extends Action
         return $jsonResponse;
     }
 
-    private function calculateTax($taxAmount, $grossAmount) {
+    /**
+     * Return the tax rate
+     *
+     * @param double $taxAmount amount of tax
+     * @param double $grossAmount total amount
+     * @return double tax rate, rounded to 2 decimals
+     */
+    private function calculateTax($taxAmount, $grossAmount)
+    {
         return number_format(
             ($taxAmount / $grossAmount) * 100,
             2
         );
     }
 
-    private function fetchQuote($maskedQuoteId) {
-        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($maskedQuoteId, 'masked_id');
-        $quoteId = $quoteIdMask->getQuoteId();
-
-        try {
-            $quote = $this->quoteRepository->get($quoteId);
-        } catch(NoSuchEntityException $e) {
-            $quote = null;
-        }
-
-        return $quote;
-    }
-
+    /**
+     * Prepare CreditCardTransaction with information stored in $orderDto
+     *
+     * NOTE: the resulting transaction also stored in the DTO so there is
+     *       no return here.
+     *
+     * @param OrderDto $orderDto data transfer object holds all order data
+     */
     private function processCreditCard(OrderDTO $orderDto)
     {
         $orderDto->transaction = new CreditCardTransaction();
         $orderDto->transaction->setConfig($orderDto->config);
-        $currency = $orderDto->quote->getBaseCurrencyCode();
+
+        $currency         = $orderDto->quote->getBaseCurrencyCode();
         $orderDto->amount = new Amount($orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
 
@@ -226,12 +258,11 @@ class Creditcard extends Action
         $orderDto->transaction->setEntryMode('ecommerce');
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
-        $cfgkey = $orderDto->transaction->getConfigKey();
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-
+        $cfgkey       = $orderDto->transaction->getConfigKey();
+        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $methodAppend = '?method=' . urlencode($cfgkey);
 
-        $orderDto->transaction->setRedirect(new \Wirecard\PaymentSdk\Entity\Redirect(
+        $orderDto->transaction->setRedirect(new Redirect(
             $wdBaseUrl . 'frontend/redirect' . $methodAppend,
             $wdBaseUrl . 'frontend/cancel' . $methodAppend,
             $wdBaseUrl . 'frontend/redirect' . $methodAppend
@@ -244,6 +275,14 @@ class Creditcard extends Action
         }
     }
 
+    /**
+     * Add additional data to transaction
+     *
+     * NOTE: the resulting transaction also stored in the DTO so there is
+     *       no return here.
+     *
+     * @param OrderDto $orderDto data transfer object holds all order data
+     */
     public function setAdditionalInformation(OrderDto $orderDto)
     {
         $orderDto->basket = new Basket();
@@ -270,7 +309,14 @@ class Creditcard extends Action
         $orderDto->transaction->setConsumerId($orderDto->quote->getCustomerId());
     }
 
-    private function fetchAccountHolder($address) {
+    /**
+     * Helper method to build the AccountHolder structure by an address
+     *
+     * @param \Magento\Customer\Model\Address $address Magento2 address from session
+     * @return AccountHolder paymentSdk entity AccountHolder
+     */
+    private function fetchAccountHolder($address)
+    {
         $accountHolder = new AccountHolder();
         $accountHolder->setEmail($address->getEmail());
         $accountHolder->setPhone($address->getTelephone());
@@ -281,19 +327,36 @@ class Creditcard extends Action
         return $accountHolder;
     }
 
-    private function addOrderItemsToBasket(OrderDto $orderDto) {
+    /**
+     * Build basket based on stored items
+     *
+     * NOTE: the resulting transaction also stored in the DTO so there is
+     *       no return here.
+     *
+     * @param OrderDto $orderDto data transfer object holds all order data
+     */
+    private function addOrderItemsToBasket(OrderDto $orderDto)
+    {
         $items    = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
             $amount    = new Amount($orderItem->getPriceInclTax(), $currency);
             $taxAmount = new Amount($orderItem->getTaxAmount(), $currency);
-            $item = new Item($orderItem->getName(), $amount, $orderItem->getQty());
+            $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
             $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));
             $orderDto->basket->add($item);
         }
     }
 
+    /**
+     * Find out the best supported HPP language code
+     *
+     * Currently, this triggers a call against the EE rest interface to find out
+     * all supported languages. Based on the Magento2 locale and the list of the
+     *
+     * @param string $baseUrl Gateway URL from merchants config
+     */
     private function getSupportedHppLangCode($baseUrl)
     {
         $locale = $this->resolver->getLocale();
