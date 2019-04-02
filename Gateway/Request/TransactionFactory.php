@@ -47,6 +47,7 @@ use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Operation;
+use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -188,8 +189,13 @@ class TransactionFactory
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
         $cfgkey = $this->transaction->getConfigKey();
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
 
+        // Special handling for the non-standard mapping
+        if ($this->transaction instanceof RatepayInvoiceTransaction) {
+            $cfgkey = RatepayInvoiceTransaction::NAME;
+        }
+
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $methodAppend = '?method=' . urlencode($cfgkey);
 
         $this->transaction->setRedirect(new Redirect(

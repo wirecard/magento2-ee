@@ -166,7 +166,7 @@ class BasketFactory
             if ($item->getBaseRowInvoiced() == 0 || $qty == 0) {
                 continue;
             }
-            $basket->add($this->itemFactory->capture($item, $order->getCurrencyCode(), $qty));
+            $basket->add($this->itemFactory->capture($item, $order->getCurrencyCode(), (int) $qty));
         }
 
         //Current shipping
@@ -227,7 +227,7 @@ class BasketFactory
             if ($item->getBaseAmountRefunded() == 0 || $qty == 0) {
                 continue;
             }
-            $basket->add($this->itemFactory->refund($item, $order->getCurrencyCode(), $qty));
+            $basket->add($this->itemFactory->refund($item, $order->getCurrencyCode(), (int) $qty));
         }
 
         //Current shipping
@@ -292,7 +292,7 @@ class BasketFactory
             $shippingItem = new Item(
                 'Shipping',
                 new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
-                "1"
+                1
             );
 
             $taxRate = number_format(

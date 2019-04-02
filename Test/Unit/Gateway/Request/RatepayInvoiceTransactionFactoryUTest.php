@@ -281,9 +281,9 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect?method=ratepay-invoice',
-            'http://magen.to/frontend/cancel?method=ratepay-invoice',
-            'http://magen.to/frontend/redirect?method=ratepay-invoice'
+            'http://magen.to/frontend/redirect?method=ratepayinvoice',
+            'http://magen.to/frontend/cancel?method=ratepayinvoice',
+            'http://magen.to/frontend/redirect?method=ratepayinvoice'
         ));
 
         $customFields = new CustomFieldCollection();
