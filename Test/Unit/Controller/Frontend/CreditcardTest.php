@@ -34,33 +34,24 @@ namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
-use Magento\Framework\Controller\Result\Redirect;
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Locale\ResolverInterface;
-use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
-use Wirecard\ElasticEngine\Controller\Frontend\Cancel;
 use Wirecard\ElasticEngine\Controller\Frontend\Creditcard;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-
-use Magento\Payment\Model\MethodInterface;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\TransactionService;
 
 class CreditcardTest extends \PHPUnit_Framework_TestCase
 {
-
     const ORDER_ID = '12345';
     const BASE_URL = 'https://example.com/';
     const CURRENCY_CODE = 'EUR';
@@ -83,7 +74,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->resultJson = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->getMock();
 
         $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
@@ -185,5 +175,4 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $this->controller->execute();
     }
-
 }
