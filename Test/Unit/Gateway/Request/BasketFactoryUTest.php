@@ -103,8 +103,8 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->itemFactory = $this->getMockBuilder(ItemFactory::class)->getMock();
 
-        $this->itemFactory->method('capture')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
-        $this->itemFactory->method('refund')->willReturn(new Item('', new Amount(0.0, 'EUR'), ''));
+        $this->itemFactory->method('capture')->willReturn(new Item('', new Amount(0.0, 'EUR'), 0));
+        $this->itemFactory->method('refund')->willReturn(new Item('', new Amount(0.0, 'EUR'), 0));
 
         $this->orderFactory = $this->getMockBuilder(OrderFactory::class)->disableOriginalConstructor()
             ->setMethods(['create'])->getMock();
@@ -190,19 +190,19 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->setUpWithQuoteData();
 
         $this->itemFactory->expects($this->at(0))->method('create')
-            ->willReturn(new Item('item', new Amount(0.0, 'EUR'), ''));
+            ->willReturn(new Item('item', new Amount(0.0, 'EUR'), 0));
         $this->itemFactory->expects($this->at(1))->method('create')
-            ->willReturn(new Item('bundledItem1', new Amount(0.0, 'EUR'), ''));
+            ->willReturn(new Item('bundledItem1', new Amount(0.0, 'EUR'), 0));
         $this->itemFactory->expects($this->at(2))->method('create')
-            ->willReturn(new Item('bundleFixed', new Amount(0.0, 'EUR'), ''));
+            ->willReturn(new Item('bundleFixed', new Amount(0.0, 'EUR'), 0));
 
         $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
-        $expected->add(new Item('item', new Amount(0.0, 'EUR'), ''));
-        $expected->add(new Item('bundledItem1', new Amount(0.0, 'EUR'), ''));
-        $expected->add(new Item('bundleFixed', new Amount(0.0, 'EUR'), ''));
+        $expected->add(new Item('item', new Amount(0.0, 'EUR'), 0));
+        $expected->add(new Item('bundledItem1', new Amount(0.0, 'EUR'), 0));
+        $expected->add(new Item('bundleFixed', new Amount(0.0, 'EUR'), 0));
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
@@ -230,8 +230,8 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
@@ -269,8 +269,8 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), ''));
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
+        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
