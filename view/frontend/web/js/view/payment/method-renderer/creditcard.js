@@ -48,19 +48,19 @@ define(
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
-            	
-                let wrappingDivId   = this.getCode() + "_seamless_form";
-                let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
-                let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
-                let messageContainer = this.messageContainer;
+                var wrappingDivId   = this.getCode() + "_seamless_form";
+                var formSizeHandler = this.seamlessFormSizeHandler.bind(this);
+                var formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
+                var messageContainer = this.messageContainer;
 
                 $.ajax({
                     url : url.build("wirecard_elasticengine/frontend/creditcard"),
                     type : 'post',
                     success : function(result) {
                         if ('OK' === result.status) {
+                            var uiInitData = JSON.parse(result.uiData);
                             WirecardPaymentPage.seamlessRenderForm({
-                                requestData:   result.uiData,
+                                requestData:   uiInitData,
                                 wrappingDivId: wrappingDivId,
                                 onSuccess:     formSizeHandler,
                                 onError:       formInitHandler

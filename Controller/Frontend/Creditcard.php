@@ -164,12 +164,11 @@ class Creditcard extends Action
         $orderDto->config = $transactionService->getConfig()->get(CreditCardTransaction::NAME);
         $this->processCreditCard($orderDto);
         $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, 'authorization', $language);
-        $decodedData = json_decode($data);
-        if (empty($decodedData)) {
+        if (empty($data)) {
             return $this->buildErrorResponse('cannot create UI', ['raw ui data' => $data]);
         }
 
-        return $this->buildSuccessResponse($decodedData);
+        return $this->buildSuccessResponse($data);
     }
 
     /**
@@ -283,7 +282,7 @@ class Creditcard extends Action
      *
      * @param OrderDto $orderDto data transfer object holds all order data
      */
-    public function setAdditionalInformation(OrderDto $orderDto)
+    private function setAdditionalInformation(OrderDto $orderDto)
     {
         $orderDto->basket = new Basket();
 
