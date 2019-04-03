@@ -136,7 +136,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'seamless_request_data' => $seamlessRequestData,
                     'vaultCode' => self::CREDITCARD_VAULT_CODE
                 ],
                 'wirecard_elasticengine_maestro' => [
@@ -275,7 +274,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'seamless_request_data' => $seamlessRequestData,
                     'vaultCode' => self::CREDITCARD_VAULT_CODE
                 ],
                 'wirecard_elasticengine_maestro' => [
