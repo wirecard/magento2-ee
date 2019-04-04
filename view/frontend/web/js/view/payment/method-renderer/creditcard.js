@@ -48,6 +48,7 @@ define(
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
+                var uiInitData = { "txtype": this.getCode() };
                 var wrappingDivId   = this.getCode() + "_seamless_form";
                 var formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 var formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
@@ -56,6 +57,7 @@ define(
                 $.ajax({
                     url : url.build("wirecard_elasticengine/frontend/creditcard"),
                     type : 'post',
+                    data: uiInitData,
                     success : function(result) {
                         if ('OK' === result.status) {
                             var uiInitData = JSON.parse(result.uiData);

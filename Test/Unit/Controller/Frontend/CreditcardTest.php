@@ -33,6 +33,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Locale\ResolverInterface;
@@ -72,35 +73,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     /** @var TransactionService */
     private $transactionServiceFactory;
 
-    public function setUp()
-    {
-        $this->resultJson = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->getMock();
-
-        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
-
-        $resultJsonFactory = $this->getMockBuilder(JsonFactory::class)->disableOriginalConstructor()->getMock();
-        $resultJsonFactory->expects($this->once())->method('create')->willReturn($this->resultJson);
-
-        $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $quoteRepository = $this->getMockForAbstractClass(CartRepositoryInterface::class);
-
-        $this->checkoutSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
-
-        $taxCalculation = $this->getMockBuilder(Calculation::class)->disableOriginalConstructor()->getMock();
-        $resolver  = $this->getMockForAbstractClass(ResolverInterface::class);
-        $storeManager = $this->getMockForAbstractClass(StoreManagerInterface::class);
-        $urlBuilder = $this->getMockForAbstractClass(UrlInterface::class);
-        $this->paymentHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
-        $methodConfig = $this->getMockForAbstractClass(ConfigInterface::class);
-
-        $this->controller = new Creditcard($context, $resultJsonFactory, $this->transactionServiceFactory,
-            $quoteRepository, $this->checkoutSession, $taxCalculation, $resolver, $storeManager, $urlBuilder,
-            $this->paymentHelper, $methodConfig
-        );
-    }
-
     public function testExecuteWithEmptyCheckoutSession()
     {
         $expectedResultData = [
@@ -108,14 +80,36 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             'errMsg' => 'no quote found',
         ];
 
+        $this->initWithMockInput(null);
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn(null);
+        $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
+        $this->controller->execute();
+    }
+
+    public function testExecuteWithUnsupportedTransactionType()
+    {
+        $expectedResultData = [
+            'status' => 'ERR',
+            'errMsg' => 'Unknown transaction type',
+        ];
+
+        $this->initWithMockInput('fake');
+
+        $quote = $this->getMockBuilder(Quote::class)->disableOriginalConstructor()->getMock();
+        $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
+
         $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
         $this->controller->execute();
     }
 
     public function testExecuteWithFailedCreditCardUiFromBackend()
     {
-        $quote = $this->getMockBuilder(Quote::class)->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId'])->disableOriginalConstructor()->getMock();
+        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
+
+        $quote = $this->getMockBuilder(Quote::class)
+            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
         $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
         $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
@@ -148,7 +142,12 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     {
         $mockedUiJson = '{"foo":"bar"}';
 
-        $quote = $this->getMockBuilder(Quote::class)->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId'])->disableOriginalConstructor()->getMock();
+        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
+
+        $quote = $this->getMockBuilder(Quote::class)
+            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
         $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
         $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
@@ -174,5 +173,45 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
 
         $this->controller->execute();
+    }
+
+    private function initWithMockInput($mockedParameterValue = null)
+    {
+        $this->resultJson = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->getMock();
+
+        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+
+        if (!empty($mockedParameterValue)) {
+            $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
+            $requestMock->expects($this->once())->method('getParam')->willReturn($mockedParameterValue);
+            $context->expects($this->once())->method('getRequest')->willReturn($requestMock);
+        }
+
+        $resultJsonFactory = $this->getMockBuilder(JsonFactory::class)->disableOriginalConstructor()->getMock();
+        $resultJsonFactory->expects($this->once())->method('create')->willReturn($this->resultJson);
+
+        $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $quoteRepository = $this->getMockForAbstractClass(CartRepositoryInterface::class);
+
+        $this->checkoutSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+
+        $taxCalculation = $this->getMockBuilder(Calculation::class)->disableOriginalConstructor()->getMock();
+
+        $resolver  = $this->getMockForAbstractClass(ResolverInterface::class);
+
+        $storeManager = $this->getMockForAbstractClass(StoreManagerInterface::class);
+
+        $urlBuilder = $this->getMockForAbstractClass(UrlInterface::class);
+
+        $this->paymentHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
+
+        $methodConfig = $this->getMockForAbstractClass(ConfigInterface::class);
+
+        $this->controller = new Creditcard($context, $resultJsonFactory, $this->transactionServiceFactory,
+            $quoteRepository, $this->checkoutSession, $taxCalculation, $resolver, $storeManager, $urlBuilder,
+            $this->paymentHelper, $methodConfig
+        );
     }
 }

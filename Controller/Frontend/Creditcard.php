@@ -55,9 +55,20 @@ use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
+use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 
 class Creditcard extends Action
 {
+    /*' @var string FORM parameter name to send the transaction type in AJAX */
+    const FRONTEND_DATAKEY_TXTYPE = 'txtype';
+    /** @var string key CREDITCARD as sent by frontend */
+    const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
+    /** @var string key MAESTRO as sent by frontend */
+    const FRONTEND_CODE_MAESTRO = 'wirecard_elasticengine_maestro';
+    /** @var string key UnionPayInternational as sent by frontend */
+    const FRONTEND_CODE_UPI = 'wirecard_elasticengine_unionpayinternational';
+
     /** @var JsonFactory Magento2 JsonFactory injected by DI */
     protected $resultJsonFactory;
 
@@ -150,18 +161,24 @@ class Creditcard extends Action
             return $this->buildErrorResponse('no quote found');
         }
 
+        $txType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
+        $txName = $this->findTransactionNameByFrontendType($txType);
+        if (is_null($txName)) {
+            return $this->buildErrorResponse('Unknown transaction type');
+        }
+
         $orderDto = new OrderDto();
         $quote->reserveOrderId();
         $orderDto->quote = $quote;
 
-        $transactionService = $this->transactionServiceFactory->create(CreditCardTransaction::NAME);
+        $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
 
         $method = $this->paymentHelper->getMethodInstance('wirecard_elasticengine_creditcard');
         $baseUrl = $method->getConfigData('base_url');
         $language = $this->getSupportedHppLangCode($baseUrl);
 
-        $orderDto->config = $transactionService->getConfig()->get(CreditCardTransaction::NAME);
+        $orderDto->config = $transactionService->getConfig()->get($txName);
         $this->processCreditCard($orderDto);
         $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, 'authorization', $language);
         if (empty($data)) {
@@ -346,6 +363,25 @@ class Creditcard extends Action
             $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));
             $orderDto->basket->add($item);
         }
+    }
+
+    /**
+     * Detect the Transaction type based on the key sent by frontend
+     *
+     * @param string $txType frontend key to specify the transaction type
+     * @return string|null Transaction type name used in backend, or null
+     */
+    private function findTransactionNameByFrontendType($txType)
+    {
+        if (!empty($txType)) {
+            switch ($txType) {
+                case self::FRONTEND_CODE_CREDITCARD: return CreditCardTransaction::NAME;
+                case self::FRONTEND_CODE_MAESTRO:    return MaestroTransaction::NAME;
+                case self::FRONTEND_CODE_UPI:        return UpiTransaction::NAME;
+            }
+        }
+
+        return null;
     }
 
     /**

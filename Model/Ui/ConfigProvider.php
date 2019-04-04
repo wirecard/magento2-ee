@@ -38,9 +38,7 @@ use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\IdealBic;
-use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -182,18 +180,9 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private function getConfigForMaestro($paymentMethodName)
     {
-        $maestro = new MaestroTransaction();
-        $maestro->setAmount(new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode()));
-
-        $method = $this->paymentHelper->getMethodInstance(self::MAESTRO_CODE);
-        $baseUrl = $method->getConfigData('base_url');
-        $transactionService = $this->transactionServiceFactory->create(MaestroTransaction::NAME);
-        $language = $this->getSupportedHppLangCode($baseUrl);
-
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getCreditCardUiWithData($maestro, 'authorization', $language), true)
             ]
         ];
     }
@@ -204,15 +193,10 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private function getConfigForCreditCardWithVault($paymentMethodName)
     {
-        $method = $this->paymentHelper->getMethodInstance(self::CREDITCARD_CODE);
-        $baseUrl = $method->getConfigData('base_url');
-        $language = $this->getSupportedHppLangCode($baseUrl);
-        $transactionService = $this->transactionServiceFactory->create('creditcard');
-        $amount = new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode());
         return [
             $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE
+                'logo_url'  => $this->getLogoUrl($paymentMethodName),
+                'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE,
             ]
         ];
     }
@@ -223,15 +207,9 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private function getConfigForUpi($paymentMethodName)
     {
-        $method = $this->paymentHelper->getMethodInstance(self::UPI_CODE);
-        $baseUrl = $method->getConfigData('base_url');
-        $language = $this->getSupportedHppLangCode($baseUrl);
-        $transactionService = $this->transactionServiceFactory->create('unionpayinternational');
-        $amount = new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode());
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForUpiUi($language, $amount, null, 'tokenize'), true)
             ]
         ];
     }

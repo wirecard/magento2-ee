@@ -140,7 +140,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_maestro' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'seamless_request_data' => $seamlessRequestData
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -177,7 +176,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'seamless_request_data' => $upiSeamlessRequestData
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -278,7 +276,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_maestro' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'seamless_request_data' => $seamlessRequestData
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -315,7 +312,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'seamless_request_data' => $upiSeamlessRequestData
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
