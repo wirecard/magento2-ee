@@ -1,5 +1,14 @@
 [
   {
+    "release": "1.4.2",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.0",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Improve payment method mapping"
+    ]
+  },
+  {
     "release": "1.4.1",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.0",
