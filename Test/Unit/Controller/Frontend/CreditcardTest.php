@@ -45,6 +45,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Creditcard;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Config\Config;
@@ -107,7 +108,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
 
         $quote = $this->getMockBuilder(Quote::class)
-            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId'])
+            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId', 'save'])
             ->disableOriginalConstructor()
             ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
@@ -131,7 +132,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $expectedResultData = [
             'status'  => 'ERR',
             'errMsg'  => 'cannot create UI',
-            'details' => ['raw ui data' => null],
+            'details' => ['exception' => 'Exception'],
         ];
         $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
 
@@ -145,7 +146,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
 
         $quote = $this->getMockBuilder(Quote::class)
-            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId'])
+            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId', 'save'])
             ->disableOriginalConstructor()
             ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
@@ -209,9 +210,11 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $methodConfig = $this->getMockForAbstractClass(ConfigInterface::class);
 
+        $logger = $this->getMockForAbstractClass(LoggerInterface::class);
+
         $this->controller = new Creditcard($context, $resultJsonFactory, $this->transactionServiceFactory,
             $quoteRepository, $this->checkoutSession, $taxCalculation, $resolver, $storeManager, $urlBuilder,
-            $this->paymentHelper, $methodConfig
+            $this->paymentHelper, $methodConfig, $logger
         );
     }
 }

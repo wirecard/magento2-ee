@@ -44,6 +44,7 @@ use Magento\Payment\Helper\Data;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -54,9 +55,6 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
-use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
-use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
-use Wirecard\PaymentSdk\Transaction\UpiTransaction;
 
 class Creditcard extends Action
 {
@@ -99,6 +97,9 @@ class Creditcard extends Action
     /** @var ConfigInterface Magento2 payment method config injected by DI */
     protected $methodConfig;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     /**
      * Creditcard constructor.
      *
@@ -113,6 +114,7 @@ class Creditcard extends Action
      * @param UrlInterface $urlBuilder
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
+     * @param LoggerInterface $logger,
      */
     public function __construct(
         Context $context,
@@ -125,7 +127,8 @@ class Creditcard extends Action
         StoreManagerInterface $storeManager,
         UrlInterface $urlBuilder,
         Data $paymentHelper,
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        LoggerInterface $logger
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
@@ -137,6 +140,7 @@ class Creditcard extends Action
         $this->urlBuilder = $urlBuilder;
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
@@ -158,34 +162,41 @@ class Creditcard extends Action
     {
         $quote = $this->checkoutSession->getQuote();
         if (is_null($quote)) {
+            $this->logger->warning("Creditcard-UI-AJAX: quote not found");
             return $this->buildErrorResponse('no quote found');
         }
 
         $txType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
         $txName = $this->findTransactionNameByFrontendType($txType);
         if (is_null($txName)) {
+            $this->logger->warning("Creditcard-UI-AJAX: transaction type $txType not supported");
             return $this->buildErrorResponse('Unknown transaction type');
         }
 
         $orderDto = new OrderDto();
-        $quote->reserveOrderId();
+        $quote->reserveOrderId()->save();
         $orderDto->quote = $quote;
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
+        $this->logger->info("Creditcard-UI-AJAX: reserve order id: " . $orderDto->orderId);
 
         $method = $this->paymentHelper->getMethodInstance('wirecard_elasticengine_creditcard');
         $baseUrl = $method->getConfigData('base_url');
         $language = $this->getSupportedHppLangCode($baseUrl);
 
+        $this->logger->debug("load config for transaction $txName");
         $orderDto->config = $transactionService->getConfig()->get($txName);
-        $this->processCreditCard($orderDto);
-        $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, 'authorization', $language);
-        if (empty($data)) {
-            return $this->buildErrorResponse('cannot create UI', ['raw ui data' => $data]);
+        $this->processCreditCard($orderDto, $txType);
+        try {
+            $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, 'authorization', $language);
+            if (empty($data)) {
+                throw new \Exception("Cannot create UI");
+            }
+            return $this->buildSuccessResponse($data);
+        } catch (\Exception $e) {
+            return $this->buildErrorResponse('cannot create UI', ['exception' => get_class($e)]);
         }
-
-        return $this->buildSuccessResponse($data);
     }
 
     /**
@@ -257,10 +268,12 @@ class Creditcard extends Action
      *       no return here.
      *
      * @param OrderDto $orderDto data transfer object holds all order data
+     * @param string $txType frontend key to specify the transaction type
      */
-    private function processCreditCard(OrderDTO $orderDto)
+    private function processCreditCard(OrderDTO $orderDto, string $txType)
     {
-        $orderDto->transaction = new CreditCardTransaction();
+        $className = $this->findTransactionClassByFrontendType($txType);
+        $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
         $currency         = $orderDto->quote->getBaseCurrencyCode();
@@ -303,7 +316,8 @@ class Creditcard extends Action
     {
         $orderDto->basket = new Basket();
 
-        $orderDto->transaction->setAccountHolder($this->fetchAccountHolder($orderDto->quote->getBillingAddress()));
+        $accountHolder = $this->fetchAccountHolder($orderDto->quote->getBillingAddress());
+        $orderDto->transaction->setAccountHolder($accountHolder);
 
         $shippingAddress = $orderDto->quote->getShippingAddress();
         if (isset($shippingAddress)) {
@@ -373,11 +387,28 @@ class Creditcard extends Action
      */
     private function findTransactionNameByFrontendType($txType)
     {
+        $className = $this->findTransactionClassByFrontendType($txType);
+        if (empty($className)) {
+            return null;
+        }
+        return constant("$className::NAME");
+    }
+    /**
+     * Detect the Transaction class for key sent by frontend
+     *
+     * @param string $txType frontend key to specify the transaction type
+     * @return string|null Transaction class name with full namespace, or null
+     */
+    private function findTransactionClassByFrontendType($txType)
+    {
         if (!empty($txType)) {
             switch ($txType) {
-                case self::FRONTEND_CODE_CREDITCARD: return CreditCardTransaction::NAME;
-                case self::FRONTEND_CODE_MAESTRO:    return MaestroTransaction::NAME;
-                case self::FRONTEND_CODE_UPI:        return UpiTransaction::NAME;
+                case self::FRONTEND_CODE_CREDITCARD:
+                    return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
+                case self::FRONTEND_CODE_MAESTRO:
+                    return '\Wirecard\PaymentSdk\Transaction\MaestroTransaction';
+                case self::FRONTEND_CODE_UPI:
+                    return '\Wirecard\PaymentSdk\Transaction\UpiTransaction';
             }
         }
 
