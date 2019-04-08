@@ -54,6 +54,9 @@ define(
                 var formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
                 var messageContainer = this.messageContainer;
 
+                //this.testConf = window.checkoutConfig.payment[this.getCode()];
+                //console.log(this.getCode());
+
                 $.ajax({
                     url : url.build("wirecard_elasticengine/frontend/creditcard"),
                     type : 'post',

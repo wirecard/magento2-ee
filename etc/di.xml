@@ -56,17 +56,6 @@
             <argument name="commandPool" xsi:type="object">CreditCardCommandPool</argument>
         </arguments>
     </virtualType>
-    <virtualType name="MaestroFacade" type="Magento\Payment\Model\Method\Adapter">
-        <arguments>
-            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MAESTRO_CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
-            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
-            <argument name="valueHandlerPool" xsi:type="object">MaestroValueHandlerPool</argument>
-            <!--  We can use the same validators as for credit card. -->
-            <argument name="validatorPool" xsi:type="object">CreditCardValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">MaestroCommandPool</argument>
-        </arguments>
-    </virtualType>
     <virtualType name="SepaFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::SEPA_CODE</argument>
@@ -205,20 +194,6 @@
     <virtualType name="CreditCardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">WirecardCreditCardConfig</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="MaestroValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">MaestroConfigValueHandler</item>
-                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MaestroConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
-        <arguments>
-            <argument name="configInterface" xsi:type="object">WirecardMaestroConfig</argument>
         </arguments>
     </virtualType>
 
@@ -393,11 +368,6 @@
     <virtualType name="WirecardCreditCardVaultConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::CREDITCARD_VAULT_CODE</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="WirecardMaestroConfig" type="Magento\Payment\Gateway\Config\Config">
-        <arguments>
-            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MAESTRO_CODE</argument>
         </arguments>
     </virtualType>
     <virtualType name="WirecardSepaConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -630,49 +600,6 @@
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
             <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="MaestroCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
-        <arguments>
-            <argument name="commands" xsi:type="array">
-                <item name="initialize" xsi:type="string">MaestroInitializeCommand</item>
-                <item name="capture" xsi:type="string">MaestroCaptureCommand</item>
-                <item name="refund" xsi:type="string">MaestroRefundCommand</item>
-                <item name="void" xsi:type="string">MaestroVoidCommand</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MaestroCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MaestroTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMaestroConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MaestroRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MaestroTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMaestroConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MaestroInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MaestroTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMaestroConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MaestroVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MaestroTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMaestroConfig</argument>
         </arguments>
     </virtualType>
 
@@ -1026,15 +953,6 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="MaestroTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\MaestroTransactionFactory">
-        <arguments>
-            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\MaestroTransaction</argument>
-            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
-            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMaestroConfig</argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="SepaTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\SepaTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction</argument>
@@ -1162,7 +1080,6 @@
             <argument name="methodConfigs" xsi:type="array">
                 <item name="paypal" xsi:type="object">WirecardPaypalConfig</item>
                 <item name="creditcard" xsi:type="object">WirecardCreditCardConfig</item>
-                <item name="maestro" xsi:type="object">WirecardMaestroConfig</item>
                 <item name="sepadirectdebit" xsi:type="object">WirecardSepaConfig</item>
                 <item name="sepacredit" xsi:type="object">WirecardSepaCreditConfig</item>
                 <item name="sofortbanking" xsi:type="object">WirecardSofortConfig</item>

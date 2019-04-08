@@ -47,6 +47,7 @@ use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -55,15 +56,16 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Operation;
 
 class Creditcard extends Action
 {
     /*' @var string FORM parameter name to send the transaction type in AJAX */
     const FRONTEND_DATAKEY_TXTYPE = 'txtype';
+
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
-    /** @var string key MAESTRO as sent by frontend */
-    const FRONTEND_CODE_MAESTRO = 'wirecard_elasticengine_maestro';
+
     /** @var string key UnionPayInternational as sent by frontend */
     const FRONTEND_CODE_UPI = 'wirecard_elasticengine_unionpayinternational';
 
@@ -181,15 +183,28 @@ class Creditcard extends Action
         $orderDto->orderId = $quote->getReservedOrderId();
         $this->logger->info("Creditcard-UI-AJAX: reserve order id: " . $orderDto->orderId);
 
-        $method = $this->paymentHelper->getMethodInstance('wirecard_elasticengine_creditcard');
+        if ($txType === self::FRONTEND_CODE_UPI) {
+            $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_UPI);
+        } else {
+            $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
+        }
+        $this->logger->info($method->getCode());
         $baseUrl = $method->getConfigData('base_url');
         $language = $this->getSupportedHppLangCode($baseUrl);
 
+        $paymentAction = $method->getConfigData('payment_action');
+        if ($paymentAction === PaymentAction::AUTHORIZE_CAPTURE) {
+            $paymentAction = "purchase";
+        } else {
+            $paymentAction = "authorization";
+        };
+
+        $this->logger->info($paymentAction);
         $this->logger->debug("load config for transaction $txName");
         $orderDto->config = $transactionService->getConfig()->get($txName);
         $this->processCreditCard($orderDto, $txType);
         try {
-            $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, 'authorization', $language);
+            $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, $paymentAction, $language);
             if (empty($data)) {
                 throw new \Exception("Cannot create UI");
             }
@@ -405,8 +420,6 @@ class Creditcard extends Action
             switch ($txType) {
                 case self::FRONTEND_CODE_CREDITCARD:
                     return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
-                case self::FRONTEND_CODE_MAESTRO:
-                    return '\Wirecard\PaymentSdk\Transaction\MaestroTransaction';
                 case self::FRONTEND_CODE_UPI:
                     return '\Wirecard\PaymentSdk\Transaction\UpiTransaction';
             }

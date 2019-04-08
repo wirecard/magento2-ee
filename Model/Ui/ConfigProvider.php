@@ -44,7 +44,6 @@ class ConfigProvider implements ConfigProviderInterface
 {
     const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
     const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
-    const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
     const SEPA_CODE = 'wirecard_elasticengine_sepadirectdebit';
     const SEPACREDIT_CODE = 'wirecard_elasticengine_sepacredit';
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
@@ -117,7 +116,6 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
                 $this->getConfigForCreditCardWithVault(self::CREDITCARD_CODE) +
-                $this->getConfigForMaestro(self::MAESTRO_CODE) +
                 $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
@@ -170,19 +168,6 @@ class ConfigProvider implements ConfigProviderInterface
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'ratepay_script' => $this->getRatepayScript(),
                 'address_same' => (bool) $this->isBillingEqualShippingAddress(self::RATEPAYINVOICE_CODE)
-            ]
-        ];
-    }
-
-    /**
-     * @param $paymentMethodName
-     * @return array
-     */
-    private function getConfigForMaestro($paymentMethodName)
-    {
-        return [
-            $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName),
             ]
         ];
     }
