@@ -31,9 +31,9 @@ matrix:
     php: 7.0
     env: GATEWAY=API-TEST
     install:
-      - travis_retry composer install
+      - travis_retry composer update
       - composer show
-    script: vendor\bin\codecept run acceptance --debug
+    script: bash .bin/run-ui-tests.sh
 #    after_success:
 #      - bash .bin/upload-logs-and-notify.sh
 #    after_failure:
