@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   web:
-    container_name: "${WEB}"
+    container_name: "${MAGENTO_CONTAINER_NAME}"
     image: alexcheng/magento2
     ports:
       - "9090:80"
