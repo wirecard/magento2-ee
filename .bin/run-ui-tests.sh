@@ -22,6 +22,7 @@ NGROK_URL=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .p
 while [ ! ${NGROK_URL} ] || [ ${NGROK_URL} = 'null' ];  do
     echo "Waiting for ngrok to initialize"
     export NGROK_URL=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
+    echo $NGROK_URL
     sleep 1
 done
 
