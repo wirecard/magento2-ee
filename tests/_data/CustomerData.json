@@ -1,0 +1,10 @@
+{
+  "last_name": "test",
+  "first_name": "test",
+  "country": "Austria",
+  "street_address": "test",
+  "town": "Graz",
+  "post_code": "8010",
+  "phone": "123456",
+  "email_address": "test@example.com"
+}

@@ -1,0 +1,57 @@
+{
+  "NOVA": {
+    "base_url": "https://payments-test.wirecard.com",
+    "http_user": "NovaTeam",
+    "http_pass": "kCopTTMkpw",
+    "merchant_account_id": "fd83dbfa-8790-4492-8391-3f3938908b28",
+    "secret": "38424ae8-2dc5-45be-af4c-6e0fee0fea3e",
+    "three_d_merchant_account_id": "fd83dbfa-8790-4492-8391-3f3938908b28",
+    "three_d_secret": "38424ae8-2dc5-45be-af4c-6e0fee0fea3e",
+    "ssl_max_limit": 100,
+    "three_d_min_limit": 50
+  },
+  "API-WDCEE-TEST": {
+    "base_url": "https://api-wdcee-test.wirecard.com",
+    "http_user": "pink-test",
+    "http_pass": "8f5y2h0s",
+    "merchant_account_id": "589651ab-bffe-4f45-9a41-c5466aa8cbc8",
+    "secret": "cf8be86b-a671-4da4-b870-80af5c3eedb1",
+    "three_d_merchant_account_id": "49ee1355-cdd3-4205-920f-85391bb3865d",
+    "three_d_secret": "518c3be1-4aa2-4294-a081-eb7edf20f9d7",
+    "ssl_max_limit": 100,
+    "three_d_min_limit": 50
+  },
+  "API-TEST": {
+    "base_url": "https://api-test.wirecard.com",
+    "http_user": "70000-APITEST-AP",
+    "http_pass": "qD2wzQ_hrc!8",
+    "merchant_account_id": "53f2895a-e4de-4e82-a813-0d87a10e55e6",
+    "secret": "dbc5a498-9a66-43b9-bf1d-a618dd399684",
+    "three_d_merchant_account_id": "508b8896-b37d-4614-845c-26bf8bf2c948",
+    "three_d_secret": "dbc5a498-9a66-43b9-bf1d-a618dd399684",
+    "ssl_max_limit": 100,
+    "three_d_min_limit": 50
+  },
+  "SECURE-TEST-SG": {
+    "base_url": "https://secure-test.wirecard.com.sg",
+    "http_user": "uatwd_ecom",
+    "http_pass": "Tomcat123",
+    "merchant_account_id": "d7855010-64c1-4e66-9ab3-d98b309a3d8c",
+    "secret": "543d957b-dcc9-46cd-8258-0f49ed97fa8e",
+    "three_d_merchant_account_id": "d7855010-64c1-4e66-9ab3-d98b309a3d8c",
+    "three_d_secret": "543d957b-dcc9-46cd-8258-0f49ed97fa8e",
+    "ssl_max_limit": 100,
+    "three_d_min_limit": 50
+  },
+  "TEST-SG": {
+    "base_url": "https://test.wirecard.com.sg",
+    "http_user": "wirecarduser3d",
+    "http_pass": "Tomcat123",
+    "merchant_account_id": "961c567b-d9da-41f6-9801-ba21cb228a00",
+    "secret": "03365d5f-1a12-4f16-9351-7ee59ddc9d3f",
+    "three_d_merchant_account_id": "961c567b-d9da-41f6-9801-ba21cb228a00",
+    "three_d_secret": "03365d5f-1a12-4f16-9351-7ee59ddc9d3f",
+    "ssl_max_limit": 100,
+    "three_d_min_limit": 50
+  }
+}
