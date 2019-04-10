@@ -94,10 +94,10 @@ matrix:
     - cd $TMPDIR && travis_retry bundle install
     - bin/rake trigger_build
 
-install:
-  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
-  - travis_retry composer install $COMPOSER_ARGS
-  - composer show
+#install:
+#  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
+#  - travis_retry composer install $COMPOSER_ARGS
+#  - composer show
 
 #before_script:
 #  - php configure_payment_method_db.php creditcard
