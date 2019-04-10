@@ -3,7 +3,7 @@ services:
   web:
     image: alexcheng/magento2
     ports:
-      - "80:80"
+      - "80:8080"
     links:
       - db
     env_file:

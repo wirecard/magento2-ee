@@ -17,7 +17,7 @@ chmod +x $PWD/jq
 # Open ngrok tunnel
 $PWD/ngrok authtoken $NGROK_TOKEN
 TIMESTAMP=$(date +%s)
-$PWD/ngrok http 80 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}" > /dev/null &
+$PWD/ngrok http 8080 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}" > /dev/null &
 
 
 # extract the ngrok url
