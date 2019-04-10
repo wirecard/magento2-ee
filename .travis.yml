@@ -105,8 +105,8 @@ install:
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
 
-before_script:
-  - php configure_payment_method_db.php creditcard
+#before_script:
+#  - php configure_payment_method_db.php creditcard
 
 script:
   - composer test-coverage
