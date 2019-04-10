@@ -3,9 +3,6 @@ set -e # Exit with nonzero exit code if anything fails
 #get version
 export VERSION=`jq .[0].release SHOPVERSIONS`
 
-#start payment-sdk
-php -S localhost:8080 > /dev/null &
-
 # download and install ngrok
 curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > ngrok.zip
 unzip ngrok.zip
@@ -17,7 +14,7 @@ chmod +x $PWD/jq
 # Open ngrok tunnel
 $PWD/ngrok authtoken $NGROK_TOKEN
 TIMESTAMP=$(date +%s)
-$PWD/ngrok http 9090 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}" > /dev/null &
+$PWD/ngrok http 9090 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}"
 
 # extract the ngrok url
 NGROK_URL=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
