@@ -10,11 +10,11 @@ modules:
     - WebDriver:
 #        host: 'hub-cloud.browserstack.com'
 #        port: 80
-        url: '%NGROK_URL%'
+        url: 'https://magento2-230-109-71-apache-postsize.eu.ngrok.io/'
         browser: chrome # 'chrome' or 'firefox'
         capabilities:
           'build': '%VERSION%'
-          'project': 'magento2-ee-api-test'
+          'project': 'magento2-ee'
 #          'browserstack.user': '%BROWSERSTACK_USER%'
 #          'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
     - \Helper\Acceptance
