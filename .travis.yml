@@ -31,8 +31,7 @@ matrix:
     php: 7.0
     env: GATEWAY=API-TEST
     install:
-      - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception
-      - travis_retry composer install $COMPOSER_ARGS
+      - travis_retry composer install
       - composer show
     script: vendor\bin\codecept run acceptance --debug
 #    after_success:
