@@ -9,6 +9,8 @@ services:
       - db
     env_file:
       - env
+    environment:
+      MAGENTO_URL: "${NGROK_URL}"
     volumes:
       - /dev/mytheme:/var/www/html/app/design/frontend/mytheme/default
   db:
