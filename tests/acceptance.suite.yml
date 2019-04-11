@@ -8,8 +8,8 @@ actor: AcceptanceTester
 modules:
   enabled:
     - WebDriver:
-#        host: 'hub-cloud.browserstack.com'
-#        port: 80
+        host: 'hub-cloud.browserstack.com'
+        port: 80
         url: '%NGROK_URL%'
         browser: chrome # 'chrome' or 'firefox'
         capabilities:
@@ -18,3 +18,5 @@ modules:
 #          'browserstack.user': '%BROWSERSTACK_USER%'
 #          'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
     - \Helper\Acceptance
+    - - \Helper\PhpBrowserAPI:
+          url: '%NGROK_URL%'
