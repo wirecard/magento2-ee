@@ -25,4 +25,4 @@ done
 
 bash .bin/start-shopsystem.sh
 
-vendor/bin/codecept run acceptance --debug
+#vendor/bin/codecept run acceptance --debug
