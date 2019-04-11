@@ -17,7 +17,6 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento module:status
-echo "Make it executable."
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "cd ~/ && chmod -R 777 /var/www/html"
 
-# docker exec ${MAGENTO_CONTAINER_NAME} bash -c "cd /var/www/html/_data && php configure_payment_method_db.php creditcard"
+docker exec ${MAGENTO_CONTAINER_NAME} bash -c "cd /var/www/html/_data && php configure_payment_method_db.php creditcard"
