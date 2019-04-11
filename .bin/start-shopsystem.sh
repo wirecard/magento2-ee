@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e # Exit with nonzero exit code if anything fails
 
-export MAGENTO_CONTAINER_NAME=web
+export MAGENTO_CONTAINER_NAME=magento2
 
 docker-compose build --build-arg GATEWAY=${GATEWAY} web
 docker-compose up > /dev/null &
