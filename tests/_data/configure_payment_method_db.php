@@ -27,45 +27,46 @@
  *
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
+ *
+ * @author Wirecard AG
+ * @copyright Wirecard AG
+ * @license GPLv3
  */
 
-// the path for different config files, each named as <paymentmethod>.json
-define( 'GATEWAY_CONFIG_PATH', 'gateway_configs' );
+define('GATEWAY_CONFIG_PATH', 'gateway_configs');
 
-$gateway = getenv( 'GATEWAY' );
-if ( ! $gateway ) {
-	$gateway = 'API-TEST';
+$gateway = getenv('GATEWAY');
+if (!$gateway) {
+    $gateway = 'API-TEST';
 }
 
-// the default config defines valid keys for each payment method and is prefilled with API-TEST setup by default
 $defaultConfig = [
-	'creditcard' => [
-		'base_url'            => 'https://api-test.wirecard.com',
-		'http_user'           => '70000-APITEST-AP',
-		'http_pass'           => 'qD2wzQ_hrc!8',
-		'threed_maid'         => '508b8896-b37d-4614-845c-26bf8bf2c948',
-		'threed_secret'       => 'dbc5a498-9a66-43b9-bf1d-a618dd399684',
-		'merchant_account_id' => '53f2895a-e4de-4e82-a813-0d87a10e55e6',
-		'secret'              => 'dbc5a498-9a66-43b9-bf1d-a618dd399684',
-		'ssl_max_limit'       => 100,
-		'three_d_min_limit'   => 50,
+    'creditcard' => [
+        'base_url' => 'https://api-test.wirecard.com',
+        'http_user' => '70000-APITEST-AP',
+        'http_pass' => 'qD2wzQ_hrc!8',
+        'three_d_merchant_account_id' => '508b8896-b37d-4614-845c-26bf8bf2c948',
+        'three_d_secret' => 'dbc5a498-9a66-43b9-bf1d-a618dd399684',
+        'merchant_account_id' => '53f2895a-e4de-4e82-a813-0d87a10e55e6',
+        'secret' => 'dbc5a498-9a66-43b9-bf1d-a618dd399684',
+        'ssl_max_limit' => 100,
+        'three_d_min_limit' => 50,
 
-		'enabled'             => 'yes',
-		'title'               => 'Wirecard Credit Card',
-		'credentials'         => '',
-		'test_button'         => 'Test',
-		'advanced'            => '',
-		'payment_action'      => 'pay',
-		'descriptor'          => 'no',
-		'send_additional'     => 'yes',
-		'cc_vault_enabled'    => 'no',
-	],
+        'enabled' => '1',
+        'title' => 'Wirecard Credit Card',
+        'credentials' => '',
+        'test_button' => 'Test',
+        'advanced' => '',
+        'payment_action' => 'pay',
+        'descriptor' => '0',
+        'send_additional' => '1',
+        'cc_vault_enabled' => '0',
+    ]
 ];
 
-// main script - read payment method from command line, build the config and write it into database
-if ( count( $argv ) < 2 ) {
-	$supportedPaymentMethods = implode( "\n  ", array_keys( $GLOBALS['defaultConfig'] ) );
-	echo <<<END_USAGE
+if (count($argv) < 2) {
+    $supportedPaymentMethods = implode("\n  ", array_keys($GLOBALS['defaultConfig']));
+    echo <<<END_USAGE
 Usage: php configure_payment_method_db.php <paymentmethod>
 
 Supported payment methods:
@@ -73,17 +74,18 @@ Supported payment methods:
 
 
 END_USAGE;
-	exit( 1 );
+    exit(1);
 }
-$paymentMethod = trim( $argv[1] );
+$paymentMethod = trim($argv[1]);
 
-$dbConfig = buildConfigByPaymentMethod( $paymentMethod, $gateway );
-if ( empty( $dbConfig ) ) {
-	echo "Payment method $paymentMethod is not supported\n";
-	exit( 1 );
+$dbConfig = buildConfigByPaymentMethod($paymentMethod, $gateway);
+if (empty($dbConfig)) {
+    echo "Payment method $paymentMethod is not supported\n";
+    exit(1);
 }
 
-updateMagento2EeDbConfig( $dbConfig, $paymentMethod );
+
+updateMagento2EeDbConfig($dbConfig, $paymentMethod);
 
 /**
  * Method buildConfigByPaymentMethod
@@ -91,66 +93,85 @@ updateMagento2EeDbConfig( $dbConfig, $paymentMethod );
  * @param string $gateway
  * @return array
  *
- * @since   1.4.4
+ * @since   1.4.1
  */
 
-function buildConfigByPaymentMethod( $paymentMethod, $gateway ) {
-	if ( ! array_key_exists( $paymentMethod, $GLOBALS['defaultConfig'] ) ) {
-		return null;
-	}
-	$config = $GLOBALS['defaultConfig'][ $paymentMethod ];
+function buildConfigByPaymentMethod($paymentMethod, $gateway)
+{
+    if (!array_key_exists($paymentMethod, $GLOBALS['defaultConfig'])) {
+        return null;
+    }
+    $config = $GLOBALS['defaultConfig'][$paymentMethod];
 
-	$jsonFile = GATEWAY_CONFIG_PATH . DIRECTORY_SEPARATOR . $paymentMethod . '.json';
-	if ( file_exists( $jsonFile ) ) {
-		$jsonData = json_decode( file_get_contents( $jsonFile ) );
-		if ( ! empty( $jsonData ) && ! empty( $jsonData->$gateway ) ) {
-			foreach ( get_object_vars( $jsonData->$gateway ) as $key => $data ) {
-				// only replace values from json if the key is defined in defaultDbValues
-				if ( array_key_exists( $key, $config ) ) {
-					$config[ $key ] = $data;
-				}
-			}
-		}
-	}
-	return $config;
+    $jsonFile = GATEWAY_CONFIG_PATH . DIRECTORY_SEPARATOR . $paymentMethod . '.json';
+    if (file_exists($jsonFile)) {
+        $jsonData = json_decode(file_get_contents($jsonFile));
+        if (!empty($jsonData) && !empty($jsonData->$gateway)) {
+            foreach (get_object_vars($jsonData->$gateway) as $key => $data) {
+                // only replace values from json if the key is defined in defaultDbValues
+                if (array_key_exists($key, $config)) {
+                    $config[$key] = $data;
+                }
+            }
+        }
+    }
+    return $config;
 }
 
 /**
- * Method update_magento2_ee_db_config
+ * Method updateMagento2EeDbConfig
  * @param array $db_config
  * @param string $payment_method
  * @return boolean
  *
- * @since   1.4.4
+ * @since   1.4.1
  */
-function updateMagento2EeDbConfig( $db_config, $payment_method ) {
-	echo 'Configuring ' . $payment_method . " payment method in the shop system \n";
-	//DB setup
-	$dbHost = 'db';
-	$dbName = 'magento';
-	$dbUser = 'magento';
-	$dbPass = 'magento';
-	$dbPort = '3306';
+function updateMagento2EeDbConfig($db_config, $payment_method)
+{
+    echo 'Configuring ' . $payment_method . " payment method in the shop system \n";
+    $dbHost = 'db';
+    $dbName = 'magento';
+    $dbUser = 'magento';
+    $dbPass = 'magento';
 
-	$tableName            = 'core_config_data';
-//	$creditCardSettingKey = 'woocommerce_wirecard_ee_' . $payment_method . '_settings';
+    $tableName = 'core_config_data';
 
-//	$serializedConfig = serialize( $db_config );
+    $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
+    if ($mysqli->connect_errno) {
+        echo "Can't connect DB $dbName on host $dbHost as user $dbUser \n";
+        return false;
+    }
 
-	// create connection
-	$mysqli = new mysqli( $dbHost, $dbUser, $dbPass, $dbName, $dbPort );
-	if ( $mysqli->connect_errno ) {
-		echo "Can't connect DB $dbName on host $dbHost as user $dbUser \n";
-		return false;
-	}
-
-//	$stmtDelete = $mysqli->prepare( "DELETE FROM $tableName WHERE option_name = ?" );
-//	$stmtDelete->bind_param( 's', $creditCardSettingKey );
-//	$stmtDelete->execute();
-//
-//	$stmtInsert = $mysqli->prepare( "INSERT INTO $tableName (option_name, option_value, autoload) VALUES (?, ?, 'yes')" );
-//	$stmtInsert->bind_param( 'ss', $creditCardSettingKey, $serializedConfig );
-//	$stmtInsert->execute();
-
-	return true;
+//    foreach ($db_config as $name => $value) {
+//        $mysqli->query("UPDATE $tableName SET value = '1' WHERE path = 'payment/wirecard_elasticengine_creditcard/active'");
+//        if ('base_url' === $name) {
+//            $baseUrl = serialize($value);
+//            $mysqli->query("UPDATE $tableName SET value = '$baseUrl' WHERE path = 'payment/wirecard_elasticengine_creditcard/base_url'");
+//        }
+//        if ('http_user' === $name) {
+//            $httpUser = serialize($value);
+//            $mysqli->query("UPDATE $tableName SET value = '$httpUser' WHERE path = 'payment/wirecard_elasticengine_creditcard/http_user'");
+//        }
+//        if ('http_pass' === $name) {
+//            $httpPass = serialize($value);
+//            $mysqli->query("UPDATE $tableName SET value = '$httpPass' WHERE path = '	payment/wirecard_elasticengine_creditcard/http_pass'");
+//        }
+//        if ('three_d_merchant_account_id' === $name) {
+//            $threeDMerchantAccountId = serialize($value);
+//            $mysqli->query("UPDATE $tableName SET value = '$threeDMerchantAccountId' WHERE path = 'payment/wirecard_elasticengine_creditcard/three_d_merchant_account_id'");
+//        }
+//        if ('three_d_secret' === $name) {
+//            $threeDSecret = serialize($value);
+//            $mysqli->query("UPDATE $tableName SET value = '$threeDSecret' WHERE path = 'payment/wirecard_elasticengine_creditcard/three_d_secret'");
+//        }
+//        if ('merchant_account_id' === $name) {
+//            $merchantAccountId = serialize($value);
+//            $mysqli->query("UPDATE $tableName SET value = '$merchantAccountId' WHERE path = 'payment/wirecard_elasticengine_creditcard/merchant_account_id'");
+//        }
+//        if ('secret' === $name) {
+//            $secret = serialize($value);
+//            $mysqli->query("UPDATE $tableName SET value = '$secret' WHERE path = 'payment/wirecard_elasticengine_creditcard/secret'");
+//        }
+//    }
+    return true;
 }

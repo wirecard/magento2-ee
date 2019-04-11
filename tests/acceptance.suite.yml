@@ -15,8 +15,6 @@ modules:
         capabilities:
           'build': '%VERSION%'
           'project': 'magento2-ee'
-#          'browserstack.user': '%BROWSERSTACK_USER%'
-#          'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
+          'browserstack.user': '%BROWSERSTACK_USER%'
+          'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
     - \Helper\Acceptance
-    - - \Helper\PhpBrowserAPI:
-          url: '%NGROK_URL%'
