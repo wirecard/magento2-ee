@@ -19,3 +19,4 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento module:status
 cd '~/'
 chmod -R 777 /var/www/html
+pwd
