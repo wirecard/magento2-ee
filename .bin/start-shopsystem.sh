@@ -14,7 +14,11 @@ done
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
+echo "START php bin/magento setup:upgrade"
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
+echo "START php bin/magento setup:di:compile"
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
+echo "START php bin/magento module:status"
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento module:status
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "cd ~/ && chmod -R 777 /var/www/html && pwd"
+echo "CHANGE PATH AND ADD PERMISSIONS"
+docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "cd ~/ && chmod -R 777 /var/www/html && ls"
