@@ -10,7 +10,7 @@ modules:
     - WebDriver:
 #        host: 'hub-cloud.browserstack.com'
 #        port: 80
-        url: 'https://magento2-230-109-71-apache-postsize.eu.ngrok.io/'
+        url: '%NGROK_URL%'
         browser: chrome # 'chrome' or 'firefox'
         capabilities:
           'build': '%VERSION%'
