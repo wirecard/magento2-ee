@@ -140,6 +140,8 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
     if ($mysqli->connect_errno) {
         echo "Can't connect DB $dbName on host $dbHost as user $dbUser \n";
         return false;
+    } else {
+        echo "Connection established successfully!";
     }
 
 //    foreach ($db_config as $name => $value) {
