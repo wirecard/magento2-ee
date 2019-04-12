@@ -13,7 +13,6 @@ done
 
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
-#docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento deploy:mode:set developer
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:static-content:deploy -f
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:flush
