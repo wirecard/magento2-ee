@@ -24,5 +24,5 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento module:status
 #docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "cd ~/ && chmod -R 777 /var/www/html && find /var/www/html/ -name configure_payment_method_db.php"
 
-echo "Executing configure file ->"
+echo "Executing configure file. ->"
 docker exec ${MAGENTO_CONTAINER_NAME} php tests/_data/configure_payment_method_db.php creditcard
