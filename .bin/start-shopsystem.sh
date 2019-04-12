@@ -11,10 +11,10 @@ while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
     sleep 5
 done
 
-docker exec -it ${MAGENTO_CONTAINER_NAME} composer require adyen/module-payment
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento module:enable Adyen_Payment
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:flush
+curl -s https://raw.githubusercontent.com/clean-docker/Magento2/master/init | bash -s ${MAGENTO_CONTAINER_NAME} clone
+cd ${MAGENTO_CONTAINER_NAME}
+rm index.php
+install-magento
 #docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 #docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 #docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
