@@ -14,6 +14,7 @@ done
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:static-content:deploy -f
+docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento deploy:mode:set developer
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile

@@ -11,12 +11,12 @@ services:
       - env
     environment:
       MAGENTO_URL: "${NGROK_URL}"
-#    volumes:
-#      - /dev/mytheme:/var/www/html/app/design/frontend/mytheme/default
+    volumes:
+      - /dev/mytheme:/var/www/html/app/design/frontend/mytheme/default
   db:
     image: mysql:5.6.23
-#    volumes:
-#      - db-data:/var/lib/mysql/data
+    volumes:
+      - db-data:/var/lib/mysql/data
     env_file:
       - env
   phpmyadmin:
