@@ -50,6 +50,6 @@ class Shop extends Base
      * @since 1.4.1
      */
     public $elements = [
-        'First Product in the Product List' => '//*[@id="maincontent"]/div[3]/div/div[2]/div[3]/div/div/ol/li[1]/div/div/div[3]/div[1]/button'
+        'First Product in the Product List' => '//*[@id="maincontent"]/div[3]/div/div[2]/div[3]/div/div/ol/li[4]/div/div/div[3]/div/div[1]/form/button'
     ];
 }
