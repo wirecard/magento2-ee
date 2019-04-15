@@ -22,13 +22,13 @@ matrix:
   allow_failures:
     - stage: acceptance-test
   include:
-  - php: 7.2
+  - php: 7.0
     if: env(PHRASEAPP_PULL) != '1'
 
   - &acceptance-test
     stage: acceptance-test
     if: type != cron
-    php: 7.2
+    php: 7.0
     env: GATEWAY=API-TEST
     install:
       - travis_retry composer update
