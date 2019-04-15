@@ -11,7 +11,6 @@ while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
     sleep 5
 done
 
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 # install magento shop
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
@@ -22,4 +21,5 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 
 echo "Make folders writeable and find configuration file"
+docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 sleep 1200s
