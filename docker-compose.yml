@@ -15,3 +15,5 @@ services:
     image: mysql:5.6.23
     env_file:
       - env
+    command:
+      - --wait_timeout=1000
