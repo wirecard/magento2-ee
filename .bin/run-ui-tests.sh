@@ -19,11 +19,10 @@ NGROK_URL_S=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output 
 while [ ! ${NGROK_URL_S} ] || [ ${NGROK_URL_S} = 'null' ];  do
     echo "Waiting for ngrok to initialize"
     NGROK_URL_S=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
+    export NGROK_URL = ${NGROK_URL_S/https/http}
+    echo $NGROK_URL
     sleep 1
 done
-
-export NGROK_URL = ${NGROK_URL_S/https/http}
-echo $NGROK_URL
 
 bash .bin/start-shopsystem.sh
 #vendor/bin/codecept run acceptance --debug --html --xml
