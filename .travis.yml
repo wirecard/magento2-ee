@@ -31,7 +31,7 @@ matrix:
     php: 7.0
     env: GATEWAY=API-TEST
     install:
-      - travis_retry composer update
+      - travis_retry composer update $COMPOSER_ARGS
     script: bash .bin/run-ui-tests.sh
     after_script: skip
 #    after_success:
