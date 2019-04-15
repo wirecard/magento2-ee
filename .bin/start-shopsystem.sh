@@ -19,8 +19,7 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento module:status
 
-sleep 120s
 echo "Make folders writeable and find configuration file"
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./ && find . -name configure_payment_method_db"
+docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
+sleep 10m
