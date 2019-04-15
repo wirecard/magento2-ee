@@ -15,9 +15,9 @@ services:
     image: mysql:5.6.23
     env_file:
       - env
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - "8580:80"
-    links:
-      - db
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    ports:
+#      - "8580:80"
+#    links:
+#      - db

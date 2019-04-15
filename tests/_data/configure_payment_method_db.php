@@ -144,36 +144,36 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
         echo "Connection established successfully!";
     }
 
-//    foreach ($db_config as $name => $value) {
-//        $mysqli->query("UPDATE $tableName SET value = '1' WHERE path = 'payment/wirecard_elasticengine_creditcard/active'");
-//        if ('base_url' === $name) {
-//            $baseUrl = serialize($value);
-//            $mysqli->query("UPDATE $tableName SET value = '$baseUrl' WHERE path = 'payment/wirecard_elasticengine_creditcard/base_url'");
-//        }
-//        if ('http_user' === $name) {
-//            $httpUser = serialize($value);
-//            $mysqli->query("UPDATE $tableName SET value = '$httpUser' WHERE path = 'payment/wirecard_elasticengine_creditcard/http_user'");
-//        }
-//        if ('http_pass' === $name) {
-//            $httpPass = serialize($value);
-//            $mysqli->query("UPDATE $tableName SET value = '$httpPass' WHERE path = '	payment/wirecard_elasticengine_creditcard/http_pass'");
-//        }
-//        if ('three_d_merchant_account_id' === $name) {
-//            $threeDMerchantAccountId = serialize($value);
-//            $mysqli->query("UPDATE $tableName SET value = '$threeDMerchantAccountId' WHERE path = 'payment/wirecard_elasticengine_creditcard/three_d_merchant_account_id'");
-//        }
-//        if ('three_d_secret' === $name) {
-//            $threeDSecret = serialize($value);
-//            $mysqli->query("UPDATE $tableName SET value = '$threeDSecret' WHERE path = 'payment/wirecard_elasticengine_creditcard/three_d_secret'");
-//        }
-//        if ('merchant_account_id' === $name) {
-//            $merchantAccountId = serialize($value);
-//            $mysqli->query("UPDATE $tableName SET value = '$merchantAccountId' WHERE path = 'payment/wirecard_elasticengine_creditcard/merchant_account_id'");
-//        }
-//        if ('secret' === $name) {
-//            $secret = serialize($value);
-//            $mysqli->query("UPDATE $tableName SET value = '$secret' WHERE path = 'payment/wirecard_elasticengine_creditcard/secret'");
-//        }
-//    }
+    foreach ($db_config as $name => $value) {
+        $mysqli->query("UPDATE $tableName SET value = '1' WHERE path = 'payment/wirecard_elasticengine_creditcard/active'");
+        if ('base_url' === $name) {
+            $baseUrl = serialize($value);
+            $mysqli->query("UPDATE $tableName SET value = '$baseUrl' WHERE path = 'payment/wirecard_elasticengine_creditcard/base_url'");
+        }
+        if ('http_user' === $name) {
+            $httpUser = serialize($value);
+            $mysqli->query("UPDATE $tableName SET value = '$httpUser' WHERE path = 'payment/wirecard_elasticengine_creditcard/http_user'");
+        }
+        if ('http_pass' === $name) {
+            $httpPass = serialize($value);
+            $mysqli->query("UPDATE $tableName SET value = '$httpPass' WHERE path = '	payment/wirecard_elasticengine_creditcard/http_pass'");
+        }
+        if ('three_d_merchant_account_id' === $name) {
+            $threeDMerchantAccountId = serialize($value);
+            $mysqli->query("UPDATE $tableName SET value = '$threeDMerchantAccountId' WHERE path = 'payment/wirecard_elasticengine_creditcard/three_d_merchant_account_id'");
+        }
+        if ('three_d_secret' === $name) {
+            $threeDSecret = serialize($value);
+            $mysqli->query("UPDATE $tableName SET value = '$threeDSecret' WHERE path = 'payment/wirecard_elasticengine_creditcard/three_d_secret'");
+        }
+        if ('merchant_account_id' === $name) {
+            $merchantAccountId = serialize($value);
+            $mysqli->query("UPDATE $tableName SET value = '$merchantAccountId' WHERE path = 'payment/wirecard_elasticengine_creditcard/merchant_account_id'");
+        }
+        if ('secret' === $name) {
+            $secret = serialize($value);
+            $mysqli->query("UPDATE $tableName SET value = '$secret' WHERE path = 'payment/wirecard_elasticengine_creditcard/secret'");
+        }
+    }
     return true;
 }
