@@ -14,6 +14,7 @@ done
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
+echo "Installing done!"
 sleep 120s
 #docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 #docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade

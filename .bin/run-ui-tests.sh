@@ -24,4 +24,4 @@ while [ ! ${NGROK_URL} ] || [ ${NGROK_URL} = 'null' ];  do
 done
 
 bash .bin/start-shopsystem.sh
-vendor/bin/codecept run acceptance --debug --html --xml
+#vendor/bin/codecept run acceptance --debug --html --xml
