@@ -22,3 +22,5 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 
 echo "Give permissions to load css! - mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
+
+sleep 5m
