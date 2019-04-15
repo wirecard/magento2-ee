@@ -11,7 +11,7 @@ git clone ${REPO_ADDRESS}
 #create folder with current date
 export TODAY=$(date +%Y-%m-%d)
 
-export PROJECT_FOLDER="woocommerce-ee"
+export PROJECT_FOLDER="magento2-ee"
 GATEWAY_FOLDER=${REPO_NAME}/${PROJECT_FOLDER}/${GATEWAY}
 DATE_FOLDER=${GATEWAY_FOLDER}/${TODAY}
 
@@ -24,10 +24,10 @@ mkdir ${DATE_FOLDER}
 fi
 
 #copy report files
-cp wirecard-woocommerce-extension/tests/_output/*.html ${DATE_FOLDER}
-cp wirecard-woocommerce-extension/tests/_output/*.xml ${DATE_FOLDER}
+cp tests/_output/*.html ${DATE_FOLDER}
+cp tests/_output/*.xml ${DATE_FOLDER}
 if [[ $1 == 'fail' ]]; then
-    cp wirecard-woocommerce-extension/tests/_output/*.fail.png ${DATE_FOLDER}
+    cp tests/_output/*.fail.png ${DATE_FOLDER}
 fi
 
 cd ${REPO_NAME}
