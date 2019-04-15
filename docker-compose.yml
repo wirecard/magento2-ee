@@ -16,4 +16,5 @@ services:
     env_file:
       - env
     command:
+      - mysqld
       - --wait_timeout=1000
