@@ -22,4 +22,4 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 
 echo "Make folders writeable and find configuration file"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
-sleep 11m
+sleep 1200s
