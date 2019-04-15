@@ -30,8 +30,8 @@ matrix:
     if: type != cron
     php: 7.2
     env: GATEWAY=API-TEST
-#    install:
-#      - travis_retry composer update
+    install:
+      - travis_retry composer update
     script: bash .bin/run-ui-tests.sh
 
   - <<: *acceptance-test
