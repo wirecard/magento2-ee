@@ -3,7 +3,7 @@ set -e
 
 export MAGENTO_CONTAINER_NAME=web
 
-docker-compose build --build-arg GATEWAY=${GATEWAY} ${MAGENTO_CONTAINER_NAME}
+docker-compose build --build-arg GATEWAY=${GATEWAY} web
 docker-compose up > /dev/null &
 
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
