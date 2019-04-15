@@ -185,7 +185,7 @@ class AcceptanceTester extends \Codeception\Actor
     {
         $this->iAmOnPage('Shop');
         //chose a product and open product page
-        $this->scrollTo(['class' => 'page-wrapper'], 20, 900);
+        $this->scrollTo(['class' => 'page-wrapper'], 20, 1500);
         $this->moveMouseOver('//*[@id="maincontent"]/div[3]/div/div[2]/div[3]/div/div/ol/li[6]');
         $this->click($this->currentPage->getElement('First Product in the Product List'));
     }
