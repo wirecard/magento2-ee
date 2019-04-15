@@ -20,5 +20,5 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 
-echo "Make folders writeable and find configuration file"
+echo "Give permissions to load css!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
