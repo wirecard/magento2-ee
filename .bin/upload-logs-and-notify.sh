@@ -23,6 +23,8 @@ if [ ! -d "${DATE_FOLDER}" ]; then
 mkdir ${DATE_FOLDER}
 fi
 
+cd tests
+cd _output
 ls
 
 #copy report files

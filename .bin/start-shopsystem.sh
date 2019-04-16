@@ -3,6 +3,7 @@ set -e
 
 export MAGENTO_CONTAINER_NAME=web
 
+ls
 docker-compose build --build-arg GATEWAY=${GATEWAY} web
 docker-compose up > /dev/null &
 
@@ -23,3 +24,5 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
 
 echo "Give permissions to load css! - it is mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./ && find . -type d -name "_output""
+
+ls
