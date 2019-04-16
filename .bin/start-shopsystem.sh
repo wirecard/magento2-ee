@@ -12,17 +12,16 @@ while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
 done
 
 # install magento shop
-docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
+docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento:2.3.0
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 
 #install wirecard magento2 plugin
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
-#docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
+docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
 
 echo "Give permissions to load css! - it is mandatory!"
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./ && find . -type d -name "_output""
+docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 
-ls
-#docker exec ${MAGENTO_CONTAINER_NAME} php tests/_data/configure_payment_method_db.php creditcard
+docker exec ${MAGENTO_CONTAINER_NAME} bash -c "cd tests/_data && php configure_payment_method_db.php creditcard"

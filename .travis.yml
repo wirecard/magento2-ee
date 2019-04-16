@@ -22,22 +22,22 @@ matrix:
   allow_failures:
     - stage: acceptance-test
   include:
-  - php: 7.0
+  - php: 7.1
     if: env(PHRASEAPP_PULL) != '1'
 
   - &acceptance-test
     stage: acceptance-test
     if: type != cron
-    php: 7.0
+    php: 7.1
     env: GATEWAY=API-TEST
     install:
       - travis_retry composer update $COMPOSER_ARGS
     script: bash .bin/run-ui-tests.sh
     after_script: skip
-    after_success:
-      - bash .bin/upload-logs-and-notify.sh
-    after_failure:
-      - bash .bin/upload-logs-and-notify.sh fail
+#    after_success:
+#      - bash .bin/upload-logs-and-notify.sh
+#    after_failure:
+#      - bash .bin/upload-logs-and-notify.sh fail
 
   - <<: *acceptance-test
     env: GATEWAY=API-WDCEE-TEST

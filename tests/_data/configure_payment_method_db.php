@@ -175,5 +175,14 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
             $mysqli->query("UPDATE $tableName SET value = '$secret' WHERE path = 'payment/wirecard_elasticengine_creditcard/secret'");
         }
     }
+
+    echo "New Database rows!\n";
+    $stmtInsert = "SELECT * FROM $tableName";
+    $result = $mysqli->query($stmtInsert);
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            echo $row['path'] . " " . $row['value'] . "\n";
+        }
+    }
     return true;
 }
