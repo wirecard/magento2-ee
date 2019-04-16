@@ -20,7 +20,7 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 
-echo "Give permissions to load css! - it is mandatory!"
+echo "Give permissions to load css! - It is mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 
 docker exec ${MAGENTO_CONTAINER_NAME} php /magento2-plugin/tests/_data/configure_payment_method_db.php creditcard
