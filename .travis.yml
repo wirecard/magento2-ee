@@ -31,8 +31,7 @@ matrix:
     php: 7.1
     env: GATEWAY=API-TEST
     install:
-      - travis_retry composer require codeception/codeception --dev
-      - travis_retry composer install
+      - travis_retry composer install $COMPOSER_ARGS
     script: bash .bin/run-ui-tests.sh
     after_script: skip
 #    after_success:
