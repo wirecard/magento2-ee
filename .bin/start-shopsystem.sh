@@ -24,5 +24,5 @@ echo "Give permissions to load css! - it is mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 
 #docker exec ${MAGENTO_CONTAINER_NAME} bash -c "cd tests/_data && php configure_payment_method_db.php creditcard"
-echo "Sleep for 4 minutes"
+echo "Sleep for 5 minutes"
 sleep 5m
