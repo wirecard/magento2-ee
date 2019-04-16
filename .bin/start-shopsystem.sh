@@ -24,6 +24,6 @@ echo "Give permissions to load css! - it is mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 
 echo "Show what is in the tests file!"
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "cd tests && ls"
+docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "find / -type d -name "_data""
 
 #docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "cd tests/_data && php configure_payment_method_db.php creditcard"
