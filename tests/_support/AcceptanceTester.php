@@ -184,9 +184,9 @@ class AcceptanceTester extends \Codeception\Actor
     public function iPrepareCheckout()
     {
         $this->iAmOnPage('Shop');
+        $this->wait(20);
         //chose a product and open product page
         $this->scrollTo(['class' => 'page-wrapper'], 20, 1500);
-//        $this->moveMouseOver('//*[@id="maincontent"]/div[3]/div/div[2]/div[3]/div/div/ol/li[1]');
         $this->click($this->currentPage->getElement('First Product in the Product List'));
         $this->wait(10);
     }
