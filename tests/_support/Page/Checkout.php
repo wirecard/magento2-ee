@@ -58,6 +58,7 @@ class Checkout extends Base
         'Zip/Postal Code' => "//*[@name='postcode']",
         'Phone Number' => "//*[@name='telephone']",
         'Country' => "//*[@name='country_id']",
+        'State/Province' => "//*[@name='region_id']",
         'Next' => "//*[@class='button action continue primary']"
     ];
 
@@ -72,6 +73,8 @@ class Checkout extends Base
         $data_field_values = $I->getDataFromDataFile('tests/_data/CustomerData.json');
         $I->waitForElementVisible($this->getElement('Country'));
         $I->selectOption($this->getElement('Country'), $data_field_values->country);
+        $I->waitForElementVisible($this->getElement('State/Province'));
+        $I->selectOption($this->getElement('State/Province'), $data_field_values->state);
         $I->waitForElementVisible($this->getElement('Email Address'));
         $I->fillField($this->getElement('Email Address'), $data_field_values->email_address);
         $I->waitForElementVisible($this->getElement('First Name'));
