@@ -23,6 +23,8 @@ if [ ! -d "${DATE_FOLDER}" ]; then
 mkdir ${DATE_FOLDER}
 fi
 
+ls
+
 #copy report files
 cp /tests/_output/*.html ${DATE_FOLDER}
 cp /tests/_output/*.xml ${DATE_FOLDER}
