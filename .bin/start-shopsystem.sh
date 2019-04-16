@@ -3,7 +3,6 @@ set -e
 
 export MAGENTO_CONTAINER_NAME=web
 
-ls
 docker-compose build --build-arg GATEWAY=${GATEWAY} web
 docker-compose up > /dev/null &
 
@@ -20,9 +19,10 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
+#docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
 
 echo "Give permissions to load css! - it is mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./ && find . -type d -name "_output""
 
 ls
+#docker exec ${MAGENTO_CONTAINER_NAME} php tests/_data/configure_payment_method_db.php creditcard
