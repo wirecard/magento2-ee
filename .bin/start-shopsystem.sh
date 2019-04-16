@@ -23,7 +23,7 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 echo "Give permissions to load css! - it is mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 
-echo "Sleep for 5 minutes"
-sleep 5m
+echo "Sleep for 4 minutes"
+sleep 4m
 
-#docker exec ${MAGENTO_CONTAINER_NAME} bash -c "cd tests/_data && php configure_payment_method_db.php creditcard"
+#docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "cd tests/_data && php configure_payment_method_db.php creditcard"
