@@ -11,6 +11,8 @@ services:
       - env
     environment:
       MAGENTO_URL: "${NGROK_URL}"
+    volumes:
+      - ".:/magento2-plugin"
   db:
     image: mysql:5.6.23
     env_file:
