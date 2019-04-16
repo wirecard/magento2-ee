@@ -140,8 +140,6 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
     if ($mysqli->connect_errno) {
         echo "Can't connect DB $dbName on host $dbHost as user $dbUser \n";
         return false;
-    } else {
-        echo "Connection established successfully!";
     }
 
     foreach ($db_config as $name => $value) {
@@ -177,7 +175,8 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
     }
 
     echo "New Database rows!\n";
-    $stmtInsert = "SELECT * FROM $tableName";
+//    $stmtInsert = "SELECT * FROM $tableName WHERE ('path' LIKE '%wirecard%' OR 'value' LIKE '%wirecard%') LIMIT 50";
+    $stmtInsert = "SELECT * FROM $tableName WHERE path = 'payment/wirecard_elasticengine_creditcard/base_url' or path = 'payment/wirecard_elasticengine_creditcard/http_user'";
     $result = $mysqli->query($stmtInsert);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
