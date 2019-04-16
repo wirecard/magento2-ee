@@ -14,7 +14,6 @@ done
 # install magento shop
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
-docker exec -ti ${MAGENTO_CONTAINER_NAME} sh
 
 #install wirecard magento2 plugin
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee
