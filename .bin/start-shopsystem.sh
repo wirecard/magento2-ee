@@ -12,7 +12,7 @@ while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
 done
 
 # install magento shop
-docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento:2.3.0
+docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 
 #install wirecard magento2 plugin
