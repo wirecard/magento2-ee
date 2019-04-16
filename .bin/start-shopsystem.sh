@@ -22,4 +22,4 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
 
 echo "Give permissions to load css! - it is mandatory!"
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
+docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./ && find . -type d -name "_output""
