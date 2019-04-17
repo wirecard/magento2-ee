@@ -33,4 +33,4 @@ docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
             ${MAGENTO_CONTAINER_NAME} php /magento2-plugin/tests/_data/configure_payment_method_db.php creditcard
 
 # wait for payment method to be activated
-sleep 6m
+# sleep 6m
