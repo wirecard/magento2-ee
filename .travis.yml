@@ -34,10 +34,10 @@ matrix:
       - travis_retry composer update
     script: bash .bin/run-ui-tests.sh
     after_script: skip
-    after_success:
-      - bash .bin/upload-logs-and-notify.sh
-    after_failure:
-      - bash .bin/upload-logs-and-notify.sh fail
+#    after_success:
+#      - bash .bin/upload-logs-and-notify.sh
+#    after_failure:
+#      - bash .bin/upload-logs-and-notify.sh fail
 
   - <<: *acceptance-test
     env: GATEWAY=API-WDCEE-TEST
@@ -100,7 +100,7 @@ matrix:
     - bin/rake trigger_build
 
 install:
-  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^2.0
+  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
 
