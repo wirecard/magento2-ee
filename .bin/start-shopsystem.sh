@@ -25,4 +25,4 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 
 docker exec ${MAGENTO_CONTAINER_NAME} php /magento2-plugin/tests/_data/configure_payment_method_db.php creditcard
 
-sleep 5m
+sleep 6m
