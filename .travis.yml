@@ -100,7 +100,7 @@ matrix:
     - bin/rake trigger_build
 
 install:
-  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
+  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^2.0
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
 
