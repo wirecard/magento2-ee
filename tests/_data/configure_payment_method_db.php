@@ -49,18 +49,6 @@ $defaultConfig = [
         'three_d_secret' => 'dbc5a498-9a66-43b9-bf1d-a618dd399684',
         'merchant_account_id' => '53f2895a-e4de-4e82-a813-0d87a10e55e6',
         'secret' => 'dbc5a498-9a66-43b9-bf1d-a618dd399684',
-        'ssl_max_limit' => 100,
-        'three_d_min_limit' => 50,
-
-        'enabled' => '1',
-        'title' => 'Wirecard Credit Card',
-        'credentials' => '',
-        'test_button' => 'Test',
-        'advanced' => '',
-        'payment_action' => 'pay',
-        'descriptor' => '0',
-        'send_additional' => '1',
-        'cc_vault_enabled' => '0',
     ]
 ];
 
@@ -143,6 +131,13 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
     }
 
     $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/active', '1')");
+    $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/title', 'Wirecard Credit Card')");
+    $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/send_additional', '1')");
+    $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/ssl_max_limit', '100.0')");
+    $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_min_limit', '50.0')");
+    $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/default_currency', 'EUR')");
+    $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/payment_action', 'authorize')");
+    $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/sort_order', '1')");
 
     foreach ($db_config as $name => $value) {
         if ('base_url' === $name) {
