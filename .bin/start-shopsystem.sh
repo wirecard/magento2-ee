@@ -32,7 +32,5 @@ docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
             --env GATEWAY=${GATEWAY} \
             ${MAGENTO_CONTAINER_NAME} bash -c "cd /magento2-plugin/tests/_data/ && php configure_payment_method_db.php creditcard"
 
+# clean cache to activate payment method
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
-
-# wait for payment method to be activated
-sleep 7m
