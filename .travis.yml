@@ -34,10 +34,10 @@ matrix:
       - travis_retry composer update
     script: bash .bin/run-ui-tests.sh
     after_script: skip
-    after_success:
-      - bash .bin/upload-logs-and-notify.sh
-    after_failure:
-      - bash .bin/upload-logs-and-notify.sh fail
+#    after_success:
+#      - bash .bin/upload-logs-and-notify.sh
+#    after_failure:
+#      - bash .bin/upload-logs-and-notify.sh fail
 
   - <<: *acceptance-test
     env: GATEWAY=API-WDCEE-TEST
