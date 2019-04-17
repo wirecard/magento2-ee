@@ -39,6 +39,7 @@ $gateway = getenv('GATEWAY');
 if (!$gateway) {
     $gateway = 'API-TEST';
 }
+echo "Na pocetku: " . $gateway;
 
 $defaultConfig = [
     'creditcard' => [
@@ -86,7 +87,7 @@ updateMagento2EeDbConfig($dbConfig, $paymentMethod);
 
 function buildConfigByPaymentMethod($paymentMethod, $gateway)
 {
-    echo $gateway;
+    echo "U funkciji: " . $gateway;
     if (!array_key_exists($paymentMethod, $GLOBALS['defaultConfig'])) {
         return null;
     }
@@ -94,7 +95,7 @@ function buildConfigByPaymentMethod($paymentMethod, $gateway)
 
     $jsonFile = GATEWAY_CONFIG_PATH . DIRECTORY_SEPARATOR . $paymentMethod . '.json';
     if (file_exists($jsonFile)) {
-        echo $jsonFile;
+        echo "Json file: " . $jsonFile;
         $jsonData = json_decode(file_get_contents($jsonFile));
         if (!empty($jsonData) && !empty($jsonData->$gateway)) {
             foreach (get_object_vars($jsonData->$gateway) as $key => $data) {
