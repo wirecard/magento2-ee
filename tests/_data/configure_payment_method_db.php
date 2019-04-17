@@ -146,32 +146,32 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
 
     foreach ($db_config as $name => $value) {
         if ('base_url' === $name) {
-            $baseUrl = serialize($value);
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/base_url', $baseUrl)");
+            $baseUrl = $value;
+            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/base_url', '$baseUrl')");
         }
         if ('http_user' === $name) {
-            $httpUser = serialize($value);
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/http_user', $httpUser)");
+            $httpUser = $value;
+            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/http_user', '$httpUser')");
         }
         if ('http_pass' === $name) {
-            $httpPass = serialize($value);
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/http_pass', $httpPass)");
+            $httpPass = $value;
+            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/http_pass', '$httpPass')");
         }
         if ('three_d_merchant_account_id' === $name) {
-            $threeDMerchantAccountId = serialize($value);
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_merchant_account_id', $threeDMerchantAccountId)");
+            $threeDMerchantAccountId = $value;
+            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_merchant_account_id', '$threeDMerchantAccountId')");
         }
         if ('three_d_secret' === $name) {
-            $threeDSecret = serialize($value);
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_secret', $threeDSecret)");
+            $threeDSecret = $value;
+            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_secret', '$threeDSecret')");
         }
         if ('merchant_account_id' === $name) {
-            $merchantAccountId = serialize($value);
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/merchant_account_id', $merchantAccountId)");
+            $merchantAccountId = $value;
+            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/merchant_account_id', '$merchantAccountId')");
         }
         if ('secret' === $name) {
-            $secret = serialize($value);
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/secret', $secret)");
+            $secret = $value;
+            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/secret', '$secret')");
         }
     }
 

@@ -78,22 +78,22 @@ class AcceptanceTester extends \Codeception\Actor
     {
         switch ($name) {
             case 'Checkout':
-                $this->wait(30);
+                $this->wait(45);
                 $page = new CheckoutPage($this);
                 break;
             case 'Shop':
                 $page = new ShopPage($this);
                 break;
             case 'Verified':
-                $this->wait(30);
+                $this->wait(45);
                 $page = new VerifiedPage($this);
                 break;
             case 'Order Received':
-                $this->wait(30);
+                $this->wait(45);
                 $page = new OrderReceivedPage($this);
                 break;
             case 'Payment':
-                $this->wait(30);
+                $this->wait(45);
                 $page = new PaymentPage($this);
                 break;
             default:
