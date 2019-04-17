@@ -7,8 +7,6 @@
     "secret": "38424ae8-2dc5-45be-af4c-6e0fee0fea3e",
     "three_d_merchant_account_id": "fd83dbfa-8790-4492-8391-3f3938908b28",
     "three_d_secret": "38424ae8-2dc5-45be-af4c-6e0fee0fea3e",
-    "ssl_max_limit": 100,
-    "three_d_min_limit": 50
   },
   "API-WDCEE-TEST": {
     "base_url": "https://api-wdcee-test.wirecard.com",
@@ -18,8 +16,6 @@
     "secret": "cf8be86b-a671-4da4-b870-80af5c3eedb1",
     "three_d_merchant_account_id": "49ee1355-cdd3-4205-920f-85391bb3865d",
     "three_d_secret": "518c3be1-4aa2-4294-a081-eb7edf20f9d7",
-    "ssl_max_limit": 100,
-    "three_d_min_limit": 50
   },
   "API-TEST": {
     "base_url": "https://api-test.wirecard.com",
@@ -29,7 +25,5 @@
     "secret": "dbc5a498-9a66-43b9-bf1d-a618dd399684",
     "three_d_merchant_account_id": "508b8896-b37d-4614-845c-26bf8bf2c948",
     "three_d_secret": "dbc5a498-9a66-43b9-bf1d-a618dd399684",
-    "ssl_max_limit": 100,
-    "three_d_min_limit": 50
   }
 }
