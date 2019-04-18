@@ -22,13 +22,13 @@ matrix:
   allow_failures:
     - stage: acceptance-test
   include:
-  - php: 7.1
+  - php: 7.0
     if: env(PHRASEAPP_PULL) != '1'
 
   - &acceptance-test
     stage: acceptance-test
     if: type != cron
-    php: 7.1
+    php: 7.0
     env: GATEWAY=API-TEST
     install:
       - travis_retry composer update
@@ -99,10 +99,10 @@ matrix:
     - cd $TMPDIR && travis_retry bundle install
     - bin/rake trigger_build
 
-#install:
-#  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
-#  - travis_retry composer install $COMPOSER_ARGS
-#  - composer show
+install:
+  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
+  - travis_retry composer install $COMPOSER_ARGS
+  - composer show
 
 script:
   - composer test-coverage
