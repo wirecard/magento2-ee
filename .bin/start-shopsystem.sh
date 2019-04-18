@@ -26,6 +26,7 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 echo "Give permissions to load css! - It is mandatory!"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
 
+# change gateway if so configured
 docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
             --env MYSQL_USER=${MYSQL_USER} \
             --env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
@@ -36,5 +37,5 @@ docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:flush
 
-echo "Sleep to hceck payment method!"
+echo "Sleep for 5 minutes!"
 sleep 5m
