@@ -124,5 +124,5 @@ notifications:
       - "%{repository}#%{build_number} (%{branch} : %{author}): %{message}"
       - "Change view : %{compare_url}"
       - "Build details : %{build_url}"
-    on_success: change
-    on_failure: change
+    on_success: never
+    on_failure: never
