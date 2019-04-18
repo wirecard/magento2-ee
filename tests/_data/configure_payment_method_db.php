@@ -81,7 +81,6 @@ if (empty($dbConfig)) {
     exit(1);
 }
 
-
 updateMagento2EeDbConfig($dbConfig, $paymentMethod);
 
 /**
@@ -127,9 +126,9 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
 {
     echo 'Configuring ' . $payment_method . " payment method in the shop system \n";
     $dbHost = 'db';
-    $dbName = getenv( 'MYSQL_DATABASE' );
-    $dbUser = getenv( 'MYSQL_USER' );
-    $dbPass = getenv( 'MYSQL_PASSWORD' );
+    $dbName = getenv('MYSQL_DATABASE');
+    $dbUser = getenv('MYSQL_USER');
+    $dbPass = getenv('MYSQL_PASSWORD');
 
     $tableName = 'core_config_data';
 
