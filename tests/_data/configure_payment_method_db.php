@@ -130,6 +130,12 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
         return false;
     }
 
+    $gatewayApiWdcee = getenv('GATEWAY');
+    if ('API-WDCEE-TEST' === $gatewayApiWdcee) {
+        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/base_url', 'https://api-wdcee-test.wirecard.com')");
+        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/http_user', 'pink-test')");
+        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/http_pass', '8f5y2h0s')");
+    }
     $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/active', '1')");
     $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/title', 'Wirecard Credit Card')");
     $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/send_additional', '1')");
