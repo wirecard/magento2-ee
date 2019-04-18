@@ -37,5 +37,5 @@ docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:flush
 
-echo "Sleep for 5 minutes!"
-sleep 5m
+#echo "Sleep for 5 minutes!"
+#sleep 5m
