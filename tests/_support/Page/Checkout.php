@@ -71,6 +71,7 @@ class Checkout extends Base
     {
         $I = $this->tester;
         $data_field_values = $I->getDataFromDataFile('tests/_data/CustomerData.json');
+        $I->wait(45);
         $I->waitForElementVisible($this->getElement('Country'));
         $I->selectOption($this->getElement('Country'), $data_field_values->country);
         $I->waitForElementVisible($this->getElement('State/Province'));
