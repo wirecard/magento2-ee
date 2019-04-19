@@ -149,8 +149,7 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
         $path = sprintf("payment/wirecard_elasticengine_creditcard/%s", $name);
 
         $stmt = $mysqli->prepare("INSERT INTO $tableName (path, value) VALUES (?, ?)");
-        $stmt->bind_param("s", $path);
-        $stmt->bind_param("s", $value);
+        $stmt->bind_param("ss", $path, $value);
 
         $stmt->execute();
     }
