@@ -162,7 +162,7 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
     $stmtInsert = "SELECT * FROM $tableName";
     $result = $mysqli->query($stmtInsert);
     if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             echo $row['path'] . " " . $row['value'] . "\n";
         }
     }
