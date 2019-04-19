@@ -124,7 +124,7 @@ function buildConfigByPaymentMethod($paymentMethod, $gateway)
  */
 function updateMagento2EeDbConfig($db_config, $payment_method)
 {
-    echo 'Configuring ' . $payment_method . " payment method in the shop system \n";
+    echo '\nConfiguring ' . $payment_method . " payment method in the shop system\n";
     $dbHost = 'db';
     $dbName = getenv('MYSQL_DATABASE');
     $dbUser = getenv('MYSQL_USER');
@@ -138,15 +138,14 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
         return false;
     }
 
-    $gateway = getenv('GATEWAY');
-    if ('API-WDCEE-TEST' === $gateway) {
-        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/base_url', 'https://api-wdcee-test.wirecard.com')");
-        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/http_user', 'pink-test')");
-        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/http_pass', '8f5y2h0s')");
-    } elseif ('NOVA' === $gateway) {
-        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/base_url', 'https://payments-test.wirecard.com')");
-        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/http_user', 'NovaTeam')");
-        $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('wirecard_elasticengine/credentials/http_pass', 'kCopTTMkpw')");
+    $paymentMethodActivation = array_slice($db_config, 0, 3);
+    foreach ($paymentMethodActivation as $name => $value) {
+        $path = sprintf("wirecard_elasticengine/credentials/%s", $name);
+
+        $stmt = $mysqli->prepare("INSERT INTO $tableName (path, value) VALUES (?, ?)");
+        $stmt->bind_param("ss", $path, $value);
+
+        $stmt->execute();
     }
 
     foreach ($db_config as $name => $value) {
@@ -156,15 +155,6 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
         $stmt->bind_param("ss", $path, $value);
 
         $stmt->execute();
-    }
-
-    echo "New Database rows!\n";
-    $stmtInsert = "SELECT * FROM $tableName";
-    $result = $mysqli->query($stmtInsert);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo $row['path'] . " " . $row['value'] . "\n";
-        }
     }
     return true;
 }
