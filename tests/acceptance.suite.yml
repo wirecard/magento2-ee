@@ -8,13 +8,13 @@ actor: AcceptanceTester
 modules:
   enabled:
     - WebDriver:
-#        host: 'hub-cloud.browserstack.com'
-#        port: 80
+        host: 'hub-cloud.browserstack.com'
+        port: 80
         url: '%NGROK_URL%'
         browser: chrome # 'chrome' or 'firefox'
         capabilities:
           'build': '%VERSION%'
-          'project': 'magento2-ee-api-test'
-#          'browserstack.user': '%BROWSERSTACK_USER%'
-#          'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
+          'project': 'magento2-ee'
+          'browserstack.user': '%BROWSERSTACK_USER%'
+          'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
     - \Helper\Acceptance

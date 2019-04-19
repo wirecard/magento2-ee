@@ -78,21 +78,22 @@ class AcceptanceTester extends \Codeception\Actor
     {
         switch ($name) {
             case 'Checkout':
+                $this->wait(45);
                 $page = new CheckoutPage($this);
                 break;
             case 'Shop':
                 $page = new ShopPage($this);
                 break;
             case 'Verified':
-                $this->wait(8);
+                $this->wait(45);
                 $page = new VerifiedPage($this);
                 break;
             case 'Order Received':
-                $this->wait(6);
+                $this->wait(45);
                 $page = new OrderReceivedPage($this);
                 break;
             case 'Payment':
-                $this->wait(7);
+                $this->wait(45);
                 $page = new PaymentPage($this);
                 break;
             default:
@@ -184,9 +185,11 @@ class AcceptanceTester extends \Codeception\Actor
     public function iPrepareCheckout()
     {
         $this->iAmOnPage('Shop');
+        $this->wait(20);
         //chose a product and open product page
-        $this->scrollTo(['class' => 'page-wrapper'], 20, 100);
+        $this->scrollTo(['class' => 'page-wrapper'], 20, 1500);
         $this->click($this->currentPage->getElement('First Product in the Product List'));
+        $this->wait(10);
     }
 
     /**

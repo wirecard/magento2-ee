@@ -66,6 +66,7 @@ class Payment extends Base
     public function fillCreditCardDetails()
     {
         $I = $this->tester;
+        $I->wait(20);
         $data_field_values = $I->getDataFromDataFile('tests/_data/CardData.json');
         $I->selectOption($this->getElement('Wirecard Credit Card'), 'Wirecard Credit Card');
         $this->switchFrame();
