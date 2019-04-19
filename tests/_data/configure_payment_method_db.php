@@ -146,66 +146,13 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
     }
 
     foreach ($db_config as $name => $value) {
-        if ('base_url' === $name) {
-            $baseUrl = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/base_url', '$baseUrl')");
-        }
-        if ('http_user' === $name) {
-            $httpUser = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/http_user', '$httpUser')");
-        }
-        if ('http_pass' === $name) {
-            $httpPass = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/http_pass', '$httpPass')");
-        }
-        if ('three_d_merchant_account_id' === $name) {
-            $threeDMerchantAccountId = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_merchant_account_id', '$threeDMerchantAccountId')");
-        }
-        if ('three_d_secret' === $name) {
-            $threeDSecret = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_secret', '$threeDSecret')");
-        }
-        if ('merchant_account_id' === $name) {
-            $merchantAccountId = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/merchant_account_id', '$merchantAccountId')");
-        }
-        if ('secret' === $name) {
-            $secret = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/secret', '$secret')");
-        }
-        if ('active' === $name) {
-            $active = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/active', '$active')");
-        }
-        if ('title' === $name) {
-            $title = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/title', '$title')");
-        }
-        if ('send_additional' === $name) {
-            $sendAdditional = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/send_additional', '$sendAdditional')");
-        }
-        if ('ssl_max_limit' === $name) {
-            $sslMaxLimit = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/ssl_max_limit', '$sslMaxLimit')");
-        }
-        if ('three_d_min_limit' === $name) {
-            $threeDMinLimit = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/three_d_min_limit', '$threeDMinLimit')");
-        }
-        if ('default_currency' === $name) {
-            $defaultCurrency = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/default_currency', '$defaultCurrency')");
-        }
-        if ('payment_action' === $name) {
-            $paymentAction = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/payment_action', '$paymentAction')");
-        }
-        if ('sort_order' === $name) {
-            $sortOrder = $value;
-            $mysqli->query("INSERT INTO $tableName (path, value) VALUES ('payment/wirecard_elasticengine_creditcard/sort_order', '$sortOrder')");
-        }
+        $path = sprintf("payment/wirecard_elasticengine_creditcard/%s", $name);
+
+        $stmt = $mysqli->prepare("INSERT INTO $tableName (path, value) VALUES (?, ?)");
+        $stmt->bind_param("s", $path);
+        $stmt->bind_param("s", $value);
+
+        $stmt->execute();
     }
     return true;
 }

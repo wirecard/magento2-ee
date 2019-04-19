@@ -6,6 +6,7 @@ if [[ ${GATEWAY} = "API-WDCEE-TEST" ]]; then
   CHANNEL='shs-ui-api-wdcee-test'
 elif [[  ${GATEWAY} = "API-TEST" ]]; then
    CHANNEL='shs-ui-api-test'
+fi
 
 #send information about the build
 curl -X POST -H 'Content-type: application/json' \
