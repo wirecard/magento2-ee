@@ -6,6 +6,8 @@ if [[ ${GATEWAY} = "API-WDCEE-TEST" ]]; then
   CHANNEL='shs-ui-api-wdcee-test'
 elif [[  ${GATEWAY} = "API-TEST" ]]; then
    CHANNEL='shs-ui-api-test'
+elif [[  ${GATEWAY} = "NOVA" ]]; then
+   CHANNEL='shs-ui-nova'
 fi
 
 #send information about the build
