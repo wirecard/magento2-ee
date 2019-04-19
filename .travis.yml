@@ -27,7 +27,7 @@ matrix:
 
   - &acceptance-test
     stage: acceptance-test
-    if: type = cron
+    if: type != cron
     php: 7.0
     env: GATEWAY=API-TEST
     install:
