@@ -44,6 +44,8 @@ matrix:
 
   - <<: *acceptance-test
     env: GATEWAY=API-WDCEE-TEST
+  - <<: *acceptance-test
+    env: GATEWAY=NOVA
 
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'

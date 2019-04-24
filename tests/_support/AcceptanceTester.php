@@ -78,7 +78,6 @@ class AcceptanceTester extends \Codeception\Actor
     {
         switch ($name) {
             case 'Checkout':
-                $this->wait(45);
                 $page = new CheckoutPage($this);
                 break;
             case 'Shop':
