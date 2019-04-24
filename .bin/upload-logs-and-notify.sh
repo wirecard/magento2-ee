@@ -5,6 +5,12 @@ export REPO_NAME='reports'
 export REPO_LINK="https://github.com/wirecard/${REPO_NAME}"
 export REPO_ADDRESS="${REPO_LINK}.git"
 
+# add random sleep time to minimize conflict possibility
+echo "Timestamp : $(date)"
+RANDOM_VALUE=$[ ( RANDOM % 30 )  + 1 ]
+echo "Sleeping for: ${RANDOM_VALUE}"
+sleep ${RANDOM_VALUE}s
+
 #clone the repository where the screenshot should be uploaded
 git clone ${REPO_ADDRESS}
 
@@ -38,8 +44,8 @@ git push -q https://${GITHUB_TOKEN}@github.com/wirecard/${REPO_NAME}.git master
 
 #save commit hash
 export SCREENSHOT_COMMIT_HASH=$(git rev-parse --verify HEAD)
-if [[ $1 == 'fail' ]]; then
-    cd ..
-    #send slack notification
-    bash .bin/send-notify.sh
-fi
+#if [[ $1 == 'fail' ]]; then
+#    cd ..
+#    #send slack notification
+#    bash .bin/send-notify.sh
+#fi

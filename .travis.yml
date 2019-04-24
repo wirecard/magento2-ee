@@ -23,17 +23,17 @@ matrix:
     - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1'
+    if: env(PHRASEAPP_PULL) != '1' AND type = cron
 
   - &acceptance-test
     stage: acceptance-test
-    if: type = cron
+    if: type != cron
     php: 7.0
     env: GATEWAY=API-TEST
     install:
       - bash .bin/remove-composer-lock-file.sh
       - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
-      - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception
+      - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
       - travis_retry composer install $COMPOSER_ARGS
     script: bash .bin/run-ui-tests.sh
     after_script: skip
