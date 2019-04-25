@@ -23,11 +23,11 @@ matrix:
     - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1' AND type = cron
+    if: env(PHRASEAPP_PULL) != '1' AND type != cron
 
   - &acceptance-test
     stage: acceptance-test
-    if: type != cron
+    if: type = cron
     php: 7.0
     env: GATEWAY=API-TEST
     install:
