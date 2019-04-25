@@ -34,11 +34,9 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "mage/translate",
         "mage/url",
-        "Magento_Vault/js/view/payment/vault-enabler",
-        "Magento_CheckoutAgreements/js/model/agreements-assigner",
-        "Magento_Checkout/js/model/quote"
+        "Magento_Vault/js/view/payment/vault-enabler"
     ],
-    function ($, Component, $t, url, VaultEnabler, agreementsAssigner, quote) {
+    function ($, Component, $t, url, VaultEnabler) {
         "use strict";
         return Component.extend({
             token_id: null,
@@ -48,13 +46,6 @@ define(
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
-                //console.log(this.item.method);
-                //let paymentData = quote.paymentMethod();
-                //agreementsAssigner(paymentData);
-                //console.log(paymentData.agreements);
-                //console.log(agreementsAssigner(paymentData));
-                //console.log(agreementsAssigner(this));
-
                 WirecardPaymentPage.seamlessRenderForm({
                     requestData: this.config.seamless_request_data,
                     wrappingDivId: this.getCode() + "_seamless_form",
