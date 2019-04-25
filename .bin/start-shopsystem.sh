@@ -7,7 +7,7 @@ export MYSQL_USER=magento
 export MYSQL_PASSWORD=magento
 
 docker-compose build --build-arg GATEWAY=${GATEWAY} web
-docker-compose up > /dev/null &
+docker-compose up -d
 
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
     echo "Waiting for docker container to initialize"
