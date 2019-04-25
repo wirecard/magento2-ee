@@ -34,9 +34,11 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "mage/translate",
         "mage/url",
-        "Magento_Vault/js/view/payment/vault-enabler"
+        "Magento_Vault/js/view/payment/vault-enabler",
+        "Magento_CheckoutAgreements/js/model/agreements-assigner",
+        "Magento_Checkout/js/model/quote"
     ],
-    function ($, Component, $t, url, VaultEnabler) {
+    function ($, Component, $t, url, VaultEnabler, agreementsAssigner, quote) {
         "use strict";
         return Component.extend({
             token_id: null,
@@ -46,6 +48,13 @@ define(
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
+                //console.log(this.item.method);
+                //let paymentData = quote.paymentMethod();
+                //agreementsAssigner(paymentData);
+                //console.log(paymentData.agreements);
+                //console.log(agreementsAssigner(paymentData));
+                //console.log(agreementsAssigner(this));
+
                 WirecardPaymentPage.seamlessRenderForm({
                     requestData: this.config.seamless_request_data,
                     wrappingDivId: this.getCode() + "_seamless_form",
@@ -130,6 +139,20 @@ define(
             placeSeamlessOrder: function (data, event) {
                 if (event) {
                     event.preventDefault();
+                }
+
+                let agreementForm = $('.payment-method._active div[data-role=checkout-agreements] input');
+                if (agreementForm.length) {
+                    for (let i in agreementForm) {
+                        if (!agreementForm.hasOwnProperty(i)) {
+                            continue;
+                        }
+                        let funElement = agreementForm[i];
+                        if (funElement.checked !== true && funElement.disabled === false) {
+                            this.messageContainer.addErrorMessage({message: 'Checkout agreements not accepted!'});
+                            return;
+                        }
+                    }
                 }
 
                 this.seamlessFormSubmit();
