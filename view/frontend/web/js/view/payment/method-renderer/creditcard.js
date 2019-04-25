@@ -138,8 +138,8 @@ define(
                         if (!agreementForm.hasOwnProperty(i)) {
                             continue;
                         }
-                        let funElement = agreementForm[i];
-                        if (funElement.checked !== true && funElement.disabled === false) {
+                        let agreementElement = agreementForm[i];
+                        if (agreementElement.checked !== true && agreementElement.disabled === false) {
                             this.messageContainer.addErrorMessage({message: 'Checkout agreements not accepted!'});
                             return;
                         }
