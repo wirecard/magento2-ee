@@ -132,6 +132,20 @@ define(
                     event.preventDefault();
                 }
 
+                let agreementForm = $('.payment-method._active div[data-role=checkout-agreements] input');
+                if (agreementForm.length) {
+                    for (let i in agreementForm) {
+                        if (!agreementForm.hasOwnProperty(i)) {
+                            continue;
+                        }
+                        let agreementElement = agreementForm[i];
+                        if (agreementElement.checked !== true && agreementElement.disabled === false) {
+                            this.messageContainer.addErrorMessage({message: 'Checkout agreements not accepted!'});
+                            return;
+                        }
+                    }
+                }
+
                 this.seamlessFormSubmit();
             },
             afterPlaceOrder: function () {
