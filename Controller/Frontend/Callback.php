@@ -106,7 +106,7 @@ class Callback extends Action
         $response = null;
         $data = null;
         if ($this->getRequest()->getParam('jsresponse')) {
-            //TODO: get correct method?
+            //get correct method?
             $methodName = 'creditcard';
 
             /** @var RedirectResult $resultRedirect */
@@ -122,19 +122,16 @@ class Callback extends Action
                 ];
             }
 
-            $initresponse = $this->getRequest()->getPost()->toArray();
-            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-            $wdBaseUrl    = 'wirecard_elasticengine/';
+            $response = $this->getRequest()->getPost()->toArray();
+            $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
             $methodAppend = '?method=' . urlencode('creditcard');
             $url = $wdBaseUrl . 'frontend/redirect' . $methodAppend;
 
-            $redirect = $resultRedirect->setPath($url, ['_secure' => true]);
-            $this->logger->error(print_r($initresponse['jsresponse'], true));
+            $this->logger->debug('Response: ' . print_r($response['jsresponse'], true));
             /** @var Response $response */
-            $response = $transactionService->processJsResponse($initresponse['jsresponse'], $url);
-            //TODO: save response data? - log response? - save token?
-            $data[self::REDIRECT_URL] = $redirect;
-            $this->logger->error('handle response here if forminteraction or success');
+            $response = $transactionService->processJsResponse($response['jsresponse'], $url);
+            $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
+
             if ($response instanceof FormInteractionResponse) {
                 unset($data[self::REDIRECT_URL]);
                 $data['form-url'] = html_entity_decode($response->getUrl());
@@ -142,16 +139,8 @@ class Callback extends Action
                 foreach ($response->getFormFields() as $key => $value) {
                     $data[$key] = html_entity_decode($value);
                 }
-            } elseif ($response instanceof  SuccessResponse) {
-                unset($data[self::REDIRECT_URL]);
-                foreach ($initresponse['jsresponse'] as $key => $value) {
-                    $data[$key] = html_entity_decode($value);
-                }
             }
-        } /*else {
-            $this->logger->error(print_r($response, true));
-
-            //TODO: check with other methods
+        } else {
             $data = [
                 self::REDIRECT_URL => null,
                 'form-url' => null,
@@ -176,7 +165,7 @@ class Callback extends Action
                 $this->logger->error('set default redirect url');
                 $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
             }
-        }*/
+        }
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $result->setData([

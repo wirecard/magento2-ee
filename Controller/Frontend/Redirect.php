@@ -94,6 +94,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $methodName = $this->getRequest()->getParam('method');
+        $jsResponse = false;
         if ($methodName == null && $this->getRequest()->isPost()) {
             $methodName = $this->getRequest()->getPost()->get('method');
         }
@@ -109,13 +110,16 @@ class Redirect extends Action implements CsrfAwareActionInterface
 
         if ($this->getRequest()->isPost()) {
             $params = $this->getRequest()->getPost()->toArray();
-            $params = $params['data'];
-            $this->logger->debug('Response: ' . print_r($params, true));
+            if (isset($params['data'])) {
+                $params = $params['data'];
+                $jsResponse = true;
+            }
         } else {
             $params = $this->getRequest()->getParams();
         }
+        $this->logger->debug('Response: ' . print_r($params, true));
 
-        if ($methodName === 'creditcard') {
+        if ($jsResponse) {
             $result = $transactionService->processJsResponse($params, $resultRedirect);
         } else {
             $result = $transactionService->handleResponse($params);

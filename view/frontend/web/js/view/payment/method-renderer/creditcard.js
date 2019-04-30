@@ -90,21 +90,7 @@ define(
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                /*if (response.hasOwnProperty("token_id")) {
-                    this.token_id = response.token_id;
-                    this.first_name = response.first_name;
-                    this.last_name = response.last_name;
-                } else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
-                    this.token_id = response.card_token.token;
-
-                    this.expiration_date = {};
-                    var fields = ["expiration_month", "expiration_year"];
-                    for (var part in fields) {
-                        this.expiration_date[fields[part]] = response.card[fields[part]];
-                    }
-                }*/
-                console.log(response);
-
+                this.setTokenData(response);
                 if (response.hasOwnProperty('acs_url')) {
                     this.redirectCreditCard(response);
                 } else {
@@ -123,6 +109,21 @@ define(
                     });
                 }
             },
+            setTokenData: function (response) {
+                if (response.hasOwnProperty("token_id")) {
+                    this.token_id = response.token_id;
+                    this.first_name = response.first_name;
+                    this.last_name = response.last_name;
+                } else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
+                    this.token_id = response.card_token.token;
+
+                    this.expiration_date = {};
+                    let fields = ["expiration_month", "expiration_year"];
+                    for (let part in fields) {
+                        this.expiration_date[fields[part]] = response.card[fields[part]];
+                    }
+                }
+            },
             redirectCreditCard: function (response) {
                 let result = {};
                 result.data = {};
@@ -131,7 +132,6 @@ define(
                     type: 'post',
                     data: {'jsresponse': response},
                     success: function (result) {
-                        console.log(result.data);
                         if (result.data["form-url"]) {
                             let form = $("<form />", {
                                 action: result.data["form-url"],
@@ -155,15 +155,10 @@ define(
                     }
                 });
             },
-            seamlessFormInitErrorHandler:
-
-                function (response) {
-                    this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-
-                    console.error(response);
-                }
-
-            ,
+            seamlessFormInitErrorHandler: function (response) {
+                this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                console.error(response);
+            },
             seamlessFormSubmitErrorHandler: function (response) {
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
 
@@ -172,15 +167,13 @@ define(
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
-            }
-            ,
+            },
             seamlessFormSizeHandler: function () {
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
                 this.resizeIFrame();
-            }
-            ,
+            },
             resizeIFrame: function () {
-                var iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
+                let iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
                 if (iframe) {
                     if (iframe.clientWidth > 768) {
                         iframe.style.height = "267px";
@@ -190,8 +183,7 @@ define(
                         iframe.style.height = "415px";
                     }
                 }
-            }
-            ,
+            },
 
             getData: function () {
                 return {
@@ -206,23 +198,19 @@ define(
                         "last_name": this.last_name
                     }
                 };
-            }
-            ,
+            },
             selectPaymentMethod: function () {
                 this._super();
                 this.resizeIFrame();
 
                 return true;
-            }
-            ,
+            },
             afterPlaceOrder: function () {
-                console.log('in placeseamlessorder');
                 this.seamlessFormSubmit();
-            }
-            ,
+            },
 
             placeOrder: function (data, event) {
-                var self = this;
+                let self = this;
 
                 if (event) {
                     event.preventDefault();
@@ -245,8 +233,7 @@ define(
                 );
 
                 return true;
-            }
-            ,
+            },
 
             /**
              * @returns {String}
@@ -262,8 +249,6 @@ define(
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
             }
-        })
-            ;
+        });
     }
-)
-;
+);
