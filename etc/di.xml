@@ -1138,6 +1138,12 @@
         </arguments>
     </type>
 
+    <type name="Wirecard\ElasticEngine\Controller\Frontend\Callback">
+        <arguments>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+        </arguments>
+    </type>
+
     <type name="Wirecard\ElasticEngine\Controller\Frontend\Creditcard">
         <arguments>
             <argument name="jsonFactory" xsi:type="object">Magento\Framework\Controller\Result\JsonFactory</argument>

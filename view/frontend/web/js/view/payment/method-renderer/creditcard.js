@@ -43,56 +43,54 @@ define(
         return Component.extend({
             token_id: null,
             expiration_date: {},
+            response_data: {},
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
             seamlessFormInit: function () {
-                var uiInitData = { "txtype": this.getCode() };
-                var wrappingDivId   = this.getCode() + "_seamless_form";
+                var uiInitData = {"txtype": this.getCode()};
+                var wrappingDivId = this.getCode() + "_seamless_form";
                 var formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 var formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
                 var messageContainer = this.messageContainer;
 
-                //this.testConf = window.checkoutConfig.payment[this.getCode()];
-                //console.log(this.getCode());
-
                 $.ajax({
-                    url : url.build("wirecard_elasticengine/frontend/creditcard"),
-                    type : 'post',
+                    url: url.build("wirecard_elasticengine/frontend/creditcard"),
+                    type: 'post',
                     data: uiInitData,
-                    success : function(result) {
+                    success: function (result) {
                         if ('OK' === result.status) {
                             var uiInitData = JSON.parse(result.uiData);
                             WirecardPaymentPage.seamlessRenderForm({
-                                requestData:   uiInitData,
+                                requestData: uiInitData,
                                 wrappingDivId: wrappingDivId,
-                                onSuccess:     formSizeHandler,
-                                onError:       formInitHandler
+                                onSuccess: formSizeHandler,
+                                onError: formInitHandler
                             });
                         } else {
                             messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
                             console.error("Problem receive UI data");
                         }
                     },
-                    error : function(err) {
+                    error: function (err) {
                         messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                        console.error("Error : "+JSON.stringify(err));
+                        console.error("Error : " + JSON.stringify(err));
                     }
                 });
 
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
-            seamlessFormSubmit: function() {
+            seamlessFormSubmit: function () {
+                console.log('in seamlessFormSbumit');
                 WirecardPaymentPage.seamlessSubmitForm({
                     onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
-                    onError: this.seamlessFormSubmitErrorHandler.bind(this),
-                    wrappingDivId: this.getCode() + "_seamless_form"
+                    onError: this.seamlessFormSubmitErrorHandler.bind(this)
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                if (response.hasOwnProperty("token_id")) {
+                /*if (response.hasOwnProperty("token_id")) {
                     this.token_id = response.token_id;
                     this.first_name = response.first_name;
                     this.last_name = response.last_name;
@@ -104,27 +102,83 @@ define(
                     for (var part in fields) {
                         this.expiration_date[fields[part]] = response.card[fields[part]];
                     }
+                }*/
+                console.log(response);
+
+                if (response.hasOwnProperty('acs_url')) {
+                    this.redirectCreditCard(response);
+                } else {
+                    $.ajax({
+                        url: url.build("wirecard_elasticengine/frontend/redirect"),
+                        type: 'post',
+                        data: {
+                            'data': response,
+                            'method': 'creditcard'
+                        }
+                    }).done(function (redirect) {
+                        //exchange this with proper magento function at later point
+                        document.open();
+                        document.write(redirect);
+                        document.close();
+                    });
                 }
-                this.placeOrder();
             },
-            seamlessFormInitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                
-                console.error(response);
+            redirectCreditCard: function (response) {
+                let result = {};
+                result.data = {};
+                $.ajax({
+                    url: url.build("wirecard_elasticengine/frontend/callback"),
+                    type: 'post',
+                    data: {'jsresponse': response},
+                    success: function (result) {
+                        console.log(result.data);
+                        if (result.data["form-url"]) {
+                            let form = $("<form />", {
+                                action: result.data["form-url"],
+                                method: result.data["form-method"]
+                            });
+                            for (let key in result.data) {
+                                if (key !== "form-url" && key !== "form-method") {
+                                    form.append($("<input />", {
+                                        type: "hidden",
+                                        name: key,
+                                        value: result.data[key]
+                                    }));
+                                }
+                            }
+                            form.appendTo("body").submit();
+                        }
+                    },
+                    error: function (err) {
+                        messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        console.error("Error : " + JSON.stringify(err));
+                    }
+                });
             },
+            seamlessFormInitErrorHandler:
+
+                function (response) {
+                    this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+
+                    console.error(response);
+                }
+
+            ,
             seamlessFormSubmitErrorHandler: function (response) {
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
 
                 console.error(response);
 
-                setTimeout(function(){
+                setTimeout(function () {
                     location.reload();
-                },3000);
-            },
+                }, 3000);
+            }
+            ,
             seamlessFormSizeHandler: function () {
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
                 this.resizeIFrame();
-            },
+            }
+            ,
             resizeIFrame: function () {
                 var iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
                 if (iframe) {
@@ -136,7 +190,8 @@ define(
                         iframe.style.height = "415px";
                     }
                 }
-            },
+            }
+            ,
 
             getData: function () {
                 return {
@@ -151,45 +206,55 @@ define(
                         "last_name": this.last_name
                     }
                 };
-            },
+            }
+            ,
             selectPaymentMethod: function () {
                 this._super();
                 this.resizeIFrame();
 
                 return true;
-            },
-            placeSeamlessOrder: function (data, event) {
+            }
+            ,
+            afterPlaceOrder: function () {
+                console.log('in placeseamlessorder');
+                this.seamlessFormSubmit();
+            }
+            ,
+
+            placeOrder: function (data, event) {
+                var self = this;
+
                 if (event) {
                     event.preventDefault();
                 }
+                this.isPlaceOrderActionAllowed(false);
 
-                this.seamlessFormSubmit();
-            },
-            afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    if (data["form-url"]) {
-                        var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
-
-                        for (var i = 0; i < data["form-fields"].length; i++) {
-                            form.append($("<input />", {
-                                type: "hidden",
-                                name: data["form-fields"][i]["key"],
-                                value: data["form-fields"][i]["value"]
-                            }));
+                this.getPlaceOrderDeferredObject()
+                    .fail(
+                        function () {
+                            self.isPlaceOrderActionAllowed(true);
                         }
-                        form.appendTo("body").submit();
-                    } else {
-                        window.location.replace(data["redirect-url"]);
+                    ).done(
+                    function () {
+                        self.afterPlaceOrder();
+
+                        if (self.redirectAfterPlaceOrder) {
+                            redirectOnSuccessAction.execute();
+                        }
                     }
-                });
-            },
+                );
+
+                return true;
+            }
+            ,
 
             /**
              * @returns {String}
              */
             getVaultCode: function () {
                 return window.checkoutConfig.payment[this.getCode()].vaultCode;
-            },
+            }
+            ,
 
             /**
              * @returns {Bool}
@@ -197,6 +262,8 @@ define(
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
             }
-        });
+        })
+            ;
     }
-);
+)
+;
