@@ -41,12 +41,10 @@ define(
     function ($, Component, $t, url, VaultEnabler, quote, checkoutData) {
         "use strict";
         return Component.extend({
-            token_id: null,
             expiration_date: {},
             response_data: {},
             defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-creditcard",
-                redirectAfterPlaceOrder: false
+                template: "Wirecard_ElasticEngine/payment/method-creditcard"
             },
             seamlessFormInit: function () {
                 var uiInitData = {"txtype": this.getCode()};
@@ -70,7 +68,6 @@ define(
                             });
                         } else {
                             messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                            console.error("Problem receive UI data");
                         }
                     },
                     error: function (err) {
@@ -82,15 +79,7 @@ define(
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
-            seamlessFormSubmit: function () {
-                console.log('in seamlessFormSbumit');
-                WirecardPaymentPage.seamlessSubmitForm({
-                    onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
-                    onError: this.seamlessFormSubmitErrorHandler.bind(this)
-                });
-            },
             seamlessFormSubmitSuccessHandler: function (response) {
-                this.setTokenData(response);
                 if (response.hasOwnProperty('acs_url')) {
                     this.redirectCreditCard(response);
                 } else {
@@ -107,21 +96,6 @@ define(
                         document.write(redirect);
                         document.close();
                     });
-                }
-            },
-            setTokenData: function (response) {
-                if (response.hasOwnProperty("token_id")) {
-                    this.token_id = response.token_id;
-                    this.first_name = response.first_name;
-                    this.last_name = response.last_name;
-                } else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
-                    this.token_id = response.card_token.token;
-
-                    this.expiration_date = {};
-                    let fields = ["expiration_month", "expiration_year"];
-                    for (let part in fields) {
-                        this.expiration_date[fields[part]] = response.card[fields[part]];
-                    }
                 }
             },
             redirectCreditCard: function (response) {
@@ -190,12 +164,7 @@ define(
                     "method": this.getCode(),
                     "po_number": null,
                     "additional_data": {
-                        "token_id": this.token_id,
-                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler(),
-                        "expiration_year": this.expiration_date.expiration_year,
-                        "expiration_month": this.expiration_date.expiration_month,
-                        "first_name": this.first_name,
-                        "last_name": this.last_name
+                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler()
                     }
                 };
             },
@@ -206,33 +175,11 @@ define(
                 return true;
             },
             afterPlaceOrder: function () {
-                this.seamlessFormSubmit();
-            },
-
-            placeOrder: function (data, event) {
-                let self = this;
-
-                if (event) {
-                    event.preventDefault();
-                }
-                this.isPlaceOrderActionAllowed(false);
-
-                this.getPlaceOrderDeferredObject()
-                    .fail(
-                        function () {
-                            self.isPlaceOrderActionAllowed(true);
-                        }
-                    ).done(
-                    function () {
-                        self.afterPlaceOrder();
-
-                        if (self.redirectAfterPlaceOrder) {
-                            redirectOnSuccessAction.execute();
-                        }
-                    }
-                );
-
-                return true;
+                WirecardPaymentPage.seamlessSubmitForm({
+                    wrappingDivId: this.getCode() + "_seamless_form",
+                    onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
+                    onError: this.seamlessFormSubmitErrorHandler.bind(this)
+                });
             },
 
             /**
@@ -240,8 +187,7 @@ define(
              */
             getVaultCode: function () {
                 return window.checkoutConfig.payment[this.getCode()].vaultCode;
-            }
-            ,
+            },
 
             /**
              * @returns {Bool}
