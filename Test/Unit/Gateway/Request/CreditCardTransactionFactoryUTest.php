@@ -214,10 +214,6 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     private function minimumExpectedTransaction()
     {
-        $card = new Card();
-        $card->setExpirationYear('mypersonaltoken');
-        $card->setExpirationMonth('mypersonaltoken');
-
         $accountHolder = new AccountHolder();
 
         $expected = new CreditCardTransaction();
@@ -235,11 +231,9 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', self::ORDER_ID));
-        $customFields->add(new CustomField('vaultEnabler', self::VAULT_ENABLER));
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
-        $expected->setCard($card);
 
         return $expected;
     }

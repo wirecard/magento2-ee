@@ -42,6 +42,7 @@ use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Callback;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Zend\Stdlib\ParametersInterface;
 
 class CallbackUTest extends \PHPUnit_Framework_TestCase
 {
@@ -70,6 +71,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
     /** @var UrlInterface $urlBuilder */
     private $urlBuilder;
+
+    private $request;
 
     public function setUp()
     {
@@ -121,6 +124,17 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $this->transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $this->transactionServiceFactory->method('create')->willReturn($transactionService);
         $this->urlBuilder = $this->getMockForAbstractClass(UrlInterface::class);
+
+        $postParams = $this->getMock(ParametersInterface::class);
+        $postParams->method('toArray')->willReturn(['jsresponse' => 'payload']);
+
+        $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
+        $this->request->method('getPost')->willReturn($postParams);
+        $this->request->method('getParams')->willReturn(['request_id' => '1234']);
+        $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
+        $this->request->method('getParam')->willReturn('jsresponse');
+
+        $this->context->method('getRequest')->willReturn($this->request);
 
         $this->response = $this->getMockBuilder(Http::class)
             ->disableOriginalConstructor()

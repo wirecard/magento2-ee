@@ -163,14 +163,12 @@ class Creditcard extends Action
     {
         $quote = $this->checkoutSession->getQuote();
         if (is_null($quote)) {
-            $this->logger->warning("Creditcard-UI-AJAX: quote not found");
             return $this->buildErrorResponse('no quote found');
         }
 
         $txType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
         $txName = $this->findTransactionNameByFrontendType($txType);
         if (is_null($txName)) {
-            $this->logger->warning("Creditcard-UI-AJAX: transaction type $txType not supported");
             return $this->buildErrorResponse('Unknown transaction type');
         }
 
@@ -180,7 +178,6 @@ class Creditcard extends Action
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
-        $this->logger->info("Creditcard-UI-AJAX: reserve order id: " . $orderDto->orderId);
 
         if ($txType === self::FRONTEND_CODE_UPI) {
             $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_UPI);
@@ -198,8 +195,6 @@ class Creditcard extends Action
             $paymentAction = "authorization";
         };
 
-        $this->logger->info($paymentAction);
-        $this->logger->debug("load config for transaction $txName");
         $orderDto->config = $transactionService->getConfig()->get($txName);
         $this->processCreditCard($orderDto, $txType);
         try {
