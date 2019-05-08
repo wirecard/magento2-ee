@@ -34,11 +34,9 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "mage/translate",
         "mage/url",
-        "Magento_Vault/js/view/payment/vault-enabler",
-        "Magento_Checkout/js/model/quote",
-        'Magento_Checkout/js/checkout-data'
+        "Magento_Vault/js/view/payment/vault-enabler"
     ],
-    function ($, Component, $t, url, VaultEnabler, quote, checkoutData) {
+    function ($, Component, $t, url, VaultEnabler) {
         "use strict";
         return Component.extend({
             expiration_date: {},
@@ -47,19 +45,20 @@ define(
                 template: "Wirecard_ElasticEngine/payment/method-creditcard"
             },
             seamlessFormInit: function () {
-                var uiInitData = {"txtype": this.getCode()};
-                var wrappingDivId = this.getCode() + "_seamless_form";
-                var formSizeHandler = this.seamlessFormSizeHandler.bind(this);
-                var formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
-                var messageContainer = this.messageContainer;
+                let uiInitData = {"txtype": this.getCode()};
+                let wrappingDivId = this.getCode() + "_seamless_form";
+                let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
+                let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
+                let messageContainer = this.messageContainer;
 
+                // Build seamless renderform with full transaction data
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/creditcard"),
                     type: 'post',
                     data: uiInitData,
                     success: function (result) {
                         if ('OK' === result.status) {
-                            var uiInitData = JSON.parse(result.uiData);
+                            let uiInitData = JSON.parse(result.uiData);
                             WirecardPaymentPage.seamlessRenderForm({
                                 requestData: uiInitData,
                                 wrappingDivId: wrappingDivId,
@@ -83,6 +82,7 @@ define(
                 if (response.hasOwnProperty('acs_url')) {
                     this.redirectCreditCard(response);
                 } else {
+                    // Handle redirect for Non-3D transactions
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/redirect"),
                         type: 'post',
@@ -98,6 +98,10 @@ define(
                     });
                 }
             },
+            /**
+             * Handle 3Ds credit card transactions within callback
+             * @param response
+             */
             redirectCreditCard: function (response) {
                 let result = {};
                 result.data = {};
@@ -174,6 +178,10 @@ define(
 
                 return true;
             },
+
+            /**
+             * Submit credit card request
+             */
             afterPlaceOrder: function () {
                 WirecardPaymentPage.seamlessSubmitForm({
                     wrappingDivId: this.getCode() + "_seamless_form",

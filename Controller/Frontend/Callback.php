@@ -32,21 +32,16 @@
 namespace Wirecard\ElasticEngine\Controller\Frontend;
 
 use Magento\Checkout\Model\Session;
-use Magento\Customer\Test\Unit\Controller\Address\FormPostTest;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
-use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
@@ -68,10 +63,19 @@ class Callback extends Action
      */
     private $baseUrl;
 
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
+    /**
+     * @var TransactionServiceFactory
+     */
     private $transactionServiceFactory;
 
+    /**
+     * @var UrlInterface
+     */
     private $urlBuilder;
 
     /**
@@ -102,44 +106,11 @@ class Callback extends Action
      */
     public function execute()
     {
-        $this->logger->error('execute callback controller');
         $response = null;
         $data = null;
         if ($this->getRequest()->getParam('jsresponse')) {
-            //get correct method?
-            $methodName = 'creditcard';
-
-            /** @var RedirectResult $resultRedirect */
-            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-            try {
-                /** @var TransactionService $transactionService */
-                $transactionService = $this->transactionServiceFactory->create($methodName);
-            } catch (\Throwable $exception) {
-                $this->logger->error($exception->getMessage());
-                $errData = [
-                    'status' => 'ERR',
-                    'errMsg' => $exception->getMessage(),
-                ];
-            }
-
             $response = $this->getRequest()->getPost()->toArray();
-            $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-            $methodAppend = '?method=' . urlencode('creditcard');
-            $url = $wdBaseUrl . 'frontend/redirect' . $methodAppend;
-
-            $this->logger->debug('Response: ' . print_r($response['jsresponse'], true));
-            /** @var Response $response */
-            $response = $transactionService->processJsResponse($response['jsresponse'], $url);
-            $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
-
-            if ($response instanceof FormInteractionResponse) {
-                unset($data[self::REDIRECT_URL]);
-                $data['form-url'] = html_entity_decode($response->getUrl());
-                $data['form-method'] = $response->getMethod();
-                foreach ($response->getFormFields() as $key => $value) {
-                    $data[$key] = html_entity_decode($value);
-                }
-            }
+            $data = $this->handleThreeDTransactions($response);
         } else {
             $data = [
                 self::REDIRECT_URL => null,
@@ -150,10 +121,8 @@ class Callback extends Action
 
             if ($this->session->hasRedirectUrl()) {
                 $data[self::REDIRECT_URL] = $this->session->getRedirectUrl();
-                $this->logger->error('has redirect url');
                 $this->session->unsRedirectUrl();
             } elseif ($this->session->hasFormUrl()) {
-                $this->logger->error('has form url');
                 $data['form-url'] = $this->session->getFormUrl();
                 $data['form-method'] = $this->session->getFormMethod();
                 $data['form-fields'] = $this->session->getFormFields();
@@ -162,7 +131,6 @@ class Callback extends Action
                 $this->session->unsFormMethod();
                 $this->session->unsFormFields();
             } else {
-                $this->logger->error('set default redirect url');
                 $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
             }
         }
@@ -174,5 +142,48 @@ class Callback extends Action
         ]);
 
         return $result;
+    }
+
+    /**
+     * Handle callback with acs url - jsresponse
+     *
+     * @param $response
+     * @return mixed
+     */
+    private function handleThreeDTransactions($response) {
+        $methodName = 'creditcard';
+
+        try {
+            /** @var TransactionService $transactionService */
+            $transactionService = $this->transactionServiceFactory->create($methodName);
+        } catch (\Throwable $exception) {
+            $this->logger->error($exception->getMessage());
+            $errData = [
+                'status' => 'ERR',
+                'errMsg' => $exception->getMessage(),
+            ];
+        }
+
+        // Create credit card redirection url
+        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $methodAppend = '?method=' . urlencode('creditcard');
+        $url = $wdBaseUrl . 'frontend/redirect' . $methodAppend;
+
+        $this->logger->debug('Response: ' . print_r($response['jsresponse'], true));
+
+        /** @var Response $response */
+        $response = $transactionService->processJsResponse($response['jsresponse'], $url);
+        $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
+
+        if ($response instanceof FormInteractionResponse) {
+            unset($data[self::REDIRECT_URL]);
+            $data['form-url'] = html_entity_decode($response->getUrl());
+            $data['form-method'] = $response->getMethod();
+            foreach ($response->getFormFields() as $key => $value) {
+                $data[$key] = html_entity_decode($value);
+            }
+        }
+
+        return $data;
     }
 }
