@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -8,7 +7,7 @@
  *
  * They have been tested and approved for full functionality in the standard configuration
  * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
+ * License version 3 (GPLv3) and can be used, developed and passed on to third parties under
  * the same terms.
  *
  * However, Wirecard AG does not provide any guarantee or accept any liability for any errors
@@ -28,16 +27,55 @@
  *
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
+ *
+ * @author Wirecard AG
+ * @copyright Wirecard AG
+ * @license GPLv3
  */
--->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Wirecard_ElasticEngine" setup_version="1.4.3">
-        <sequence>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Payment"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Vault"/>
-        </sequence>
-    </module>
-</config>
+namespace Helper;
+
+// here you can define custom actions
+// all public methods declared in helper class will be available in $I
+
+use Codeception\Lib\Generator\PageObject;
+
+class Acceptance extends \Codeception\Module
+{
+
+    /**
+     * Method getDataFromDataFile
+     * @param string $fileName
+     * @return string
+     *
+     * @since 1.4.1
+     */
+    public static function getDataFromDataFile($fileName)
+    {
+        // decode the JSON feed
+        $json_data = json_decode(file_get_contents($fileName));
+        if (! $json_data) {
+            $error = error_get_last();
+            echo 'Failed to get customer data from tests/_data/CustomerData.json. Error was: ' . $error['message'];
+        } else {
+            return $json_data;
+        }
+    }
+
+    /**
+     * Method fillFieldsWithData
+     *
+     * @param string $dataType
+     * @param PageObject $page
+     *
+     * @since 1.4.1
+     */
+    public static function fillFieldsWithData($dataType, $page)
+    {
+        if (strpos($dataType, 'Customer') !== false) {
+            $page->fillBillingDetails();
+        } elseif (strpos($dataType, 'Credit Card') !== false) {
+            $page->fillCreditCardDetails();
+        }
+    }
+}

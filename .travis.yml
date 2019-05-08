@@ -19,9 +19,33 @@ env:
   - COMPOSER_ARGS="--no-interaction"
 
 matrix:
+  allow_failures:
+    - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1'
+    if: env(PHRASEAPP_PULL) != '1' AND type != cron
+
+  - &acceptance-test
+    stage: acceptance-test
+    if: type = cron
+    php: 7.0
+    env: GATEWAY=API-TEST
+    install:
+      - bash .bin/remove-composer-lock-file.sh
+      - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
+      - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
+      - travis_retry composer install $COMPOSER_ARGS
+    script: bash .bin/run-ui-tests.sh
+    after_script: skip
+    after_success:
+      - bash .bin/upload-logs-and-notify.sh
+    after_failure:
+      - bash .bin/upload-logs-and-notify.sh fail
+
+  - <<: *acceptance-test
+    env: GATEWAY=API-WDCEE-TEST
+  - <<: *acceptance-test
+    env: GATEWAY=NOVA
 
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
@@ -36,7 +60,7 @@ matrix:
     after_script: skip
 
   - stage: phraseapp-check-if-in-sync
-    if: branch = master OR type = pull_request
+    if: type != cron AND (branch = master OR type = pull_request)
     language: ruby
     ruby: 2.5.3
     before_install: skip

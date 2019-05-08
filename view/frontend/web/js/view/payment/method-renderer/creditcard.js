@@ -40,7 +40,6 @@ define(
         "use strict";
         return Component.extend({
             expiration_date: {},
-            response_data: {},
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard"
             },

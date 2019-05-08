@@ -1,0 +1,19 @@
+version: '3.0'
+services:
+  web:
+    container_name: "${MAGENTO_CONTAINER_NAME}"
+    build: .
+    ports:
+      - "9090:80"
+    links:
+      - db
+    env_file:
+      - env
+    environment:
+      MAGENTO_URL: "${NGROK_URL}"
+    volumes:
+      - ".:/magento2-plugin"
+  db:
+    image: mysql:5.6.23
+    env_file:
+      - env
