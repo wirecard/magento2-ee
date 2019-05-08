@@ -262,7 +262,6 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $expected = new UpiTransaction();
         $expected->setParentTransactionId('123456PARENT');
 
-        $expected->setAccountHolder(new AccountHolder());
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');

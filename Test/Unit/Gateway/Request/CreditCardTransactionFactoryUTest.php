@@ -268,7 +268,6 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new CreditCardTransaction();
         $expected->setParentTransactionId('123456PARENT');
 
-        $expected->setAccountHolder(new AccountHolder());
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');

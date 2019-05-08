@@ -90,13 +90,6 @@ class UnionPayInternationalTransactionFactory extends TransactionFactory
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
 
-        $firstName = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::FIRST_NAME);
-        $lastName = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::LAST_NAME);
-
-        $order = $paymentDO->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, null, $firstName, $lastName));
         $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
@@ -128,14 +121,6 @@ class UnionPayInternationalTransactionFactory extends TransactionFactory
     {
         parent::refund($commandSubject);
 
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $firstName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::FIRST_NAME);
-        $lastName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::LAST_NAME);
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, null, $firstName, $lastName));
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;

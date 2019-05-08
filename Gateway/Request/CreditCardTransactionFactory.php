@@ -37,7 +37,6 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
-use Wirecard\PaymentSdk\Entity\Card;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -135,14 +134,6 @@ class CreditCardTransactionFactory extends TransactionFactory
     {
         parent::refund($commandSubject);
 
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $firstName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::FIRST_NAME);
-        $lastName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::LAST_NAME);
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, null, $firstName, $lastName));
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;
