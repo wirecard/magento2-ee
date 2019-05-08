@@ -39,7 +39,9 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Translate\InlineInterface;
 use Magento\Framework\UrlInterface;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Callback;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 
 class CallbackUTest extends \PHPUnit_Framework_TestCase
 {
@@ -59,6 +61,15 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
     private $session;
 
     private $response;
+
+    /** @var LoggerInterface $logger */
+    private $logger;
+
+    /** @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject */
+    private $transactionServiceFactory;
+
+    /** @var UrlInterface $urlBuilder */
+    private $urlBuilder;
 
     public function setUp()
     {
@@ -104,6 +115,13 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $this->session->method('getFormMethod')->willReturn('post');
         $this->session->method('getFormFields')->willReturn('myfieldsarray');
 
+        $this->logger = $this->getMock(LoggerInterface::class);
+
+        $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $this->transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $this->transactionServiceFactory->method('create')->willReturn($transactionService);
+        $this->urlBuilder = $this->getMockForAbstractClass(UrlInterface::class);
+
         $this->response = $this->getMockBuilder(Http::class)
             ->disableOriginalConstructor()
             ->setMethods([self::RESPONSE_JSON])
@@ -118,7 +136,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('unsRedirectUrl');
 
         /** @var $sessionMock Session */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $redirect->execute();
     }
 
@@ -132,7 +150,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('unsFormFields');
 
         /** @var $sessionMock Session */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $redirect->execute();
     }
 
@@ -143,7 +161,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_FORM_URL)->willReturn(true);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -163,7 +181,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(true);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -183,7 +201,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(false);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
