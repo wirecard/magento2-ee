@@ -127,10 +127,6 @@ class WirecardCommand implements CommandInterface
             $operation = Operation::RESERVE;
         }
 
-        error_reporting(E_ALL);
-        ini_set('display_errors', 'on');
-        restore_error_handler();
-
         /** @var PaymentDataObject $paymentDO */
         $paymentDO = $commandSubject['payment'];
         try {
