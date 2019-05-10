@@ -182,6 +182,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
      * @param $transactionClass
      * @param $configuredAction
      * @param $expectedOperation
+     * @param $recurringPayment
      */
     public function testExecuteUsesCorrectOperation($transactionClass, $configuredAction, $expectedOperation, $recurringPayment)
     {

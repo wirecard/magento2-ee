@@ -77,11 +77,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         ];
         $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
 
-        $maestroSeamlessRequestData = [
-            'key' => 'value'
-        ];
-        $transactionService->method('getCreditCardUiWithData')->willReturn(json_encode($maestroSeamlessRequestData));
-
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
             ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
@@ -137,9 +132,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'vaultCode' => self::CREDITCARD_VAULT_CODE
-                ],
-                'wirecard_elasticengine_maestro' => [
-                    'logo_url' => self::LOGO_URL_PATH,
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -213,11 +205,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         ];
         $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
 
-        $maestroSeamlessRequestData = [
-            'key' => 'value'
-        ];
-        $transactionService->method('getCreditCardUiWithData')->willReturn(json_encode($maestroSeamlessRequestData));
-
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
             ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
@@ -273,9 +260,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'vaultCode' => self::CREDITCARD_VAULT_CODE
-                ],
-                'wirecard_elasticengine_maestro' => [
-                    'logo_url' => self::LOGO_URL_PATH,
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
