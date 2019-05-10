@@ -37,7 +37,6 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
-use Wirecard\PaymentSdk\Entity\Card;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
@@ -94,38 +93,21 @@ class CreditCardTransactionFactory extends TransactionFactory
         $paymentDO = $commandSubject[self::PAYMENT];
         $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
 
-        $expiration_month = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::EXPIRATION_MONTH);
-        $expiration_year = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::EXPIRATION_YEAR);
-
-        if (strlen($expiration_month) && strlen($expiration_year)) {
-            $card = new Card();
-            $card->setExpirationMonth($expiration_month);
-            $card->setExpirationYear($expiration_year);
-            $this->transaction->setCard($card);
-        }
-
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', $this->orderId));
-        if ($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)) {
-            $customFields->add(new CustomField('vaultEnabler', $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)));
-        }
 
         if ($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)) {
             $this->transaction->setThreeD(false);
         }
 
-        $firstName = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::FIRST_NAME);
-        $lastName = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::LAST_NAME);
-
         $order = $paymentDO->getOrder();
         $billingAddress = $order->getBillingAddress();
 
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, null, $firstName, $lastName));
+        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
         $this->transaction->setCustomFields($customFields);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect?method=' . $this->transaction->getConfigKey());
-
         return $this->transaction;
     }
 
@@ -152,14 +134,6 @@ class CreditCardTransactionFactory extends TransactionFactory
     {
         parent::refund($commandSubject);
 
-        $payment = $commandSubject[self::PAYMENT];
-        $order = $payment->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $firstName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::FIRST_NAME);
-        $lastName = $payment->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::LAST_NAME);
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress, null, $firstName, $lastName));
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;

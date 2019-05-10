@@ -37,6 +37,7 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Message\ManagerInterface;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Redirect as RedirectController;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -84,6 +85,9 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
      */
     private $session;
 
+    /** @var LoggerInterface $logger */
+    private $logger;
+
     public function setUp()
     {
         /**
@@ -124,7 +128,9 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
          */
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
-        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory);
+        $this->logger = $this->getMock(LoggerInterface::class);
+
+        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory, $this->logger);
     }
 
     public function testExecuteWithGetSuccess()
@@ -249,7 +255,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
          */
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
-        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory);
+        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory, $this->logger);
     }
 
     public function testPayPalSuccess()
@@ -304,7 +310,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
          */
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
-        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory);
+        $this->controller = new RedirectController($context, $this->session, $transactionServiceFactory, $this->logger);
     }
 
     public function testRatePaySuccess()

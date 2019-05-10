@@ -39,48 +39,101 @@ define(
     function ($, Component, $t, url, VaultEnabler) {
         "use strict";
         return Component.extend({
-            token_id: null,
             expiration_date: {},
             defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-creditcard",
-                redirectAfterPlaceOrder: false
+                template: "Wirecard_ElasticEngine/payment/method-creditcard"
             },
             seamlessFormInit: function () {
-                WirecardPaymentPage.seamlessRenderForm({
-                    requestData: this.config.seamless_request_data,
-                    wrappingDivId: this.getCode() + "_seamless_form",
-                    onSuccess: this.seamlessFormSizeHandler.bind(this),
-                    onError: this.seamlessFormInitErrorHandler.bind(this)
+                let uiInitData = {"txtype": this.getCode()};
+                let wrappingDivId = this.getCode() + "_seamless_form";
+                let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
+                let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
+                let messageContainer = this.messageContainer;
+
+                // Build seamless renderform with full transaction data
+                $.ajax({
+                    url: url.build("wirecard_elasticengine/frontend/creditcard"),
+                    type: 'post',
+                    data: uiInitData,
+                    success: function (result) {
+                        if ('OK' === result.status) {
+                            let uiInitData = JSON.parse(result.uiData);
+                            WirecardPaymentPage.seamlessRenderForm({
+                                requestData: uiInitData,
+                                wrappingDivId: wrappingDivId,
+                                onSuccess: formSizeHandler,
+                                onError: formInitHandler
+                            });
+                        } else {
+                            messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        }
+                    },
+                    error: function (err) {
+                        messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        console.error("Error : " + JSON.stringify(err));
+                    }
                 });
+
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
-            seamlessFormSubmit: function() {
-                WirecardPaymentPage.seamlessSubmitForm({
-                    onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
-                    onError: this.seamlessFormSubmitErrorHandler.bind(this),
-                    wrappingDivId: this.getCode() + "_seamless_form"
-                });
-            },
             seamlessFormSubmitSuccessHandler: function (response) {
-                if (response.hasOwnProperty("token_id")) {
-                    this.token_id = response.token_id;
-                    this.first_name = response.first_name;
-                    this.last_name = response.last_name;
-                } else if (response.hasOwnProperty("card_token") && response.card_token.hasOwnProperty("token")) {
-                    this.token_id = response.card_token.token;
-
-                    this.expiration_date = {};
-                    var fields = ["expiration_month", "expiration_year"];
-                    for (var part in fields) {
-                        this.expiration_date[fields[part]] = response.card[fields[part]];
-                    }
+                if (response.hasOwnProperty('acs_url')) {
+                    this.redirectCreditCard(response);
+                } else {
+                    // Handle redirect for Non-3D transactions
+                    $.ajax({
+                        url: url.build("wirecard_elasticengine/frontend/redirect"),
+                        type: 'post',
+                        data: {
+                            'data': response,
+                            'method': 'creditcard'
+                        }
+                    }).done(function (redirect) {
+                        //exchange this with proper magento function at later point
+                        document.open();
+                        document.write(redirect);
+                        document.close();
+                    });
                 }
-                this.placeOrder();
+            },
+            /**
+             * Handle 3Ds credit card transactions within callback
+             * @param response
+             */
+            redirectCreditCard: function (response) {
+                let result = {};
+                result.data = {};
+                $.ajax({
+                    url: url.build("wirecard_elasticengine/frontend/callback"),
+                    type: 'post',
+                    data: {'jsresponse': response},
+                    success: function (result) {
+                        if (result.data["form-url"]) {
+                            let form = $("<form />", {
+                                action: result.data["form-url"],
+                                method: result.data["form-method"]
+                            });
+                            for (let key in result.data) {
+                                if (key !== "form-url" && key !== "form-method") {
+                                    form.append($("<input />", {
+                                        type: "hidden",
+                                        name: key,
+                                        value: result.data[key]
+                                    }));
+                                }
+                            }
+                            form.appendTo("body").submit();
+                        }
+                    },
+                    error: function (err) {
+                        messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        console.error("Error : " + JSON.stringify(err));
+                    }
+                });
             },
             seamlessFormInitErrorHandler: function (response) {
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-
                 console.error(response);
             },
             seamlessFormSubmitErrorHandler: function (response) {
@@ -88,22 +141,24 @@ define(
 
                 console.error(response);
 
-                setTimeout(function(){
+                setTimeout(function () {
                     location.reload();
-                },3000);
+                }, 3000);
             },
             seamlessFormSizeHandler: function () {
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
                 this.resizeIFrame();
             },
             resizeIFrame: function () {
-                var iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
-                if (iframe.clientWidth > 768) {
-                    iframe.style.height = "267px";
-                } else if (iframe.clientWidth > 460) {
-                    iframe.style.height = "341px";
-                } else {
-                    iframe.style.height = "415px";
+                let iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
+                if (iframe) {
+                    if (iframe.clientWidth > 768) {
+                        iframe.style.height = "267px";
+                    } else if (iframe.clientWidth > 460) {
+                        iframe.style.height = "341px";
+                    } else {
+                        iframe.style.height = "415px";
+                    }
                 }
             },
 
@@ -112,12 +167,7 @@ define(
                     "method": this.getCode(),
                     "po_number": null,
                     "additional_data": {
-                        "token_id": this.token_id,
-                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler(),
-                        "expiration_year": this.expiration_date.expiration_year,
-                        "expiration_month": this.expiration_date.expiration_month,
-                        "first_name": this.first_name,
-                        "last_name": this.last_name
+                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler()
                     }
                 };
             },
@@ -127,43 +177,15 @@ define(
 
                 return true;
             },
-            placeSeamlessOrder: function (data, event) {
-                if (event) {
-                    event.preventDefault();
-                }
 
-                let agreementForm = $('.payment-method._active div[data-role=checkout-agreements] input');
-                if (agreementForm.length) {
-                    for (let i in agreementForm) {
-                        if (!agreementForm.hasOwnProperty(i)) {
-                            continue;
-                        }
-                        let agreementElement = agreementForm[i];
-                        if (agreementElement.checked !== true && agreementElement.disabled === false) {
-                            this.messageContainer.addErrorMessage({message: 'Checkout agreements not accepted!'});
-                            return;
-                        }
-                    }
-                }
-
-                this.seamlessFormSubmit();
-            },
+            /**
+             * Submit credit card request
+             */
             afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
-                    if (data["form-url"]) {
-                        var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
-
-                        for (var i = 0; i < data["form-fields"].length; i++) {
-                            form.append($("<input />", {
-                                type: "hidden",
-                                name: data["form-fields"][i]["key"],
-                                value: data["form-fields"][i]["value"]
-                            }));
-                        }
-                        form.appendTo("body").submit();
-                    } else {
-                        window.location.replace(data["redirect-url"]);
-                    }
+                WirecardPaymentPage.seamlessSubmitForm({
+                    wrappingDivId: this.getCode() + "_seamless_form",
+                    onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
+                    onError: this.seamlessFormSubmitErrorHandler.bind(this)
                 });
             },
 

@@ -40,11 +40,6 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
     const TOKEN_ID = 'token_id';
     const VAULT_ENABLER = 'is_active_payment_token_enabler';
     const RECURRING = 'recurring_payment';
-    const EXPIRATION_DATE = 'expiration_date';
-    const EXPIRATION_YEAR = 'expiration_year';
-    const EXPIRATION_MONTH = 'expiration_month';
-    const FIRST_NAME = 'first_name';
-    const LAST_NAME = 'last_name';
 
     /**
      * @param Observer $observer
@@ -60,20 +55,6 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
         }
 
         $paymentInfo = $this->readPaymentModelArgument($observer);
-
-        if (array_key_exists(
-            self::EXPIRATION_YEAR,
-                $additionalData
-        ) && $additionalData[self::EXPIRATION_YEAR] != null) {
-            $paymentInfo->setAdditionalInformation(
-                self::EXPIRATION_MONTH,
-                $additionalData[self::EXPIRATION_MONTH]
-            );
-            $paymentInfo->setAdditionalInformation(
-                self::EXPIRATION_YEAR,
-                $additionalData[self::EXPIRATION_YEAR]
-            );
-        }
 
         if (array_key_exists(self::TOKEN_ID, $additionalData)) {
             $paymentInfo->setAdditionalInformation(
@@ -93,20 +74,6 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
             $paymentInfo->setAdditionalInformation(
                 self::RECURRING,
                 $additionalData[self::RECURRING]
-            );
-        }
-
-        if (array_key_exists(self::FIRST_NAME, $additionalData)) {
-            $paymentInfo->setAdditionalInformation(
-                self::FIRST_NAME,
-                $additionalData[self::FIRST_NAME]
-            );
-        }
-
-        if (array_key_exists(self::LAST_NAME, $additionalData)) {
-            $paymentInfo->setAdditionalInformation(
-                self::LAST_NAME,
-                $additionalData[self::LAST_NAME]
             );
         }
     }

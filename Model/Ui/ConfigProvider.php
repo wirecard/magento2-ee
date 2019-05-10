@@ -38,15 +38,12 @@ use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\IdealBic;
-use Wirecard\PaymentSdk\Transaction\MaestroTransaction;
 
 class ConfigProvider implements ConfigProviderInterface
 {
     const PAYPAL_CODE = 'wirecard_elasticengine_paypal';
     const CREDITCARD_CODE = 'wirecard_elasticengine_creditcard';
-    const MAESTRO_CODE = 'wirecard_elasticengine_maestro';
     const SEPA_CODE = 'wirecard_elasticengine_sepadirectdebit';
     const SEPACREDIT_CODE = 'wirecard_elasticengine_sepacredit';
     const SOFORT_CODE = 'wirecard_elasticengine_sofortbanking';
@@ -119,7 +116,6 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => $this->getConfigForPaymentMethod(self::PAYPAL_CODE) +
                 $this->getConfigForCreditCardWithVault(self::CREDITCARD_CODE) +
-                $this->getConfigForMaestro(self::MAESTRO_CODE) +
                 $this->getConfigForSepa(self::SEPA_CODE) +
                 $this->getConfigForPaymentMethod(self::SOFORT_CODE) +
                 $this->getConfigForPaymentMethod(self::IDEAL_CODE) +
@@ -180,40 +176,12 @@ class ConfigProvider implements ConfigProviderInterface
      * @param $paymentMethodName
      * @return array
      */
-    private function getConfigForMaestro($paymentMethodName)
-    {
-        $maestro = new MaestroTransaction();
-        $maestro->setAmount(new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode()));
-
-        $method = $this->paymentHelper->getMethodInstance(self::MAESTRO_CODE);
-        $baseUrl = $method->getConfigData('base_url');
-        $transactionService = $this->transactionServiceFactory->create(MaestroTransaction::NAME);
-        $language = $this->getSupportedHppLangCode($baseUrl);
-
-        return [
-            $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getCreditCardUiWithData($maestro, 'authorization', $language), true)
-            ]
-        ];
-    }
-
-    /**
-     * @param $paymentMethodName
-     * @return array
-     */
     private function getConfigForCreditCardWithVault($paymentMethodName)
     {
-        $method = $this->paymentHelper->getMethodInstance(self::CREDITCARD_CODE);
-        $baseUrl = $method->getConfigData('base_url');
-        $language = $this->getSupportedHppLangCode($baseUrl);
-        $transactionService = $this->transactionServiceFactory->create('creditcard');
-        $amount = new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode());
         return [
             $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForCreditCardUi($language, $amount, null, 'tokenize'), true),
-                'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE
+                'logo_url'  => $this->getLogoUrl($paymentMethodName),
+                'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE,
             ]
         ];
     }
@@ -224,15 +192,9 @@ class ConfigProvider implements ConfigProviderInterface
      */
     private function getConfigForUpi($paymentMethodName)
     {
-        $method = $this->paymentHelper->getMethodInstance(self::UPI_CODE);
-        $baseUrl = $method->getConfigData('base_url');
-        $language = $this->getSupportedHppLangCode($baseUrl);
-        $transactionService = $this->transactionServiceFactory->create('unionpayinternational');
-        $amount = new Amount(0, $this->storeManager->getStore()->getCurrentCurrency()->getCode());
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'seamless_request_data' => json_decode($transactionService->getDataForUpiUi($language, $amount, null, 'tokenize'), true)
             ]
         ];
     }

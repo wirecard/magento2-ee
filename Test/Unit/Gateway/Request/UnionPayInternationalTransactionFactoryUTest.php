@@ -215,13 +215,11 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
      */
     private function minimumExpectedTransaction()
     {
-        $accountHolder = new AccountHolder();
-
         $expected = new UpiTransaction();
         $expected->setTokenId('mypersonaltoken');
         $expected->setTermUrl(self::REDIRECT_URL);
         $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setAccountHolder($accountHolder);
+        $expected->setAccountHolder(null);
         $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
@@ -262,7 +260,6 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $expected = new UpiTransaction();
         $expected->setParentTransactionId('123456PARENT');
 
-        $expected->setAccountHolder(new AccountHolder());
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');

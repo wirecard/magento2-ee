@@ -39,7 +39,10 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Translate\InlineInterface;
 use Magento\Framework\UrlInterface;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Callback;
+use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Zend\Stdlib\ParametersInterface;
 
 class CallbackUTest extends \PHPUnit_Framework_TestCase
 {
@@ -59,6 +62,17 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
     private $session;
 
     private $response;
+
+    /** @var LoggerInterface $logger */
+    private $logger;
+
+    /** @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject */
+    private $transactionServiceFactory;
+
+    /** @var UrlInterface $urlBuilder */
+    private $urlBuilder;
+
+    private $request;
 
     public function setUp()
     {
@@ -104,6 +118,24 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $this->session->method('getFormMethod')->willReturn('post');
         $this->session->method('getFormFields')->willReturn('myfieldsarray');
 
+        $this->logger = $this->getMock(LoggerInterface::class);
+
+        $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $this->transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
+        $this->transactionServiceFactory->method('create')->willReturn($transactionService);
+        $this->urlBuilder = $this->getMockForAbstractClass(UrlInterface::class);
+
+        $postParams = $this->getMock(ParametersInterface::class);
+        $postParams->method('toArray')->willReturn(['jsresponse' => 'payload']);
+
+        $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
+        $this->request->method('getPost')->willReturn($postParams);
+        $this->request->method('getParams')->willReturn(['request_id' => '1234']);
+        $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
+        $this->request->method('getParam')->willReturn('jsresponse');
+
+        $this->context->method('getRequest')->willReturn($this->request);
+
         $this->response = $this->getMockBuilder(Http::class)
             ->disableOriginalConstructor()
             ->setMethods([self::RESPONSE_JSON])
@@ -118,7 +150,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('unsRedirectUrl');
 
         /** @var $sessionMock Session */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $redirect->execute();
     }
 
@@ -132,7 +164,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('unsFormFields');
 
         /** @var $sessionMock Session */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $redirect->execute();
     }
 
@@ -143,7 +175,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_FORM_URL)->willReturn(true);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -163,7 +195,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(true);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -183,7 +215,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(false);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */

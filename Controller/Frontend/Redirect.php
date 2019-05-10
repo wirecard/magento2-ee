@@ -38,6 +38,7 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
@@ -63,15 +64,22 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private $transactionServiceFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Redirect constructor.
      * @param Context $context
      * @param Session $checkoutSession
      * @param TransactionServiceFactory $transactionServiceFactory
+     * @param LoggerInterface $logger
      */
-    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory)
+    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory, LoggerInterface $logger)
     {
         $this->checkoutSession = $checkoutSession;
         $this->transactionServiceFactory = $transactionServiceFactory;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
@@ -85,6 +93,10 @@ class Redirect extends Action implements CsrfAwareActionInterface
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $methodName = $this->getRequest()->getParam('method');
+        $jsResponse = false;
+        if ($methodName == null && $this->getRequest()->isPost()) {
+            $methodName = $this->getRequest()->getPost()->get('method');
+        }
         if ($methodName === null || (!$this->getRequest()->isPost() && !$this->getRequest()->isGet())) {
             $this->checkoutSession->restoreQuote();
             $this->messageManager->addNoticeMessage(__('order_error'));
@@ -97,11 +109,19 @@ class Redirect extends Action implements CsrfAwareActionInterface
 
         if ($this->getRequest()->isPost()) {
             $params = $this->getRequest()->getPost()->toArray();
+            if (isset($params['data'])) {
+                $params = $params['data'];
+                $jsResponse = true;
+            }
         } else {
             $params = $this->getRequest()->getParams();
         }
 
-        $result = $transactionService->handleResponse($params);
+        if ($jsResponse) {
+            $result = $transactionService->processJsResponse($params, $resultRedirect);
+        } else {
+            $result = $transactionService->handleResponse($params);
+        }
 
         if ($result instanceof SuccessResponse) {
             $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');

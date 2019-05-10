@@ -48,6 +48,7 @@ use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -165,7 +166,6 @@ class Notify extends Action implements CsrfAwareActionInterface
     {
         //get the raw request body
         $payload = $this->getRequest()->getContent();
-        $this->logger->debug('Engine response: ' . $payload);
         try {
             $transactionService = $this->transactionServiceFactory->create();
             //handle response
@@ -214,7 +214,7 @@ class Notify extends Action implements CsrfAwareActionInterface
     }
 
     /**
-     * @param $order
+     * @param Order $order
      * @param SuccessResponse $response
      */
     private function handleSuccess($order, $response)
@@ -232,7 +232,7 @@ class Notify extends Action implements CsrfAwareActionInterface
             $this->captureInvoice($order, $response);
         }
 
-        if ($response->getCustomFields()->get('vaultEnabler') === "true") {
+        if ($payment->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)) {
             $this->saveCreditCardToken($response, $order->getCustomerId(), $payment);
         }
 
