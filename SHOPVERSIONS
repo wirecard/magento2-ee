@@ -1,5 +1,15 @@
 [
   {
+    "release": "1.5.0",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.0",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Remove maestro payment method",
+      "Replace tokenize workflow for Credit Card with direct Authorization or Purchase"
+    ]
+  },
+  {
     "release": "1.4.3",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.0",
