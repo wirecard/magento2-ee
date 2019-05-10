@@ -139,6 +139,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         $this->paymentDO = $this->getMockBuilder(DataObject::class)->disableOriginalConstructor()->setMethods(['getPayment'])->getMock();
         $this->paymentDO->method('getPayment')->willReturn($payment);
 
+        $this->paymentDO->getPayment()->setAdditionalInformation('token_id', '12312354');
+
         $this->commandSubject = [
             'stateObject' => $stateObject,
             'payment' => $this->paymentDO
