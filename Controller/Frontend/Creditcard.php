@@ -192,7 +192,7 @@ class Creditcard extends Action
             $paymentAction = "purchase";
         } else {
             $paymentAction = "authorization";
-        };
+        }
 
         $orderDto->config = $transactionService->getConfig()->get($txName);
         $this->processCreditCard($orderDto, $txType);

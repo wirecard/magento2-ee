@@ -88,7 +88,6 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
     /** @var LoggerInterface $logger */
     private $logger;
 
-
     public function setUp()
     {
         /**

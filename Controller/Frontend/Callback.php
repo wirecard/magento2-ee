@@ -150,7 +150,8 @@ class Callback extends Action
      * @param $response
      * @return mixed
      */
-    private function handleThreeDTransactions($response) {
+    private function handleThreeDTransactions($response)
+    {
         $methodName = 'creditcard';
 
         try {
