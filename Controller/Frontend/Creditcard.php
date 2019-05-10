@@ -184,7 +184,6 @@ class Creditcard extends Action
         } else {
             $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
         }
-        $this->logger->info($method->getCode());
         $baseUrl = $method->getConfigData('base_url');
         $language = $this->getSupportedHppLangCode($baseUrl);
 
@@ -260,7 +259,7 @@ class Creditcard extends Action
      *
      * @param double $taxAmount amount of tax
      * @param double $grossAmount total amount
-     * @return double tax rate, rounded to 2 decimals
+     * @return string tax rate, rounded to 2 decimals
      */
     private function calculateTax($taxAmount, $grossAmount)
     {

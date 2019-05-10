@@ -40,7 +40,6 @@ use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
-use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
@@ -117,7 +116,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
         } else {
             $params = $this->getRequest()->getParams();
         }
-        $this->logger->debug('Response: ' . print_r($params, true));
 
         if ($jsResponse) {
             $result = $transactionService->processJsResponse($params, $resultRedirect);

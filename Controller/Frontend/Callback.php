@@ -158,18 +158,12 @@ class Callback extends Action
             $transactionService = $this->transactionServiceFactory->create($methodName);
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage());
-            $errData = [
-                'status' => 'ERR',
-                'errMsg' => $exception->getMessage(),
-            ];
         }
 
         // Create credit card redirection url
         $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $methodAppend = '?method=' . urlencode('creditcard');
+        $methodAppend = '?method=' . urlencode($methodName);
         $url = $wdBaseUrl . 'frontend/redirect' . $methodAppend;
-
-        $this->logger->debug('Response: ' . print_r($response['jsresponse'], true));
 
         /** @var Response $response */
         $response = $transactionService->processJsResponse($response['jsresponse'], $url);
