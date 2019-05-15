@@ -39,25 +39,27 @@ class PaymentPageLoader extends Template
     /**
      * @var ConfigInterface
      */
-    private $eeConfig;
+    private $methodConfig;
     /**
      * Constructor
      *
      * @param Template\Context $context
-     * @param ConfigInterface $eeConfig,
+     * @param ConfigInterface $creditcardConfig,
+     * @param ConfigInterface $upiConfig,
      * @param array $data
      */
     public function __construct(
         Template\Context $context,
-        ConfigInterface $eeConfig,
+        ConfigInterface $creditcardConfig,
+        ConfigInterface $upiConfig,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->eeConfig = $eeConfig;
+        $this->methodConfig = $creditcardConfig;
     }
 
     public function getPaymentPageLoaderUrl()
     {
-        return $this->eeConfig->getValue('credentials/base_url') . '/engine/hpp/paymentPageLoader.js';
+        return $this->methodConfig->getValue('wpp_url') . '/loader/paymentPage.js';
     }
 }

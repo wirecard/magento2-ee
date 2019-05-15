@@ -58,7 +58,7 @@ define(
                     success: function (result) {
                         if ('OK' === result.status) {
                             let uiInitData = JSON.parse(result.uiData);
-                            WirecardPaymentPage.seamlessRenderForm({
+                            WPP.seamlessRender({
                                 requestData: uiInitData,
                                 wrappingDivId: wrappingDivId,
                                 onSuccess: formSizeHandler,
@@ -182,7 +182,7 @@ define(
              * Submit credit card request
              */
             afterPlaceOrder: function () {
-                WirecardPaymentPage.seamlessSubmitForm({
+                WPP.seamlessSubmit({
                     wrappingDivId: this.getCode() + "_seamless_form",
                     onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
                     onError: this.seamlessFormSubmitErrorHandler.bind(this)

@@ -1165,7 +1165,8 @@
     </type>
     <type name="Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader">
         <arguments>
-            <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
+            <argument name="creditcardConfig" xsi:type="object">WirecardCreditCardConfig</argument>
+            <argument name="upiConfig" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
         </arguments>
     </type>
     <type name="Wirecard\ElasticEngine\Block\Checkout\SepaMandateBlock">
