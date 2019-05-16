@@ -148,9 +148,9 @@ define(
 
                 console.error(response);
 
-                setTimeout(function () {
+                /*setTimeout(function () {
                     location.reload();
-                }, 3000);
+                }, 3000);*/
             },
             seamlessFormSizeHandler: function () {
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
@@ -191,6 +191,7 @@ define(
              * Submit credit card request
              */
             afterPlaceOrder: function () {
+                //FIX: cart is missing after error
                 WPP.seamlessSubmit({
                     wrappingDivId: this.getCode() + "_seamless_form",
                     onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
