@@ -98,6 +98,9 @@ class Creditcard extends Action
     /** @var ConfigInterface Magento2 payment method config injected by DI */
     protected $methodConfig;
 
+    /** @var ConfigInterface Magento2 payment method config injected by DI */
+    protected $upiConfig;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -107,7 +110,7 @@ class Creditcard extends Action
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
      * @param TransactionServiceFactory $transactionServiceFactory
-     * @param CartRepositoryInterface $cartRepository
+     * @param CartRepositoryInterface $quoteRepository
      * @param Session $checkoutSession
      * @param Calculation $taxCalculation
      * @param ResolverInterface $resolver
@@ -115,7 +118,8 @@ class Creditcard extends Action
      * @param UrlInterface $urlBuilder
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
-     * @param LoggerInterface $logger,
+     * @param ConfigInterface $upiConfig
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
@@ -129,6 +133,7 @@ class Creditcard extends Action
         UrlInterface $urlBuilder,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
+        ConfigInterface $upiConfig,
         LoggerInterface $logger
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
@@ -141,6 +146,7 @@ class Creditcard extends Action
         $this->urlBuilder = $urlBuilder;
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
+        $this->upiConfig = $upiConfig;
         $this->logger = $logger;
         parent::__construct($context);
     }
@@ -307,7 +313,12 @@ class Creditcard extends Action
         $notificationUrl = $wdBaseUrl . 'frontend/notify?orderId=' . $orderDto->orderId;
         $orderDto->transaction->setNotificationUrl($notificationUrl);
 
-        if ($this->methodConfig->getValue('send_additional')) {
+        $config = $this->methodConfig;
+        if ($txType == self::FRONTEND_CODE_UPI) {
+            $config = $this->upiConfig;
+        }
+
+        if ($config->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
     }

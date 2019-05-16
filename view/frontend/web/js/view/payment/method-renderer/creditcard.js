@@ -43,6 +43,16 @@ define(
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard"
             },
+
+            getPaymentPageScript: function () {
+                return window.checkoutConfig.payment[this.getCode()].wpp_url;
+            },
+
+            seamlessFormInitVaultEnabler: function () {
+                this.vaultEnabler = new VaultEnabler();
+                this.vaultEnabler.setPaymentCode(this.getVaultCode());
+            },
+
             seamlessFormInit: function () {
                 let uiInitData = {"txtype": this.getCode()};
                 let wrappingDivId = this.getCode() + "_seamless_form";
@@ -73,9 +83,6 @@ define(
                         console.error("Error : " + JSON.stringify(err));
                     }
                 });
-
-                this.vaultEnabler = new VaultEnabler();
-                this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
             seamlessFormSubmitSuccessHandler: function (response) {
                 if (response.hasOwnProperty('acs_url')) {
@@ -147,10 +154,13 @@ define(
             },
             seamlessFormSizeHandler: function () {
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
-                this.resizeIFrame();
+                let seamlessForm = document.getElementById(this.getCode() + "_seamless_form");
+                if (seamlessForm !== null) {
+                    this.resizeIFrame(seamlessForm);
+                }
             },
-            resizeIFrame: function () {
-                let iframe = document.getElementById(this.getCode() + "_seamless_form").firstElementChild;
+            resizeIFrame: function (seamlessForm) {
+                let iframe = seamlessForm.firstElementChild;
                 if (iframe) {
                     if (iframe.clientWidth > 768) {
                         iframe.style.height = "267px";
@@ -173,7 +183,6 @@ define(
             },
             selectPaymentMethod: function () {
                 this._super();
-                this.resizeIFrame();
 
                 return true;
             },
