@@ -98,7 +98,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceFactory->method('create')->willReturn($transactionService);
 
         $methodInterface = $this->getMockWithoutInvokingTheOriginalConstructor(MethodInterface::class);
-        $methodInterface->method('getConfigData')->willReturn(false);
+        $methodInterface->method('getConfigData')->will($this->onConsecutiveCalls(
+            self::WPP_URL,
+            false,
+            false,
+            self::WPP_URL
+        ));
         $paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(Data::class);
         $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
         $session = $this->getMockWithoutInvokingTheOriginalConstructor(Session::class);
@@ -133,7 +138,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'vaultCode' => self::CREDITCARD_VAULT_CODE,
-                    'wpp_url'  => self::WPP_URL
+                    'wpp_url'  => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -170,7 +175,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'wpp_url'  => self::WPP_URL
+                    'wpp_url'  => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -228,7 +233,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceFactory->method('create')->willReturn($transactionService);
 
         $methodInterface = $this->getMockWithoutInvokingTheOriginalConstructor(MethodInterface::class);
-        $methodInterface->method('getConfigData')->willReturn(true);
+        $methodInterface->method('getConfigData')->will($this->onConsecutiveCalls(
+            self::WPP_URL,
+            true,
+            true,
+            self::WPP_URL
+        ));
         $paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(Data::class);
         $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
         $session = $this->getMockWithoutInvokingTheOriginalConstructor(Session::class);
@@ -262,7 +272,8 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'vaultCode' => self::CREDITCARD_VAULT_CODE
+                    'vaultCode' => self::CREDITCARD_VAULT_CODE,
+                    'wpp_url'  => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -299,6 +310,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
+                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -307,4 +319,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             ]
         ], $prov->getConfig());
     }
+}
+
+function callback() {
+    $args = func_get_args();
+    if ($args === ConfigProvider::CREDITCARD_CODE || $args === ConfigProvider::UPI_CODE) {
+        return 'https://wpp-test.wirecard.com';
+    }
+    return true;
 }
