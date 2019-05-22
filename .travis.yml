@@ -21,13 +21,15 @@ matrix:
     - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1' AND type != cron
+    if: env(PHRASEAPP_PULL) != '1' AND type = cron
 
   - &acceptance-test
     stage: acceptance-test
     if: type != cron
     php: 7.0
-    env: GATEWAY=API-TEST
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO_VERSION=2.2.8
     install:
       - bash .bin/remove-composer-lock-file.sh
       - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
@@ -39,7 +41,10 @@ matrix:
 #      - bash .bin/upload-logs-and-notify.sh
     after_failure: skip
 #      - bash .bin/upload-logs-and-notify.sh fail
-
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO_VERSION=2.3.1
 #  - <<: *acceptance-test
 #    env: GATEWAY=API-WDCEE-TEST
 #  - <<: *acceptance-test

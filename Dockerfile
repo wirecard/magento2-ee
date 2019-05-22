@@ -1,6 +1,7 @@
-FROM php:7.2-apache
+FROM php:7.1-apache
 
-ENV MAGENTO_VERSION 2.3.1
+ARG MAGENTO_VERSION
+ENV MAGENTO_VERSION=$MAGENTO_VERSION
 ENV INSTALL_DIR /var/www/html
 ENV COMPOSER_HOME /var/www/.composer/
 
@@ -9,8 +10,8 @@ RUN curl -sS https://getcomposer.org/installer | php \
 COPY ./.bin/auth.json $COMPOSER_HOME
 
 RUN requirements="libpng-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 libjpeg62-turbo libjpeg62-turbo-dev libpng-dev libfreetype6-dev libicu-dev libxslt1-dev unzip cron" \
-    && apt-get update \
-    && apt-get install -y $requirements \
+    && apt-get -qq update \
+    && apt-get -qq install -y $requirements \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -27,14 +28,13 @@ RUN requirements="libpng-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 
 
 RUN apt-get update \
     && apt-get install -y libmcrypt-dev \
-    && yes '' | pecl install mcrypt-1.0.1 \
-    && echo 'extension=mcrypt.so' > /usr/local/etc/php/conf.d/mcrypt.ini
+    && docker-php-ext-install  mcrypt
 
 RUN chsh -s /bin/bash www-data
 
 RUN cd /tmp && \
   curl https://codeload.github.com/magento/magento2/tar.gz/$MAGENTO_VERSION -o $MAGENTO_VERSION.tar.gz && \
-  tar xvf $MAGENTO_VERSION.tar.gz && \
+  tar xf $MAGENTO_VERSION.tar.gz && \
   mv magento2-$MAGENTO_VERSION/* magento2-$MAGENTO_VERSION/.htaccess $INSTALL_DIR
 
 RUN chown -R www-data:www-data /var/www
