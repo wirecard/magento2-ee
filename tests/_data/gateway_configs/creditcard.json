@@ -1,6 +1,7 @@
 {
   "API-WDCEE-TEST": {
     "base_url": "https://api-wdcee-test.wirecard.com",
+    "wpp_url":  "https://wpp-wdcee-test.wirecard.com",
     "http_user": "pink-test",
     "http_pass": "8f5y2h0s",
     "merchant_account_id": "589651ab-bffe-4f45-9a41-c5466aa8cbc8",
@@ -18,6 +19,7 @@
   },
   "API-TEST": {
     "base_url": "https://api-test.wirecard.com",
+    "wpp_url":  "https://wpp-test.wirecard.com",
     "http_user": "70000-APITEST-AP",
     "http_pass": "qD2wzQ_hrc!8",
     "merchant_account_id": "53f2895a-e4de-4e82-a813-0d87a10e55e6",
@@ -35,6 +37,7 @@
   },
   "NOVA": {
     "base_url": "https://payments-test.wirecard.com",
+    "wpp_url" : "https://payments-test.wirecard.com",
     "http_user": "NovaTeam",
     "http_pass": "kCopTTMkpw",
     "merchant_account_id": "fd83dbfa-8790-4492-8391-3f3938908b28",
