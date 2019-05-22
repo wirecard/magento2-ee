@@ -50,8 +50,15 @@ class PaymentPageLoaderUTest extends \PHPUnit_Framework_TestCase
             ['credentials/http_pass'],
             ['settings/public_key']
         )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key');
+        $upiConfig = $this->getMock(ConfigInterface::class);
+        $upiConfig->method('getValue')->withConsecutive(
+            ['credentials/base_url'],
+            ['credentials/http_user'],
+            ['credentials/http_pass'],
+            ['settings/public_key']
+        )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'public_key');
 
-        $paymentPageLoader = new PaymentPageLoader($context, $eeConfig);
+        $paymentPageLoader = new PaymentPageLoader($context, $eeConfig, $upiConfig);
         $this->assertEquals(self::BASE_URL . '/engine/hpp/paymentPageLoader.js', $paymentPageLoader->getPaymentPageLoaderUrl());
     }
 }

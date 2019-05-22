@@ -48,6 +48,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 {
     const LOGO_URL_PATH = '/logo/url.png';
     const CREDITCARD_VAULT_CODE = 'wirecard_elasticengine_cc_vault';
+    const WPP_URL = 'https://wpp-test.wirecard.com';
 
     public function testGetConfigDummyWithoutBic()
     {
@@ -131,7 +132,8 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'vaultCode' => self::CREDITCARD_VAULT_CODE
+                    'vaultCode' => self::CREDITCARD_VAULT_CODE,
+                    'wpp_url'  => self::WPP_URL
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -168,6 +170,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
+                    'wpp_url'  => self::WPP_URL
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
