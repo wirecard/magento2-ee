@@ -79,15 +79,6 @@ class WirecardVoidCommand implements CommandInterface
     private $methodConfig;
 
     /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
-    /**
      * WirecardVoidCommand constructor.
      * @param TransactionFactory $transactionFactory
      * @param TransactionServiceFactory $transactionServiceFactory

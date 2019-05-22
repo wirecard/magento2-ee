@@ -39,20 +39,20 @@ class Contact extends Action
     /**
      * @var \Magento\Framework\View\Result\PageFactory
      */
-    protected $_resultPageFactory;
+    protected $resultPageFactory;
 
     public function __construct(
         Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory
     ) {
         parent::__construct($context);
-        $this->_resultPageFactory = $resultPageFactory;
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     public function execute()
     {
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
-        $resultPage = $this->_resultPageFactory->create();
+        $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu('Magento_Backend::system_store');
         $resultPage->getConfig()->getTitle()->prepend(__('text_support'));
 

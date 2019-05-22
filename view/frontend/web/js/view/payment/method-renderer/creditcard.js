@@ -28,6 +28,8 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
+/* globals WPP */
+
 define(
     [
         "jquery",
@@ -39,7 +41,6 @@ define(
     function ($, Component, $t, url, VaultEnabler) {
         "use strict";
         return Component.extend({
-            expiration_date: {},
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard"
             },
@@ -63,10 +64,10 @@ define(
                 // Build seamless renderform with full transaction data
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/creditcard"),
-                    type: 'post',
+                    type: "post",
                     data: uiInitData,
                     success: function (result) {
-                        if ('OK' === result.status) {
+                        if ("OK" === result.status) {
                             let uiInitData = JSON.parse(result.uiData);
                             WPP.seamlessRender({
                                 requestData: uiInitData,
@@ -85,16 +86,16 @@ define(
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                if (response.hasOwnProperty('acs_url')) {
+                if (response.hasOwnProperty("acs_url")) {
                     this.redirectCreditCard(response);
                 } else {
                     // Handle redirect for Non-3D transactions
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/redirect"),
-                        type: 'post',
+                        type: "post",
                         data: {
-                            'data': response,
-                            'method': 'creditcard'
+                            "data": response,
+                            "method": "creditcard"
                         }
                     }).done(function (redirect) {
                         //exchange this with proper magento function at later point
@@ -102,6 +103,17 @@ define(
                         document.write(redirect);
                         document.close();
                     });
+                }
+            },
+            appendFormData: function (data, form) {
+                for (let key in data) {
+                    if (key !== "form-url" && key !== "form-method") {
+                        form.append($("<input />", {
+                            type: "hidden",
+                            name: key,
+                            value: data[key]
+                        }));
+                    }
                 }
             },
             /**
@@ -113,28 +125,20 @@ define(
                 result.data = {};
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/callback"),
-                    type: 'post',
-                    data: {'jsresponse': response},
+                    type: "post",
+                    data: {"jsresponse": response},
                     success: function (result) {
                         if (result.data["form-url"]) {
                             let form = $("<form />", {
                                 action: result.data["form-url"],
                                 method: result.data["form-method"]
                             });
-                            for (let key in result.data) {
-                                if (key !== "form-url" && key !== "form-method") {
-                                    form.append($("<input />", {
-                                        type: "hidden",
-                                        name: key,
-                                        value: result.data[key]
-                                    }));
-                                }
-                            }
+                            this.appendFormData(result.data, form);
                             form.appendTo("body").submit();
                         }
                     },
                     error: function (err) {
-                        messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
                         console.error("Error : " + JSON.stringify(err));
                     }
                 });
@@ -145,12 +149,11 @@ define(
             },
             seamlessFormSubmitErrorHandler: function (response) {
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
-
                 console.error(response);
 
-                /*setTimeout(function () {
+                setTimeout(function () {
                     location.reload();
-                }, 3000);*/
+                }, 3000);
             },
             seamlessFormSizeHandler: function () {
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
@@ -191,7 +194,6 @@ define(
              * Submit credit card request
              */
             afterPlaceOrder: function () {
-                //FIX: cart is missing after error
                 WPP.seamlessSubmit({
                     wrappingDivId: this.getCode() + "_seamless_form",
                     onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
