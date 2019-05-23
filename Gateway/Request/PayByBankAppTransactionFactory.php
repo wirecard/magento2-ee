@@ -85,7 +85,15 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         RequestInterface $httpRequest
     ) {
         $this->request = $httpRequest;
-        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
+        parent::__construct(
+            $urlBuilder,
+            $resolver,
+            $transaction,
+            $methodConfig,
+            $storeManager,
+            $accountHolderFactory,
+            $basketFactory
+        );
     }
 
     /**
@@ -101,8 +109,10 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         $customFields = new CustomFieldCollection();
         $this->transaction->setCustomFields($customFields);
 
-        $customFields->add($this->makeCustomField('MerchantRtnStrng',
-            $this->methodConfig->getValue('zapp_merchant_return_string')));
+        $customFields->add($this->makeCustomField(
+            'MerchantRtnStrng',
+            $this->methodConfig->getValue('zapp_merchant_return_string')
+        ));
         $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
         $customFields->add($this->makeCustomField('DeliveryType', 'DELTAD'));
 

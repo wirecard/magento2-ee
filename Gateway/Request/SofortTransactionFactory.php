@@ -70,7 +70,15 @@ class SofortTransactionFactory extends TransactionFactory
         AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
+        parent::__construct(
+            $urlBuilder,
+            $resolver,
+            $transaction,
+            $methodConfig,
+            $storeManager,
+            $accountHolderFactory,
+            $basketFactory
+        );
     }
 
     /**

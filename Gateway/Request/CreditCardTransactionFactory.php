@@ -76,7 +76,15 @@ class CreditCardTransactionFactory extends TransactionFactory
         AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
+        parent::__construct(
+            $urlBuilder,
+            $resolver,
+            $transaction,
+            $methodConfig,
+            $storeManager,
+            $accountHolderFactory,
+            $basketFactory
+        );
     }
 
     /**
@@ -91,7 +99,9 @@ class CreditCardTransactionFactory extends TransactionFactory
 
         /** @var PaymentDataObjectInterface $payment */
         $paymentDO = $commandSubject[self::PAYMENT];
-        $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID));
+        $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(
+            CreditCardDataAssignObserver::TOKEN_ID
+        ));
 
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', $this->orderId));

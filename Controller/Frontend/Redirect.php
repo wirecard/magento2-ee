@@ -75,8 +75,12 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param LoggerInterface $logger
      */
-    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory, LoggerInterface $logger)
-    {
+    public function __construct(
+        Context $context,
+        Session $checkoutSession,
+        TransactionServiceFactory $transactionServiceFactory,
+        LoggerInterface $logger
+    ) {
         $this->checkoutSession = $checkoutSession;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;

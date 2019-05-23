@@ -98,7 +98,7 @@ class BasketFactory
         $basket->setVersion($transaction);
         $items = $order->getItems();
 
-        /** @var OrderItemInterface $item*/
+        /** @var OrderItemInterface $item */
         foreach ($items as $item) {
             if (!$this->canAddToBasket($item)) {
                 continue;
@@ -118,7 +118,7 @@ class BasketFactory
 
             $taxRate = number_format(
                 ($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
-                    2
+                2
             );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
@@ -157,7 +157,7 @@ class BasketFactory
         $basket->setVersion($transaction);
         $items = $order->getItems();
 
-        /** @var Order\Item $item*/
+        /** @var Order\Item $item */
         foreach ($items as $item) {
             //Current quantity for item
             $origQty = $item->getOrigData('qty_invoiced');
@@ -166,7 +166,7 @@ class BasketFactory
             if ($item->getBaseRowInvoiced() == 0 || $qty == 0) {
                 continue;
             }
-            $basket->add($this->itemFactory->capture($item, $order->getCurrencyCode(), (int) $qty));
+            $basket->add($this->itemFactory->capture($item, $order->getCurrencyCode(), (int)$qty));
         }
 
         //Current shipping
@@ -218,7 +218,7 @@ class BasketFactory
         $basket->setVersion($transaction);
         $items = $order->getItems();
 
-        /** @var Order\Item $item*/
+        /** @var Order\Item $item */
         foreach ($items as $item) {
             //Current quantity for item
             $origQty = $item->getOrigData('qty_refunded');
@@ -227,7 +227,7 @@ class BasketFactory
             if ($item->getBaseAmountRefunded() == 0 || $qty == 0) {
                 continue;
             }
-            $basket->add($this->itemFactory->refund($item, $order->getCurrencyCode(), (int) $qty));
+            $basket->add($this->itemFactory->refund($item, $order->getCurrencyCode(), (int)$qty));
         }
 
         //Current shipping
@@ -280,7 +280,7 @@ class BasketFactory
         $basket->setVersion($transaction);
         $items = $order->getItems();
 
-        /** @var OrderItemInterface $item*/
+        /** @var OrderItemInterface $item */
         foreach ($items as $item) {
             if ($item->getPriceInclTax() == 0) {
                 continue;
