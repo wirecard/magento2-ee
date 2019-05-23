@@ -76,7 +76,7 @@ class Payment extends Base
         $I->selectOption(
             $this->getElement('Credit Card Valid until month / year'),
             $data_field_values->valid_until_month
-            .substr( $data_field_values->valid_until_year, -2)
+            . substr($data_field_values->valid_until_year, -2)
         );
         $I->switchToIFrame();
         $I->click($this->getElement('Place Order'));
