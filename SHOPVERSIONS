@@ -1,5 +1,15 @@
 [
   {
+    "release": "1.5.1",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.0",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Use interaction redirect for non credit card payments",
+      "Remove checkout index layout parameter"
+    ]
+  },
+  {
     "release": "1.5.0",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.0",
