@@ -90,7 +90,8 @@ define(
                 return $(form).validation() && $(form).validation("isValid");
             },
             afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (response) {
+                    let data = response.data;
                     if (data["form-url"]) {
                         var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
 

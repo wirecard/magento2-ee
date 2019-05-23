@@ -68,8 +68,8 @@ define(
                     }
                 };
             },
-            hasBankBic: function() {
-                if(parseInt(this.config.enable_bic)) {
+            hasBankBic: function () {
+                if (parseInt(this.config.enable_bic)) {
                     return true;
                 }
                 return false;
@@ -89,7 +89,7 @@ define(
                         innerScroll: true,
                         buttons: [{
                             text: "Accept",
-                            click: function() {
+                            click: function () {
                                 self.mandateId = $("input[name=mandateId]", sepaMandate).val();
                                 this.closeModal();
                                 self.placeOrder();
@@ -99,8 +99,8 @@ define(
                                 text: "Close",
                                 click: this.closeModal
                             }],
-                        opened: function(){
-                                var acceptButton = $("footer button:first", sepaMandate.closest(".modal-inner-wrap"));
+                        opened: function () {
+                            var acceptButton = $("footer button:first", sepaMandate.closest(".modal-inner-wrap"));
                             acceptButton.addClass("disabled");
                             var modal = this;
                             $.get(url.build("wirecard_elasticengine/frontend/sepamandate", {})).done(
@@ -109,13 +109,13 @@ define(
                                         .replace(/%lastname%/g, $("#wirecard_elasticengine_sepadirectdebit_accountLastName").val())
                                         .replace(/%bankAccountIban%/g, $("#wirecard_elasticengine_sepadirectdebit_bankAccountIban").val());
 
-                                    if(self.hasBankBic()) {
-                                    response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepadirectdebit_bankBic").val());
+                                    if (self.hasBankBic()) {
+                                        response = response.replace(/%bankBic%/g, $("#wirecard_elasticengine_sepadirectdebit_bankBic").val());
                                     } else {
                                         response = response.replace(/%bankBic%/g, "");
                                     }
                                     $(modal).html(response);
-                                    $("#sepa-accept", modal).on("change", function(event) {
+                                    $("#sepa-accept", modal).on("change", function (event) {
                                         if ($("#sepa-accept", modal).prop("checked")) {
                                             if (acceptButton.hasClass("disabled")) {
                                                 acceptButton.removeClass("disabled");
@@ -132,7 +132,8 @@ define(
                 }
             },
             afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (response) {
+                    let data = response.data;
                     if (data["form-url"]) {
                         var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
 
