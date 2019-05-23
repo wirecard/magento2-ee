@@ -30,7 +30,7 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="order.success.additional.info">

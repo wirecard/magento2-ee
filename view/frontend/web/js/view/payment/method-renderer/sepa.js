@@ -132,7 +132,7 @@ define(
                 }
             },
             afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (data) {
+                $.get(url.build("wirecard_elasticengine/frontend/interaction"), function (data) {
                     if (data["form-url"]) {
                         var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
 
