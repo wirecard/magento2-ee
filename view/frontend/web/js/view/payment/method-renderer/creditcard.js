@@ -105,17 +105,6 @@ define(
                     });
                 }
             },
-            appendFormData: function (data, form) {
-                for (let key in data) {
-                    if (key !== "form-url" && key !== "form-method") {
-                        form.append($("<input />", {
-                            type: "hidden",
-                            name: key,
-                            value: data[key]
-                        }));
-                    }
-                }
-            },
             /**
              * Handle 3Ds credit card transactions within callback
              * @param response
@@ -123,6 +112,7 @@ define(
             redirectCreditCard: function (response) {
                 let result = {};
                 result.data = {};
+                let appendFormData = this.appendFormData.bind(this);
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/callback"),
                     type: "post",
@@ -133,7 +123,7 @@ define(
                                 action: result.data["form-url"],
                                 method: result.data["form-method"]
                             });
-                            this.appendFormData(result.data, form);
+                            appendFormData(result.data, form);
                             form.appendTo("body").submit();
                         }
                     },
@@ -142,6 +132,17 @@ define(
                         console.error("Error : " + JSON.stringify(err));
                     }
                 });
+            },
+            appendFormData: function (data, form) {
+                for (let key in data) {
+                    if (key !== "form-url" && key !== "form-method") {
+                        form.append($("<input />", {
+                            type: "hidden",
+                            name: key,
+                            value: data[key]
+                        }));
+                    }
+                }
             },
             seamlessFormInitErrorHandler: function (response) {
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
