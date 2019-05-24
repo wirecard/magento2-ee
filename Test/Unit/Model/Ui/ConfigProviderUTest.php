@@ -176,7 +176,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
+                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -312,7 +312,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_unionpayinternational' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
+                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
