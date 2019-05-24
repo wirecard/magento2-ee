@@ -98,6 +98,9 @@ class Creditcard extends Action
     /** @var ConfigInterface Magento2 payment method config injected by DI */
     protected $methodConfig;
 
+    /** @var ConfigInterface Magento2 payment method config injected by DI */
+    protected $upiConfig;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -107,7 +110,7 @@ class Creditcard extends Action
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
      * @param TransactionServiceFactory $transactionServiceFactory
-     * @param CartRepositoryInterface $cartRepository
+     * @param CartRepositoryInterface $quoteRepository
      * @param Session $checkoutSession
      * @param Calculation $taxCalculation
      * @param ResolverInterface $resolver
@@ -115,7 +118,8 @@ class Creditcard extends Action
      * @param UrlInterface $urlBuilder
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
-     * @param LoggerInterface $logger,
+     * @param ConfigInterface $upiConfig
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
@@ -129,6 +133,7 @@ class Creditcard extends Action
         UrlInterface $urlBuilder,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
+        ConfigInterface $upiConfig,
         LoggerInterface $logger
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
@@ -141,6 +146,7 @@ class Creditcard extends Action
         $this->urlBuilder = $urlBuilder;
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
+        $this->upiConfig = $upiConfig;
         $this->logger = $logger;
         parent::__construct($context);
     }
@@ -284,7 +290,7 @@ class Creditcard extends Action
         $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
-        $currency         = $orderDto->quote->getBaseCurrencyCode();
+        $currency = $orderDto->quote->getBaseCurrencyCode();
         $orderDto->amount = new Amount($orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
 
@@ -295,8 +301,8 @@ class Creditcard extends Action
         $orderDto->transaction->setEntryMode('ecommerce');
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
-        $cfgkey       = $orderDto->transaction->getConfigKey();
-        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $cfgkey = $orderDto->transaction->getConfigKey();
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $methodAppend = '?method=' . urlencode($cfgkey);
 
         $orderDto->transaction->setRedirect(new Redirect(
@@ -307,7 +313,12 @@ class Creditcard extends Action
         $notificationUrl = $wdBaseUrl . 'frontend/notify?orderId=' . $orderDto->orderId;
         $orderDto->transaction->setNotificationUrl($notificationUrl);
 
-        if ($this->methodConfig->getValue('send_additional')) {
+        $config = $this->methodConfig;
+        if ($txType == self::FRONTEND_CODE_UPI) {
+            $config = $this->upiConfig;
+        }
+
+        if ($config->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
     }
@@ -375,12 +386,12 @@ class Creditcard extends Action
      */
     private function addOrderItemsToBasket(OrderDto $orderDto)
     {
-        $items    = $orderDto->quote->getAllVisibleItems();
+        $items = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount    = new Amount($orderItem->getPriceInclTax(), $currency);
+            $amount = new Amount($orderItem->getPriceInclTax(), $currency);
             $taxAmount = new Amount($orderItem->getTaxAmount(), $currency);
-            $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
+            $item = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
             $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));
             $orderDto->basket->add($item);
@@ -401,6 +412,7 @@ class Creditcard extends Action
         }
         return constant("$className::NAME");
     }
+
     /**
      * Detect the Transaction class for key sent by frontend
      *
@@ -445,7 +457,9 @@ class Creditcard extends Action
                 break;
         }
         try {
-            $supportedLang = json_decode(file_get_contents($baseUrl . '/engine/includes/i18n/languages/hpplanguages.json'));
+            $supportedLang = json_decode(
+                file_get_contents($baseUrl . '/engine/includes/i18n/languages/hpplanguages.json')
+            );
             if (key_exists(substr($locale, 0, 2), $supportedLang)) {
                 $lang = substr($locale, 0, 2);
             } elseif (key_exists($locale, $supportedLang)) {

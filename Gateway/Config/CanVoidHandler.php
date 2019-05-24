@@ -83,7 +83,7 @@ class CanVoidHandler implements ValueHandlerInterface
         /** @var Collection $transactionList */
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         $transactions = $transactionList->getItems();
-        foreach ($transactions as $id => $item) {
+        foreach ($transactions as $item) {
             if ($item->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION) {
                 return $paymentDO->getPayment()->getAmountPaid() !== $paymentDO->getPayment()->getAmountOrdered();
             }

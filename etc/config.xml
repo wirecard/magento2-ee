@@ -105,6 +105,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <title>Wirecard Credit Card</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
+                <wpp_url>https://wpp-test.wirecard.com</wpp_url>
                 <http_user>70000-APITEST-AP</http_user>
                 <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
@@ -341,6 +342,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
             <wirecard_elasticengine_unionpayinternational>
                 <title>Wirecard UnionPay International</title>
                 <active>0</active>
+                <wpp_url>https://wpp-test.wirecard.com</wpp_url>
                 <base_url>https://api-test.wirecard.com</base_url>
                 <http_user>70000-APILUHN-CARD</http_user>
                 <http_pass>8mhwavKVb91T</http_pass>

@@ -1154,6 +1154,7 @@
             <argument name="urlBuilder" xsi:type="object">Magento\Framework\UrlInterface</argument>
             <argument name="paymentHelper" xsi:type="object">Magento\Payment\Helper\Data</argument>
             <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
+            <argument name="upiConfig" xsi:type="object">WirecardUnionPayInternationalConfig</argument>
         </arguments>
     </type>
 
@@ -1161,11 +1162,6 @@
     <type name="Wirecard\ElasticEngine\Model\Ui\ConfigProvider">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-        </arguments>
-    </type>
-    <type name="Wirecard\ElasticEngine\Block\Checkout\PaymentPageLoader">
-        <arguments>
-            <argument name="eeConfig" xsi:type="object">WirecardElasticEngineConfig</argument>
         </arguments>
     </type>
     <type name="Wirecard\ElasticEngine\Block\Checkout\SepaMandateBlock">

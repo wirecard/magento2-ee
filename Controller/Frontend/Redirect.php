@@ -69,17 +69,27 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private $logger;
 
     /**
+     * @var boolean
+     */
+    private $jsResponse;
+
+    /**
      * Redirect constructor.
      * @param Context $context
      * @param Session $checkoutSession
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param LoggerInterface $logger
      */
-    public function __construct(Context $context, Session $checkoutSession, TransactionServiceFactory $transactionServiceFactory, LoggerInterface $logger)
-    {
+    public function __construct(
+        Context $context,
+        Session $checkoutSession,
+        TransactionServiceFactory $transactionServiceFactory,
+        LoggerInterface $logger
+    ) {
         $this->checkoutSession = $checkoutSession;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;
+        $this->jsResponse = false;
         parent::__construct($context);
     }
 
@@ -93,7 +103,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $methodName = $this->getRequest()->getParam('method');
-        $jsResponse = false;
         if ($methodName == null && $this->getRequest()->isPost()) {
             $methodName = $this->getRequest()->getPost()->get('method');
         }
@@ -105,33 +114,56 @@ class Redirect extends Action implements CsrfAwareActionInterface
             return $resultRedirect;
         }
 
-        $transactionService = $this->transactionServiceFactory->create($methodName);
-
-        if ($this->getRequest()->isPost()) {
-            $params = $this->getRequest()->getPost()->toArray();
-            if (isset($params['data'])) {
-                $params = $params['data'];
-                $jsResponse = true;
-            }
-        } else {
-            $params = $this->getRequest()->getParams();
-        }
-
-        if ($jsResponse) {
-            $result = $transactionService->processJsResponse($params, $resultRedirect);
-        } else {
-            $result = $transactionService->handleResponse($params);
-        }
+        $params = $this->processRequestData();
+        $result = $this->processResponse($params, $resultRedirect, $methodName);
 
         if ($result instanceof SuccessResponse) {
             $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
-        } else {
-            $this->checkoutSession->restoreQuote();
-            $this->messageManager->addNoticeMessage(__('order_error'));
-            $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
+            return $resultRedirect;
         }
 
+        $this->checkoutSession->restoreQuote();
+        $this->messageManager->addNoticeMessage(__('order_error'));
+        $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
+
         return $resultRedirect;
+    }
+
+    /**
+     * Distinguish between jsresponse or response within request data
+     *
+     * @return array|mixed
+     * @since 2.0.0
+     */
+    private function processRequestData()
+    {
+        if ($this->getRequest()->isPost()) {
+            $params = $this->getRequest()->getPost()->toArray();
+            if (isset($params['data'])) {
+                $this->jsResponse = true;
+                return $params['data'];
+            }
+            return $params;
+        }
+        return $this->getRequest()->getParams();
+    }
+
+    /**
+     * Process jsresponse or response
+     *
+     * @param $params
+     * @param $resultRedirect
+     * @param $methodName
+     * @return \Wirecard\PaymentSdk\Response\Response
+     * @since 2.0.0
+     */
+    private function processResponse($params, $resultRedirect, $methodName)
+    {
+        $transactionService = $this->transactionServiceFactory->create($methodName);
+        if ($this->jsResponse) {
+            return $transactionService->processJsResponse($params, $resultRedirect);
+        }
+        return $transactionService->handleResponse($params);
     }
 
     /**

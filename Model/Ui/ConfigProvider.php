@@ -56,6 +56,7 @@ class ConfigProvider implements ConfigProviderInterface
     const UPI_CODE = 'wirecard_elasticengine_unionpayinternational';
     const CREDITCARD_VAULT_CODE = 'wirecard_elasticengine_cc_vault';
     const PAYBYBANKAPP_CODE = 'wirecard_elasticengine_paybybankapp';
+    const PAYMENTPAGE_LOADER = '/loader/paymentPage.js';
 
     /**
      * @var Repository
@@ -96,8 +97,14 @@ class ConfigProvider implements ConfigProviderInterface
      * @param Resolver $store
      * @param StoreManagerInterface $storeManager
      */
-    public function __construct(TransactionServiceFactory $transactionServiceFactory, Repository $assetRepo, Data $paymentHelper, Session $session, Resolver $store, StoreManagerInterface $storeManager)
-    {
+    public function __construct(
+        TransactionServiceFactory $transactionServiceFactory,
+        Repository $assetRepo,
+        Data $paymentHelper,
+        Session $session,
+        Resolver $store,
+        StoreManagerInterface $storeManager
+    ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->assetRepository = $assetRepo;
         $this->paymentHelper = $paymentHelper;
@@ -167,7 +174,9 @@ class ConfigProvider implements ConfigProviderInterface
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'ratepay_script' => $this->getRatepayScript(),
-                'address_same' => (bool) $this->isBillingEqualShippingAddress(self::RATEPAYINVOICE_CODE)
+                'billing_equals_shipping' => (bool)$this->isBillingEqualShippingAddress(
+                    self::RATEPAYINVOICE_CODE
+                )
             ]
         ];
     }
@@ -180,8 +189,9 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             $paymentMethodName => [
-                'logo_url'  => $this->getLogoUrl($paymentMethodName),
+                'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE,
+                'wpp_url' => $this->getWppUrl(self::CREDITCARD_CODE),
             ]
         ];
     }
@@ -195,6 +205,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
+                'wpp_url' => $this->getWppUrl(self::UPI_CODE),
             ]
         ];
     }
@@ -206,7 +217,10 @@ class ConfigProvider implements ConfigProviderInterface
     private function getLogoUrl($code)
     {
         $logoName = substr($code, strlen('wirecard_elasticengine_')) . '.png';
-        return $this->assetRepository->getUrlWithParams('Wirecard_ElasticEngine::images/' . $logoName, ['_secure' => true]);
+        return $this->assetRepository->getUrlWithParams(
+            'Wirecard_ElasticEngine::images/' . $logoName,
+            ['_secure' => true]
+        );
     }
 
     /**
@@ -275,51 +289,30 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-    * Return if the billing and shipping address needs to be same
-    *
-    * @param string $paymentCode
-    * @return string
-    * @since 1.3.7
-    */
+     * Returns the wpp script based on configured wpp url for credit card form
+     *
+     * @param $paymentCode
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function getWppUrl($paymentCode)
+    {
+        $method = $this->paymentHelper->getMethodInstance($paymentCode);
+        $format = '<script src="%s%s" type="text/javascript"/>';
+        $script = sprintf($format, $method->getConfigData('wpp_url'), self::PAYMENTPAGE_LOADER);
+        return $script;
+    }
+
+    /**
+     * Return if the billing and shipping address needs to be same
+     *
+     * @param string $paymentCode
+     * @return string
+     * @since 1.3.7
+     */
     private function isBillingEqualShippingAddress($paymentCode)
     {
         $method = $this->paymentHelper->getMethodInstance($paymentCode);
         return $method->getConfigData('billing_shipping_address_identical');
-    }
-
-    /**
-     * Return supported language code for hpp seamless form
-     *
-     * @param string $baseUrl
-     * @return bool|string
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @since 1.3.11
-     */
-    private function getSupportedHppLangCode($baseUrl)
-    {
-        $locale = $this->store->getLocale();
-        $lang = 'en';
-        //special case for chinese languages
-        switch ($locale) {
-            case 'zh_Hans_CN':
-                $locale = 'zh_CN';
-                break;
-            case 'zh_Hant_TW':
-                $locale = 'zh_TW';
-                break;
-            default:
-                break;
-        }
-        try {
-            $supportedLang = json_decode(file_get_contents($baseUrl . '/engine/includes/i18n/languages/hpplanguages.json'));
-            if (key_exists(substr($locale, 0, 2), $supportedLang)) {
-                $lang = substr($locale, 0, 2);
-            } elseif (key_exists($locale, $supportedLang)) {
-                $lang = $locale;
-            }
-        } catch (\Exception $exception) {
-            return 'en';
-        }
-        return $lang;
     }
 }

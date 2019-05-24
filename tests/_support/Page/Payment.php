@@ -51,12 +51,11 @@ class Payment extends Base
     public $elements = [
         'Wirecard Credit Card' => "//*[@id='wirecard_elasticengine_creditcard']",
         'Place Order' => "//*[@id='wirecard_elasticengine_creditcard_submit']",
-        'Credit Card First Name' => "//*[@id='first_name']",
-        'Credit Card Last Name' => "//*[@id='last_name']",
-        'Credit Card Card number' => "//*[@id='account_number']",
-        'Credit Card CVV' => "//*[@id='card_security_code']",
-        'Credit Card Valid until month' => "//*[@name='expiration_month']",
-        'Credit Card Valid until year' => "//*[@name='expiration_year']"
+        'Credit Card First Name' => "//*[@id='pp-cc-first-name']",
+        'Credit Card Last Name' => "//*[@id='pp-cc-last-name']",
+        'Credit Card Card number' => "//*[@id='pp-cc-account-number']",
+        'Credit Card CVV' => "//*[@id='pp-cc-cvv']",
+        'Credit Card Valid until month / year' => "//*[@name='pp-cc-expiration-date']"
     ];
 
     /**
@@ -74,8 +73,11 @@ class Payment extends Base
         $I->fillField($this->getElement('Credit Card Last Name'), $data_field_values->last_name);
         $I->fillField($this->getElement('Credit Card Card number'), $data_field_values->card_number);
         $I->fillField($this->getElement('Credit Card CVV'), $data_field_values->cvv);
-        $I->selectOption($this->getElement('Credit Card Valid until month'), $data_field_values->valid_until_month);
-        $I->selectOption($this->getElement('Credit Card Valid until year'), $data_field_values->valid_until_year);
+        $I->selectOption(
+            $this->getElement('Credit Card Valid until month / year'),
+            $data_field_values->valid_until_month
+            . substr($data_field_values->valid_until_year, -2)
+        );
         $I->switchToIFrame();
         $I->click($this->getElement('Place Order'));
     }
@@ -91,7 +93,7 @@ class Payment extends Base
         //wait for Javascript to load iframe and it's contents
         $I->wait(2);
         //get wirecard seemless frame name
-        $wirecard_frame_name = $I->executeJS('return document.querySelector(".wirecard-seamless-frame").getAttribute("name")');
+        $wirecard_frame_name = $I->executeJS('return document.querySelector("#wirecard-integrated-payment-page-frame").getAttribute("name")');
         $I->switchToIFrame("$wirecard_frame_name");
     }
 }
