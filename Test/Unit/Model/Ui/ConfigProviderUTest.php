@@ -139,7 +139,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'vaultCode' => self::CREDITCARD_VAULT_CODE,
-                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
+                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -275,7 +275,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'vaultCode' => self::CREDITCARD_VAULT_CODE,
-                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript" />'
+                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
