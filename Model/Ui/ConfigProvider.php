@@ -56,6 +56,7 @@ class ConfigProvider implements ConfigProviderInterface
     const UPI_CODE = 'wirecard_elasticengine_unionpayinternational';
     const CREDITCARD_VAULT_CODE = 'wirecard_elasticengine_cc_vault';
     const PAYBYBANKAPP_CODE = 'wirecard_elasticengine_paybybankapp';
+    const PAYMENTPAGE_LOADER = '/loader/paymentPage.js';
 
     /**
      * @var Repository
@@ -173,7 +174,9 @@ class ConfigProvider implements ConfigProviderInterface
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'ratepay_script' => $this->getRatepayScript(),
-                'address_same' => (bool)$this->isBillingEqualShippingAddress(self::RATEPAYINVOICE_CODE)
+                'billing_equals_shipping' => (bool)$this->isBillingEqualShippingAddress(
+                    self::RATEPAYINVOICE_CODE
+                )
             ]
         ];
     }
@@ -188,7 +191,7 @@ class ConfigProvider implements ConfigProviderInterface
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE,
-                'wpp_url' => $this->getWPPUrl(self::CREDITCARD_CODE),
+                'wpp_url' => $this->getWppUrl(self::CREDITCARD_CODE),
             ]
         ];
     }
@@ -202,7 +205,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             $paymentMethodName => [
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'wpp_url' => $this->getWPPUrl(self::UPI_CODE),
+                'wpp_url' => $this->getWppUrl(self::UPI_CODE),
             ]
         ];
     }
@@ -292,10 +295,11 @@ class ConfigProvider implements ConfigProviderInterface
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function getWPPUrl($paymentCode)
+    private function getWppUrl($paymentCode)
     {
         $method = $this->paymentHelper->getMethodInstance($paymentCode);
-        $script = '<script src="' . $method->getConfigData('wpp_url') . '/loader/paymentPage.js" type="text/javascript" />';
+        $format = '<script src="%s%s" type="text/javascript"/>';
+        $script = sprintf($format, $method->getConfigData('wpp_url'), self::PAYMENTPAGE_LOADER);
         return $script;
     }
 

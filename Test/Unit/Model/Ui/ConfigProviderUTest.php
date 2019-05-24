@@ -160,7 +160,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_ratepayinvoice' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript,
-                    'address_same' => false
+                    'billing_equals_shipping' => false
                 ],
                 'wirecard_elasticengine_alipayxborder' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -296,7 +296,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_ratepayinvoice' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript,
-                    'address_same' => true
+                    'billing_equals_shipping' => true
                 ],
                 'wirecard_elasticengine_alipayxborder' => [
                     'logo_url' => self::LOGO_URL_PATH,

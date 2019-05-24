@@ -55,7 +55,7 @@ define(
                 this._super().observe("customerDob");
                 return this;
             },
-            initialize: function() {
+            initialize: function () {
                 this._super();
                 this.config = window.checkoutConfig.payment[this.getCode()];
                 this.customerData = window.customerData;
@@ -71,7 +71,7 @@ define(
                     }
                 };
             },
-            getRatepayScript: function() {
+            getRatepayScript: function () {
                 return this.config.ratepay_script;
             },
             validate: function () {
@@ -81,7 +81,8 @@ define(
                     errorPane.css("display", "block");
                     return false;
                 }
-                if (this.config.address_same && $("#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice").is(":checked") === false) {
+                if (this.config.billing_equals_shipping
+                    && $("#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice").is(":checked") === false) {
                     errorPane.html($t("text_need_same_address_notice"));
                     errorPane.css("display", "block");
                     return false;
