@@ -90,7 +90,8 @@ class CreditCardConfig extends Value
      * @return bool
      * @since 2.0.0
      */
-    private function isUrlConfigurationValid() {
+    private function isUrlConfigurationValid()
+    {
         $baseUrl = (string)$this->getFieldsetDataValue('base_url');
         $wppUrl  = (string)$this->getFieldsetDataValue('wpp_url');
         $needle  = 'test';
@@ -111,12 +112,12 @@ class CreditCardConfig extends Value
      * @return bool
      * @since 2.0.0
      */
-    private function stringContainsSubstring($string, $needle) {
+    private function stringContainsSubstring($string, $needle)
+    {
         if (stripos($string, $needle) === false) {
             return false;
         }
 
         return true;
     }
-
 }
