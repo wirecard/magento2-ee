@@ -47,8 +47,8 @@ define(
                 redirectAfterPlaceOrder: false
             },
             onTermsCheckboxClick: function () {
-                $(".actions-toolbar .primary .action").attr("disabled", !this.termsChecked);
-                $(".actions-toolbar .primary .action").toggleClass("disabled", !this.termsChecked);
+                $("#wirecard_elasticengine_ratepayinvoice_submit").attr("disabled", !this.termsChecked);
+                $("#wirecard_elasticengine_ratepayinvoice_submit").toggleClass("disabled", !this.termsChecked);
                 return true;
             },
             initObservable: function () {
