@@ -35,8 +35,16 @@ use Magento\Framework\App\Config\Value;
 
 class CreditCardConfig extends Value
 {
+    /**
+     * @var string ERR_MSG_MIXED_CREDENTIALS
+     * @since 2.0.0
+     */
     const ERR_MSG_MIXED_CREDENTIALS = "Attention: Please check your credentials within the URL setting fields. You might have configured/combined a productive account with a test account.";
 
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface $messageManager
+     * @since 2.0.0
+     */
     private $messageManager;
 
     public function __construct(
@@ -62,6 +70,10 @@ class CreditCardConfig extends Value
         $this->messageManager = $messageManager;
     }
 
+    /**
+     * @return Value|void
+     * @since 2.0.0
+     */
     public function beforeSave()
     {
         //possible error, warning, notice, success
@@ -74,6 +86,7 @@ class CreditCardConfig extends Value
 
     /**
      * @return bool
+     * @since 2.0.0
      */
     private function isUrlConfigurationValid() {
         $baseUrl = (string)$this->getFieldsetDataValue('base_url');
@@ -94,6 +107,7 @@ class CreditCardConfig extends Value
      * @param $string
      * @param $needle
      * @return bool
+     * @since 2.0.0
      */
     private function stringContainsSubstring($string, $needle) {
         if (stripos($string, $needle) === false) {
