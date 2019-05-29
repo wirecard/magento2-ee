@@ -39,7 +39,9 @@ class CreditCardConfig extends Value
      * @var string ERR_MSG_MIXED_CREDENTIALS
      * @since 2.0.0
      */
-    const ERR_MSG_MIXED_CREDENTIALS = "Attention: Please check your Credit Card credentials within the URL setting fields. You might have configured/combined a productive account with a test account.";
+    const ERR_MSG_MIXED_CREDENTIALS = "
+    Attention: Please check your Credit Card credentials within the URL setting fields. 
+    You might have configured/combined a productive account with a test account.";
 
     /**
      * @var \Magento\Framework\Message\ManagerInterface $messageManager
