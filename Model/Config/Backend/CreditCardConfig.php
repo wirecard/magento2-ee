@@ -39,9 +39,7 @@ class CreditCardConfig extends Value
      * @var string ERR_MSG_MIXED_CREDENTIALS
      * @since 2.0.0
      */
-    const ERR_MSG_MIXED_CREDENTIALS = "
-    Attention: Please check your Credit Card credentials within the URL setting fields. 
-    You might have configured/combined a productive account with a test account.";
+    const ERR_MSG_MIXED_CREDENTIALS = "warning_credit_card_url_mismatch";
 
     /**
      * @var \Magento\Framework\Message\ManagerInterface $messageManager
@@ -79,13 +77,21 @@ class CreditCardConfig extends Value
     public function beforeSave()
     {
         if (!$this->isUrlConfigurationValid()) {
-            $this->messageManager->addWarningMessage(self::ERR_MSG_MIXED_CREDENTIALS);
+            $this->messageManager->addWarningMessage(__(self::ERR_MSG_MIXED_CREDENTIALS));
         }
 
         parent::beforeSave();
     }
 
     /**
+     * Scenarios checked in this method
+     * base_url and wpp_url both contain "test"        = valid
+     * base_url and wpp_url both do not contain "test" = valid
+     * only base_url or wpp_url contains "test"        = invalid
+     *
+     * The information is used to check the possibility
+     * of a mixed configuration (production and test)
+     *
      * @return bool
      * @since 2.0.0
      */
@@ -106,8 +112,8 @@ class CreditCardConfig extends Value
     }
 
     /**
-     * @param $string
-     * @param $needle
+     * @param string $string
+     * @param string $needle
      * @return bool
      * @since 2.0.0
      */
