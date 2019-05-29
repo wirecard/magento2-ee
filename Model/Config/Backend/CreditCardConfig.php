@@ -78,7 +78,6 @@ class CreditCardConfig extends Value
      */
     public function beforeSave()
     {
-        //possible error, warning, notice, success
         if (!$this->isUrlConfigurationValid()) {
             $this->messageManager->addWarningMessage(self::ERR_MSG_MIXED_CREDENTIALS);
         }
