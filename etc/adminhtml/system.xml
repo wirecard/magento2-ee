@@ -158,6 +158,7 @@
                 <field id="wpp_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>config_wpp_url</label>
                     <comment>config_wpp_url_desc</comment>
+                    <backend_model>Wirecard\ElasticEngine\Model\Config\Backend\CreditCardConfig</backend_model>
                 </field>
                 <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>config_http_user</label>
