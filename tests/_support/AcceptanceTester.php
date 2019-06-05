@@ -54,6 +54,7 @@ use Page\Checkout as CheckoutPage;
 use Page\OrderReceived as OrderReceivedPage;
 use Page\Payment as PaymentPage;
 use Page\Shop as ShopPage;
+use Page\Product as ProductPage;
 use Page\Verified as VerifiedPage;
 
 class AcceptanceTester extends \Codeception\Actor
@@ -82,6 +83,9 @@ class AcceptanceTester extends \Codeception\Actor
                 break;
             case 'Shop':
                 $page = new ShopPage($this);
+                break;
+            case 'Product':
+                $page = new ProductPage($this);
                 break;
             case 'Verified':
                 $this->wait(45);
@@ -125,7 +129,6 @@ class AcceptanceTester extends \Codeception\Actor
         $this->currentPage = $this->selectPage($page);
         $this->amOnPage($this->currentPage->getURL());
     }
-
     /**
      * @When I click :object
      * @since 1.4.1
@@ -183,11 +186,9 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iPrepareCheckout()
     {
-        $this->iAmOnPage('Shop');
+        $this->iAmOnPage('Product');
         $this->wait(20);
-        //chose a product and open product page
-        $this->scrollTo(['class' => 'page-wrapper'], 20, 1500);
-        $this->click($this->currentPage->getElement('First Product in the Product List'));
+        $this->click($this->currentPage->getElement('Add to Cart'));
         $this->wait(10);
     }
 
