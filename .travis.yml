@@ -49,18 +49,42 @@ matrix:
       - travis_retry composer install $COMPOSER_ARGS
     script: bash .bin/run-ui-tests.sh
     after_script: skip
-    after_success: skip
-#      - bash .bin/upload-logs-and-notify.sh
-    after_failure: skip
-#      - bash .bin/upload-logs-and-notify.sh fail
-#  - <<: *acceptance-test
-#    env:
-#    - GATEWAY=API-TEST
-#    - MAGENTO2_RELEASE_VERSION=2
-#  - <<: *acceptance-test
-#    env: GATEWAY=API-WDCEE-TEST
-#  - <<: *acceptance-test
-#    env: GATEWAY=NOVA
+    after_success:
+      - bash .bin/upload-logs-and-notify.sh
+    after_failure:
+      - bash .bin/upload-logs-and-notify.sh fail
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO2_RELEASE_VERSION=2
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO2_RELEASE_VERSION=3
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=API-WDCEE-TEST
+    - MAGENTO2_RELEASE_VERSION=1
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=API-WDCEE-TEST
+    - MAGENTO2_RELEASE_VERSION=2
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=API-WDCEE-TEST
+    - MAGENTO2_RELEASE_VERSION=3
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=NOVA
+    - MAGENTO2_RELEASE_VERSION=1
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=NOVA
+    - MAGENTO2_RELEASE_VERSION=2
+  - <<: *acceptance-test
+    env:
+    - GATEWAY=NOVA
+    - MAGENTO2_RELEASE_VERSION=3
 
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'

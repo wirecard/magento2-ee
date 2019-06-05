@@ -21,14 +21,12 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata
 
 # install wirecard magento2 plugin
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:dev-master
-#docker exec -it ${MAGENTO_CONTAINER_NAME} bash  -c "chmod -R 777 var pub"
-#docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
-#docker exec -it ${MAGENTO_CONTAINER_NAME} bash  -c "chmod -R 777 var pub"
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
-curl $NGROK_URL
+#this gives the shop time to init
+curl $NGROK_URL --head
 sleep 30
-curl $NGROK_URL
+curl $NGROK_URL --head
 
 echo "\nModify File Permissions To Load CSS!\n"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
