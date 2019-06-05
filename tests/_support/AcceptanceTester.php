@@ -53,7 +53,6 @@ use Page\Base;
 use Page\Checkout as CheckoutPage;
 use Page\OrderReceived as OrderReceivedPage;
 use Page\Payment as PaymentPage;
-use Page\Shop as ShopPage;
 use Page\Product as ProductPage;
 use Page\Verified as VerifiedPage;
 
@@ -80,9 +79,6 @@ class AcceptanceTester extends \Codeception\Actor
         switch ($name) {
             case 'Checkout':
                 $page = new CheckoutPage($this);
-                break;
-            case 'Shop':
-                $page = new ShopPage($this);
                 break;
             case 'Product':
                 $page = new ProductPage($this);

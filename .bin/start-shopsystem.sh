@@ -5,7 +5,6 @@ export MAGENTO_CONTAINER_NAME=web
 export MYSQL_DATABASE=magento
 export MYSQL_USER=magento
 export MYSQL_PASSWORD=magento
-#export MAGENTO_VERSION=2.3.1
 
 docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
 docker-compose up -d

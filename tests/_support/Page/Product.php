@@ -40,14 +40,14 @@ class Product extends Base
 
     /**
      * @var string
-     * @since 1.4.1
+     * @since 1.5.1
      */
     // include url of current page
     public $URL = '/index.php/fusion-backpack.html';
 
     /**
      * @var array
-     * @since 1.4.1
+     * @since 1.5.1
      */
     public $elements = [
         'Add to Cart' => '//*[@id="product-addtocart-button"]',
