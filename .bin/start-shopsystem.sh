@@ -7,7 +7,7 @@ export MYSQL_USER=magento
 export MYSQL_PASSWORD=magento
 #export MAGENTO_VERSION=2.3.1
 
-docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO_VERSION} web
+docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
 docker-compose up -d
 sleep 30
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
@@ -26,9 +26,9 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:
 #docker exec -it ${MAGENTO_CONTAINER_NAME} bash  -c "chmod -R 777 var pub"
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
-
+curl $NGROK_URL
 sleep 30
-
+curl $NGROK_URL
 
 echo "\nModify File Permissions To Load CSS!\n"
 docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"

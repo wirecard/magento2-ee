@@ -25,7 +25,7 @@ matrix:
     if: env(PHRASEAPP_PULL) != '1' AND type = cron
 
   - stage: get-magento2-versions
-    if: type != cron
+    if: type = cron
     php: 7.1
     install: skip
     before_script: skip
@@ -42,6 +42,7 @@ matrix:
     - MAGENTO2_RELEASE_VERSION=1
     install:
       - export MAGENTO2_VERSION=$(awk "NR==$MAGENTO2_RELEASE_VERSION {print; exit}" ${MAGENTO2_RELEASES_FILE})
+      - echo $MAGENTO2_VERSION
       - bash .bin/remove-composer-lock-file.sh
       - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
       - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
@@ -52,10 +53,10 @@ matrix:
 #      - bash .bin/upload-logs-and-notify.sh
     after_failure: skip
 #      - bash .bin/upload-logs-and-notify.sh fail
-  - <<: *acceptance-test
-    env:
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=2
+#  - <<: *acceptance-test
+#    env:
+#    - GATEWAY=API-TEST
+#    - MAGENTO2_RELEASE_VERSION=2
 #  - <<: *acceptance-test
 #    env: GATEWAY=API-WDCEE-TEST
 #  - <<: *acceptance-test
