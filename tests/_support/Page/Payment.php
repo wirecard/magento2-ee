@@ -41,7 +41,7 @@ class Payment extends Base
      * @var string
      * @since 1.4.1
      */
-    public $URL = 'index.php/checkout#payment';
+    public $URL = 'payment';
 
     /**
      * @var array
