@@ -7,7 +7,7 @@ export REPO_ADDRESS="${REPO_LINK}.git"
 
 # add random sleep time to minimize conflict possibility
 echo "Timestamp : $(date)"
-RANDOM_VALUE=$[ ( RANDOM % 30 ) * $OPENCART_RELEASE_VERSION + 1 ]
+RANDOM_VALUE=$[ ( RANDOM % 30 ) * $MAGENTO2_RELEASE_VERSION + 1 ]
 echo "Sleeping for: ${RANDOM_VALUE}"
 sleep ${RANDOM_VALUE}s
 
