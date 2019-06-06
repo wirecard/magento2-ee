@@ -46,11 +46,11 @@ RUN cd $INSTALL_DIR \
     && find . -type f -exec chmod 660 {} \; \
     && chmod u+x bin/magento
 
-COPY ./.bin/install-magento /usr/local/bin/install-magento
-RUN chmod +x /usr/local/bin/install-magento
+COPY .bin/install-magento.sh /usr/local/bin/install-magento.sh
+RUN chmod +x /usr/local/bin/install-magento.sh
 
-COPY ./.bin/install-sampledata /usr/local/bin/install-sampledata
-RUN chmod +x /usr/local/bin/install-sampledata
+COPY .bin/install-sampledata.sh /usr/local/bin/install-sampledata.sh
+RUN chmod +x /usr/local/bin/install-sampledata.sh
 
 RUN a2enmod rewrite
 RUN echo "memory_limit=2048M" > /usr/local/etc/php/conf.d/memory-limit.ini
