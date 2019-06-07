@@ -442,11 +442,11 @@ class Creditcard extends Action
     private function getSupportedWppLangCode()
     {
         //Set default for exception case
-        $language = 'en';
-        $locale = $this->resolver->getLocale();
+        $language  = 'en';
+        $locale    = $this->resolver->getLocale();
 
         //Shorten to ISO-639-1 because of magento2 special cases e.g. zh_Hans_CN
-        $locale = mb_substr($locale, 0, 2);
+        $locale    = mb_substr($locale, 0, 2);
         $converter = new WppVTwoConverter();
 
         try {
