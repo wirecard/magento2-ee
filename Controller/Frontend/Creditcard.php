@@ -45,6 +45,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
+use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
@@ -190,8 +191,7 @@ class Creditcard extends Action
         } else {
             $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
         }
-        $baseUrl = $method->getConfigData('base_url');
-        $language = $this->getSupportedHppLangCode($baseUrl);
+        $language = $this->getSupportedWppLangCode();
 
         $paymentAction = $method->getConfigData('payment_action');
         if ($paymentAction === PaymentAction::AUTHORIZE_CAPTURE) {
@@ -434,40 +434,28 @@ class Creditcard extends Action
     }
 
     /**
-     * Find out the best supported HPP language code
+     * Convert locale to WPP V2 supported language code
      *
-     * Currently, this triggers a call against the EE rest interface to find out
-     * all supported languages. Based on the Magento2 locale and the list of the
-     *
-     * @param string $baseUrl Gateway URL from merchants config
+     * @return string
+     * @since 2.0.0
      */
-    private function getSupportedHppLangCode($baseUrl)
+    private function getSupportedWppLangCode()
     {
+        //Set default for exception case
+        $language = 'en';
         $locale = $this->resolver->getLocale();
-        $lang = 'en';
-        //special case for chinese languages
-        switch ($locale) {
-            case 'zh_Hans_CN':
-                $locale = 'zh_CN';
-                break;
-            case 'zh_Hant_TW':
-                $locale = 'zh_TW';
-                break;
-            default:
-                break;
-        }
+
+        //Shorten to ISO-639-1 because of magento2 special cases e.g. zh_Hans_CN
+        $locale = mb_substr($locale, 0, 2);
+        $converter = new WppVTwoConverter();
+
         try {
-            $supportedLang = json_decode(
-                file_get_contents($baseUrl . '/engine/includes/i18n/languages/hpplanguages.json')
-            );
-            if (key_exists(substr($locale, 0, 2), $supportedLang)) {
-                $lang = substr($locale, 0, 2);
-            } elseif (key_exists($locale, $supportedLang)) {
-                $lang = $locale;
-            }
-        } catch (\Exception $exception) {
-            return 'en';
+            $converter->init();
+            $language = $converter->convert($locale);
+        } catch (\InvalidArgumentException $exception) {
+            $this->logger->error($exception->getMessage());
+            return $language;
         }
-        return $lang;
+        return $language;
     }
 }
