@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b3b8473b55ce4f77669db3f057289b45",
+    "content-hash": "778abe3727526edf0cb3416b8a455047",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -3129,6 +3129,40 @@
                 "useragent"
             ],
             "time": "2018-10-02T09:26:41+00:00"
+        },
+        {
+            "name": "wirecard/io-converter",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wirecard/io-converter.git",
+                "reference": "c197265a550439265dcdd2dd9540c436394be518"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wirecard/io-converter/zipball/c197265a550439265dcdd2dd9540c436394be518",
+                "reference": "c197265a550439265dcdd2dd9540c436394be518",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wirecard\\Converter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "description": "Includes various adaptable I/O coverters.",
+            "time": "2019-06-05T08:18:08+00:00"
         },
         {
             "name": "wirecard/iso-paypal-converter",

@@ -118,7 +118,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $method->expects($this->at(1))->method('getConfigData')->willReturn(self::BASE_URL);
         $this->paymentHelper->expects($this->once())->method('getMethodInstance')->wilLReturn($method);
 
         $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
@@ -156,7 +155,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $method->expects($this->at(1))->method('getConfigData')->willReturn(self::BASE_URL);
         $this->paymentHelper->expects($this->once())->method('getMethodInstance')->wilLReturn($method);
 
         $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
