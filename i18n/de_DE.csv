@@ -101,3 +101,4 @@ text_terms_accept,"Hiermit bestätige ich, dass ich die <a target=""_blank"" hre
 transfer_notice,"Verwenden Sie für die Überweisung die folgenden Daten:
 ",: classes/includes/class-wc-gateway-wirecard-poipia.php:261
 vault_save_text,Für spätere Verwendung speichern.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:349
+warning_credit_card_url_mismatch,Attention: Please check your credentials within the URL setting fields. You might have configured/combined a productive account with a test account.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:777

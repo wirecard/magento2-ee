@@ -36,12 +36,6 @@ use Magento\Framework\App\Config\Value;
 class CreditCardConfig extends Value
 {
     /**
-     * @var string ERR_MSG_MIXED_CREDENTIALS
-     * @since 2.0.0
-     */
-    const ERR_MSG_MIXED_CREDENTIALS = "warning_credit_card_url_mismatch";
-
-    /**
      * @var \Magento\Framework\Message\ManagerInterface $messageManager
      * @since 2.0.0
      */
@@ -87,7 +81,7 @@ class CreditCardConfig extends Value
     public function beforeSave()
     {
         if (!$this->isUrlConfigurationValid()) {
-            $this->messageManager->addWarningMessage(__(self::ERR_MSG_MIXED_CREDENTIALS));
+            $this->messageManager->addWarningMessage(__('warning_credit_card_url_mismatch'));
         }
 
         parent::beforeSave();
