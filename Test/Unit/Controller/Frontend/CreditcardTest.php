@@ -213,8 +213,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
         $this->controller = new Creditcard($context, $resultJsonFactory, $this->transactionServiceFactory,
-            $quoteRepository, $this->checkoutSession, $taxCalculation, $resolver, $storeManager, $urlBuilder,
-            $this->paymentHelper, $methodConfig, $logger
+            $quoteRepository, $this->checkoutSession, $taxCalculation, $resolver, $storeManager, $this->paymentHelper,
+            $methodConfig, $logger
         );
     }
 }
