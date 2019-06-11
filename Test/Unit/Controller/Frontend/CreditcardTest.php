@@ -185,7 +185,11 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         if (!empty($mockedParameterValue)) {
             $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
             $requestMock->expects($this->once())->method('getParam')->willReturn($mockedParameterValue);
+
+            $urlBuilderMock = $this->getMockForAbstractClass(UrlInterface::class);
+
             $context->expects($this->once())->method('getRequest')->willReturn($requestMock);
+            $context->expects($this->any())->method('getUrl')->willReturn($urlBuilderMock);
         }
 
         $resultJsonFactory = $this->getMockBuilder(JsonFactory::class)->disableOriginalConstructor()->getMock();
@@ -203,8 +207,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $resolver  = $this->getMockForAbstractClass(ResolverInterface::class);
 
         $storeManager = $this->getMockForAbstractClass(StoreManagerInterface::class);
-
-        $urlBuilder = $this->getMockForAbstractClass(UrlInterface::class);
 
         $this->paymentHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
 
