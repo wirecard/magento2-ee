@@ -84,21 +84,19 @@ class Callback extends Action
      * @param Session $session
      * @param LoggerInterface $logger
      * @param TransactionServiceFactory $transactionServiceFactory
-     * @param UrlInterface $urlBuilder
      */
     public function __construct(
         Context $context,
         Session $session,
         LoggerInterface $logger,
-        TransactionServiceFactory $transactionServiceFactory,
-        UrlInterface $urlBuilder
+        TransactionServiceFactory $transactionServiceFactory
     ) {
         parent::__construct($context);
         $this->session = $session;
         $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
         $this->logger = $logger;
         $this->transactionServiceFactory = $transactionServiceFactory;
-        $this->urlBuilder = $urlBuilder;
+        $this->urlBuilder = $context->getUrl();
     }
 
     /**

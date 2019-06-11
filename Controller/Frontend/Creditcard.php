@@ -126,7 +126,6 @@ class Creditcard extends Action
         Calculation $taxCalculation,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
-        UrlInterface $urlBuilder,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
         LoggerInterface $logger
@@ -138,7 +137,7 @@ class Creditcard extends Action
         $this->taxCalculation = $taxCalculation;
         $this->resolver = $resolver;
         $this->storeManager = $storeManager;
-        $this->urlBuilder = $urlBuilder;
+        $this->urlBuilder = $context->getUrl();
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
         $this->logger = $logger;
