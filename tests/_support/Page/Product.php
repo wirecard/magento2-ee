@@ -35,21 +35,21 @@
 
 namespace Page;
 
-class Shop extends Base
+class Product extends Base
 {
 
     /**
      * @var string
-     * @since 1.4.1
+     * @since 1.5.1
      */
     // include url of current page
-    public $URL = '/index.php';
+    public $URL = '/index.php/fusion-backpack.html';
 
     /**
      * @var array
-     * @since 1.4.1
+     * @since 1.5.1
      */
     public $elements = [
-        'First Product in the Product List' => '//*[@id="maincontent"]/div[3]/div/div[2]/div[3]/div/div/ol/li[1]/div/div/div[3]/div[1]/button'
+        'Add to Cart' => '//*[@id="product-addtocart-button"]',
     ];
 }

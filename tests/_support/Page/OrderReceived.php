@@ -43,5 +43,5 @@ class OrderReceived extends Base
      * @var string
      * @since 1.4.1
      */
-    public $URL = 'index.php/checkout/onepage/success/';
+    public $URL = 'success';
 }

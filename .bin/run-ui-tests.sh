@@ -12,7 +12,7 @@ chmod +x $PWD/jq
 
 $PWD/ngrok authtoken $NGROK_TOKEN
 TIMESTAMP=$(date +%s)
-$PWD/ngrok http 9090 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}" > /dev/null &
+$PWD/ngrok http 9090 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}-${MAGENTO2_RELEASE_VERSION}" > /dev/null &
 
 NGROK_URL_S=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
 

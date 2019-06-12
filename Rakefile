@@ -1,3 +1,5 @@
+STDOUT.sync = true
+
 require 'rainbow/refinement'
 require_relative '.bin/phraseapp/wd-phraseapp.rb'
 require_relative '.bin/phraseapp/wd-project.rb'
