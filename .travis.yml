@@ -117,6 +117,7 @@ matrix:
     install:
       - travis_retry composer install $COMPOSER_ARGS
       - rvm install 2.5.3
+      - travis_retry gem install bundler -v 2.0.1
     after_install: skip
     before_script: skip
     script: skip
