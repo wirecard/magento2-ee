@@ -111,7 +111,7 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
         $this->order->method('getBillingAddress')->willReturn($address);
         $this->order->method('getShippingAddress')->willReturn($address);
-        $this->order->method('getGrandTotalAmount')->willReturn('1.0');
+        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
         $this->order->method('getCurrencyCode')->willReturn('EUR');
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');

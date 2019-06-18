@@ -118,7 +118,7 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
         $this->order->method('getBillingAddress')->willReturn($address);
-        $this->order->method('getGrandTotalAmount')->willReturn('1.0');
+        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
