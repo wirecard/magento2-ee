@@ -52,6 +52,13 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 class PaymentSdkConfigFactory implements ConfigFactoryInterface
 {
     /**
+     * @const string WIRECARD_EXTENSION_HEADER_PLUGIN_NAME
+     *
+     * @since 1.5.2
+     */
+    const WIRECARD_EXTENSION_HEADER_PLUGIN_NAME = 'magento2-ee+Wirecard';
+
+    /**
      * @var ConfigInterface
      */
     private $eeConfig;
@@ -125,11 +132,11 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
 
         $config->add($paymentMethod);
         $config->setShopInfo(
-            $this->productMetadata->getName() . ' ' . $this->productMetadata->getEdition() . ' Edition',
+            $this->productMetadata->getName() . '+' . $this->productMetadata->getEdition() . ' Edition',
             $this->productMetadata->getVersion()
         );
         $config->setPluginInfo(
-            'Wirecard_ElasticEngine',
+            self::WIRECARD_EXTENSION_HEADER_PLUGIN_NAME,
             $this->moduleList->getOne('Wirecard_ElasticEngine')['setup_version']
         );
 
