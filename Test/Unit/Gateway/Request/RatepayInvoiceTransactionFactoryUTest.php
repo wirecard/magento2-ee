@@ -132,7 +132,7 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->paymentDo->method('getOrder')->willReturn($this->order);
         $this->paymentDo->method('getPayment')->willReturn($this->payment);
 
-        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
+        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => 1.0];
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $this->session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
