@@ -36,11 +36,13 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Class Redirect
@@ -52,6 +54,8 @@ class Redirect extends Action implements CsrfAwareActionInterface
     use NoCsrfTrait;
 
     const CHECKOUT_URL = 'checkout/cart';
+
+    const REDIRECT_URL = 'redirect-url';
 
     /**
      * @var Session
@@ -69,6 +73,16 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private $logger;
 
     /**
+     * @var Context
+     */
+    private $context;
+
+    /**
+     * @var TransactionService
+     */
+    private $transactionService;
+
+    /**
      * Redirect constructor.
      * @param Context $context
      * @param Session $checkoutSession
@@ -80,58 +94,95 @@ class Redirect extends Action implements CsrfAwareActionInterface
         $this->checkoutSession = $checkoutSession;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;
+        $this->context = $context;
         parent::__construct($context);
     }
 
-    /**
-     * @return RedirectResult
-     */
+
     public function execute()
+    {
+        $methodName = $this->getRequest()->getParam('method');
+        if ($methodName == null && $this->getRequest()->isPost()) {
+            $methodName = $this->getRequest()->getPost()->get('method');
+        }
+
+        if ($methodName === null || !$this->getRequest()->isPost()) {
+            $this->checkoutSession->restoreQuote();
+            $this->messageManager->addNoticeMessage(__('order_error'));
+            $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl(self::CHECKOUT_URL);
+            return $data;
+        }
+
+        $this->transactionService = $this->transactionServiceFactory->create($methodName);
+
+        $params = $this->getRequest()->getPost()->toArray();
+        if (isset($params['data'])) {
+            $result = $this->handleNonThreeDResponse($params['data']);
+        } else {
+            $result = $this->handleThreeDResponse($params);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Handles credit card 3D responses and returns redirect page
+     *
+     * @param $responseParams
+     * @return RedirectResult
+     * @since 1.5.2
+     */
+    private function handleThreeDResponse($responseParams)
     {
         /**
          * @var $resultRedirect RedirectResult
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $methodName = $this->getRequest()->getParam('method');
-        $jsResponse = false;
-        if ($methodName == null && $this->getRequest()->isPost()) {
-            $methodName = $this->getRequest()->getPost()->get('method');
-        }
-        if ($methodName === null || (!$this->getRequest()->isPost() && !$this->getRequest()->isGet())) {
-            $this->checkoutSession->restoreQuote();
-            $this->messageManager->addNoticeMessage(__('order_error'));
-            $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
+        // Set redirect for error/failure case
+        $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
 
-            return $resultRedirect;
-        }
+        $response = $this->transactionService->handleResponse($responseParams);
 
-        $transactionService = $this->transactionServiceFactory->create($methodName);
-
-        if ($this->getRequest()->isPost()) {
-            $params = $this->getRequest()->getPost()->toArray();
-            if (isset($params['data'])) {
-                $params = $params['data'];
-                $jsResponse = true;
-            }
-        } else {
-            $params = $this->getRequest()->getParams();
-        }
-
-        if ($jsResponse) {
-            $result = $transactionService->processJsResponse($params, $resultRedirect);
-        } else {
-            $result = $transactionService->handleResponse($params);
-        }
-
-        if ($result instanceof SuccessResponse) {
+        if ($response instanceof SuccessResponse) {
             $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
         } else {
             $this->checkoutSession->restoreQuote();
             $this->messageManager->addNoticeMessage(__('order_error'));
-            $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
         }
 
         return $resultRedirect;
+    }
+
+    /**
+     * Handles credit card non-3D responses and returns redirect url in json
+     *
+     * @param $responseParams
+     * @return Json
+     * @since 1.5.2
+     */
+    private function handleNonThreeDResponse($responseParams)
+    {
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+
+        $data = [
+            self::REDIRECT_URL => null
+        ];
+
+        $response = $this->transactionService->processJsResponse($responseParams, $resultRedirect);
+
+        if ($response instanceof SuccessResponse) {
+            $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl('onepage/success');
+        } else {
+            $this->checkoutSession->restoreQuote();
+            $this->messageManager->addNoticeMessage(__('order_error'));
+            $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl(self::CHECKOUT_URL);
+        }
+
+        /** @var Json $result */
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result->setData($data);
+
+        return $result;
     }
 
     /**
