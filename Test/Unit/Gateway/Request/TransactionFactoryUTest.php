@@ -84,7 +84,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->order->method('getGrandTotalAmount')->willReturn('1.0');
+        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
         $this->order->method('getCurrencyCode')->willReturn('EUR');
         $this->order->method('getId')->willReturn('1');
         $this->order->method('getShippingAddress')->willReturn($address);
@@ -161,7 +161,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateSetsAmountValues()
     {
         $transactionMock = $this->getMock(Transaction::class);
-        $transactionMock->expects($this->Once())->method('setAmount')->with($this->equalTo(new Amount('1.0', 'EUR')));
+        $transactionMock->expects($this->Once())->method('setAmount')->with($this->equalTo(new Amount(1.0, 'EUR')));
 
         $transactionFactory = new TransactionFactory(
             $this->urlBuilder,

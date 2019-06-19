@@ -104,7 +104,7 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
-        $this->order->method('getGrandTotalAmount')->willReturn('1.0');
+        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
         $this->order->method('getCurrencyCode')->willReturn('EUR');
 
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
@@ -116,7 +116,7 @@ class UnionPayInternationalTransactionFactoryUTest extends \PHPUnit_Framework_Te
         $this->paymentDo->method('getPayment')->willReturn($this->payment);
         $this->paymentDo->method('getOrder')->willReturn($this->order);
 
-        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
+        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => 1.0];
 
         $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
     }
