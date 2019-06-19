@@ -177,7 +177,7 @@ class TransactionFactory
         /** @var OrderAdapterInterface $order */
         $order = $payment->getOrder();
 
-        $amount = new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $amount = new Amount((float)$order->getGrandTotalAmount(), $order->getCurrencyCode());
         $this->transaction->setAmount($amount);
 
         $this->orderId = $order->getOrderIncrementId();
@@ -235,7 +235,7 @@ class TransactionFactory
 
         $this->orderId = $order->getId();
         $captureAmount = $commandSubject[self::AMOUNT];
-        $amount = new Amount($captureAmount, $order->getCurrencyCode());
+        $amount = new Amount((float)$captureAmount, $order->getCurrencyCode());
         $this->transaction->setParentTransactionId($payment->getParentTransactionId());
         $this->transaction->setAmount($amount);
 
@@ -273,7 +273,7 @@ class TransactionFactory
         $this->transactionId = $payment->getParentTransactionId();
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount($commandSubject[self::AMOUNT], $order->getCurrencyCode()));
+        $this->transaction->setAmount(new Amount((float)$commandSubject[self::AMOUNT], $order->getCurrencyCode()));
 
         return $this->transaction;
     }
@@ -299,7 +299,7 @@ class TransactionFactory
         $this->transactionId = $payment->getParentTransactionId();
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount($order->getGrandTotalAmount(), $order->getCurrencyCode()));
+        $this->transaction->setAmount(new Amount((float)$order->getGrandTotalAmount(), $order->getCurrencyCode()));
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;

@@ -67,7 +67,7 @@ class ItemFactory
         $taxRate = $qtyTax / $amount;
         $item = new Item(
             $name,
-            new Amount($amount, $currency),
+            new Amount((float)$amount, $currency),
             (int) $qty
         );
         $item->setDescription($magentoItemObj->getDescription());
@@ -107,7 +107,7 @@ class ItemFactory
         $taxRate = $qtyTax / $amount;
         $item = new Item(
             $name,
-            new Amount($amount, $currency),
+            new Amount((float)$amount, $currency),
             (int) $qty
         );
         $item->setDescription($magentoItemObj->getDescription());
@@ -147,7 +147,7 @@ class ItemFactory
         $taxRate = $qtyTax / $amount;
         $item = new Item(
             $name,
-            new Amount($amount, $currency),
+            new Amount((float)$amount, $currency),
             (int) $qty
         );
         $item->setDescription($magentoItemObj->getDescription());
