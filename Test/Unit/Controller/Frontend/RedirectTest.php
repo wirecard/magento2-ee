@@ -129,8 +129,6 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $context->method('getResultFactory')->willReturn($this->resultFactory);
         $context->method('getUrl')->willReturn($this->urlBuilder);
 
-        $this->resultFactory->expects($this->at(0))->method('create')->willReturn($this->redirectResult);
-
         $this->messageManager = $this->getMock(ManagerInterface::class);
         $context->method('getMessageManager')->willReturn($this->messageManager);
 
@@ -160,10 +158,9 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
         $this->setIsPost(false);
 
         $this->urlBuilder->method('getRedirectUrl')->willReturn('checkout/cart');
-        $this->resultFactory->expects($this->at(1))->method('create')->willReturn($this->resultJson);
-
-        $this->resultJson->expects($this->once())->method('setData')->with(['redirect-url' => 'checkout/cart']);
+        $this->resultFactory->expects($this->once())->method('create')->willReturn($this->resultJson);
         $this->session->expects($this->once())->method('restoreQuote');
+        $this->resultJson->expects($this->once())->method('setData')->with(['redirect-url' => 'checkout/cart']);
         $this->controller->execute();
     }
 
@@ -208,6 +205,8 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 
         $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
         $this->transactionService->method('handleResponse')->willReturn($successResponse);
+
+        $this->resultFactory->expects($this->once())->method('create')->willReturn($this->redirectResult);
         $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
 
         $this->controller->execute();
@@ -224,6 +223,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 
         $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
         $this->transactionService->method('handleResponse')->willReturn($failureResponse);
+        $this->resultFactory->expects($this->once())->method('create')->willReturn($this->redirectResult);
 
         $this->session->expects($this->once())->method('restoreQuote');
         $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('order_error'));
