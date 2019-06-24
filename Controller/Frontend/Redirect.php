@@ -110,7 +110,11 @@ class Redirect extends Action implements CsrfAwareActionInterface
             $this->checkoutSession->restoreQuote();
             $this->messageManager->addNoticeMessage(__('order_error'));
             $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl(self::CHECKOUT_URL);
-            return $data;
+            /** @var Json $result */
+            $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+            $result->setData($data);
+
+            return $result;
         }
 
         $this->transactionService = $this->transactionServiceFactory->create($methodName);
@@ -138,8 +142,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
          * @var $resultRedirect RedirectResult
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        // Set redirect for error/failure case
-        $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
 
         $response = $this->transactionService->handleResponse($responseParams);
 
@@ -148,6 +150,8 @@ class Redirect extends Action implements CsrfAwareActionInterface
         } else {
             $this->checkoutSession->restoreQuote();
             $this->messageManager->addNoticeMessage(__('order_error'));
+            // Set redirect for error/failure case
+            $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
         }
 
         return $resultRedirect;
