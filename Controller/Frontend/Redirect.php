@@ -98,7 +98,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
         parent::__construct($context);
     }
 
-
     public function execute()
     {
         $methodName = $this->getRequest()->getParam('method');
