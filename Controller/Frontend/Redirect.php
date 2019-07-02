@@ -100,32 +100,39 @@ class Redirect extends Action implements CsrfAwareActionInterface
 
     public function execute()
     {
-        $methodName = $this->getRequest()->getParam('method');
-        if ($methodName == null && $this->getRequest()->isPost()) {
-            $methodName = $this->getRequest()->getPost()->get('method');
-        }
+        $methodName = $this->getMethodName();
 
         if ($methodName === null || !$this->getRequest()->isPost() && !$this->getRequest()->isGet()) {
-            $this->checkoutSession->restoreQuote();
-            $this->messageManager->addNoticeMessage(__('order_error'));
-            $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl(self::CHECKOUT_URL);
             /** @var Json $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-            $result->setData($data);
+            $this->handleFailedResponse();
 
-            return $result;
+            return $this->getRedirectData($result, self::CHECKOUT_URL);
         }
 
         $this->transactionService = $this->transactionServiceFactory->create($methodName);
 
         $params = $this->getRequestParam();
         if (isset($params['data'])) {
-            $result = $this->handleNonThreeDResponse($params['data']);
-        } else {
-            $result = $this->handleResponse($params);
+            return $this->handleNonThreeDResponse($params['data']);
         }
 
-        return $result;
+        return $this->handleResponse($params);
+    }
+
+    /**
+     * Extracts payment method name from request parameters or from post param
+     *
+     * @return mixed
+     * @since 1.5.2
+     */
+    private function getMethodName()
+    {
+        $methodName = $this->getRequest()->getParam('method');
+        if ($methodName == null && $this->getRequest()->isPost()) {
+            $methodName = $this->getRequest()->getPost()->get('method');
+        }
+        return $methodName;
     }
 
     /**
@@ -156,17 +163,14 @@ class Redirect extends Action implements CsrfAwareActionInterface
          * @var $resultRedirect RedirectResult
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-
         $response = $this->transactionService->handleResponse($responseParams);
 
         if ($response instanceof SuccessResponse) {
             $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
-        } else {
-            $this->checkoutSession->restoreQuote();
-            $this->messageManager->addNoticeMessage(__('order_error'));
-            // Set redirect for error/failure case
-            $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
+            return $resultRedirect;
         }
+        $this->handleFailedResponse();
+        $this->setRedirectPath($resultRedirect, self::CHECKOUT_URL);
 
         return $resultRedirect;
     }
@@ -181,26 +185,27 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private function handleNonThreeDResponse($responseParams)
     {
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-
-        $data = [
-            self::REDIRECT_URL => null
-        ];
-
         $response = $this->transactionService->processJsResponse($responseParams, $resultRedirect);
-
-        if ($response instanceof SuccessResponse) {
-            $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl('onepage/success');
-        } else {
-            $this->checkoutSession->restoreQuote();
-            $this->messageManager->addNoticeMessage(__('order_error'));
-            $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl(self::CHECKOUT_URL);
-        }
-
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $result->setData($data);
 
-        return $result;
+        if ($response instanceof SuccessResponse) {
+            return $this->getRedirectData($result, 'onepage/success');
+        }
+        $this->handleFailedResponse();
+
+        return $this->getRedirectData($result, self::CHECKOUT_URL);
+    }
+
+    /**
+     * Restores order quote and add error message
+     *
+     * @since 1.5.2
+     */
+    private function handleFailedResponse()
+    {
+        $this->checkoutSession->restoreQuote();
+        $this->messageManager->addNoticeMessage(__('order_error'));
     }
 
     /**
@@ -211,5 +216,22 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private function setRedirectPath(RedirectResult $resultRedirect, $path)
     {
         return $resultRedirect->setPath($path, ['_secure' => true]);
+    }
+
+    /**
+     * Create redirect data for json ResultFactory with given path
+     *
+     * @param Json $resultJson
+     * @param $path
+     * @return Json
+     * @since 1.5.2
+     */
+    private function getRedirectData(Json $resultJson, $path) {
+        $data = [
+            self::REDIRECT_URL => null
+        ];
+        $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl($path);
+        $resultJson->setData($data);
+        return $resultJson;
     }
 }
