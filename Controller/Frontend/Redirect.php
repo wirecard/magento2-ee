@@ -226,7 +226,8 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * @return Json
      * @since 1.5.2
      */
-    private function getRedirectData(Json $resultJson, $path) {
+    private function getRedirectData(Json $resultJson, $path)
+    {
         $data = [
             self::REDIRECT_URL => null
         ];
