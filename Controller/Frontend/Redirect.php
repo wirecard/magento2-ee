@@ -105,7 +105,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
             $methodName = $this->getRequest()->getPost()->get('method');
         }
 
-        if ($methodName === null || !$this->getRequest()->isPost()) {
+        if ($methodName === null || !$this->getRequest()->isPost() && !$this->getRequest()->isGet()) {
             $this->checkoutSession->restoreQuote();
             $this->messageManager->addNoticeMessage(__('order_error'));
             $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl(self::CHECKOUT_URL);
@@ -118,24 +118,39 @@ class Redirect extends Action implements CsrfAwareActionInterface
 
         $this->transactionService = $this->transactionServiceFactory->create($methodName);
 
-        $params = $this->getRequest()->getPost()->toArray();
+        $params = $this->getRequestParam();
         if (isset($params['data'])) {
             $result = $this->handleNonThreeDResponse($params['data']);
         } else {
-            $result = $this->handleThreeDResponse($params);
+            $result = $this->handleResponse($params);
         }
 
         return $result;
     }
 
     /**
-     * Handles credit card 3D responses and returns redirect page
+     * Request parameters get distinguished between post and get
+     *
+     * @return array|mixed
+     * @since 1.5.2
+     */
+    private function getRequestParam()
+    {
+        if ($this->getRequest()->isPost()) {
+            return $this->getRequest()->getPost()->toArray();
+        }
+        return $this->getRequest()->getParams();
+    }
+
+    /**
+     * Handles credit card 3D responses and other payment methods
+     * Returns redirect page
      *
      * @param $responseParams
      * @return RedirectResult
      * @since 1.5.2
      */
-    private function handleThreeDResponse($responseParams)
+    private function handleResponse($responseParams)
     {
         /**
          * @var $resultRedirect RedirectResult

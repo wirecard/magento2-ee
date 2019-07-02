@@ -129,7 +129,7 @@ class Callback extends Action
                 $this->session->unsFormMethod();
                 $this->session->unsFormFields();
             } else {
-                $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
+                $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/interaction';
             }
         }
         /** @var Json $result */
