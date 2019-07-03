@@ -56,6 +56,7 @@ class ConfigProvider implements ConfigProviderInterface
     const UPI_CODE = 'wirecard_elasticengine_unionpayinternational';
     const CREDITCARD_VAULT_CODE = 'wirecard_elasticengine_cc_vault';
     const PAYBYBANKAPP_CODE = 'wirecard_elasticengine_paybybankapp';
+    const WECHAT_QRPAY_CODE = 'wirecard_elasticengine_wechat_qrpay';
 
     /**
      * @var Repository
@@ -125,7 +126,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForPaymentMethod(self::POIPIA_CODE) +
                 $this->getConfigForPaymentMethod(self::MASTERPASS_CODE) +
                 $this->getConfigForUpi(self::UPI_CODE) +
-                $this->getConfigForPaymentMethod(self::PAYBYBANKAPP_CODE)
+                $this->getConfigForPaymentMethod(self::PAYBYBANKAPP_CODE) +
+                $this->getConfigForPaymentMethod(self::WECHAT_QRPAY_CODE)
         ];
     }
 

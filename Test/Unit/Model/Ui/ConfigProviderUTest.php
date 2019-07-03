@@ -172,7 +172,11 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
-                ]
+                ],
+                'wirecard_elasticengine_wechat_qrpay' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
+                ],
             ]
         ], $prov->getConfig());
     }
@@ -298,6 +302,10 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'logo_url' => self::LOGO_URL_PATH,
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
+                    'logo_url' => self::LOGO_URL_PATH,
+                    'ideal_bic' => $idealBic
+                ],
+                'wirecard_elasticengine_wechat_qrpay' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
                 ]
