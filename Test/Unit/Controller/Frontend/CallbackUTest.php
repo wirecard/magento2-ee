@@ -150,7 +150,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('unsRedirectUrl');
 
         /** @var $sessionMock Session */
-        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory);
         $redirect->execute();
     }
 
@@ -164,7 +164,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('unsFormFields');
 
         /** @var $sessionMock Session */
-        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory);
         $redirect->execute();
     }
 
@@ -175,7 +175,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_FORM_URL)->willReturn(true);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -195,7 +195,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(true);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -215,7 +215,7 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(false);
 
         /** @var Session $sessionMock */
-        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory, $this->urlBuilder);
+        $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory);
         $result = $redirect->execute();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $responseMock */

@@ -57,8 +57,8 @@ define(
                 return frm.validation() && frm.validation("isValid");
             },
             afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/interaction"), function (data) {
-                    window.location.replace(data["redirect-url"]);
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (result) {
+                    window.location.replace(result.data["redirect-url"]);
                 });
             }
         });
