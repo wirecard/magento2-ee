@@ -47,8 +47,8 @@ define(
                 redirectAfterPlaceOrder: false
             },
             onTermsCheckboxClick: function () {
-                $(".actions-toolbar .primary .action").attr("disabled", !this.termsChecked);
-                $(".actions-toolbar .primary .action").toggleClass("disabled", !this.termsChecked);
+                $("#wirecard_elasticengine_ratepayinvoice_submit").attr("disabled", !this.termsChecked);
+                $("#wirecard_elasticengine_ratepayinvoice_submit").toggleClass("disabled", !this.termsChecked);
                 return true;
             },
             initObservable: function () {
@@ -90,20 +90,20 @@ define(
                 return $(form).validation() && $(form).validation("isValid");
             },
             afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/interaction"), function (data) {
-                    if (data["form-url"]) {
-                        var form = $("<form />", {action: data["form-url"], method: data["form-method"]});
+                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (result) {
+                    if (result.data["form-url"]) {
+                        var form = $("<form />", {action: result.data["form-url"], method: result.data["form-method"]});
 
-                        for (var i = 0; i < data["form-fields"].length; i++) {
+                        for (var i = 0; i < result.data["form-fields"].length; i++) {
                             form.append($("<input />", {
                                 type: "hidden",
-                                name: data["form-fields"][i]["key"],
-                                value: data["form-fields"][i]["value"]
+                                name: result.data["form-fields"][i]["key"],
+                                value: result.data["form-fields"][i]["value"]
                             }));
                         }
                         form.appendTo("body").submit();
                     } else {
-                        window.location.replace(data["redirect-url"]);
+                        window.location.replace(result.data["redirect-url"]);
                     }
                 });
             }

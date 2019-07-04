@@ -126,7 +126,6 @@ class Creditcard extends Action
         Calculation $taxCalculation,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
-        UrlInterface $urlBuilder,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
         LoggerInterface $logger
@@ -138,7 +137,7 @@ class Creditcard extends Action
         $this->taxCalculation = $taxCalculation;
         $this->resolver = $resolver;
         $this->storeManager = $storeManager;
-        $this->urlBuilder = $urlBuilder;
+        $this->urlBuilder = $context->getUrl();
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
         $this->logger = $logger;
@@ -285,7 +284,7 @@ class Creditcard extends Action
         $orderDto->transaction->setConfig($orderDto->config);
 
         $currency         = $orderDto->quote->getBaseCurrencyCode();
-        $orderDto->amount = new Amount($orderDto->quote->getGrandTotal(), $currency);
+        $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
 
         $orderDto->customFields = new CustomFieldCollection();
@@ -378,8 +377,8 @@ class Creditcard extends Action
         $items    = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount    = new Amount($orderItem->getPriceInclTax(), $currency);
-            $taxAmount = new Amount($orderItem->getTaxAmount(), $currency);
+            $amount    = new Amount((float)$orderItem->getPriceInclTax(), $currency);
+            $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
             $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
             $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));

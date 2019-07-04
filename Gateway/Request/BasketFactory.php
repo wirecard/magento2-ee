@@ -112,7 +112,7 @@ class BasketFactory
         if ($orderObject->getShippingInclTax() > 0) {
             $shippingItem = new Item(
                 'Shipping',
-                new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                new Amount((float)$orderObject->getShippingInclTax(), $order->getCurrencyCode()),
                 1
             );
 
@@ -177,7 +177,7 @@ class BasketFactory
         if ($shipping > 0) {
             $shippingItem = new Item(
                 'Shipping',
-                new Amount($shipping, $order->getCurrencyCode()),
+                new Amount((float)$shipping, $order->getCurrencyCode()),
                 1
             );
 
@@ -238,7 +238,7 @@ class BasketFactory
         if ($shipping > 0) {
             $shippingItem = new Item(
                 'Shipping',
-                new Amount($shipping, $order->getCurrencyCode()),
+                new Amount((float)$shipping, $order->getCurrencyCode()),
                 1
             );
 
@@ -291,7 +291,7 @@ class BasketFactory
         if ($orderObject->getShippingInclTax() > 0) {
             $shippingItem = new Item(
                 'Shipping',
-                new Amount($orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                new Amount((float)$orderObject->getShippingInclTax(), $order->getCurrencyCode()),
                 1
             );
 

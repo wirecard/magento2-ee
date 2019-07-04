@@ -228,9 +228,9 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $configFromFactory = $this->configFactory->create('paypal');
 
         $this->assertEquals($configFromFactory->getShopHeader(), ['headers' => [
-            'shop-system-name' => 'Magento Community Edition',
+            'shop-system-name' => 'Magento+Community Edition',
             'shop-system-version' => '2.1.0',
-            'plugin-name' => 'Wirecard_ElasticEngine',
+            'plugin-name' => 'magento2-ee+Wirecard',
             'plugin-version' => '2.0.0'
         ]]);
     }

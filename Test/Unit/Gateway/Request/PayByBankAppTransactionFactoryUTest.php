@@ -116,7 +116,7 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
-        $this->order->method('getGrandTotalAmount')->willReturn('1.0');
+        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
         $this->order->method('getCurrencyCode')->willReturn('GBP');
 
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
@@ -128,7 +128,7 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->paymentDo->method('getPayment')->willReturn($this->payment);
         $this->paymentDo->method('getOrder')->willReturn($this->order);
 
-        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => '1.0'];
+        $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => 1.0];
 
         $this->request = $this->getMockBuilder(Http::class)
             ->disableOriginalConstructor()->getMock();

@@ -89,11 +89,9 @@ define(
                             'data': response,
                             'method': 'creditcard'
                         }
-                    }).done(function (redirect) {
-                        //exchange this with proper magento function at later point
-                        document.open();
-                        document.write(redirect);
-                        document.close();
+                    }).done(function (data) {
+                        // Redirect non-3D credit card payment response
+                        window.location.replace(data["redirect-url"]);
                     });
                 }
             },
