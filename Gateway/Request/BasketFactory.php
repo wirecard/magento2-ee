@@ -44,6 +44,7 @@ use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 
 /**
  * Class BasketFactory
@@ -52,6 +53,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class BasketFactory
 {
+    use CalculationTrait;
     /**
      * @var ItemFactory
      */
@@ -87,6 +89,8 @@ class BasketFactory
      * @throws \InvalidArgumentException
      * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
+     *
+     * @since 1.5.3 Use divide method to prevent division by zero
      */
     public function create($order, $transaction)
     {
@@ -117,7 +121,7 @@ class BasketFactory
             );
 
             $taxRate = number_format(
-                ($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                $this->divide($orderObject->getShippingTaxAmount(), $orderObject->getShippingInclTax()) * 100,
                     2
             );
             $shippingItem->setDescription($orderObject->getShippingDescription());
@@ -257,6 +261,8 @@ class BasketFactory
      * @throws \InvalidArgumentException
      * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
+     *
+     * @since 1.5.3 Use divide method to prevent division by zero
      */
     public function void($order, $transaction)
     {
@@ -296,7 +302,7 @@ class BasketFactory
             );
 
             $taxRate = number_format(
-                ($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
+                $this->divide($orderObject->getShippingTaxAmount(), $orderObject->getShippingInclTax()) * 100,
                 2
             );
             $shippingItem->setDescription($orderObject->getShippingDescription());

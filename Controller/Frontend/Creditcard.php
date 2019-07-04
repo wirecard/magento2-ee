@@ -56,9 +56,12 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 
 class Creditcard extends Action
 {
+    use CalculationTrait;
+
     /*' @var string FORM parameter name to send the transaction type in AJAX */
     const FRONTEND_DATAKEY_TXTYPE = 'txtype';
 
@@ -259,11 +262,13 @@ class Creditcard extends Action
      * @param double $taxAmount amount of tax
      * @param double $grossAmount total amount
      * @return string tax rate, rounded to 2 decimals
+     *
+     * @since 1.5.3 Use divide method to prevent division by zero
      */
     private function calculateTax($taxAmount, $grossAmount)
     {
         return number_format(
-            ($taxAmount / $grossAmount) * 100,
+            $this->divide($taxAmount, $grossAmount) * 100,
             2
         );
     }
