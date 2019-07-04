@@ -33,10 +33,10 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\Order;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
-use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 
 /**
  * Class ItemFactory
@@ -44,6 +44,7 @@ use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
  */
 class ItemFactory
 {
+
     use CalculationTrait;
 
     /**

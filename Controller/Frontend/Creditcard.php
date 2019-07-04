@@ -46,6 +46,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -56,7 +57,6 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
-use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 
 class Creditcard extends Action
 {
