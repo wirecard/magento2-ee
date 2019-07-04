@@ -69,14 +69,15 @@ class ItemFactory
         $amount = $qtyAmount + $qtyTax - $qtyDiscount;
         $name = $magentoItemObj->getName();
 
-        $item = new Item(
+        $item = $this->createSdkItem(
             $name,
-            new Amount((float)$amount, $currency),
-            (int) $qty
+            $amount,
+            $currency,
+            $qty,
+            $qtyTax,
+            $magentoItemObj
         );
-        $item->setDescription($magentoItemObj->getDescription());
-        $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxRate($this->calculateTax($qtyTax, $amount));
+
         return $item;
     }
 
@@ -110,14 +111,15 @@ class ItemFactory
             $qtyTax = $qtyTax * $qty;
             $qty = 1;
         }
-        $item = new Item(
+
+        $item = $this->createSdkItem(
             $name,
-            new Amount((float)$amount, $currency),
-            (int) $qty
+            $amount,
+            $currency,
+            $qty,
+            $qtyTax,
+            $magentoItemObj
         );
-        $item->setDescription($magentoItemObj->getDescription());
-        $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxRate($this->calculateTax($qtyTax, $amount));
 
         return $item;
     }
@@ -151,14 +153,44 @@ class ItemFactory
             $qtyTax = $qtyTax * $qty;
             $qty = 1;
         }
+
+        $item = $this->createSdkItem(
+            $name,
+            $amount,
+            $currency,
+            $qty,
+            $qtyTax,
+            $magentoItemObj
+        );
+
+        return $item;
+    }
+
+    /**
+     * @param string $name
+     * @param float $amount
+     * @param string $currency
+     * @param int $qty
+     * @param float $qtyTax
+     * @param Order\Item|OrderItemInterface $magentoItem
+     * @return Item
+     *
+     * @since 1.5.3
+     */
+    protected function createSdkItem($name, $amount, $currency, $qty, $qtyTax, $magentoItem)
+    {
         $item = new Item(
             $name,
             new Amount((float)$amount, $currency),
             (int) $qty
         );
-        $item->setDescription($magentoItemObj->getDescription());
-        $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxRate($this->calculateTax($qtyTax, $amount));
+
+        $item->setDescription($magentoItem->getDescription());
+        $item->setArticleNumber($magentoItem->getSku());
+        $item->setTaxRate($this->calculateTax(
+            $qtyTax,
+            $amount
+        ));
 
         return $item;
     }
