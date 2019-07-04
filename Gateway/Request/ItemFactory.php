@@ -44,7 +44,6 @@ use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
  */
 class ItemFactory
 {
-
     use CalculationTrait;
 
     /**
