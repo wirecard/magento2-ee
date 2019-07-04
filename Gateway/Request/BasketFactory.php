@@ -120,14 +120,12 @@ class BasketFactory
                 new Amount((float)$orderObject->getShippingInclTax(), $order->getCurrencyCode()),
                 1
             );
-
-            $taxRate = number_format(
-                $this->divide($orderObject->getShippingTaxAmount(), $orderObject->getShippingInclTax()) * 100,
-                    2
-            );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate($taxRate);
+            $shippingItem->setTaxRate($this->calculateTax(
+                $orderObject->getShippingTaxAmount(),
+                $orderObject->getShippingInclTax())
+            );
             $basket->add($shippingItem);
         }
         return $basket;
@@ -302,13 +300,12 @@ class BasketFactory
                 1
             );
 
-            $taxRate = number_format(
-                $this->divide($orderObject->getShippingTaxAmount(), $orderObject->getShippingInclTax()) * 100,
-                2
-            );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate($taxRate);
+            $shippingItem->setTaxRate($this->calculateTax(
+                $orderObject->getShippingTaxAmount(),
+                $orderObject->getShippingInclTax())
+            );
             $basket->add($shippingItem);
         }
         return $basket;

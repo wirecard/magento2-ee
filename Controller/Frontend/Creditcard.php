@@ -257,23 +257,6 @@ class Creditcard extends Action
     }
 
     /**
-     * Return the tax rate
-     *
-     * @param double $taxAmount amount of tax
-     * @param double $grossAmount total amount
-     * @return string tax rate, rounded to 2 decimals
-     *
-     * @since 1.5.3 Use divide method to prevent division by zero
-     */
-    private function calculateTax($taxAmount, $grossAmount)
-    {
-        return number_format(
-            $this->divide($taxAmount, $grossAmount) * 100,
-            2
-        );
-    }
-
-    /**
      * Prepare CreditCardTransaction with information stored in $orderDto
      *
      * NOTE: the resulting transaction also stored in the DTO so there is
@@ -386,7 +369,10 @@ class Creditcard extends Action
             $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
             $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
-            $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));
+            $item->setTaxRate($this->calculateTax(
+                $orderItem->getTaxAmount(),
+                $orderItem->getPriceInclTax())
+            );
             $orderDto->basket->add($item);
         }
     }

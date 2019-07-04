@@ -51,4 +51,21 @@ trait CalculationTrait
 
         return (float)($dividend / $divisor);
     }
+
+    /**
+     * Return the tax rate
+     *
+     * @param double $taxAmount amount of tax
+     * @param double $grossAmount total amount
+     * @return string tax rate, rounded to 2 decimals
+     *
+     * @since 1.5.3
+     */
+    public function calculateTax($taxAmount, $grossAmount)
+    {
+        return number_format(
+            $this->divide($taxAmount, $grossAmount) * 100,
+            2
+        );
+    }
 }

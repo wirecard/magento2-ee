@@ -69,7 +69,6 @@ class ItemFactory
         $amount = $qtyAmount + $qtyTax - $qtyDiscount;
         $name = $magentoItemObj->getName();
 
-        $taxRate = $this->divide($qtyTax, $amount);
         $item = new Item(
             $name,
             new Amount((float)$amount, $currency),
@@ -77,7 +76,7 @@ class ItemFactory
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxRate(number_format($taxRate * 100, 2));
+        $item->setTaxRate($this->calculateTax($qtyTax, $amount));
         return $item;
     }
 
@@ -111,7 +110,6 @@ class ItemFactory
             $qtyTax = $qtyTax * $qty;
             $qty = 1;
         }
-        $taxRate = $this->divide($qtyTax, $amount);
         $item = new Item(
             $name,
             new Amount((float)$amount, $currency),
@@ -119,7 +117,7 @@ class ItemFactory
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxRate(number_format($taxRate * 100, 2));
+        $item->setTaxRate($this->calculateTax($qtyTax, $amount));
 
         return $item;
     }
@@ -153,7 +151,6 @@ class ItemFactory
             $qtyTax = $qtyTax * $qty;
             $qty = 1;
         }
-        $taxRate = $this->divide($qtyTax, $amount);
         $item = new Item(
             $name,
             new Amount((float)$amount, $currency),
@@ -161,7 +158,7 @@ class ItemFactory
         );
         $item->setDescription($magentoItemObj->getDescription());
         $item->setArticleNumber($magentoItemObj->getSku());
-        $item->setTaxRate(number_format($taxRate * 100, 2));
+        $item->setTaxRate($this->calculateTax($qtyTax, $amount));
 
         return $item;
     }
