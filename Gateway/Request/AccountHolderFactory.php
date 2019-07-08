@@ -56,7 +56,7 @@ class AccountHolderFactory
 
     /**
      * @param AddressAdapterInterface $magentoAddressObj
-     * @param string $customerBirthdate
+     * @param string|null $customerBirthdate
      * @param string|null $firstName
      * @param string|null $lastName
      * @return AccountHolder
@@ -72,12 +72,12 @@ class AccountHolderFactory
         $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         $accountHolder->setEmail($magentoAddressObj->getEmail());
 
-        // This is a special case for credit card / UPI.
+        // This is a special case for credit card
         // If we get a last name (and maybe first name) from the seamless form, that is our actual account holder.
-        if ($lastName != null) {
+        if ($lastName !== null) {
             $accountHolder->setLastName($lastName);
 
-            if ($firstName != null) {
+            if ($firstName !== null) {
                 $accountHolder->setFirstName($firstName);
             }
         } else {
@@ -87,7 +87,7 @@ class AccountHolderFactory
 
         $accountHolder->setPhone($magentoAddressObj->getTelephone());
 
-        if ($customerBirthdate != null) {
+        if ($customerBirthdate !== null) {
             $accountHolder->setDateOfBirth(new \DateTime($customerBirthdate));
         }
 

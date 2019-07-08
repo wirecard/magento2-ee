@@ -66,9 +66,6 @@ class Creditcard extends Action
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
 
-    /** @var string key UnionPayInternational as sent by frontend */
-    const FRONTEND_CODE_UPI = 'wirecard_elasticengine_unionpayinternational';
-
     /** @var JsonFactory Magento2 JsonFactory injected by DI */
     protected $resultJsonFactory;
 
@@ -99,9 +96,6 @@ class Creditcard extends Action
     /** @var ConfigInterface Magento2 payment method config injected by DI */
     protected $methodConfig;
 
-    /** @var ConfigInterface Magento2 payment method config injected by DI */
-    protected $upiConfig;
-
     /** @var LoggerInterface */
     protected $logger;
 
@@ -119,7 +113,6 @@ class Creditcard extends Action
      * @param UrlInterface $urlBuilder
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
-     * @param ConfigInterface $upiConfig
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -134,7 +127,6 @@ class Creditcard extends Action
         UrlInterface $urlBuilder,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
-        ConfigInterface $upiConfig,
         LoggerInterface $logger
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
@@ -147,7 +139,6 @@ class Creditcard extends Action
         $this->urlBuilder = $urlBuilder;
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
-        $this->upiConfig = $upiConfig;
         $this->logger = $logger;
         parent::__construct($context);
     }
@@ -185,12 +176,8 @@ class Creditcard extends Action
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
+        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
 
-        if ($txType === self::FRONTEND_CODE_UPI) {
-            $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_UPI);
-        } else {
-            $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-        }
         $language = $this->getSupportedWppLangCode();
 
         $paymentAction = $method->getConfigData('payment_action');
@@ -314,9 +301,6 @@ class Creditcard extends Action
         $orderDto->transaction->setNotificationUrl($notificationUrl);
 
         $config = $this->methodConfig;
-        if ($txType == self::FRONTEND_CODE_UPI) {
-            $config = $this->upiConfig;
-        }
 
         if ($config->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
@@ -421,13 +405,8 @@ class Creditcard extends Action
      */
     private function findTransactionClassByFrontendType($txType)
     {
-        if (!empty($txType)) {
-            switch ($txType) {
-                case self::FRONTEND_CODE_CREDITCARD:
-                    return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
-                case self::FRONTEND_CODE_UPI:
-                    return '\Wirecard\PaymentSdk\Transaction\UpiTransaction';
-            }
+        if ($txType == self::FRONTEND_CODE_CREDITCARD) {
+            return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
         }
 
         return null;

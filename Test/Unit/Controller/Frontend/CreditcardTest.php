@@ -208,13 +208,11 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $methodConfig = $this->getMockForAbstractClass(ConfigInterface::class);
 
-        $upiConfig = $this->getMockForAbstractClass(ConfigInterface::class);
-
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
         $this->controller = new Creditcard($context, $resultJsonFactory, $this->transactionServiceFactory,
             $quoteRepository, $this->checkoutSession, $taxCalculation, $resolver, $storeManager, $urlBuilder,
-            $this->paymentHelper, $methodConfig, $upiConfig, $logger
+            $this->paymentHelper, $methodConfig, $logger
         );
     }
 }

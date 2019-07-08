@@ -73,11 +73,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
 
-        $upiSeamlessRequestData = [
-            'key' => 'value'
-        ];
-        $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
-
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
             ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
@@ -174,10 +169,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
                 ],
-                'wirecard_elasticengine_unionpayinternational' => [
-                    'logo_url' => self::LOGO_URL_PATH,
-                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
-                ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
@@ -208,11 +199,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         ];
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
-
-        $upiSeamlessRequestData = [
-            'key' => 'value'
-        ];
-        $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
 
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
@@ -309,10 +295,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_masterpass' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
-                ],
-                'wirecard_elasticengine_unionpayinternational' => [
-                    'logo_url' => self::LOGO_URL_PATH,
-                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,

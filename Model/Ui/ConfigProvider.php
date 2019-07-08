@@ -53,7 +53,6 @@ class ConfigProvider implements ConfigProviderInterface
     const ALIPAYXBORDER_CODE = 'wirecard_elasticengine_alipayxborder';
     const POIPIA_CODE = 'wirecard_elasticengine_poipia';
     const MASTERPASS_CODE = 'wirecard_elasticengine_masterpass';
-    const UPI_CODE = 'wirecard_elasticengine_unionpayinternational';
     const CREDITCARD_VAULT_CODE = 'wirecard_elasticengine_cc_vault';
     const PAYBYBANKAPP_CODE = 'wirecard_elasticengine_paybybankapp';
     const PAYMENTPAGE_LOADER = '/loader/paymentPage.js';
@@ -131,7 +130,6 @@ class ConfigProvider implements ConfigProviderInterface
                 $this->getConfigForPaymentMethod(self::ALIPAYXBORDER_CODE) +
                 $this->getConfigForPaymentMethod(self::POIPIA_CODE) +
                 $this->getConfigForPaymentMethod(self::MASTERPASS_CODE) +
-                $this->getConfigForUpi(self::UPI_CODE) +
                 $this->getConfigForPaymentMethod(self::PAYBYBANKAPP_CODE)
         ];
     }
@@ -192,20 +190,6 @@ class ConfigProvider implements ConfigProviderInterface
                 'logo_url' => $this->getLogoUrl($paymentMethodName),
                 'vaultCode' => ConfigProvider::CREDITCARD_VAULT_CODE,
                 'wpp_url' => $this->getWppUrl(self::CREDITCARD_CODE),
-            ]
-        ];
-    }
-
-    /**
-     * @param $paymentMethodName
-     * @return array
-     */
-    private function getConfigForUpi($paymentMethodName)
-    {
-        return [
-            $paymentMethodName => [
-                'logo_url' => $this->getLogoUrl($paymentMethodName),
-                'wpp_url' => $this->getWppUrl(self::UPI_CODE),
             ]
         ];
     }
