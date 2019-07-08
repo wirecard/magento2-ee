@@ -37,8 +37,8 @@ trait CalculationTrait
      * Divide method to prevent division by zero
      * Returns 0 in that case
      *
-     * @param $dividend
-     * @param $divisor
+     * @param float|int $dividend
+     * @param float|int $divisor
      * @return float
      *
      * @since 1.5.3
