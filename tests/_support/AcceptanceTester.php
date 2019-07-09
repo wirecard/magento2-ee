@@ -53,8 +53,7 @@ use Page\Base;
 use Page\Checkout as CheckoutPage;
 use Page\OrderReceived as OrderReceivedPage;
 use Page\Payment as PaymentPage;
-use Page\Product3DS as Product3DSPage;
-use Page\ProductNon3DS as ProductNon3DSPage;
+use Page\Product as ProductPage;
 use Page\Verified as VerifiedPage;
 
 class AcceptanceTester extends \Codeception\Actor
@@ -81,11 +80,8 @@ class AcceptanceTester extends \Codeception\Actor
             case 'Checkout':
                 $page = new CheckoutPage($this);
                 break;
-            case 'Product3DS':
-                $page = new Product3DSPage($this);
-                break;
-            case 'ProductNon3DS':
-                $page = new ProductNon3DSPage($this);
+            case 'Product':
+                $page = new ProductPage($this);
                 break;
             case 'Verified':
                 $this->wait(45);
@@ -181,17 +177,12 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
-     * @Given I prepare checkout :type
+     * @Given I prepare checkout
      * @since 1.4.1
      */
-    public function iPrepareCheckout($type)
+    public function iPrepareCheckout()
     {
-        $page = 'Product3DS';
-        if (strpos('Non3DS', $type))
-        {
-            $page = 'ProductNon3DS';
-        }
-        $this->iAmOnPage($page);
+        $this->iAmOnPage('Product');
         $this->wait(20);
         $this->click($this->currentPage->getElement('Add to Cart'));
         $this->wait(10);
