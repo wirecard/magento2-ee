@@ -55,17 +55,18 @@ trait CalculationTrait
     /**
      * Return the tax rate
      *
-     * @param double $taxAmount amount of tax
-     * @param double $grossAmount total amount
+     * @param float $taxAmount amount of tax
+     * @param float $grossAmount total amount
+     * @param int    $decimals decimals used for number_format
      * @return string tax rate, rounded to 2 decimals
      *
      * @since 1.5.3
      */
-    public function calculateTax($taxAmount, $grossAmount)
+    public function calculateTax($taxAmount, $grossAmount, $decimals = 2)
     {
         return number_format(
             $this->divide($taxAmount, $grossAmount) * 100,
-            2
+            $decimals
         );
     }
 }
