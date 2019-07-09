@@ -86,6 +86,7 @@ class AcceptanceTester extends \Codeception\Actor
                 break;
             case 'ProductNon3DS':
                 $page = new ProductNon3DSPage($this);
+                break;
             case 'Verified':
                 $this->wait(45);
                 $page = new VerifiedPage($this);
