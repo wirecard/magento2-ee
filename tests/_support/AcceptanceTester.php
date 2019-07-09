@@ -187,7 +187,7 @@ class AcceptanceTester extends \Codeception\Actor
     public function iPrepareCheckout($type)
     {
         $page = 'Product3DS';
-        if (strpos('Non3DS', $type))
+        if (strpos($type, 'Non3DS') !== false )
         {
             $page = 'ProductNon3DS';
         }
