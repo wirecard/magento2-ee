@@ -1,15 +1,14 @@
-Feature: CreditCard3DSPurchaseHappyPath
+Feature: checkCreditCard3DSFunctionalityHappyPath
   As a guest  user
   I want to make a purchase with a Credit Card 3DS
   And to see that transaction was successful
 
   Background:
-    Given I prepare checkout "3DS"
+    Given I prepare checkout
     And I am on "Checkout" page
     Then I fill fields with "Customer data"
 
-  @API-TEST @API-WDCEE-TEST @NOVA
-  Scenario: purchase
+  Scenario: try purchaseCheck
     Given I am redirected to "Payment" page
     When I fill fields with "Valid Credit Card Data"
     And I am redirected to "Verified" page

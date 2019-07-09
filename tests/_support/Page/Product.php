@@ -35,7 +35,7 @@
 
 namespace Page;
 
-class Product3DS extends Base
+class Product extends Base
 {
 
     /**
