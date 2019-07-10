@@ -45,6 +45,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
@@ -59,6 +60,8 @@ use Wirecard\PaymentSdk\Entity\Redirect;
 
 class Creditcard extends Action
 {
+    use CalculationTrait;
+
     /*' @var string FORM parameter name to send the transaction type in AJAX */
     const FRONTEND_DATAKEY_TXTYPE = 'txtype';
 
@@ -254,21 +257,6 @@ class Creditcard extends Action
     }
 
     /**
-     * Return the tax rate
-     *
-     * @param double $taxAmount amount of tax
-     * @param double $grossAmount total amount
-     * @return string tax rate, rounded to 2 decimals
-     */
-    private function calculateTax($taxAmount, $grossAmount)
-    {
-        return number_format(
-            ($taxAmount / $grossAmount) * 100,
-            2
-        );
-    }
-
-    /**
      * Prepare CreditCardTransaction with information stored in $orderDto
      *
      * NOTE: the resulting transaction also stored in the DTO so there is
@@ -381,7 +369,10 @@ class Creditcard extends Action
             $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
             $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
-            $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));
+            $item->setTaxRate($this->calculateTax(
+                $orderItem->getTaxAmount(),
+                $orderItem->getPriceInclTax()
+            ));
             $orderDto->basket->add($item);
         }
     }

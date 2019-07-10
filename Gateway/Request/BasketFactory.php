@@ -39,6 +39,7 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\Item;
@@ -52,6 +53,8 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class BasketFactory
 {
+    use CalculationTrait;
+
     /**
      * @var ItemFactory
      */
@@ -87,6 +90,8 @@ class BasketFactory
      * @throws \InvalidArgumentException
      * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
+     *
+     * @since 1.5.3 Use divide method to prevent division by zero
      */
     public function create($order, $transaction)
     {
@@ -115,14 +120,12 @@ class BasketFactory
                 new Amount((float)$orderObject->getShippingInclTax(), $order->getCurrencyCode()),
                 1
             );
-
-            $taxRate = number_format(
-                ($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
-                    2
-            );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate($taxRate);
+            $shippingItem->setTaxRate($this->calculateTax(
+                $orderObject->getShippingTaxAmount(),
+                $orderObject->getShippingInclTax()
+            ));
             $basket->add($shippingItem);
         }
         return $basket;
@@ -257,6 +260,8 @@ class BasketFactory
      * @throws \InvalidArgumentException
      * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
+     *
+     * @since 1.5.3 Use divide method to prevent division by zero
      */
     public function void($order, $transaction)
     {
@@ -295,13 +300,12 @@ class BasketFactory
                 1
             );
 
-            $taxRate = number_format(
-                ($orderObject->getShippingTaxAmount() / $orderObject->getShippingInclTax()) * 100,
-                2
-            );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate($taxRate);
+            $shippingItem->setTaxRate($this->calculateTax(
+                $orderObject->getShippingTaxAmount(),
+                $orderObject->getShippingInclTax()
+            ));
             $basket->add($shippingItem);
         }
         return $basket;

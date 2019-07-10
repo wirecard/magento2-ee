@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -29,15 +28,45 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
--->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Wirecard_ElasticEngine" setup_version="1.5.3">
-        <sequence>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Payment"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Vault"/>
-        </sequence>
-    </module>
-</config>
+namespace Wirecard\ElasticEngine\Gateway\Helper;
+
+trait CalculationTrait
+{
+    /**
+     * Divide method to prevent division by zero
+     * Returns 0 in that case
+     *
+     * @param float|int $dividend
+     * @param float|int $divisor
+     * @return float
+     *
+     * @since 1.5.3
+     */
+    public function divide($dividend, $divisor)
+    {
+        if (empty($divisor)) {
+            return (float)0;
+        }
+
+        return (float)($dividend / $divisor);
+    }
+
+    /**
+     * Return the tax rate
+     *
+     * @param float $taxAmount amount of tax
+     * @param float $grossAmount total amount
+     * @param int    $decimals decimals used for number_format
+     * @return string tax rate, rounded to 2 decimals
+     *
+     * @since 1.5.3
+     */
+    public function calculateTax($taxAmount, $grossAmount, $decimals = 2)
+    {
+        return number_format(
+            $this->divide($taxAmount, $grossAmount) * 100,
+            $decimals
+        );
+    }
+}
