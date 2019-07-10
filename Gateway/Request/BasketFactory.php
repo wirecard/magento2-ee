@@ -124,8 +124,8 @@ class BasketFactory
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
             $shippingItem->setTaxRate($this->calculateTax(
                 $orderObject->getShippingTaxAmount(),
-                $orderObject->getShippingInclTax())
-            );
+                $orderObject->getShippingInclTax()
+            ));
             $basket->add($shippingItem);
         }
         return $basket;
