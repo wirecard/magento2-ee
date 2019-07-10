@@ -371,8 +371,8 @@ class Creditcard extends Action
             $item->setTaxAmount($taxAmount);
             $item->setTaxRate($this->calculateTax(
                 $orderItem->getTaxAmount(),
-                $orderItem->getPriceInclTax())
-            );
+                $orderItem->getPriceInclTax()
+            ));
             $orderDto->basket->add($item);
         }
     }
