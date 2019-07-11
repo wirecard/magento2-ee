@@ -24,14 +24,14 @@ matrix:
   - php: 7.0
     if: env(PHRASEAPP_PULL) != '1' AND type != cron
 
-#  - stage: get-magento2-versions
-#    if: type = cron
-#    php: 7.1
-#    install: skip
-#    before_script: skip
-#    script: bash .bin/get-magento2-versions.sh
-#    after_script: skip
-#    after_failure: skip
+  - stage: get-magento2-versions
+    if: type = cron
+    php: 7.1
+    install: skip
+    before_script: skip
+    script: bash .bin/get-magento2-versions.sh
+    after_script: skip
+    after_failure: skip
 
   - &acceptance-test
     stage: acceptance-test
