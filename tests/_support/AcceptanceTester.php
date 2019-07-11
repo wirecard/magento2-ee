@@ -193,7 +193,8 @@ class AcceptanceTester extends \Codeception\Actor
             $page = 'ProductNon3DS';
         }
         $this->iAmOnPage($page);
-        $this->wait(20);
+        $this->wait(30);
+        $this->waitForElementClickable($this->currentPage->getElement('Add to Cart'));
         $this->click($this->currentPage->getElement('Add to Cart'));
         //this avoids problem of Magento giving 404 after CC non 3DS payment
         if (strpos($type, 'Non3DS') !== false) {
