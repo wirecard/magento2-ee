@@ -130,6 +130,7 @@ class AcceptanceTester extends \Codeception\Actor
         $this->currentPage = $this->selectPage($page);
         $this->amOnPage($this->currentPage->getURL());
     }
+
     /**
      * @When I click :object
      * @since 1.4.1
@@ -188,16 +189,14 @@ class AcceptanceTester extends \Codeception\Actor
     public function iPrepareCheckout($type)
     {
         $page = 'Product3DS';
-        if (strpos($type, 'Non3DS') !== false )
-        {
+        if (strpos($type, 'Non3DS') !== false) {
             $page = 'ProductNon3DS';
         }
         $this->iAmOnPage($page);
         $this->wait(20);
         $this->click($this->currentPage->getElement('Add to Cart'));
         //this avoids problem of Magento giving 404 after CC non 3DS payment
-        if (strpos($type, 'Non3DS') !== false )
-        {
+        if (strpos($type, 'Non3DS') !== false) {
             $this->wait(10);
             $this->click($this->currentPage->getElement('Basket'));
             $this->wait(10);
