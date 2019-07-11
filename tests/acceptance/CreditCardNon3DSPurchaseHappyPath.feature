@@ -5,7 +5,7 @@ Feature: CreditCardNon3DSPurchaseHappyPath
 
   Background:
     Given I prepare checkout "Non3DS"
-    And I am on "Checkout" page
+    And I am redirected to "Checkout" page
     Then I fill fields with "Customer data"
 
   @API-TEST @API-WDCEE-TEST

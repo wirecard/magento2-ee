@@ -91,6 +91,18 @@ class Base
     }
 
     /**
+     * Method getPageSpecific
+     *
+     * @return string
+     *
+     * @since 1.5.3
+     */
+    public function getPageSpecific()
+    {
+        return $this->URL;
+    }
+
+    /**
      * Method fillBillingDetails
      *
      * @since 1.4.1

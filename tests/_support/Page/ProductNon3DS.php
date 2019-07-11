@@ -40,16 +40,18 @@ class ProductNon3DS extends Base
 
     /**
      * @var string
-     * @since 1.5.1
+     * @since 1.5.3
      */
     // include url of current page
     public $URL = '/index.php/savvy-shoulder-tote.html';
 
     /**
      * @var array
-     * @since 1.5.1
+     * @since 1.5.3
      */
     public $elements = [
         'Add to Cart' => '//*[@id="product-addtocart-button"]',
+        'Basket' => '//*[@class="action showcart"]',
+        'Proceed to Checkout' => '//*[@class="action primary checkout"]',
     ];
 }

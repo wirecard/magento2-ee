@@ -79,6 +79,7 @@ class AcceptanceTester extends \Codeception\Actor
     {
         switch ($name) {
             case 'Checkout':
+                $this->wait(5);
                 $page = new CheckoutPage($this);
                 break;
             case 'Product3DS':
@@ -149,7 +150,7 @@ class AcceptanceTester extends \Codeception\Actor
         // Initialize required pageObject WITHOUT checking URL
         $this->currentPage = $this->selectPage($page);
         // Check only specific keyword that page URL should contain
-        $this->seeInCurrentUrl($this->currentPage->getURL());
+        $this->seeInCurrentUrl($this->currentPage->getPageSpecific());
     }
 
     /**
@@ -194,7 +195,14 @@ class AcceptanceTester extends \Codeception\Actor
         $this->iAmOnPage($page);
         $this->wait(20);
         $this->click($this->currentPage->getElement('Add to Cart'));
-        $this->wait(10);
+        //this avoids problem of Magento giving 404 after CC non 3DS payment
+        if (strpos($type, 'Non3DS') !== false )
+        {
+            $this->wait(10);
+            $this->click($this->currentPage->getElement('Basket'));
+            $this->wait(10);
+            $this->click($this->currentPage->getElement('Proceed to Checkout'));
+        }
     }
 
     /**
