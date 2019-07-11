@@ -35,23 +35,12 @@
 
 namespace Page;
 
-class ProductNon3DS extends Base
+class ProductNon3DS extends Product3DS
 {
 
     /**
-     * @var string
+     * @var string url of current page
      * @since 1.5.3
      */
-    // include url of current page
     public $URL = '/index.php/savvy-shoulder-tote.html';
-
-    /**
-     * @var array
-     * @since 1.5.3
-     */
-    public $elements = [
-        'Add to Cart' => '//*[@id="product-addtocart-button"]',
-        'Basket' => '//*[@class="action showcart"]',
-        'Proceed to Checkout' => '//*[@class="action primary checkout"]',
-    ];
 }

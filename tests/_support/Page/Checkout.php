@@ -43,6 +43,10 @@ class Checkout extends Base
      * @since 1.4.1
      */
     public $URL = 'index.php/checkout#shipping';
+    /**
+     * @var string
+     * @since 1.5.3
+     */
     public $page_specific = 'checkout';
     /**
      * @var array

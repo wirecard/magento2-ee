@@ -51,5 +51,7 @@ class Product3DS extends Base
      */
     public $elements = [
         'Add to Cart' => '//*[@id="product-addtocart-button"]',
+        'Basket' => '//*[@class="action showcart"]',
+        'Proceed to Checkout' => '//*[@class="action primary checkout"]',
     ];
 }
