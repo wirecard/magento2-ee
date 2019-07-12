@@ -122,6 +122,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Given I am on :page page
+     * @param string $page
      * @since 1.4.1
      */
     public function iAmOnPage($page)
@@ -133,6 +134,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I click :object
+     * @param string $object
      * @since 1.4.1
      */
     public function iClick($object)
@@ -144,6 +146,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I am redirected to :page page
+     * @param string $page
      * @since 1.4.1
      */
     public function iAmRedirectedToPage($page)
@@ -156,6 +159,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I fill fields with :data
+     * @param string $data
      * @since 1.4.1
      */
     public function iFillFieldsWith($data)
@@ -165,6 +169,8 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I enter :fieldValue in field :fieldID
+     * @param string $fieldValue
+     * @param string $fieldID
      * @since 1.4.1
      */
     public function iEnterInField($fieldValue, $fieldID)
@@ -175,6 +181,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Then I see :text
+     * @param string $text
      * @since 1.4.1
      */
     public function iSee($text)
@@ -184,6 +191,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Given I prepare checkout :type
+     * @param string $type
      * @since 1.4.1
      */
     public function iPrepareCheckout($type)
@@ -193,20 +201,22 @@ class AcceptanceTester extends \Codeception\Actor
             $page = 'ProductNon3DS';
         }
         $this->iAmOnPage($page);
-        $this->wait(30);
-        $this->waitForElementClickable($this->currentPage->getElement('Add to Cart'));
-        $this->click($this->currentPage->getElement('Add to Cart'));
-        //this avoids problem of Magento giving 404 after CC non 3DS payment
-        if (strpos($type, 'Non3DS') !== false) {
-            $this->wait(10);
-            $this->click($this->currentPage->getElement('Basket'));
-            $this->wait(10);
-            $this->click($this->currentPage->getElement('Proceed to Checkout'));
-        }
+        $this->currentPage->prepareCheckout();
+//        $this->wait(30);
+//        $this->waitForElementClickable($this->currentPage->getElement('Add to Cart'));
+//        $this->click($this->currentPage->getElement('Add to Cart'));
+//        //this avoids problem of Magento giving 404 after CC non 3DS payment
+//        if (strpos($type, 'Non3DS') !== false) {
+//            $this->wait(10);
+//            $this->click($this->currentPage->getElement('Basket'));
+//            $this->wait(10);
+//            $this->click($this->currentPage->getElement('Proceed to Checkout'));
+//        }
     }
 
     /**
      * @When I check :box
+     * @param string $box
      * @since 1.4.1
      */
     public function iCheck($box)

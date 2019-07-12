@@ -43,4 +43,20 @@ class ProductNon3DS extends Product3DS
      * @since 1.5.3
      */
     public $URL = '/index.php/savvy-shoulder-tote.html';
+    /**
+     * Method prepareCheckout
+     *
+     * @return string
+     *
+     * @since 1.5.3
+     */
+    public function prepareCheckout()
+    {
+        $I = $this->tester;
+        parent::prepareCheckout();
+        $I->wait(10);
+        $I->click(parent::getElement('Basket'));
+        $I->wait(10);
+        $I->click(parent::getElement('Proceed to Checkout'));
+    }
 }

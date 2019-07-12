@@ -54,4 +54,16 @@ class Product3DS extends Base
         'Basket' => '//*[@class="action showcart"]',
         'Proceed to Checkout' => '//*[@class="action primary checkout"]',
     ];
+    /**
+     * Method prepareCheckout
+     *
+     * @since 1.5.3
+     */
+    public function prepareCheckout()
+    {
+        $I = $this->tester;
+        $I->wait(30);
+        $I->waitForElementClickable($this->getElement('Add to Cart'));
+        $I->click($this->getElement('Add to Cart'));
+    }
 }
