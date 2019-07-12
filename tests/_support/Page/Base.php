@@ -35,7 +35,8 @@
 
 namespace Page;
 
-class Base {
+class Base
+{
 
     /**
      * @var string
@@ -59,7 +60,8 @@ class Base {
      * @var \AcceptanceTester
      * @since 1.4.1
      */
-    public function __construct(\AcceptanceTester $I) {
+    public function __construct(\AcceptanceTester $I)
+    {
         $this->tester = $I;
     }
 
@@ -71,7 +73,8 @@ class Base {
      *
      * @since 1.4.1
      */
-    public function getElement($name) {
+    public function getElement($name)
+    {
         return $this->elements[$name];
     }
 
@@ -82,7 +85,8 @@ class Base {
      *
      * @since 1.4.1
      */
-    public function getURL() {
+    public function getURL()
+    {
         return $this->URL;
     }
 
@@ -93,7 +97,8 @@ class Base {
      *
      * @since 1.5.3
      */
-    public function getPageSpecific() {
+    public function getPageSpecific()
+    {
         return $this->URL;
     }
 
@@ -102,7 +107,8 @@ class Base {
      *
      * @since 1.4.1
      */
-    public function fillBillingDetails() {
+    public function fillBillingDetails()
+    {
     }
 
     /**
@@ -110,7 +116,8 @@ class Base {
      *
      * @since 1.4.1
      */
-    public function fillCreditCardDetails() {
+    public function fillCreditCardDetails()
+    {
     }
 
     /**
@@ -118,7 +125,8 @@ class Base {
      * @param string $box
      * @since 1.4.1
      */
-    public function checkBox($box) {
+    public function checkBox($box)
+    {
         $this->tester->checkOption($this->getElement($box));
     }
 
@@ -127,6 +135,7 @@ class Base {
      *
      * @since 1.5.3
      */
-    public function prepareCheckout() {
+    public function prepareCheckout()
+    {
     }
 }
