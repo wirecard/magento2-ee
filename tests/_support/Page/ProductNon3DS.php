@@ -35,21 +35,28 @@
 
 namespace Page;
 
-class Product extends Base
+class ProductNon3DS extends Product3DS
 {
 
     /**
-     * @var string
-     * @since 1.5.1
+     * @var string url of current page
+     * @since 1.5.3
      */
-    // include url of current page
-    public $URL = '/index.php/fusion-backpack.html';
-
+    public $URL = '/index.php/savvy-shoulder-tote.html';
     /**
-     * @var array
-     * @since 1.5.1
+     * Method prepareCheckout
+     *
+     * @return string
+     *
+     * @since 1.5.3
      */
-    public $elements = [
-        'Add to Cart' => '//*[@id="product-addtocart-button"]',
-    ];
+    public function prepareCheckout()
+    {
+        $I = $this->tester;
+        parent::prepareCheckout();
+        $I->wait(10);
+        $I->click(parent::getElement('Basket'));
+        $I->wait(10);
+        $I->click(parent::getElement('Proceed to Checkout'));
+    }
 }

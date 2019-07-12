@@ -53,7 +53,8 @@ use Page\Base;
 use Page\Checkout as CheckoutPage;
 use Page\OrderReceived as OrderReceivedPage;
 use Page\Payment as PaymentPage;
-use Page\Product as ProductPage;
+use Page\Product3DS as Product3DSPage;
+use Page\ProductNon3DS as ProductNon3DSPage;
 use Page\Verified as VerifiedPage;
 
 class AcceptanceTester extends \Codeception\Actor
@@ -78,10 +79,14 @@ class AcceptanceTester extends \Codeception\Actor
     {
         switch ($name) {
             case 'Checkout':
+                $this->wait(5);
                 $page = new CheckoutPage($this);
                 break;
-            case 'Product':
-                $page = new ProductPage($this);
+            case 'Product3DS':
+                $page = new Product3DSPage($this);
+                break;
+            case 'ProductNon3DS':
+                $page = new ProductNon3DSPage($this);
                 break;
             case 'Verified':
                 $this->wait(45);
@@ -117,6 +122,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Given I am on :page page
+     * @param string $page
      * @since 1.4.1
      */
     public function iAmOnPage($page)
@@ -125,8 +131,10 @@ class AcceptanceTester extends \Codeception\Actor
         $this->currentPage = $this->selectPage($page);
         $this->amOnPage($this->currentPage->getURL());
     }
+
     /**
      * @When I click :object
+     * @param string $object
      * @since 1.4.1
      */
     public function iClick($object)
@@ -138,6 +146,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I am redirected to :page page
+     * @param string $page
      * @since 1.4.1
      */
     public function iAmRedirectedToPage($page)
@@ -145,11 +154,12 @@ class AcceptanceTester extends \Codeception\Actor
         // Initialize required pageObject WITHOUT checking URL
         $this->currentPage = $this->selectPage($page);
         // Check only specific keyword that page URL should contain
-        $this->seeInCurrentUrl($this->currentPage->getURL());
+        $this->seeInCurrentUrl($this->currentPage->getPageSpecific());
     }
 
     /**
      * @When I fill fields with :data
+     * @param string $data
      * @since 1.4.1
      */
     public function iFillFieldsWith($data)
@@ -159,6 +169,8 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I enter :fieldValue in field :fieldID
+     * @param string $fieldValue
+     * @param string $fieldID
      * @since 1.4.1
      */
     public function iEnterInField($fieldValue, $fieldID)
@@ -169,6 +181,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Then I see :text
+     * @param string $text
      * @since 1.4.1
      */
     public function iSee($text)
@@ -177,19 +190,23 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
-     * @Given I prepare checkout
+     * @Given I prepare checkout :type
+     * @param string $type
      * @since 1.4.1
      */
-    public function iPrepareCheckout()
+    public function iPrepareCheckout($type)
     {
-        $this->iAmOnPage('Product');
-        $this->wait(20);
-        $this->click($this->currentPage->getElement('Add to Cart'));
-        $this->wait(10);
+        $page = 'Product3DS';
+        if (strpos($type, 'Non3DS') !== false) {
+            $page = 'ProductNon3DS';
+        }
+        $this->iAmOnPage($page);
+        $this->currentPage->prepareCheckout();
     }
 
     /**
      * @When I check :box
+     * @param string $box
      * @since 1.4.1
      */
     public function iCheck($box)

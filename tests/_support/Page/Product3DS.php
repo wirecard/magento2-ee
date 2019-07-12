@@ -35,98 +35,35 @@
 
 namespace Page;
 
-class Base {
+class Product3DS extends Base
+{
 
     /**
      * @var string
-     * @since 1.4.1
+     * @since 1.5.1
      */
-    protected $URL = '';
+    // include url of current page
+    public $URL = '/index.php/fusion-backpack.html';
 
     /**
      * @var array
-     * @since 1.4.1
+     * @since 1.5.1
      */
-    protected $elements = [];
-
-    /**
-     * @var string
-     * @since 1.4.1
-     */
-    protected $tester;
-
-    /**
-     * @var \AcceptanceTester
-     * @since 1.4.1
-     */
-    public function __construct(\AcceptanceTester $I) {
-        $this->tester = $I;
-    }
-
-    /**
-     * Method getElement
-     *
-     * @param string $name
-     * @return string
-     *
-     * @since 1.4.1
-     */
-    public function getElement($name) {
-        return $this->elements[$name];
-    }
-
-    /**
-     * Method getURL
-     *
-     * @return string
-     *
-     * @since 1.4.1
-     */
-    public function getURL() {
-        return $this->URL;
-    }
-
-    /**
-     * Method getPageSpecific
-     *
-     * @return string
-     *
-     * @since 1.5.3
-     */
-    public function getPageSpecific() {
-        return $this->URL;
-    }
-
-    /**
-     * Method fillBillingDetails
-     *
-     * @since 1.4.1
-     */
-    public function fillBillingDetails() {
-    }
-
-    /**
-     * Method fillCreditCardDetails
-     *
-     * @since 1.4.1
-     */
-    public function fillCreditCardDetails() {
-    }
-
-    /**
-     * Method checkBox
-     * @param string $box
-     * @since 1.4.1
-     */
-    public function checkBox($box) {
-        $this->tester->checkOption($this->getElement($box));
-    }
-
+    public $elements = [
+        'Add to Cart' => '//*[@id="product-addtocart-button"]',
+        'Basket' => '//*[@class="action showcart"]',
+        'Proceed to Checkout' => '//*[@class="action primary checkout"]',
+    ];
     /**
      * Method prepareCheckout
      *
      * @since 1.5.3
      */
-    public function prepareCheckout() {
+    public function prepareCheckout()
+    {
+        $I = $this->tester;
+        $I->wait(30);
+        $I->waitForElementClickable($this->getElement('Add to Cart'));
+        $I->click($this->getElement('Add to Cart'));
     }
 }

@@ -43,7 +43,11 @@ class Checkout extends Base
      * @since 1.4.1
      */
     public $URL = 'index.php/checkout#shipping';
-
+    /**
+     * @var string
+     * @since 1.5.3
+     */
+    public $page_specific = 'checkout';
     /**
      * @var array
      * @since 1.4.1
@@ -93,5 +97,17 @@ class Checkout extends Base
         $I->waitForElementVisible($this->getElement('Next'));
         $I->wait(4);
         $I->click($this->getElement('Next'));
+    }
+
+    /**
+     * Method getPageSpecific
+     *
+     * @return string
+     *
+     * @since 1.5.3
+     */
+    public function getPageSpecific()
+    {
+        return $this->page_specific;
     }
 }
