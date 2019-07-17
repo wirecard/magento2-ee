@@ -1,4 +1,9 @@
 #!/bin/bash
+# Shop System SDK:
+# - Terms of Use can be found under:
+# https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+# - License can be found under:
+# https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
 curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/magento/magento2/releases | jq -r '.[] | .tag_name' | head -n3 > ${MAGENTO2_RELEASES_FILE}
 git config --global user.name "Travis CI"

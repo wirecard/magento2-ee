@@ -1,3 +1,11 @@
+##
+# Shop System Plugins:
+# - Terms of Use can be found under:
+# https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+# - License can be found under:
+# https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+##
+
 require 'git'
 require 'rainbow/refinement'
 require_relative 'env.rb'
