@@ -1,36 +1,10 @@
 <?php
 /**
- * Shop System Plugins - Terms of Use
- *
- * The plugins offered are provided free of charge by Wirecard AG and are explicitly not part
- * of the Wirecard AG range of products and services.
- *
- * They have been tested and approved for full functionality in the standard configuration
- * (status on delivery) of the corresponding shop system. They are under General Public
- * License version 3 (GPLv3) and can be used, developed and passed on to third parties under
- * the same terms.
- *
- * However, Wirecard AG does not provide any guarantee or accept any liability for any errors
- * occurring when used in an enhanced, customized shop system configuration.
- *
- * Operation in an enhanced, customized configuration is at your own risk and requires a
- * comprehensive test phase by the user of the plugin.
- *
- * Customers use the plugins at their own risk. Wirecard AG does not guarantee their full
- * functionality neither does Wirecard AG assume liability for any disadvantages related to
- * the use of the plugins. Additionally, Wirecard AG does not guarantee the full functionality
- * for customized shop systems or installed plugins of other vendors of plugins within the same
- * shop system.
- *
- * Customers are responsible for testing the plugin's functionality before starting productive
- * operation.
- *
- * By installing the plugin into the shop system the customer agrees to these terms of use.
- * Please do not use the plugin if you do not agree to these terms of use!
- *
- * @author Wirecard AG
- * @copyright Wirecard AG
- * @license GPLv3
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 
 /**
@@ -53,7 +27,8 @@ use Page\Base;
 use Page\Checkout as CheckoutPage;
 use Page\OrderReceived as OrderReceivedPage;
 use Page\Payment as PaymentPage;
-use Page\Shop as ShopPage;
+use Page\Product3DS as Product3DSPage;
+use Page\ProductNon3DS as ProductNon3DSPage;
 use Page\Verified as VerifiedPage;
 
 class AcceptanceTester extends \Codeception\Actor
@@ -78,10 +53,14 @@ class AcceptanceTester extends \Codeception\Actor
     {
         switch ($name) {
             case 'Checkout':
+                $this->wait(5);
                 $page = new CheckoutPage($this);
                 break;
-            case 'Shop':
-                $page = new ShopPage($this);
+            case 'Product3DS':
+                $page = new Product3DSPage($this);
+                break;
+            case 'ProductNon3DS':
+                $page = new ProductNon3DSPage($this);
                 break;
             case 'Verified':
                 $this->wait(45);
@@ -117,6 +96,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Given I am on :page page
+     * @param string $page
      * @since 1.4.1
      */
     public function iAmOnPage($page)
@@ -128,6 +108,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I click :object
+     * @param string $object
      * @since 1.4.1
      */
     public function iClick($object)
@@ -139,6 +120,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I am redirected to :page page
+     * @param string $page
      * @since 1.4.1
      */
     public function iAmRedirectedToPage($page)
@@ -146,11 +128,12 @@ class AcceptanceTester extends \Codeception\Actor
         // Initialize required pageObject WITHOUT checking URL
         $this->currentPage = $this->selectPage($page);
         // Check only specific keyword that page URL should contain
-        $this->seeInCurrentUrl($this->currentPage->getURL());
+        $this->seeInCurrentUrl($this->currentPage->getPageSpecific());
     }
 
     /**
      * @When I fill fields with :data
+     * @param string $data
      * @since 1.4.1
      */
     public function iFillFieldsWith($data)
@@ -160,6 +143,8 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @When I enter :fieldValue in field :fieldID
+     * @param string $fieldValue
+     * @param string $fieldID
      * @since 1.4.1
      */
     public function iEnterInField($fieldValue, $fieldID)
@@ -170,6 +155,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     /**
      * @Then I see :text
+     * @param string $text
      * @since 1.4.1
      */
     public function iSee($text)
@@ -178,21 +164,23 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
-     * @Given I prepare checkout
+     * @Given I prepare checkout :type
+     * @param string $type
      * @since 1.4.1
      */
-    public function iPrepareCheckout()
+    public function iPrepareCheckout($type)
     {
-        $this->iAmOnPage('Shop');
-        $this->wait(20);
-        //chose a product and open product page
-        $this->scrollTo(['class' => 'page-wrapper'], 20, 1500);
-        $this->click($this->currentPage->getElement('First Product in the Product List'));
-        $this->wait(10);
+        $page = 'Product3DS';
+        if (strpos($type, 'Non3DS') !== false) {
+            $page = 'ProductNon3DS';
+        }
+        $this->iAmOnPage($page);
+        $this->currentPage->prepareCheckout();
     }
 
     /**
      * @When I check :box
+     * @param string $box
      * @since 1.4.1
      */
     public function iCheck($box)

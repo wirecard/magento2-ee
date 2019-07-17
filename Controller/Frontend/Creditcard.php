@@ -1,32 +1,10 @@
 <?php
 /**
- * Shop System Plugins - Terms of Use
- *
- * The plugins offered are provided free of charge by Wirecard AG and are explicitly not part
- * of the Wirecard AG range of products and services.
- *
- * They have been tested and approved for full functionality in the standard configuration
- * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
- * the same terms.
- *
- * However, Wirecard AG does not provide any guarantee or accept any liability for any errors
- * occurring when used in an enhanced, customized shop system configuration.
- *
- * Operation in an enhanced, customized configuration is at your own risk and requires a
- * comprehensive test phase by the user of the plugin.
- *
- * Customers use the plugins at their own risk. Wirecard AG does not guarantee their full
- * functionality neither does Wirecard AG assume liability for any disadvantages related to
- * the use of the plugins. Additionally, Wirecard AG does not guarantee the full functionality
- * for customized shop systems or installed plugins of other vendors of plugins within the same
- * shop system.
- *
- * Customers are responsible for testing the plugin's functionality before starting productive
- * operation.
- *
- * By installing the plugin into the shop system the customer agrees to these terms of use.
- * Please do not use the plugin if you do not agree to these terms of use!
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 
 namespace Wirecard\ElasticEngine\Controller\Frontend;
@@ -45,6 +23,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -60,6 +39,8 @@ use Wirecard\PaymentSdk\Entity\Redirect;
 
 class Creditcard extends Action
 {
+    use CalculationTrait;
+
     /*' @var string FORM parameter name to send the transaction type in AJAX */
     const FRONTEND_DATAKEY_TXTYPE = 'txtype';
 
@@ -124,7 +105,6 @@ class Creditcard extends Action
         Calculation $taxCalculation,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
-        UrlInterface $urlBuilder,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
         LoggerInterface $logger
@@ -136,7 +116,7 @@ class Creditcard extends Action
         $this->taxCalculation = $taxCalculation;
         $this->resolver = $resolver;
         $this->storeManager = $storeManager;
-        $this->urlBuilder = $urlBuilder;
+        $this->urlBuilder = $context->getUrl();
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
         $this->logger = $logger;
@@ -248,21 +228,6 @@ class Creditcard extends Action
     }
 
     /**
-     * Return the tax rate
-     *
-     * @param double $taxAmount amount of tax
-     * @param double $grossAmount total amount
-     * @return string tax rate, rounded to 2 decimals
-     */
-    private function calculateTax($taxAmount, $grossAmount)
-    {
-        return number_format(
-            ($taxAmount / $grossAmount) * 100,
-            2
-        );
-    }
-
-    /**
      * Prepare CreditCardTransaction with information stored in $orderDto
      *
      * NOTE: the resulting transaction also stored in the DTO so there is
@@ -277,8 +242,8 @@ class Creditcard extends Action
         $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
-        $currency = $orderDto->quote->getBaseCurrencyCode();
-        $orderDto->amount = new Amount($orderDto->quote->getGrandTotal(), $currency);
+        $currency         = $orderDto->quote->getBaseCurrencyCode();
+        $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
 
         $orderDto->customFields = new CustomFieldCollection();
@@ -288,8 +253,8 @@ class Creditcard extends Action
         $orderDto->transaction->setEntryMode('ecommerce');
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
-        $cfgkey = $orderDto->transaction->getConfigKey();
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $cfgkey       = $orderDto->transaction->getConfigKey();
+        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $methodAppend = '?method=' . urlencode($cfgkey);
 
         $orderDto->transaction->setRedirect(new Redirect(
@@ -300,9 +265,7 @@ class Creditcard extends Action
         $notificationUrl = $wdBaseUrl . 'frontend/notify?orderId=' . $orderDto->orderId;
         $orderDto->transaction->setNotificationUrl($notificationUrl);
 
-        $config = $this->methodConfig;
-
-        if ($config->getValue('send_additional')) {
+        if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
     }
@@ -370,14 +333,17 @@ class Creditcard extends Action
      */
     private function addOrderItemsToBasket(OrderDto $orderDto)
     {
-        $items = $orderDto->quote->getAllVisibleItems();
+        $items    = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount = new Amount($orderItem->getPriceInclTax(), $currency);
-            $taxAmount = new Amount($orderItem->getTaxAmount(), $currency);
-            $item = new Item($orderItem->getName(), $amount, $orderItem->getQty());
+            $amount    = new Amount((float)$orderItem->getPriceInclTax(), $currency);
+            $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
+            $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
-            $item->setTaxRate($this->calculateTax($orderItem->getTaxAmount(), $orderItem->getPriceInclTax()));
+            $item->setTaxRate($this->calculateTax(
+                $orderItem->getTaxAmount(),
+                $orderItem->getPriceInclTax()
+            ));
             $orderDto->basket->add($item);
         }
     }

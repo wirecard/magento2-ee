@@ -1,5 +1,27 @@
 [
   {
+    "release": "1.5.3",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.1",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Fix division by zero",
+      "Add calculation trait to reduce code duplication"
+    ]
+  },
+  {
+    "release": "1.5.2",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.0",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Add compatibility with paymentSDK-php v3.7.1",
+      "Remove additional UrlInterface usage within controllers",
+      "Improve button disabling behaviour with Guaranteed Invoice",
+      "Improve credit card redirection behaviour for non-3Ds transactions"
+    ]
+  },
+  {
     "release": "1.5.1",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.0",

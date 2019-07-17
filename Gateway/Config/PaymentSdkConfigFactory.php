@@ -1,32 +1,10 @@
 <?php
 /**
- * Shop System Plugins - Terms of Use
- *
- * The plugins offered are provided free of charge by Wirecard AG and are explicitly not part
- * of the Wirecard AG range of products and services.
- *
- * They have been tested and approved for full functionality in the standard configuration
- * (status on delivery) of the corresponding shop system. They are under General Public
- * License Version 3 (GPLv3) and can be used, developed and passed on to third parties under
- * the same terms.
- *
- * However, Wirecard AG does not provide any guarantee or accept any liability for any errors
- * occurring when used in an enhanced, customized shop system configuration.
- *
- * Operation in an enhanced, customized configuration is at your own risk and requires a
- * comprehensive test phase by the user of the plugin.
- *
- * Customers use the plugins at their own risk. Wirecard AG does not guarantee their full
- * functionality neither does Wirecard AG assume liability for any disadvantages related to
- * the use of the plugins. Additionally, Wirecard AG does not guarantee the full functionality
- * for customized shop systems or installed plugins of other vendors of plugins within the same
- * shop system.
- *
- * Customers are responsible for testing the plugin's functionality before starting productive
- * operation.
- *
- * By installing the plugin into the shop system the customer agrees to these terms of use.
- * Please do not use the plugin if you do not agree to these terms of use!
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 
 namespace Wirecard\ElasticEngine\Gateway\Config;
@@ -51,6 +29,13 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
  */
 class PaymentSdkConfigFactory implements ConfigFactoryInterface
 {
+    /**
+     * @const string WIRECARD_EXTENSION_HEADER_PLUGIN_NAME
+     *
+     * @since 1.5.2
+     */
+    const WIRECARD_EXTENSION_HEADER_PLUGIN_NAME = 'magento2-ee+Wirecard';
+
     /**
      * @var ConfigInterface
      */
@@ -125,11 +110,11 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
 
         $config->add($paymentMethod);
         $config->setShopInfo(
-            $this->productMetadata->getName() . ' ' . $this->productMetadata->getEdition() . ' Edition',
+            $this->productMetadata->getName() . '+' . $this->productMetadata->getEdition() . ' Edition',
             $this->productMetadata->getVersion()
         );
         $config->setPluginInfo(
-            'Wirecard_ElasticEngine',
+            self::WIRECARD_EXTENSION_HEADER_PLUGIN_NAME,
             $this->moduleList->getOne('Wirecard_ElasticEngine')['setup_version']
         );
 
@@ -172,14 +157,14 @@ class PaymentSdkConfigFactory implements ConfigFactoryInterface
 
         if ($config->getValue('ssl_max_limit') !== '') {
             $methodSdkConfig->addSslMaxLimit(new Amount(
-                $config->getValue('ssl_max_limit'),
+                (float)$config->getValue('ssl_max_limit'),
                 $config->getValue('default_currency')
             ));
         }
 
         if ($config->getValue('three_d_min_limit') !== '') {
             $methodSdkConfig->addThreeDMinLimit(new Amount(
-                $config->getValue('three_d_min_limit'),
+                (float)$config->getValue('three_d_min_limit'),
                 $config->getValue('default_currency')
             ));
         }

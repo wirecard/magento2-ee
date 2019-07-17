@@ -1,4 +1,10 @@
 #!/bin/bash
+# Shop System SDK:
+# - Terms of Use can be found under:
+# https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+# - License can be found under:
+# https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+
 # This script will send the notification if 'fail' parameter is passed it will
 set -e # Exit with nonzero exit code if anything fails
 export REPO_NAME='reports'
@@ -7,7 +13,7 @@ export REPO_ADDRESS="${REPO_LINK}.git"
 
 # add random sleep time to minimize conflict possibility
 echo "Timestamp : $(date)"
-RANDOM_VALUE=$[ ( RANDOM % 30 )  + 1 ]
+RANDOM_VALUE=$[ ( RANDOM % 30 ) * $MAGENTO2_RELEASE_VERSION + 1 ]
 echo "Sleeping for: ${RANDOM_VALUE}"
 sleep ${RANDOM_VALUE}s
 
@@ -17,12 +23,12 @@ git clone ${REPO_ADDRESS}
 #create folder with current date
 export TODAY=$(date +%Y-%m-%d)
 
-export PROJECT_FOLDER="magento2-ee"
+export PROJECT_FOLDER="magento2-ee-${MAGENTO2_VERSION}"
 GATEWAY_FOLDER=${REPO_NAME}/${PROJECT_FOLDER}/${GATEWAY}
 DATE_FOLDER=${GATEWAY_FOLDER}/${TODAY}
 
 if [ ! -d "${GATEWAY_FOLDER}" ]; then
-mkdir ${GATEWAY_FOLDER}
+mkdir -p ${GATEWAY_FOLDER}
 fi
 
 if [ ! -d "${DATE_FOLDER}" ]; then

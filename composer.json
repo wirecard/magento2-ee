@@ -14,7 +14,7 @@
     "php-http/guzzle6-adapter": ">=1.1.1",
     "nyholm/psr7": "^0.2.3",
     "php-http/discovery": "1.4.0",
-    "wirecard/payment-sdk-php": "3.6.3",
+    "wirecard/payment-sdk-php": "3.7.1",
     "wirecard/magento2-ee-compat": "^1.0.0 || ^2.0.0",
     "wirecard/io-converter": "^1.0"
   },

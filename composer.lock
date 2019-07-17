@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "778abe3727526edf0cb3416b8a455047",
+    "content-hash": "b3b8473b55ce4f77669db3f057289b45",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -3233,20 +3233,22 @@
         },
         {
             "name": "wirecard/payment-sdk-php",
-            "version": "3.6.3",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wirecard/paymentSDK-php.git",
-                "reference": "3cea4b47c237890292b85d556567fc91d571f950"
+                "reference": "0e78bfc14f848fd9eb59606a2596cd5cd9dc94be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/3cea4b47c237890292b85d556567fc91d571f950",
-                "reference": "3cea4b47c237890292b85d556567fc91d571f950",
+                "url": "https://api.github.com/repos/wirecard/paymentSDK-php/zipball/0e78bfc14f848fd9eb59606a2596cd5cd9dc94be",
+                "reference": "0e78bfc14f848fd9eb59606a2596cd5cd9dc94be",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": ">=1.0.0",
+                "ext-mbstring": "*",
+                "ext-simplexml": "*",
                 "monolog/monolog": ">=1.16",
                 "myclabs/php-enum": "^1.5.0",
                 "php": ">=5.6",
@@ -3259,6 +3261,9 @@
             },
             "require-dev": {
                 "codacy/coverage": "1.4.2",
+                "ext-dom": "*",
+                "ext-iconv": "*",
+                "ext-json": "*",
                 "mikey179/vfsstream": "^1.6",
                 "mockery/mockery": "^1.1",
                 "php-http/guzzle6-adapter": ">=1.1.1",
@@ -3280,7 +3285,7 @@
                 "GPL-3.0-only"
             ],
             "description": "PHP SDK for the payment processing ReST API of Wirecard",
-            "time": "2019-04-01T06:55:59+00:00"
+            "time": "2019-06-13T14:02:51+00:00"
         },
         {
             "name": "zendframework/zend-code",
