@@ -19,11 +19,12 @@ trait CalculationTrait
      * @param float|int $divisor
      * @return float
      *
+     * @since 1.5.4 Add float cast to divisor
      * @since 1.5.3
      */
     public function divide($dividend, $divisor)
     {
-        if (empty($divisor)) {
+        if (empty((float)$divisor)) {
             return (float)0;
         }
 
