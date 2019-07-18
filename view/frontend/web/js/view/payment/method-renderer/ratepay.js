@@ -65,19 +65,22 @@ define(
                     errorPane.css("display", "block");
                     return false;
                 }
-                var form = $("#" + this.getCode() + "-form");
+                let form = $("#" + this.getCode() + "-form");
                 return $(form).validation() && $(form).validation("isValid");
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (result) {
                     if (result.data["form-url"]) {
-                        var form = $("<form />", {action: result.data["form-url"], method: result.data["form-method"]});
+                        let form = $("<form />", {action: result.data["form-url"], method: result.data["form-method"]});
+                        let formFields = result.data["form-fields"];
 
-                        for (var i = 0; i < result.data["form-fields"].length; i++) {
+                        for (var i = 0; i < formFields.length; i++) {
+                            let fieldName = formFields[i]["key"];
+                            let fieldValue = formFields[i]["value"];
                             form.append($("<input />", {
                                 type: "hidden",
-                                name: result.data["form-fields"][i]["key"],
-                                value: result.data["form-fields"][i]["value"]
+                                name: fieldName,
+                                value: fieldValue
                             }));
                         }
                         form.appendTo("body").submit();
