@@ -23,7 +23,7 @@ trait CalculationTrait
      */
     public function divide($dividend, $divisor)
     {
-        if (empty($divisor)) {
+        if (empty((float)$divisor)) {
             return (float)0;
         }
 
