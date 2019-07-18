@@ -1,5 +1,16 @@
 [
   {
+    "release": "2.0.0",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.1",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Implement WPP v2 Credit Card UI",
+      "Add WPP v2 language support",
+      "Remove UnionPay International"
+    ]
+  },
+  {
     "release": "1.5.3",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.1",
