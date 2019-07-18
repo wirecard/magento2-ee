@@ -23,8 +23,8 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
-use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\Converter\WppVTwoConverter;
+use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
@@ -91,7 +91,6 @@ class Creditcard extends Action
      * @param Calculation $taxCalculation
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
-     * @param UrlInterface $urlBuilder
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
      * @param LoggerInterface $logger

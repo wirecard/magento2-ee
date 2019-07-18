@@ -51,11 +51,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private $logger;
 
     /**
-     * @var boolean
-     */
-    private $jsResponse;
-
-    /**
      * @var Context
      */
     private $context;
@@ -82,7 +77,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;
         $this->context = $context;
-        $this->jsResponse = false;
         parent::__construct($context);
     }
 
@@ -194,43 +188,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
     {
         $this->checkoutSession->restoreQuote();
         $this->messageManager->addNoticeMessage(__('order_error'));
-    }
-
-    /**
-     * Distinguish between jsresponse or response within request data
-     *
-     * @return array|mixed
-     * @since 2.0.0
-     */
-    private function processRequestData()
-    {
-        if ($this->getRequest()->isPost()) {
-            $params = $this->getRequest()->getPost()->toArray();
-            if (isset($params['data'])) {
-                $this->jsResponse = true;
-                return $params['data'];
-            }
-            return $params;
-        }
-        return $this->getRequest()->getParams();
-    }
-
-    /**
-     * Process jsresponse or response
-     *
-     * @param $params
-     * @param $resultRedirect
-     * @param $methodName
-     * @return \Wirecard\PaymentSdk\Response\Response
-     * @since 2.0.0
-     */
-    private function processResponse($params, $resultRedirect, $methodName)
-    {
-        $transactionService = $this->transactionServiceFactory->create($methodName);
-        if ($this->jsResponse) {
-            return $transactionService->processJsResponse($params, $resultRedirect);
-        }
-        return $transactionService->handleResponse($params);
     }
 
     /**

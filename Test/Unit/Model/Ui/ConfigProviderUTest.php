@@ -101,8 +101,14 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store,
-            $storeManager);
+        $prov = new ConfigProvider(
+            $transactionServiceFactory,
+            $assetRepo,
+            $paymentHelper,
+            $session,
+            $store,
+            $storeManager
+        );
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
@@ -228,8 +234,14 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store,
-            $storeManager);
+        $prov = new ConfigProvider(
+            $transactionServiceFactory,
+            $assetRepo,
+            $paymentHelper,
+            $session,
+            $store,
+            $storeManager
+        );
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
