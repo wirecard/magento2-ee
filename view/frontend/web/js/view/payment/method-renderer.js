@@ -62,10 +62,6 @@ define(
                 component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             },
             {
-                type: "wirecard_elasticengine_unionpayinternational",
-                component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/creditcard"
-            },
-            {
                 type: "wirecard_elasticengine_paybybankapp",
                 component: "Wirecard_ElasticEngine/js/view/payment/method-renderer/default"
             }

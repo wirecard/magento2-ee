@@ -33,6 +33,8 @@ config_three_d_merchant_secret,Secret Key 3-D Secure,: classes/includes/class-wc
 config_three_d_min_limit,Valeur limite min. avec protocole 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:146
 config_title,Désignation,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:101, : classes/includes/class-wc-gateway-wirecard-creditcard.php:110, : classes/includes/class-wc-gateway-wirecard-eps.php:105, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:110, : classes/includes/class-wc-gateway-wirecard-ideal.php:105, : classes/includes/class-wc-gateway-wirecard-masterpass.php:103, : classes/includes/class-wc-gateway-wirecard-paypal.php:103, : classes/includes/class-wc-gateway-wirecard-poipia.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:104, : classes/includes/class-wc-gateway-wirecard-sofort.php:103, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:103"
 config_vault,Paiement en un clic
+config_wpp_url,Wirecard Payment Page v2 Adresse (URL WPP v2),": classes/includes/class-wc-gateway-wirecard-creditcard.php:219, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
+config_wpp_url_desc,Wirecard Payment Page v2 Adresse (URL WPP v2) (ex. https://wpp.wirecard.com).,": classes/includes/class-wc-gateway-wirecard-creditcard.php:221, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
 config_zapp_merchant_return_string,Merchant Return URL,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:155
 config_zapp_merchant_return_string_desc,Merchant Return URL to redirect consumers from their mobile banking apps to your shop.,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:157
 creditor,Créancier,: classes/helper/sepa-template.php:38
@@ -50,7 +52,6 @@ heading_title_alipay_crossborder,Wirecard Alipay Cross-border,": classes/include
 heading_title_creditcard,Wirecard Carte de crédit,": classes/includes/class-wc-gateway-wirecard-creditcard.php:61, : classes/includes/class-wc-gateway-wirecard-creditcard.php:113"
 heading_title_giropay,Wirecard giropay
 heading_title_ideal,Wirecard iDEAL,": classes/includes/class-wc-gateway-wirecard-ideal.php:63, : classes/includes/class-wc-gateway-wirecard-ideal.php:108"
-heading_title_maestro,Wirecard Maestro SecureCode
 heading_title_masterpass,Wirecard Masterpass,": classes/includes/class-wc-gateway-wirecard-masterpass.php:61, : classes/includes/class-wc-gateway-wirecard-masterpass.php:106"
 heading_title_paybybankapp,Wirecard Pay by Bank app,": classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:60, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:106"
 heading_title_paypal,Wirecard PayPal,": classes/includes/class-wc-gateway-wirecard-paypal.php:61, : classes/includes/class-wc-gateway-wirecard-paypal.php:106"
@@ -59,7 +60,6 @@ heading_title_ratepayinvoice,Wirecard Facture avec garantie de paiement par Wire
 heading_title_sepact,Wirecard Virement SEPA,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
 heading_title_sepadd,Wirecard Prélèvement SEPA,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
 heading_title_sofortbanking,Wirecard Sofort.,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
-heading_title_upi,Wirecard UnionPay International,": classes/includes/class-wc-gateway-wirecard-unionpay-international.php:58, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:106"
 iban,Code IBAN,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
 ideal_legend,Sélectionner votre banque
 last_name_input,Nom de famille
@@ -89,7 +89,7 @@ text_enabled,Activé
 text_min_age_notice,Vous devez avoir au moins 18 ans pour utiliser ce mode de paiement.
 text_need_same_address_notice,L’adresse de livraison et l’adresse de facturation doivent être identiques.
 text_payment_action_pay,Achat,": classes/includes/class-wc-gateway-wirecard-creditcard.php:193, : classes/includes/class-wc-gateway-wirecard-masterpass.php:162, : classes/includes/class-wc-gateway-wirecard-paypal.php:162, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:192, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:162"
-text_payment_action_reserve,Autorisation,": classes/includes/class-wc-gateway-wirecard-creditcard.php:192, : classes/includes/class-wc-gateway-wirecard-masterpass.php:161, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:161"
+text_payment_action_reserve,Autorisation,": classes/includes/class-wc-gateway-wirecard-creditcard.php:214, : classes/includes/class-wc-gateway-wirecard-masterpass.php:161, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:175"
 text_payment_type_pia,Paiement à l’avance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
 text_payment_type_poi,Paiement sur facture,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,Paramètres
@@ -97,3 +97,4 @@ text_support,Support,: classes/admin/class-wirecard-settings.php:98
 text_terms_accept,"Je confirme par la présente avoir lu <a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">privacy notice</a> and <a target=""_blank"" href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"">les conditions supplémentaires</a> concernant les modes de paiement Wirecard et j’accepte leur validité.",: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:436
 transfer_notice,Veuillez transférer le montant en utilisant les données suivantes :,: classes/includes/class-wc-gateway-wirecard-poipia.php:261
 vault_save_text,Enregistrer pour une utilisation ultérieure.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:349
+warning_credit_card_url_mismatch,Attention: Veuillez vérifier vos données de configuration dans les champs de saisie de l'URL. Vous avez peut-être combiné un compte réel avec un compte d'essai.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:777

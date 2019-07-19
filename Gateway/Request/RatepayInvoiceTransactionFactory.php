@@ -60,7 +60,15 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
         ConfigInterface $methodConfig,
         Session $session
     ) {
-        parent::__construct($urlBuilder, $resolver, $transaction, $methodConfig, $storeManager, $accountHolderFactory, $basketFactory);
+        parent::__construct(
+            $urlBuilder,
+            $resolver,
+            $transaction,
+            $methodConfig,
+            $storeManager,
+            $accountHolderFactory,
+            $basketFactory
+        );
 
         $this->checkoutSession = $session;
     }

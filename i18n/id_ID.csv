@@ -33,6 +33,8 @@ config_three_d_merchant_secret,Kunci Rahasia 3-D Secure,: classes/includes/class
 config_three_d_min_limit,Batas Minimum untuk 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:146
 config_title,Judul,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:101, : classes/includes/class-wc-gateway-wirecard-creditcard.php:110, : classes/includes/class-wc-gateway-wirecard-eps.php:105, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:110, : classes/includes/class-wc-gateway-wirecard-ideal.php:105, : classes/includes/class-wc-gateway-wirecard-masterpass.php:103, : classes/includes/class-wc-gateway-wirecard-paypal.php:103, : classes/includes/class-wc-gateway-wirecard-poipia.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:104, : classes/includes/class-wc-gateway-wirecard-sofort.php:103, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:103"
 config_vault,Checkout Satu Klik
+config_wpp_url,Wirecard Payment Page v2 Address (URL WPP v2),": classes/includes/class-wc-gateway-wirecard-creditcard.php:219, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
+config_wpp_url_desc,Wirecard Payment Page v2 Address (URL WPP v2) (e.g. https://wpp.wirecard.com).,": classes/includes/class-wc-gateway-wirecard-creditcard.php:221, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
 config_zapp_merchant_return_string,Merchant Return URL,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:155
 config_zapp_merchant_return_string_desc,Merchant Return URL to redirect consumers from their mobile banking apps to your shop.,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:157
 creditor,Kreditor,: classes/helper/sepa-template.php:38
@@ -50,7 +52,6 @@ heading_title_alipay_crossborder,Alipay Cross-border Wirecard,": classes/include
 heading_title_creditcard,Kartu Kredit Wirecard,": classes/includes/class-wc-gateway-wirecard-creditcard.php:61, : classes/includes/class-wc-gateway-wirecard-creditcard.php:113"
 heading_title_giropay,giropay Wirecard
 heading_title_ideal,iDEAL Wirecard,": classes/includes/class-wc-gateway-wirecard-ideal.php:63, : classes/includes/class-wc-gateway-wirecard-ideal.php:108"
-heading_title_maestro,Maestro SecureCode Wirecard
 heading_title_masterpass,Wirecard Masterpass,": classes/includes/class-wc-gateway-wirecard-masterpass.php:61, : classes/includes/class-wc-gateway-wirecard-masterpass.php:106"
 heading_title_paybybankapp,Wirecard Pay by Bank app,": classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:60, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:106"
 heading_title_paypal,Wirecard PayPal,": classes/includes/class-wc-gateway-wirecard-paypal.php:61, : classes/includes/class-wc-gateway-wirecard-paypal.php:106"
@@ -59,7 +60,6 @@ heading_title_ratepayinvoice,Faktur Bergaransi Wirecard,": classes/includes/clas
 heading_title_sepact,SEPA Credit Transfer Wirecard,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
 heading_title_sepadd,SEPA Direct Debit Wirecard,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
 heading_title_sofortbanking,Sofort. Wirecard,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
-heading_title_upi,Unionpay Internasional Wirecard,": classes/includes/class-wc-gateway-wirecard-unionpay-international.php:58, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:106"
 iban,IBAN:,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
 ideal_legend,Pilih bank Anda
 last_name_input,Nama Belakang
@@ -89,7 +89,7 @@ text_enabled,Aktif
 text_min_age_notice,You must be at least 18 years of age to use this payment method.
 text_need_same_address_notice,Shipping and billing address must be identical.
 text_payment_action_pay,Purchase,": classes/includes/class-wc-gateway-wirecard-creditcard.php:193, : classes/includes/class-wc-gateway-wirecard-masterpass.php:162, : classes/includes/class-wc-gateway-wirecard-paypal.php:162, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:192, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:162"
-text_payment_action_reserve,Authorization,": classes/includes/class-wc-gateway-wirecard-creditcard.php:192, : classes/includes/class-wc-gateway-wirecard-masterpass.php:161, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:161"
+text_payment_action_reserve,Authorization,": classes/includes/class-wc-gateway-wirecard-creditcard.php:214, : classes/includes/class-wc-gateway-wirecard-masterpass.php:161, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:175"
 text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
 text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,Pengaturan
@@ -97,3 +97,4 @@ text_support,Support,: classes/admin/class-wirecard-settings.php:98
 text_terms_accept,"I herewith confirm that I have read the <a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">privacy notice</a> and <a target=""_blank"" href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"">additional terms and conditions</a> for Wirecard payment types and that I accept their validity.",: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:436
 transfer_notice,Harap transfer jumlah tersebut menggunakan data berikut ini:,: classes/includes/class-wc-gateway-wirecard-poipia.php:261
 vault_save_text,Simpan untuk digunakan di kemudian hari.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:349
+warning_credit_card_url_mismatch,Attention: Please check your credentials within the URL setting fields. You might have configured/combined a productive account with a test account.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:777

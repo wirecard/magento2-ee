@@ -22,17 +22,17 @@ class Support
     /**
      * @var TransportBuilder
      */
-    protected $_transportBuilder;
+    protected $transportBuilder;
 
     /**
      * @var \Magento\Framework\Module\ModuleList\Loader
      */
-    protected $_moduleLoader;
+    protected $moduleLoader;
 
     /**
      * @var \Magento\Payment\Model\Config
      */
-    protected $_paymentConfig;
+    protected $paymentConfig;
     /**
      * @var ScopeConfigInterface
      */
@@ -182,9 +182,9 @@ class Support
     ) {
         $this->moduleList = $moduleList;
         $this->scopeConfig = $scopeConfig;
-        $this->_transportBuilder = $transportBuilder;
-        $this->_moduleLoader = $moduleLoader;
-        $this->_paymentConfig = $paymentConfig;
+        $this->transportBuilder = $transportBuilder;
+        $this->moduleLoader = $moduleLoader;
+        $this->paymentConfig = $paymentConfig;
         $this->productMetadata = $productMetadata;
     }
 
@@ -200,7 +200,7 @@ class Support
             if (!filter_var($postObject->getData('replyto'), FILTER_VALIDATE_EMAIL)) {
                 throw new \Exception(__('enter_valid_email_error'));
             }
-            $this->_transportBuilder->setReplyTo(trim($postObject->getData('replyto')));
+            $this->transportBuilder->setReplyTo(trim($postObject->getData('replyto')));
         }
 
         $sender = [
@@ -213,14 +213,14 @@ class Support
         }
 
         $modules = [];
-        foreach ($this->_moduleLoader->load() as $module) {
+        foreach ($this->moduleLoader->load() as $module) {
             if (!in_array($module['name'], $this->_moduleBlacklist)) {
                 $modules[] = $module['name'];
             }
         }
         natsort($modules);
 
-        $payments = $this->_paymentConfig->getActiveMethods();
+        $payments = $this->paymentConfig->getActiveMethods();
 
         $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
@@ -248,7 +248,7 @@ class Support
             'pluginVersion' => $this->moduleList->getOne('Wirecard_ElasticEngine')['setup_version']
         ]);
 
-        $transport = $this->_transportBuilder
+        $transport = $this->transportBuilder
             ->setTemplateIdentifier('contact_support_email')
             ->setTemplateOptions(
                 [

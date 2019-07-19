@@ -18,10 +18,10 @@ class Sendrequest extends \Magento\Backend\App\Action
     /**
      * @var Support
      */
-    protected $_supportModel;
+    protected $supportModel;
 
     /** @var PageFactory */
-    protected $_resultPageFactory;
+    protected $resultPageFactory;
 
     public function __construct(
         Context $context,
@@ -29,8 +29,8 @@ class Sendrequest extends \Magento\Backend\App\Action
         PageFactory $resultPageFactory
     ) {
         parent::__construct($context);
-        $this->_supportModel = $supportModel;
-        $this->_resultPageFactory = $resultPageFactory;
+        $this->supportModel = $supportModel;
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     public function execute()
@@ -46,7 +46,7 @@ class Sendrequest extends \Magento\Backend\App\Action
         $postObject->setData($data);
 
         try {
-            $this->_supportModel->sendrequest($postObject);
+            $this->supportModel->sendrequest($postObject);
             $this->messageManager->addNoticeMessage(__('success_email'));
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());

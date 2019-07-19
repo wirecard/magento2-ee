@@ -9,11 +9,9 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Command;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\TransactionFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -56,15 +54,6 @@ class WirecardVoidCommand implements CommandInterface
      */
     private $methodConfig;
 
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
     /**
      * WirecardVoidCommand constructor.
      * @param TransactionFactory $transactionFactory

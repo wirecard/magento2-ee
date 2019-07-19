@@ -33,7 +33,7 @@ define(
                 this._super().observe("customerDob");
                 return this;
             },
-            initialize: function() {
+            initialize: function () {
                 this._super();
                 this.config = window.checkoutConfig.payment[this.getCode()];
                 this.customerData = window.customerData;
@@ -49,7 +49,7 @@ define(
                     }
                 };
             },
-            getRatepayScript: function() {
+            getRatepayScript: function () {
                 return this.config.ratepay_script;
             },
             validate: function () {
@@ -59,24 +59,28 @@ define(
                     errorPane.css("display", "block");
                     return false;
                 }
-                if (this.config.address_same && $("#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice").is(":checked") === false) {
+                if (this.config.billing_equals_shipping
+                    && $("#billing-address-same-as-shipping-wirecard_elasticengine_ratepayinvoice").is(":checked") === false) {
                     errorPane.html($t("text_need_same_address_notice"));
                     errorPane.css("display", "block");
                     return false;
                 }
-                var form = $("#" + this.getCode() + "-form");
+                let form = $("#" + this.getCode() + "-form");
                 return $(form).validation() && $(form).validation("isValid");
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (result) {
                     if (result.data["form-url"]) {
-                        var form = $("<form />", {action: result.data["form-url"], method: result.data["form-method"]});
+                        let form = $("<form />", {action: result.data["form-url"], method: result.data["form-method"]});
+                        let formFields = result.data["form-fields"];
 
-                        for (var i = 0; i < result.data["form-fields"].length; i++) {
+                        for (var i = 0; i < formFields.length; i++) {
+                            let fieldName = formFields[i]["key"];
+                            let fieldValue = formFields[i]["value"];
                             form.append($("<input />", {
                                 type: "hidden",
-                                name: result.data["form-fields"][i]["key"],
-                                value: result.data["form-fields"][i]["value"]
+                                name: fieldName,
+                                value: fieldValue
                             }));
                         }
                         form.appendTo("body").submit();

@@ -96,7 +96,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $method->expects($this->at(1))->method('getConfigData')->willReturn(self::BASE_URL);
         $this->paymentHelper->expects($this->once())->method('getMethodInstance')->wilLReturn($method);
 
         $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
@@ -134,7 +133,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $method->expects($this->at(1))->method('getConfigData')->willReturn(self::BASE_URL);
         $this->paymentHelper->expects($this->once())->method('getMethodInstance')->wilLReturn($method);
 
         $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
@@ -192,9 +190,18 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
-        $this->controller = new Creditcard($context, $resultJsonFactory, $this->transactionServiceFactory,
-            $quoteRepository, $this->checkoutSession, $taxCalculation, $resolver, $storeManager, $this->paymentHelper,
-            $methodConfig, $logger
+        $this->controller = new Creditcard(
+            $context,
+            $resultJsonFactory,
+            $this->transactionServiceFactory,
+            $quoteRepository,
+            $this->checkoutSession,
+            $taxCalculation,
+            $resolver,
+            $storeManager,
+            $this->paymentHelper,
+            $methodConfig,
+            $logger
         );
     }
 }

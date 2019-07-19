@@ -95,8 +95,7 @@ class PoiPiaBlock extends Template
 
     public function isPia()
     {
-        if (
-            $this->getPoiPiaAction() === 'advance'
+        if ($this->getPoiPiaAction() === 'advance'
             && is_array($this->additionalInformation)
             && isset($this->additionalInformation['provider-transaction-reference-id'])
             && isset($this->additionalInformation['merchant-bank-account.0.iban'])

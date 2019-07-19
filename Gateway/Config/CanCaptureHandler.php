@@ -62,7 +62,7 @@ class CanCaptureHandler implements ValueHandlerInterface
         $transactionList = $this->transactionRepository->getList($searchCriteria);
         $transactions = $transactionList->getItems();
         $authTransaction = null;
-        foreach ($transactions as $id => $item) {
+        foreach ($transactions as $item) {
             if ($item->getTxnType() == \Wirecard\PaymentSdk\Transaction\Transaction::TYPE_AUTHORIZATION) {
                 $authTransaction = $item;
                 break;

@@ -17,6 +17,7 @@ if (!$gateway) {
 $defaultConfig = [
     'creditcard' => [
         'base_url' => 'https://api-test.wirecard.com',
+        'wpp_url'  => 'https://wpp-test.wirecard.com',
         'http_user' => '70000-APITEST-AP',
         'http_pass' => 'qD2wzQ_hrc!8',
         'three_d_merchant_account_id' => '508b8896-b37d-4614-845c-26bf8bf2c948',

@@ -26,6 +26,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 {
     const LOGO_URL_PATH = '/logo/url.png';
     const CREDITCARD_VAULT_CODE = 'wirecard_elasticengine_cc_vault';
+    const WPP_URL = 'https://wpp-test.wirecard.com';
 
     public function testGetConfigDummyWithoutBic()
     {
@@ -50,11 +51,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
 
-        $upiSeamlessRequestData = [
-            'key' => 'value'
-        ];
-        $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
-
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
             ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
@@ -75,7 +71,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceFactory->method('create')->willReturn($transactionService);
 
         $methodInterface = $this->getMockWithoutInvokingTheOriginalConstructor(MethodInterface::class);
-        $methodInterface->method('getConfigData')->willReturn(false);
+        $methodInterface->method('getConfigData')->will($this->onConsecutiveCalls(
+            self::WPP_URL,
+            false,
+            false,
+            self::WPP_URL
+        ));
         $paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(Data::class);
         $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
         $session = $this->getMockWithoutInvokingTheOriginalConstructor(Session::class);
@@ -100,7 +101,14 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store, $storeManager);
+        $prov = new ConfigProvider(
+            $transactionServiceFactory,
+            $assetRepo,
+            $paymentHelper,
+            $session,
+            $store,
+            $storeManager
+        );
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
@@ -109,7 +117,8 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'vaultCode' => self::CREDITCARD_VAULT_CODE
+                    'vaultCode' => self::CREDITCARD_VAULT_CODE,
+                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -130,7 +139,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_ratepayinvoice' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript,
-                    'address_same' => false
+                    'billing_equals_shipping' => false
                 ],
                 'wirecard_elasticengine_alipayxborder' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -143,9 +152,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_masterpass' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
-                ],
-                'wirecard_elasticengine_unionpayinternational' => [
-                    'logo_url' => self::LOGO_URL_PATH,
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -178,11 +184,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
         $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
 
-        $upiSeamlessRequestData = [
-            'key' => 'value'
-        ];
-        $transactionService->method('getDataForUpiUi')->willReturn(json_encode($upiSeamlessRequestData));
-
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
             ['key' => IdealBic::ASNBNL21, 'label' => 'ASN Bank'],
@@ -203,7 +204,12 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceFactory->method('create')->willReturn($transactionService);
 
         $methodInterface = $this->getMockWithoutInvokingTheOriginalConstructor(MethodInterface::class);
-        $methodInterface->method('getConfigData')->willReturn(true);
+        $methodInterface->method('getConfigData')->will($this->onConsecutiveCalls(
+            self::WPP_URL,
+            true,
+            true,
+            self::WPP_URL
+        ));
         $paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(Data::class);
         $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
         $session = $this->getMockWithoutInvokingTheOriginalConstructor(Session::class);
@@ -228,7 +234,14 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
             <param name=\'AllowScriptAccess\' value=\'always\'/>
         </object>';
 
-        $prov = new ConfigProvider($transactionServiceFactory, $assetRepo, $paymentHelper, $session, $store, $storeManager);
+        $prov = new ConfigProvider(
+            $transactionServiceFactory,
+            $assetRepo,
+            $paymentHelper,
+            $session,
+            $store,
+            $storeManager
+        );
         $this->assertEquals([
             'payment' => [
                 'wirecard_elasticengine_paypal' => [
@@ -237,7 +250,8 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 ],
                 'wirecard_elasticengine_creditcard' => [
                     'logo_url' => self::LOGO_URL_PATH,
-                    'vaultCode' => self::CREDITCARD_VAULT_CODE
+                    'vaultCode' => self::CREDITCARD_VAULT_CODE,
+                    'wpp_url' => '<script src="' . self::WPP_URL . '/loader/paymentPage.js" type="text/javascript"/>'
                 ],
                 'wirecard_elasticengine_sepadirectdebit' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -258,7 +272,7 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_ratepayinvoice' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ratepay_script' => $ratepayScript,
-                    'address_same' => true
+                    'billing_equals_shipping' => true
                 ],
                 'wirecard_elasticengine_alipayxborder' => [
                     'logo_url' => self::LOGO_URL_PATH,
@@ -271,9 +285,6 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
                 'wirecard_elasticengine_masterpass' => [
                     'logo_url' => self::LOGO_URL_PATH,
                     'ideal_bic' => $idealBic
-                ],
-                'wirecard_elasticengine_unionpayinternational' => [
-                    'logo_url' => self::LOGO_URL_PATH,
                 ],
                 'wirecard_elasticengine_paybybankapp' => [
                     'logo_url' => self::LOGO_URL_PATH,

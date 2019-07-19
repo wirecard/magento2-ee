@@ -31,7 +31,7 @@ use Wirecard\PaymentSdk\Transaction\Reservable;
  */
 class WirecardCommand implements CommandInterface
 {
-    const STATEOBJECT='stateObject';
+    const STATEOBJECT = 'stateObject';
 
     /**
      * @var TransactionFactory
@@ -108,7 +108,9 @@ class WirecardCommand implements CommandInterface
         /** @var PaymentDataObject $paymentDO */
         $paymentDO = $commandSubject['payment'];
         try {
-            if ($transaction instanceof CreditCardTransaction && !$paymentDO->getPayment()->hasAdditionalInformation('token_id')) {
+            if ($transaction instanceof CreditCardTransaction &&
+                !$paymentDO->getPayment()->hasAdditionalInformation('token_id')
+            ) {
                 return;
             }
             $response = $transactionService->process($transaction, $operation);

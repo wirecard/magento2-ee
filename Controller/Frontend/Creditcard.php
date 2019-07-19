@@ -23,6 +23,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
+use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -45,9 +46,6 @@ class Creditcard extends Action
 
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
-
-    /** @var string key UnionPayInternational as sent by frontend */
-    const FRONTEND_CODE_UPI = 'wirecard_elasticengine_unionpayinternational';
 
     /** @var JsonFactory Magento2 JsonFactory injected by DI */
     protected $resultJsonFactory;
@@ -88,15 +86,14 @@ class Creditcard extends Action
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
      * @param TransactionServiceFactory $transactionServiceFactory
-     * @param CartRepositoryInterface $cartRepository
+     * @param CartRepositoryInterface $quoteRepository
      * @param Session $checkoutSession
      * @param Calculation $taxCalculation
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
-     * @param UrlInterface $urlBuilder
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
-     * @param LoggerInterface $logger,
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
@@ -158,14 +155,9 @@ class Creditcard extends Action
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
+        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
 
-        if ($txType === self::FRONTEND_CODE_UPI) {
-            $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_UPI);
-        } else {
-            $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-        }
-        $baseUrl = $method->getConfigData('base_url');
-        $language = $this->getSupportedHppLangCode($baseUrl);
+        $language = $this->getSupportedWppLangCode();
 
         $paymentAction = $method->getConfigData('payment_action');
         if ($paymentAction === PaymentAction::AUTHORIZE_CAPTURE) {
@@ -369,6 +361,7 @@ class Creditcard extends Action
         }
         return constant("$className::NAME");
     }
+
     /**
      * Detect the Transaction class for key sent by frontend
      *
@@ -377,51 +370,36 @@ class Creditcard extends Action
      */
     private function findTransactionClassByFrontendType($txType)
     {
-        if (!empty($txType)) {
-            switch ($txType) {
-                case self::FRONTEND_CODE_CREDITCARD:
-                    return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
-                case self::FRONTEND_CODE_UPI:
-                    return '\Wirecard\PaymentSdk\Transaction\UpiTransaction';
-            }
+        if ($txType == self::FRONTEND_CODE_CREDITCARD) {
+            return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
         }
 
         return null;
     }
 
     /**
-     * Find out the best supported HPP language code
+     * Convert locale to WPP V2 supported language code
      *
-     * Currently, this triggers a call against the EE rest interface to find out
-     * all supported languages. Based on the Magento2 locale and the list of the
-     *
-     * @param string $baseUrl Gateway URL from merchants config
+     * @return string
+     * @since 2.0.0
      */
-    private function getSupportedHppLangCode($baseUrl)
+    private function getSupportedWppLangCode()
     {
-        $locale = $this->resolver->getLocale();
-        $lang = 'en';
-        //special case for chinese languages
-        switch ($locale) {
-            case 'zh_Hans_CN':
-                $locale = 'zh_CN';
-                break;
-            case 'zh_Hant_TW':
-                $locale = 'zh_TW';
-                break;
-            default:
-                break;
-        }
+        //Set default for exception case
+        $language  = 'en';
+        $locale    = $this->resolver->getLocale();
+
+        //Shorten to ISO-639-1 because of magento2 special cases e.g. zh_Hans_CN
+        $locale    = mb_substr($locale, 0, 2);
+        $converter = new WppVTwoConverter();
+
         try {
-            $supportedLang = json_decode(file_get_contents($baseUrl . '/engine/includes/i18n/languages/hpplanguages.json'));
-            if (key_exists(substr($locale, 0, 2), $supportedLang)) {
-                $lang = substr($locale, 0, 2);
-            } elseif (key_exists($locale, $supportedLang)) {
-                $lang = $locale;
-            }
-        } catch (\Exception $exception) {
-            return 'en';
+            $converter->init();
+            $language = $converter->convert($locale);
+        } catch (\InvalidArgumentException $exception) {
+            $this->logger->error($exception->getMessage());
+            return $language;
         }
-        return $lang;
+        return $language;
     }
 }
