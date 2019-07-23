@@ -2,16 +2,6 @@ dist: trusty
 sudo: false
 language: php
 
-cache:
-  directories:
-    - $HOME/.sonar/cache
-
-addons:
-  sonarqube:
-    organization: "wirecard"
-    token:
-      secure: "EAPeijV/NPsK8OgIu0TGXsOqSYhp9KdC9bH6HxWvevpXtxanmCz3Y60mE+xn9SUA/M5T1JBgl+WWHeFgEcZriurtd8U1t6nt1fOLmEPbiKOlhSnt0jLUwkzyAMh615B2qDifvqUopgoHDVgQ6aEhtaEFK6fij12d4IKEwM+nKYkcKMcppuXGjWRT+NTbLsOI9nWLjgi01FXS21rxjgUdk87drKZeKCMEyjcaXk2RXbBMVhELkXI+zx1fKTVGhNMjzlniLEdo/ioIGSF/KTnT+PwrYPLKcQanLGOoAbJvN2DVQceIRj3JrQZtFyES3FIOcR/V+tx2DFXMGNfwskqvqODgu1Ibf5KJAPEAmoh2qld9ikvxtuDoCPPwktUwuPSYfQoIACKKOZdA7eeC7OwihBcSrHqv/nwR7Mr3OfHcYncrLaFw8oC3Dgf3mIvj+0SIx9CPXFRgtdYN7QYYNb2y0PWrv2SG5Fs2gU+mMcYbSCSN/0bx+qqb2UKhfSvDQz5pG7btnddMzj/17AFTw9R8QFvE0uems9iocjdHKw1ydv2veiUt6Ibsccc+NSkpn+H0A5dTfPMHxzY+tcN/fUGAk2D8kprUCMdhGSYaL7u58CQ2yK6iCfjhYhyrbdfWcT48BtCBUWdQyVOwLnQo3Hs3/Ow0hlyByxdFWGq3ksPQNAk="
-
 env:
   global:
   - COMPOSER_ARGS="--no-interaction"
@@ -35,7 +25,7 @@ matrix:
 
   - &acceptance-test
     stage: acceptance-test
-    if: type = cron
+    if: type != cron
     php: 7.1
     env:
     - GATEWAY=API-TEST
@@ -72,18 +62,6 @@ matrix:
     env:
     - GATEWAY=API-WDCEE-TEST
     - MAGENTO2_RELEASE_VERSION=3
-  - <<: *acceptance-test
-    env:
-    - GATEWAY=NOVA
-    - MAGENTO2_RELEASE_VERSION=1
-  - <<: *acceptance-test
-    env:
-    - GATEWAY=NOVA
-    - MAGENTO2_RELEASE_VERSION=2
-  - <<: *acceptance-test
-    env:
-    - GATEWAY=NOVA
-    - MAGENTO2_RELEASE_VERSION=3
 
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
@@ -98,7 +76,7 @@ matrix:
     after_script: skip
 
   - stage: phraseapp-check-if-in-sync
-    if: type != cron AND type = pull_request
+    if: type = cron AND type = pull_request
     language: ruby
     ruby: 2.5.3
     before_install: skip
