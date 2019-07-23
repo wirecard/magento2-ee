@@ -29,7 +29,7 @@ class Payment extends Base
         'Credit Card Last Name' => "//*[@id='pp-cc-last-name']",
         'Credit Card Card number' => "//*[@id='pp-cc-account-number']",
         'Credit Card CVV' => "//*[@id='pp-cc-cvv']",
-        'Credit Card Valid until month / year' => "//*[@name='pp-cc-expiration-date']"
+        'Credit Card Valid until month / year' => "//*[@id='pp-cc-expiration-date']"
     ];
 
     /**
@@ -42,16 +42,13 @@ class Payment extends Base
         $I->wait(20);
         $data_field_values = $I->getDataFromDataFile('tests/_data/CardData.json');
         $I->selectOption($this->getElement('Wirecard Credit Card'), 'Wirecard Credit Card');
+        $I->wait(15);
         $this->switchFrame();
         $I->waitForElementVisible($this->getElement('Credit Card Last Name'));
         $I->fillField($this->getElement('Credit Card Last Name'), $data_field_values->last_name);
         $I->fillField($this->getElement('Credit Card Card number'), $data_field_values->card_number);
         $I->fillField($this->getElement('Credit Card CVV'), $data_field_values->cvv);
-        $I->selectOption(
-            $this->getElement('Credit Card Valid until month / year'),
-            $data_field_values->valid_until_month
-            . substr($data_field_values->valid_until_year, -2)
-        );
+        $I->fillField($this->getElement('Credit Card Valid until month / year'), $data_field_values->expiration_date);
         $I->switchToIFrame();
         $I->click($this->getElement('Place Order'));
     }
