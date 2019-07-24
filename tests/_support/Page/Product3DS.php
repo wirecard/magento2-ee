@@ -39,5 +39,11 @@ class Product3DS extends Base
         $I->wait(30);
         $I->waitForElementClickable($this->getElement('Add to Cart'));
         $I->click($this->getElement('Add to Cart'));
+        $I->wait(10);
+        $I->waitForElementClickable($this->getElement('Basket'));
+        $I->click(parent::getElement('Basket'));
+        $I->wait(10);
+        $I->waitForElementClickable($this->getElement('Proceed to Checkout'));
+        $I->click(parent::getElement('Proceed to Checkout'));
     }
 }

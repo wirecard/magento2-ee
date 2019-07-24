@@ -50,4 +50,4 @@ docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:flush
 
-sleep 30
+sleep 60

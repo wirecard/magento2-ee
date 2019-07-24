@@ -48,7 +48,6 @@ class Checkout extends Base
     public function fillBillingDetails()
     {
         $I = $this->tester;
-        $gatewayNumber = getenv('GATEWAY') . getenv('MAGENTO2_VERSION');
         $data_field_values = $I->getDataFromDataFile('tests/_data/CustomerData.json');
         $I->wait(45);
         $I->waitForElementVisible($this->getElement('Country'));
@@ -58,13 +57,13 @@ class Checkout extends Base
         $I->waitForElementVisible($this->getElement('Email Address'));
         $I->fillField($this->getElement('Email Address'), $data_field_values->email_address);
         $I->waitForElementVisible($this->getElement('First Name'));
-        $I->fillField($this->getElement('First Name'), $data_field_values->first_name . $gatewayNumber);
+        $I->fillField($this->getElement('First Name'), $data_field_values->first_name);
         $I->waitForElementVisible($this->getElement('Last Name'));
-        $I->fillField($this->getElement('Last Name'), $data_field_values->last_name . $gatewayNumber);
+        $I->fillField($this->getElement('Last Name'), $data_field_values->last_name);
         $I->waitForElementVisible($this->getElement('Street Address'));
-        $I->fillField($this->getElement('Street Address'), $data_field_values->street_address . $gatewayNumber);
+        $I->fillField($this->getElement('Street Address'), $data_field_values->street_address);
         $I->waitForElementVisible($this->getElement('City'));
-        $I->fillField($this->getElement('City'), $data_field_values->town . $gatewayNumber);
+        $I->fillField($this->getElement('City'), $data_field_values->town);
         $I->waitForElementVisible($this->getElement('Zip/Postal Code'));
         $I->fillField($this->getElement('Zip/Postal Code'), $data_field_values->post_code);
         $I->waitForElementVisible($this->getElement('Phone Number'));

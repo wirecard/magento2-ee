@@ -31,4 +31,5 @@ while [ ! ${NGROK_URL_S} ] || [ ${NGROK_URL_S} = 'null' ];  do
 done
 
 bash .bin/start-shopsystem.sh
+
 vendor/bin/codecept run acceptance  -g "${GATEWAY}" --html --xml

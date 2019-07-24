@@ -12,7 +12,7 @@ matrix:
     - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1' AND type != cron
+    if: env(PHRASEAPP_PULL) != '1' AND type = cron
 
   - stage: get-magento2-versions
     if: type = cron
