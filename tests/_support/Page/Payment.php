@@ -9,6 +9,8 @@
 
 namespace Page;
 
+use Facebook\WebDriver\Exception\UnknownServerException;
+
 class Payment extends Base
 {
     /**
@@ -43,7 +45,14 @@ class Payment extends Base
         $data_field_values = $I->getDataFromDataFile('tests/_data/CardData.json');
         $I->selectOption($this->getElement('Wirecard Credit Card'), 'Wirecard Credit Card');
         $I->wait(15);
-        $this->switchFrame();
+        try {
+            $this->switchFrame();
+        }
+        catch (UnknownServerException $e) {
+            $I->reloadPage();
+            $I->wait(15);
+            $this->switchFrame();
+        }
         $I->waitForElementVisible($this->getElement('Credit Card Last Name'));
         $I->fillField($this->getElement('Credit Card Last Name'), $data_field_values->last_name);
         $I->fillField($this->getElement('Credit Card Card number'), $data_field_values->card_number);
