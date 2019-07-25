@@ -47,8 +47,7 @@ class Payment extends Base
         $I->wait(15);
         try {
             $this->switchFrame();
-        }
-        catch (UnknownServerException $e) {
+        } catch (UnknownServerException $e) {
             $I->reloadPage();
             $I->wait(15);
             $this->switchFrame();
