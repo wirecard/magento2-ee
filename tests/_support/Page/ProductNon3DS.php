@@ -26,11 +26,6 @@ class ProductNon3DS extends Product3DS
      */
     public function prepareCheckout()
     {
-        $I = $this->tester;
         parent::prepareCheckout();
-        $I->wait(10);
-        $I->click(parent::getElement('Basket'));
-        $I->wait(10);
-        $I->click(parent::getElement('Proceed to Checkout'));
     }
 }

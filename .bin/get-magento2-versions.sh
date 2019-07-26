@@ -5,7 +5,7 @@
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
-curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/magento/magento2/releases | jq -r '.[] | .tag_name' | head -n3 > ${MAGENTO2_RELEASES_FILE}
+curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/magento/magento2/releases | jq -r '.[] | .tag_name' | egrep -v [a-zA-Z] | head -n3 > ${MAGENTO2_RELEASES_FILE}
 git config --global user.name "Travis CI"
 git config --global user.email "wirecard@travis-ci.org"
 

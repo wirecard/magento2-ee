@@ -9,7 +9,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 COPY ./.bin/auth.json $COMPOSER_HOME
 
-RUN requirements="libpng-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 libjpeg62-turbo libjpeg62-turbo-dev libpng-dev libfreetype6-dev libicu-dev libxslt1-dev unzip cron" \
+RUN requirements="libpng-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 libjpeg62-turbo libjpeg62-turbo-dev libpng-dev libfreetype6-dev libicu-dev libxslt1-dev unzip cron git" \
     && apt-get -qq update \
     && apt-get -qq install -y $requirements \
     && rm -rf /var/lib/apt/lists/* \
