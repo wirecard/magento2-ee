@@ -7,10 +7,9 @@
 
 set -e
 
-export MAGENTO_CONTAINER_NAME=web
-export MYSQL_DATABASE=magento
-export MYSQL_USER=magento
-export MYSQL_PASSWORD=magento
+#set -a # automatically export all variables from .env file
+#source .env
+#set +a
 
 docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
 docker-compose up -d
@@ -41,7 +40,7 @@ docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
             --env MYSQL_USER=${MYSQL_USER} \
             --env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
             --env GATEWAY=${GATEWAY} \
-            ${MAGENTO_CONTAINER_NAME} bash -c "cd /magento2-plugin/tests/_data/ && php configure_payment_method_db.php creditcard"
+            ${MAGENTO_CONTAINER_NAME} bash -c "cd /magento2-plugin/tests/_data/ && php configure_payment_method_db.php creditcard authorize"
 
 # clean cache to activate payment method
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean

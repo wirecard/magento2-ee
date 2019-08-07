@@ -18,3 +18,9 @@ modules:
           'browserstack.user': '%BROWSERSTACK_USER%'
           'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
     - \Helper\Acceptance
+
+    - Db:
+        dsn: 'mysql:host=127.0.0.1:%MYSQL_PORT_OUT%;dbname=magento'
+        user: '%MYSQL_USER%'
+        password: '%MYSQL_PASSWORD%'
+        waitlock: 10

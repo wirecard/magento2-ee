@@ -9,6 +9,11 @@ set -e
 
 export VERSION=`jq .[0].release SHOPVERSIONS`
 
+
+set -a # automatically export all variables from .env file
+source ../.env
+set +a
+
 curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > ngrok.zip
 unzip ngrok.zip
 chmod +x $PWD/ngrok

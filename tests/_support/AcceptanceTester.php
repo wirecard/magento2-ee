@@ -42,6 +42,21 @@ class AcceptanceTester extends \Codeception\Actor
     private $currentPage;
 
     /**
+     * @var array
+     * @since 2.0.0
+     */
+    private $mappedPaymentActions = [
+        'config' => [
+            'authorize' => 'authorize',
+            'purchase' => 'authorize_purchase',
+        ],
+        'tx_table' => [
+            'authorize' => 'authorization',
+            'purchase' => 'capture'
+        ]
+    ];
+
+    /**
      * Method selectPage
      *
      * @param string $name
@@ -186,5 +201,32 @@ class AcceptanceTester extends \Codeception\Actor
     public function iCheck($box)
     {
         $this->currentPage->checkBox($box);
+    }
+
+    /**
+     * @Given I activate payment action :paymentAction in configuration
+     * @param string $paymentAction
+     * @since 2.0.0
+     */
+    public function iActivatePaymentActionInConfiguration($paymentAction)
+    {
+        $this->updateInDatabase(
+            'core_config_data',
+            ['value' => $this->mappedPaymentActions['config'][$paymentAction]],
+            ['path' => 'payment/wirecard_elasticengine_creditcard/payment_action']
+        );
+    }
+
+    /**
+     * @Then I see :paymentAction in transaction table
+     * @param string $paymentAction
+     * @since 2.0.0
+     */
+    public function iSeeInTransactionTable($paymentAction)
+    {
+        $this->seeInDatabase(
+            'sales_payment_transaction',
+            ['txn_type like' => $this->mappedPaymentActions['tx_table'][$paymentAction]]
+        );
     }
 }
