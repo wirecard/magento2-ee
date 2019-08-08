@@ -8,8 +8,8 @@ actor: AcceptanceTester
 modules:
   enabled:
     - WebDriver:
-        host: 'hub-cloud.browserstack.com'
-        port: 80
+#        host: 'hub-cloud.browserstack.com'
+#        port: 80
         url: '%NGROK_URL%'
         browser: chrome # 'chrome' or 'firefox'
         capabilities:
@@ -17,7 +17,9 @@ modules:
           'project': 'magento2-ee-%GATEWAY%-%MAGENTO2_RELEASE_VERSION%'
           'browserstack.user': '%BROWSERSTACK_USER%'
           'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
+    - \Helper\DbHelper
     - \Helper\Acceptance
+    - Asserts
 
     - Db:
         dsn: 'mysql:host=127.0.0.1:%MYSQL_PORT_OUT%;dbname=magento'

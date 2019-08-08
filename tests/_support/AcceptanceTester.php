@@ -31,9 +31,12 @@ use Page\Product3DS as Product3DSPage;
 use Page\ProductNon3DS as ProductNon3DSPage;
 use Page\Verified as VerifiedPage;
 
+
+
 class AcceptanceTester extends \Codeception\Actor
 {
     use _generated\AcceptanceTesterActions;
+
 
     /**
      * @var string
@@ -48,7 +51,7 @@ class AcceptanceTester extends \Codeception\Actor
     private $mappedPaymentActions = [
         'config' => [
             'authorize' => 'authorize',
-            'purchase' => 'authorize_purchase',
+            'purchase' => 'authorize_capture',
         ],
         'tx_table' => [
             'authorize' => 'authorization',
@@ -215,6 +218,9 @@ class AcceptanceTester extends \Codeception\Actor
             ['value' => $this->mappedPaymentActions['config'][$paymentAction]],
             ['path' => 'payment/wirecard_elasticengine_creditcard/payment_action']
         );
+        //clean magento2 cache to for changes in database to come in place
+        exec("docker exec -it " . getenv("MAGENTO_CONTAINER_NAME") . " php bin/magento cache:clean");
+        exec("docker exec -it " . getenv("MAGENTO_CONTAINER_NAME") . " php bin/magento cache:flush");
     }
 
     /**
@@ -224,9 +230,22 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iSeeInTransactionTable($paymentAction)
     {
+        //keep track of number of each transaction type
         $this->seeInDatabase(
             'sales_payment_transaction',
             ['txn_type like' => $this->mappedPaymentActions['tx_table'][$paymentAction]]
         );
+        //check that last transaction in the table is the one under test
+        $transactionTypes = $this->getColumnFromDatabaseNoCriteria('sales_payment_transaction', 'txn_type');
+
+//        $transactionTypes = $this->grabColumnFromDatabase(
+//            'sales_payment_transaction',
+//            'txn_type',
+//            ['is_closed' => '*']
+//        );
+        print_r("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        print_r($transactionTypes);
+        print_r("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        $this->assertEquals(end($transactionTypes), $this->mappedPaymentActions['tx_table'][$paymentAction]);
     }
 }

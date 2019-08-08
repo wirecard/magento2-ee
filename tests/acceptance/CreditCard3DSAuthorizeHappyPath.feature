@@ -10,7 +10,7 @@ Feature: CreditCard3DSAuthorizeHappyPath
     Then I fill fields with "Customer data"
 
   @API-TEST @API-WDCEE-TEST
-  Scenario: purchase
+  Scenario: authorize
     Given I am redirected to "Payment" page
     When I fill fields with "Valid Credit Card Data"
     And I am redirected to "Verified" page

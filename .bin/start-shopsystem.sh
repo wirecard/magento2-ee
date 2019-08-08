@@ -7,10 +7,6 @@
 
 set -e
 
-#set -a # automatically export all variables from .env file
-#source .env
-#set +a
-
 docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
 docker-compose up -d
 sleep 30
