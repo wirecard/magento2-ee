@@ -8,8 +8,8 @@ actor: AcceptanceTester
 modules:
   enabled:
     - WebDriver:
-#        host: 'hub-cloud.browserstack.com'
-#        port: 80
+        host: 'hub-cloud.browserstack.com'
+        port: 80
         url: '%NGROK_URL%'
         browser: chrome # 'chrome' or 'firefox'
         capabilities:
