@@ -1,4 +1,12 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+ */
+
 namespace Helper;
 
 //namespace Codeception\Module;
@@ -9,6 +17,15 @@ namespace Helper;
 
 class DbHelper extends \Codeception\Module
 {
+
+    /**
+     * Method getColumnFromDatabaseNoCriteria
+     * @param string $table
+     * @param string $column
+     * @return array
+     *
+     * @since 2.0.0
+     */
     public function getColumnFromDatabaseNoCriteria($table, $column)
     {
         $dbh = $this->getModule('Db')->dbh;

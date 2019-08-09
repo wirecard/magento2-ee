@@ -31,12 +31,9 @@ use Page\Product3DS as Product3DSPage;
 use Page\ProductNon3DS as ProductNon3DSPage;
 use Page\Verified as VerifiedPage;
 
-
-
 class AcceptanceTester extends \Codeception\Actor
 {
     use _generated\AcceptanceTesterActions;
-
 
     /**
      * @var string
@@ -230,22 +227,12 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iSeeInTransactionTable($paymentAction)
     {
-        //keep track of number of each transaction type
         $this->seeInDatabase(
             'sales_payment_transaction',
             ['txn_type like' => $this->mappedPaymentActions['tx_table'][$paymentAction]]
         );
         //check that last transaction in the table is the one under test
         $transactionTypes = $this->getColumnFromDatabaseNoCriteria('sales_payment_transaction', 'txn_type');
-
-//        $transactionTypes = $this->grabColumnFromDatabase(
-//            'sales_payment_transaction',
-//            'txn_type',
-//            ['is_closed' => '*']
-//        );
-        print_r("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        print_r($transactionTypes);
-        print_r("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         $this->assertEquals(end($transactionTypes), $this->mappedPaymentActions['tx_table'][$paymentAction]);
     }
 }

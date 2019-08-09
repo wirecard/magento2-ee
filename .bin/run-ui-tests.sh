@@ -25,12 +25,12 @@ $PWD/ngrok authtoken $NGROK_TOKEN
 TIMESTAMP=$(date +%s)
 $PWD/ngrok http 9090 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}-${MAGENTO2_RELEASE_VERSION}" > /dev/null &
 
-NGROK_URL_S=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
+NGROK_URL_HTTPS=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
 
-while [ ! ${NGROK_URL_S} ] || [ ${NGROK_URL_S} = 'null' ];  do
+while [ ! ${NGROK_URL_HTTPS} ] || [ ${NGROK_URL_HTTPS} = 'null' ];  do
     echo "Waiting for ngrok to initialize"
-    NGROK_URL_S=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
-    export NGROK_URL=$(sed 's/https/http/g' <<< "$NGROK_URL_S")
+    NGROK_URL_HTTPS=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
+    export NGROK_URL=$(sed 's/https/http/g' <<< "$NGROK_URL_HTTPS")
     echo $NGROK_URL
     sleep 1
 done
