@@ -8,12 +8,14 @@ services:
     links:
       - db
     env_file:
-      - env
+      - .env
     environment:
       MAGENTO_URL: "${NGROK_URL}"
     volumes:
       - ".:/magento2-plugin"
   db:
     image: mysql:5.6.23
+    ports:
+      - ${MYSQL_PORT_OUT}:${MYSQL_PORT_IN}
     env_file:
-      - env
+      - .env
