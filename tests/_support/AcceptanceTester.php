@@ -45,6 +45,7 @@ class AcceptanceTester extends \Codeception\Actor
      * @var array
      * @since 2.0.0
      */
+    //Mapping different namings in plugin (because payment action named different in different place)
     private $mappedPaymentActions = [
         'config' => [
             'authorize' => 'authorize',
