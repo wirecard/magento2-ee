@@ -244,7 +244,7 @@ class Creditcard extends Action
         $currency         = $orderDto->quote->getBaseCurrencyCode();
         $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
-
+        $orderDto->transaction->setOrderNumber($orderDto->orderId);
         $orderDto->customFields = new CustomFieldCollection();
         $orderDto->customFields->add(new CustomField('orderId', $orderDto->orderId));
         $orderDto->transaction->setCustomFields($orderDto->customFields);

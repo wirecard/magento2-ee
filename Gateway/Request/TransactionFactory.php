@@ -162,6 +162,7 @@ class TransactionFactory
         $customFields = new CustomFieldCollection();
         $customFields->add(new CustomField('orderId', $this->orderId));
         $this->transaction->setCustomFields($customFields);
+        $this->transaction->setOrderNumber($this->orderId);
 
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
