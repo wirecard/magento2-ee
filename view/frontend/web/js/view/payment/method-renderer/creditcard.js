@@ -42,31 +42,31 @@ define(
                 this.showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(this.getPaymentPageScript(), function () {
-                // Build seamless renderform with full transaction data
-                $.ajax({
-                    url: url.build("wirecard_elasticengine/frontend/creditcard"),
-                    type: "post",
-                    data: uiInitData,
-                    success: function (result) {
-                        if ("OK" === result.status) {
-                            let uiInitData = JSON.parse(result.uiData);
-                            WPP.seamlessRender({
-                                requestData: uiInitData,
-                                wrappingDivId: wrappingDivId,
-                                onSuccess: formSizeHandler,
-                                onError: formInitHandler
-                            });
-                        } else {
+                    // Build seamless renderform with full transaction data
+                    $.ajax({
+                        url: url.build("wirecard_elasticengine/frontend/creditcard"),
+                        type: "post",
+                        data: uiInitData,
+                        success: function (result) {
+                            if ("OK" === result.status) {
+                                let uiInitData = JSON.parse(result.uiData);
+                                WPP.seamlessRender({
+                                    requestData: uiInitData,
+                                    wrappingDivId: wrappingDivId,
+                                    onSuccess: formSizeHandler,
+                                    onError: formInitHandler
+                                });
+                            } else {
                                 hideSpinner();
-                            messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                        }
-                    },
-                    error: function (err) {
+                                messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                            }
+                        },
+                        error: function (err) {
                             hideSpinner();
-                        messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                        console.error("Error : " + JSON.stringify(err));
-                    }
-                });
+                            messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                            console.error("Error : " + JSON.stringify(err));
+                        }
+                    });
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
