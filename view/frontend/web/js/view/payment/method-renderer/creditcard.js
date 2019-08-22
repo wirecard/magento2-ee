@@ -202,11 +202,11 @@ define(
             },
 
             showSpinner: function () {
-                $('body').trigger('processStart');
+                $("body").trigger("processStart");
             },
 
             hideSpinner: function () {
-                $('body').trigger('processStop');
+                $("body").trigger("processStop");
             },
 
         });
