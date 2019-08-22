@@ -1,16 +1,16 @@
-Feature: CreditCard3DSPurchaseHappyPath
+Feature: CreditCard3DSAuthorizeHappyPath
   As a guest  user
-  I want to make a purchase with a Credit Card 3DS
+  I want to make a authorization with a Credit Card 3DS
   And to see that transaction was successful
 
   Background:
-    Given I activate payment action "purchase" in configuration
+    Given I activate payment action "authorize" in configuration
     And I prepare checkout "3DS"
     And I am redirected to "Checkout" page
     Then I fill fields with "Customer data"
 
-  @API-TEST @API-WDCEE-TEST @NOVA
-  Scenario: purchase
+  @API-TEST @API-WDCEE-TEST
+  Scenario: authorize
     Given I am redirected to "Payment" page
     When I fill fields with "Valid Credit Card Data"
     And I am redirected to "Verified" page
@@ -18,4 +18,4 @@ Feature: CreditCard3DSPurchaseHappyPath
     And I click "Continue"
     Then I am redirected to "Order Received" page
     And I see "Thank you for your purchase!"
-    And I see "purchase" in transaction table
+    And I see "authorize" in transaction table

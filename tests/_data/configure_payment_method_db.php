@@ -35,24 +35,42 @@ $defaultConfig = [
         'sort_order' => '1'
     ]
 ];
+$supportedPaymentActionsPerPaymentMethod = [
+    'creditcard' => ['authorize', 'authorize_capture']
+];
 
-if (count($argv) < 2) {
+if (count($argv) < 3) {
     $supportedPaymentMethods = implode("\n  ", array_keys($GLOBALS['defaultConfig']));
+    $supportedPaymentActions = '';
+    foreach ($GLOBALS['defaultConfig'] as $key => $value) {
+        $supportedPaymentActions .= $supportedPaymentActions . "\n  "
+            . $key . ': ' . implode(",  ", $supportedPaymentActionsPerPaymentMethod[$key]);
+    }
+
     echo <<<END_USAGE
 Usage: php configure_payment_method_db.php <paymentmethod>
 
 Supported payment methods:
   $supportedPaymentMethods
+Supported operations:
+    $supportedPaymentActions
+ 
 
 
 END_USAGE;
     exit(1);
 }
 $paymentMethod = trim($argv[1]);
+$paymentAction = trim($argv[2]);
 
-$dbConfig = buildConfigByPaymentMethod($paymentMethod, $gateway);
+$dbConfig = buildConfigByPaymentMethod($paymentMethod, $paymentAction, $gateway);
 if (empty($dbConfig)) {
     echo "Payment method $paymentMethod is not supported\n";
+    exit(1);
+}
+
+if (!in_array($paymentAction, $supportedPaymentActionsPerPaymentMethod[$paymentMethod])) {
+    echo "Payment action $paymentAction is not supported\n";
     exit(1);
 }
 
@@ -61,19 +79,20 @@ updateMagento2EeDbConfig($dbConfig, $paymentMethod);
 /**
  * Method buildConfigByPaymentMethod
  * @param string $paymentMethod
+ * @param string $paymentAction
  * @param string $gateway
  * @return array
  *
  * @since   1.4.1
  */
 
-function buildConfigByPaymentMethod($paymentMethod, $gateway)
+function buildConfigByPaymentMethod($paymentMethod, $paymentAction, $gateway)
 {
     if (!array_key_exists($paymentMethod, $GLOBALS['defaultConfig'])) {
         return null;
     }
     $config = $GLOBALS['defaultConfig'][$paymentMethod];
-
+    $config['payment_action'] = $paymentAction;
     $jsonFile = GATEWAY_CONFIG_PATH . DIRECTORY_SEPARATOR . $paymentMethod . '.json';
     if (file_exists($jsonFile)) {
         $jsonData = json_decode(file_get_contents($jsonFile));
@@ -86,6 +105,7 @@ function buildConfigByPaymentMethod($paymentMethod, $gateway)
             }
         }
     }
+    $config['payment_action'] = $paymentAction;
     return $config;
 }
 
@@ -104,10 +124,11 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
     $dbName = getenv('MYSQL_DATABASE');
     $dbUser = getenv('MYSQL_USER');
     $dbPass = getenv('MYSQL_PASSWORD');
+    $dbPort = getenv('MYSQL_PORT_IN');
 
     $tableName = 'core_config_data';
 
-    $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
+    $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName, $dbPort);
     if ($mysqli->connect_errno) {
         echo "Can't connect DB $dbName on host $dbHost as user $dbUser \n";
         return false;
@@ -119,16 +140,14 @@ function updateMagento2EeDbConfig($db_config, $payment_method)
 
         $stmt = $mysqli->prepare("INSERT INTO $tableName (path, value) VALUES (?, ?)");
         $stmt->bind_param("ss", $path, $value);
-
         $stmt->execute();
     }
 
     foreach ($db_config as $name => $value) {
         $path = sprintf("payment/wirecard_elasticengine_creditcard/%s", $name);
 
-        $stmt = $mysqli->prepare("INSERT INTO $tableName (path, value) VALUES (?, ?)");
+        $stmt = $mysqli->prepare("REPLACE INTO $tableName (path, value) VALUES (?, ?)");
         $stmt->bind_param("ss", $path, $value);
-
         $stmt->execute();
     }
     return true;
