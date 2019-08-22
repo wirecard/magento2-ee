@@ -13,8 +13,11 @@ use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Phrase;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
@@ -22,16 +25,19 @@ use Magento\Sales\Api\Data\OrderSearchResultInterface;
 use Magento\Sales\Api\Data\OrderStatusHistoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
+use Magento\Vault\Model\PaymentToken;
+use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
+use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Notify;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
+use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Entity\StatusCollection;
@@ -54,52 +60,52 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
     private $controller;
 
     /**
-     * @var TransactionService|\PHPUnit_Framework_MockObject_MockObject
+     * @var TransactionService|PHPUnit_Framework_MockObject_MockObject
      */
     private $transactionService;
 
     /**
-     * @var CustomFieldCollection|\PHPUnit_Framework_MockObject_MockObject
+     * @var CustomFieldCollection|PHPUnit_Framework_MockObject_MockObject
      */
     private $customFields;
 
     /**
-     * @var OrderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var OrderInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private $order;
 
     /**
-     * @var Payment|\PHPUnit_Framework_MockObject_MockObject
+     * @var Payment|PHPUnit_Framework_MockObject_MockObject
      */
     private $payment;
 
     /**
-     * @var OrderSearchResultInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var OrderSearchResultInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private $orderSearchResult;
 
     /**
-     * @var OrderRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var OrderRepositoryInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private $orderRepository;
 
     /**
-     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private $logger;
 
     /**
-     * @var InvoiceService|\PHPUnit_Framework_MockObject_MockObject
+     * @var InvoiceService|PHPUnit_Framework_MockObject_MockObject
      */
     private $invoiceService;
 
     /**
-     * @var Transaction|\PHPUnit_Framework_MockObject_MockObject
+     * @var Transaction|PHPUnit_Framework_MockObject_MockObject
      */
     private $transaction;
 
     /**
-     * @var Array
+     * @var array
      */
     private $paymentData;
 
@@ -109,7 +115,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
     private $paymentTokenFactory;
 
     /**
-     * @var PaymentTokenInterface
+     * @var PaymentTokenInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private $paymentToken;
 
@@ -118,31 +124,51 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
      */
     private $paymentExtensionFactory;
 
+    /**
+     * @var PaymentTokenManagementInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $paymentTokenManagement;
+
+    /**
+     * @var PaymentTokenResourceModel|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $paymentTokenResourceModel;
+
+    /**
+     * @var AdapterInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $paymentTokenResourceModelDbAdapter;
+
+    /**
+     * @var EncryptorInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $encryptor;
+
     public function setUp()
     {
         /**
-         * @var $context Context|\PHPUnit_Framework_MockObject_MockObject
+         * @var $context Context|PHPUnit_Framework_MockObject_MockObject
          */
-        $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
+        $context           = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
         $this->paymentData = [
-            'providerTransactionId' => 1234,
+            'providerTransactionId'          => 1234,
             'providerTransactionReferenceId' => 1234567,
-            'requestId' => '1-2-3',
-            'maskedAccountNumber' => '5151***5485',
-            'authorizationCode' => '1515',
+            'requestId'                      => '1-2-3',
+            'maskedAccountNumber'            => '5151***5485',
+            'authorizationCode'              => '1515',
             'cardholderAuthenticationStatus' => 'Y',
-            'creditCardToken' => '0123456CARDTOKEN'
+            'creditCardToken'                => '0123456CARDTOKEN'
         ];
 
         /**
-         * @var $httpRequest Http|\PHPUnit_Framework_MockObject_MockObject
+         * @var $httpRequest Http|PHPUnit_Framework_MockObject_MockObject
          */
         $httpRequest = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
         $httpRequest->method('getContent')->willReturn('PayLoad');
         $context->method('getRequest')->willReturn($httpRequest);
 
         /**
-         * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
+         * @var $transactionServiceFactory TransactionServiceFactory|PHPUnit_Framework_MockObject_MockObject
          */
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
 
@@ -157,7 +183,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
 
         $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
 
-        $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
+        $this->order   = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
         $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
         $this->order->method('getPayment')->willReturn($this->payment);
         $this->order->method('addStatusHistoryComment')->willReturn($orderStatusHistoryInterface);
@@ -184,9 +210,7 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $transaction->method('addObject')->withAnyParameters()->willReturn($transaction);
 
-        $orderSender = $this->getMockWithoutInvokingTheOriginalConstructor(OrderSender::class);
-
-        $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->getMockForAbstractClass();
+        $this->paymentToken = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentToken::class);
         $this->paymentToken->method('getCustomerId')->willReturn(1);
 
         $extensionAttributesMock = $this->getMockBuilder(OrderPaymentExtensionInterface::class)->disableOriginalConstructor()->setMethods(['setVaultPaymentToken'])->getMock();
@@ -197,11 +221,15 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMockForAbstractClass();
         $this->paymentTokenFactory->method('create')->willReturn($this->paymentToken);
 
-        $paymentTokenManagement = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenManagementInterface::class);
+        $this->paymentTokenManagement = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenManagementInterface::class);
 
-        $encryptor = $this->getMockWithoutInvokingTheOriginalConstructor(EncryptorInterface::class);
+        $this->paymentTokenResourceModel          = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenResourceModel::class);
+        $this->paymentTokenResourceModelDbAdapter = $this->getMockWithoutInvokingTheOriginalConstructor(AdapterInterface::class);
+        $this->paymentTokenResourceModel->method('getConnection')->willReturn($this->paymentTokenResourceModelDbAdapter);
 
-        $this->controller = new Notify(
+        $this->encryptor = $this->getMockWithoutInvokingTheOriginalConstructor(EncryptorInterface::class);
+
+        $this->controller = new MyNotify(
             $context,
             $transactionServiceFactory,
             $this->orderRepository,
@@ -211,9 +239,9 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->paymentExtensionFactory,
             $this->paymentTokenFactory,
-            $paymentTokenManagement,
-            $encryptor,
-            $orderSender
+            $this->paymentTokenManagement,
+            $this->paymentTokenResourceModel,
+            $this->encryptor
         );
     }
 
@@ -321,8 +349,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
         $failureResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $statusCollection = $this->getMock(StatusCollection::class);
-        $status = $this->getMockWithoutInvokingTheOriginalConstructor(Status::class);
-        $iterator = new \ArrayIterator([$status, $status]);
+        $status           = $this->getMockWithoutInvokingTheOriginalConstructor(Status::class);
+        $iterator         = new \ArrayIterator([$status, $status]);
         $statusCollection->method('getIterator')->willReturn($iterator);
         $failureResponse->expects($this->once())->method('getStatusCollection')->willReturn($statusCollection);
 
@@ -388,13 +416,13 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->payment->expects($this->once())->method('setTransactionAdditionalInfo')->with(
             'raw_details_info',
             [
-                'providerTransactionId' => 1234,
+                'providerTransactionId'          => 1234,
                 'providerTransactionReferenceId' => 1234567,
-                'requestId' => '1-2-3',
-                'maskedAccountNumber' => '5151***5485',
-                'authorizationCode' => '1515',
+                'requestId'                      => '1-2-3',
+                'maskedAccountNumber'            => '5151***5485',
+                'authorizationCode'              => '1515',
                 'cardholderAuthenticationStatus' => 'Y',
-                'creditCardToken' => '0123456CARDTOKEN'
+                'creditCardToken'                => '0123456CARDTOKEN'
             ]
         );
 
@@ -414,5 +442,77 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
         $this->transactionService->method(self::HANDLE_NOTIFICATION)->willReturn($successResponse);
 
         $this->controller->execute();
+    }
+
+    public function testHandleSuccess()
+    {
+        $this->setDefaultOrder();
+
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
+        $successResponse->method('isValidSignature')->willReturn(true);
+
+        $this->payment->method('getAdditionalInformation')
+            ->with(CreditCardDataAssignObserver::VAULT_ENABLER)->willReturn(true);
+
+        $this->paymentTokenManagement
+            ->method('saveTokenWithPaymentLink')
+            ->willThrowException(new AlreadyExistsException(new Phrase('Unique constraint violation found')));
+
+        $this->paymentTokenResourceModelDbAdapter->expects($this->once())->method('delete');
+
+        $this->controller->myHandleSuccess($this->order, $successResponse);
+    }
+
+    public function testMigrateToken()
+    {
+        $this->setDefaultOrder();
+
+        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
+        $successResponse->method('isValidSignature')->willReturn(true);
+
+        $this->payment->method('getAdditionalInformation')
+            ->with(CreditCardDataAssignObserver::VAULT_ENABLER)->willReturn(true);
+
+        $this->paymentTokenManagement
+            ->method('getByPublicHash')
+            ->willReturn($this->paymentToken);
+
+        $this->paymentTokenResourceModel->expects($this->once())->method('delete');
+        $this->paymentTokenResourceModelDbAdapter->expects($this->once())->method('delete');
+
+        $this->controller->myHandleSuccess($this->order, $successResponse);
+    }
+
+    public function testGeneratePublicHash()
+    {
+        $this->paymentToken->method('getGatewayToken')->willReturn('4304509873471003');
+        $this->paymentToken->method('getPaymentMethodCode')->willReturn('wirecard_elasticengine_creditcard');
+        $this->paymentToken->method('getType')->willReturn('card');
+        $this->paymentToken->method('getTokenDetails')
+            ->willReturn('{"type":"","maskedCC":"1003","expirationDate":"xx-xxxx"}');
+
+        $this->encryptor->method('getHash')->will($this->returnCallback(function ($arg) {
+            return md5($arg);
+        }));
+
+        $hash = $this->controller->myGeneratePublicHash($this->paymentToken);
+        $this->assertEquals('98cb19a0753e9ae138466da73c4ead19', $hash);
+    }
+}
+
+class MyNotify extends Notify
+{
+    public function myHandleSuccess($order, $response)
+    {
+        return $this->handleSuccess($order, $response);
+    }
+
+    public function myGeneratePublicHash($paymentToken)
+    {
+        return $this->generatePublicHash($paymentToken);
     }
 }
