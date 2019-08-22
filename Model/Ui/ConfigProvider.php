@@ -260,9 +260,7 @@ class ConfigProvider implements ConfigProviderInterface
     private function getWppUrl($paymentCode)
     {
         $method = $this->paymentHelper->getMethodInstance($paymentCode);
-        $format = '<script src="%s%s" type="text/javascript"/>';
-        $script = sprintf($format, $method->getConfigData('wpp_url'), self::PAYMENTPAGE_LOADER);
-        return $script;
+        return $method->getConfigData('wpp_url') . self::PAYMENTPAGE_LOADER;
     }
 
     /**
