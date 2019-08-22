@@ -5,7 +5,8 @@
     "tested": "2.3.1",
     "compatibility": "2.1.4",
     "changelog": [
-      "Add order-number request parameter"
+      "Add order-number request parameter",
+      "Improve loading of WPP v2 Credit Card UI"
     ]
   },
   {
