@@ -189,6 +189,7 @@ class SepaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
+        $expected->setOrderNumber(self::ORDER_ID);
 
         $mandate = new Mandate('1234');
 
