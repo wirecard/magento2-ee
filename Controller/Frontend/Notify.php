@@ -9,12 +9,15 @@
 
 namespace Wirecard\ElasticEngine\Controller\Frontend;
 
+use InvalidArgumentException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
@@ -24,6 +27,8 @@ use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
+use Magento\Vault\Model\PaymentToken;
+use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
@@ -34,6 +39,7 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Class Notify
+ *
  * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method \Magento\Framework\App\Request\Http getRequest()
  */
@@ -92,12 +98,18 @@ class Notify extends Action implements CsrfAwareActionInterface
     private $paymentTokenManagement;
 
     /**
+     * @var PaymentTokenResourceModel
+     */
+    protected $paymentTokenResourceModel;
+
+    /**
      * @var EncryptorInterface
      */
     private $encryptor;
 
     /**
      * Notify constructor.
+     *
      * @param Context $context
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param OrderRepositoryInterface $orderRepository
@@ -105,6 +117,11 @@ class Notify extends Action implements CsrfAwareActionInterface
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
+     * @param OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
+     * @param PaymentTokenInterfaceFactory $paymentTokenFactory
+     * @param PaymentTokenManagementInterface $paymentTokenManagement
+     * @param PaymentTokenResourceModel $paymentTokenResourceModel
+     * @param EncryptorInterface $encryptor
      */
     public function __construct(
         Context $context,
@@ -117,19 +134,21 @@ class Notify extends Action implements CsrfAwareActionInterface
         OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
         PaymentTokenInterfaceFactory $paymentTokenFactory,
         PaymentTokenManagementInterface $paymentTokenManagement,
+        PaymentTokenResourceModel $paymentTokenResourceModel,
         EncryptorInterface $encryptor
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
-        $this->orderRepository = $orderRepository;
-        $this->logger = $logger;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->invoiceService = $invoiceService;
-        $this->transaction = $transaction;
-        $this->canCaptureInvoice = false;
-        $this->paymentTokenFactory = $paymentTokenFactory;
-        $this->paymentExtensionFactory = $paymentExtensionFactory;
-        $this->paymentTokenManagement = $paymentTokenManagement;
-        $this->encryptor = $encryptor;
+        $this->orderRepository           = $orderRepository;
+        $this->logger                    = $logger;
+        $this->searchCriteriaBuilder     = $searchCriteriaBuilder;
+        $this->invoiceService            = $invoiceService;
+        $this->transaction               = $transaction;
+        $this->canCaptureInvoice         = false;
+        $this->paymentTokenFactory       = $paymentTokenFactory;
+        $this->paymentExtensionFactory   = $paymentExtensionFactory;
+        $this->paymentTokenManagement    = $paymentTokenManagement;
+        $this->paymentTokenResourceModel = $paymentTokenResourceModel;
+        $this->encryptor                 = $encryptor;
 
         parent::__construct($context);
     }
@@ -137,8 +156,9 @@ class Notify extends Action implements CsrfAwareActionInterface
     /**
      * Dispatch request
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws MalformedResponseException
+     * @throws LocalizedException
      */
     public function execute()
     {
@@ -148,7 +168,7 @@ class Notify extends Action implements CsrfAwareActionInterface
             $transactionService = $this->transactionServiceFactory->create();
             //handle response
             $response = $transactionService->handleNotification($payload);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->logger->error('Invalid argument set: ' . $e->getMessage());
             throw $e;
         } catch (MalformedResponseException $e) {
@@ -168,6 +188,7 @@ class Notify extends Action implements CsrfAwareActionInterface
             $order = $this->getOrderByIncrementId($orderId);
         } catch (NoSuchEntityException $e) {
             $this->logger->warning(sprintf('Order with orderID %s not found.', $orderId));
+
             return;
         }
 
@@ -179,7 +200,7 @@ class Notify extends Action implements CsrfAwareActionInterface
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
                 /**
-                 * @var $status Status
+                 * @var Status $status
                  */
                 $this->logger->error(sprintf('Error occured: %s (%s)', $status->getDescription(), $status->getCode()));
             }
@@ -194,14 +215,16 @@ class Notify extends Action implements CsrfAwareActionInterface
     /**
      * @param Order $order
      * @param SuccessResponse $response
+     *
+     * @throws LocalizedException
      */
-    private function handleSuccess($order, $response)
+    protected function handleSuccess($order, $response)
     {
         if ($order->getStatus() !== Order::STATE_COMPLETE) {
             $this->updateOrderState($order, Order::STATE_PROCESSING);
         }
         /**
-         * @var $payment Order\Payment
+         * @var Order\Payment $payment
          */
         $payment = $order->getPayment();
         $this->setCanCaptureInvoice($response->getTransactionType());
@@ -210,17 +233,25 @@ class Notify extends Action implements CsrfAwareActionInterface
             $this->captureInvoice($order, $response);
         }
 
-        if ($payment->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)) {
-            $this->saveCreditCardToken($response, $order->getCustomerId(), $payment);
+        try {
+            if ($payment->getAdditionalInformation(CreditCardDataAssignObserver::VAULT_ENABLER)) {
+                $this->saveCreditCardToken($response, $order->getCustomerId(), $payment);
+            }
+        } catch (AlreadyExistsException $e) {
+            // just in the case that there is a stale token, next time saving the card will succeed
+            $this->removeTokenByGatewayToken($order->getCustomerId(), $response->getCardTokenId());
+            // suppress exception, this error should not cause an incomplete order
         }
 
         $this->orderRepository->save($order);
     }
+
     /**
      * search for an order by id and update the state/status property
      *
      * @param OrderInterface $order
      * @param $newState
+     *
      * @return OrderInterface
      */
     private function updateOrderState(OrderInterface $order, $newState)
@@ -228,12 +259,14 @@ class Notify extends Action implements CsrfAwareActionInterface
         $order->setStatus($newState);
         $order->setState($newState);
         $this->orderRepository->save($order);
+
         return $order;
     }
 
     /**
      * @param Order\Payment $payment
      * @param SuccessResponse $response
+     *
      * @return Order\Payment
      */
     private function updatePaymentTransactionIds(Order\Payment $payment, SuccessResponse $response)
@@ -275,8 +308,9 @@ class Notify extends Action implements CsrfAwareActionInterface
 
     /**
      * @param $orderId
-     * @throws NoSuchEntityException
+     *
      * @return Order
+     * @throws NoSuchEntityException
      */
     private function getOrderByIncrementId($orderId)
     {
@@ -284,7 +318,7 @@ class Notify extends Action implements CsrfAwareActionInterface
             OrderInterface::INCREMENT_ID,
             $orderId
         )->create();
-        $result = $this->orderRepository->getList($searchCriteria);
+        $result         = $this->orderRepository->getList($searchCriteria);
 
         if (empty($result->getItems())) {
             throw new NoSuchEntityException(__('no_such_order_error'));
@@ -296,7 +330,10 @@ class Notify extends Action implements CsrfAwareActionInterface
     }
 
     /**
+     * @param Order $order
      * @param SuccessResponse $response
+     *
+     * @throws LocalizedException
      */
     private function captureInvoice($order, $response)
     {
@@ -327,8 +364,17 @@ class Notify extends Action implements CsrfAwareActionInterface
         }
     }
 
-    private function saveCreditCardToken($response, $customerId, $payment)
+    /**
+     * @param SuccessResponse $response
+     * @param $customerId
+     * @param Order\Payment $payment
+     *
+     * @throws \Exception
+     */
+    protected function saveCreditCardToken($response, $customerId, $payment)
     {
+        $this->migrateToken($response, $customerId, $payment);
+
         /** @var PaymentTokenInterface $paymentToken */
         $paymentToken = $this->paymentTokenFactory->create();
         $paymentToken->setGatewayToken($response->getCardTokenId());
@@ -337,13 +383,12 @@ class Notify extends Action implements CsrfAwareActionInterface
         $paymentToken->setIsVisible(true);
         $paymentToken->setCustomerId($customerId);
         $paymentToken->setPaymentMethodCode($payment->getMethod());
-        $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
-
         $paymentToken->setTokenDetails(json_encode([
-            'type' => '',
-            'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
+            'type'           => '',
+            'maskedCC'       => substr($response->getMaskedAccountNumber(), -4),
             'expirationDate' => 'xx-xxxx'
         ]));
+        $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
 
         if (null !== $paymentToken) {
             /** @var \Magento\Sales\Api\Data\OrderPaymentExtensionInterface $extensionAttributes */
@@ -357,17 +402,89 @@ class Notify extends Action implements CsrfAwareActionInterface
         }
     }
 
-    private function generatePublicHash(PaymentTokenInterface $paymentToken)
+    /**
+     * @param PaymentTokenInterface $paymentToken
+     *
+     * @return string
+     */
+    protected function generatePublicHash(PaymentTokenInterface $paymentToken)
     {
-        $hashKey = $paymentToken->getGatewayToken();
+        $customerId = '';
         if ($paymentToken->getCustomerId()) {
-            $hashKey = $paymentToken->getCustomerId();
+            $customerId = $paymentToken->getCustomerId();
         }
 
-        $hashKey .= $paymentToken->getPaymentMethodCode()
-            . $paymentToken->getType()
-            . $paymentToken->getTokenDetails();
+        $hashKey = sprintf('%s%s%s%s%s',
+            $paymentToken->getGatewayToken(),
+            $customerId,
+            $paymentToken->getPaymentMethodCode(),
+            $paymentToken->getType(),
+            $paymentToken->getTokenDetails());
 
         return $this->encryptor->getHash($hashKey);
+    }
+
+    /**
+     * remove tokens with outdated hash credentials
+     * check if a token is found with the old hash for a customer and remove it
+     *
+     * @param SuccessResponse $response
+     * @param $customerId
+     * @param Order\Payment $payment
+     *
+     * @throws \Exception
+     */
+    protected function migrateToken($response, $customerId, $payment)
+    {
+        $hash = $this->generatePublicLegacyHash($response, $customerId, $payment);
+
+        /** @var PaymentToken $token */
+        $token = $this->paymentTokenManagement->getByPublicHash($hash, $customerId);
+        if (!empty($token)) {
+            // do not use the PaymentTokenRepository, it just deactivates the token on delete
+            $this->paymentTokenResourceModel->delete($token);
+
+            $this->removeTokenByGatewayToken($customerId, $response->getCardTokenId());
+        }
+    }
+
+    /**
+     * generate the legacy hash, do not use this function anywhere else
+     *
+     * @param SuccessResponse $response
+     * @param $customerId
+     * @param Order\Payment $payment
+     *
+     * @return string
+     */
+    private function generatePublicLegacyHash($response, $customerId, $payment)
+    {
+        $paymentToken = $this->paymentTokenFactory->create();
+
+        $hashKey = $response->getCardTokenId();
+        if ($customerId) {
+            $hashKey = $customerId;
+        }
+        $hashKey .= $payment->getMethod() . $paymentToken->getType();
+
+        return $this->encryptor->getHash($hashKey);
+    }
+
+    /**
+     * remove a token from the database by gateway token (cardTokenId)
+     * there might be some stale tokens with the same gateway_token
+     * payment_method_code, customer_id and gateway_token must be unique
+     *
+     * @param $customerId
+     * @param $gatewayToken
+     *
+     * @throws LocalizedException
+     */
+    protected function removeTokenByGatewayToken($customerId, $gatewayToken)
+    {
+        $this->paymentTokenResourceModel->getConnection()->delete($this->paymentTokenResourceModel->getMainTable(), [
+            'customer_id = ?'   => $customerId,
+            'gateway_token = ?' => $gatewayToken
+        ]);
     }
 }
