@@ -411,7 +411,7 @@ class Notify extends Action implements CsrfAwareActionInterface
     {
         $hashKey = $paymentToken->getGatewayToken();
         if ($paymentToken->getCustomerId()) {
-            $hashKey .= $paymentToken->getCustomerId();
+            $hashKey = sprintf('%s%s', $hashKey, $paymentToken->getCustomerId());
         }
 
         $hashKey .= $paymentToken->getPaymentMethodCode()
