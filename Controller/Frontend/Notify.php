@@ -433,24 +433,38 @@ class Notify extends Action implements CsrfAwareActionInterface
      */
     protected function migrateToken($response, $customerId, $payment)
     {
+        $hash = $this->generatePublicLegacyHash($response, $customerId, $payment);
+
+        /** @var PaymentToken $token */
+        $token = $this->paymentTokenManagement->getByPublicHash($hash, $customerId);
+        if (!empty($token)) {
+            // do not use the PaymentTokenRepository, it just deactivates the token on delete
+            $this->paymentTokenResourceModel->delete($token);
+
+            $this->removeTokenByGatewayToken($customerId, $response->getCardTokenId());
+        }
+    }
+
+    /**
+     * generate the legacy hash, do not use this function anywhere else
+     *
+     * @param SuccessResponse $response
+     * @param $customerId
+     * @param Order\Payment $payment
+     *
+     * @return string
+     */
+    private function generatePublicLegacyHash($response, $customerId, $payment)
+    {
         $paymentToken = $this->paymentTokenFactory->create();
 
-        // generate the (legacy) hash
         $hashKey = $response->getCardTokenId();
         if ($customerId) {
             $hashKey = $customerId;
         }
         $hashKey .= $payment->getMethod() . $paymentToken->getType();
-        $hash    = $this->encryptor->getHash($hashKey);
 
-        /** @var PaymentToken $token */
-        $token = $this->paymentTokenManagement->getByPublicHash($hash, $customerId);
-        if (!empty($token)) {
-            // don not use the PaymentTokenRepository, it just deactivates the token on delete
-            $this->paymentTokenResourceModel->delete($token);
-
-            $this->removeTokenByGatewayToken($customerId, $response->getCardTokenId());
-        }
+        return $this->encryptor->getHash($hashKey);
     }
 
     /**
