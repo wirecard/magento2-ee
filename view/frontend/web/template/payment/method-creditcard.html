@@ -34,10 +34,6 @@
         </div>
 
         <!-- ko if: (getCode() == isChecked()) -->
-        <div data-bind="html: getPaymentPageScript()" style="display: none;"></div>
-        <!-- /ko -->
-
-        <!-- ko if: (getCode() == isChecked()) -->
         <div data-bind="attr: {'id': getCode() + '_seamless_form'}, afterRender: seamlessFormInit"></div>
         <!-- /ko -->
 
