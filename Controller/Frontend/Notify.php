@@ -409,14 +409,17 @@ class Notify extends Action implements CsrfAwareActionInterface
      */
     protected function generatePublicHash(PaymentTokenInterface $paymentToken)
     {
-        $hashKey = $paymentToken->getGatewayToken();
+        $customerId = '';
         if ($paymentToken->getCustomerId()) {
-            $hashKey = sprintf('%s%s', $hashKey, $paymentToken->getCustomerId());
+            $customerId = $paymentToken->getCustomerId();
         }
 
-        $hashKey .= $paymentToken->getPaymentMethodCode()
-                    . $paymentToken->getType()
-                    . $paymentToken->getTokenDetails();
+        $hashKey = sprintf('%s%s%s%s%s',
+            $paymentToken->getGatewayToken(),
+            $customerId,
+            $paymentToken->getPaymentMethodCode(),
+            $paymentToken->getType(),
+            $paymentToken->getTokenDetails());
 
         return $this->encryptor->getHash($hashKey);
     }
