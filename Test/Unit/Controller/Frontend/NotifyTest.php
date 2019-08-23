@@ -171,11 +171,8 @@ class NotifyTest extends \PHPUnit_Framework_TestCase
          * @var $transactionServiceFactory TransactionServiceFactory|PHPUnit_Framework_MockObject_MockObject
          */
         $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
-
         $this->transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
-
         $this->transaction = $this->getMockWithoutInvokingTheOriginalConstructor(Transaction::class);
-
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
         $orderStatusHistoryInterface = $this->getMockWithoutInvokingTheOriginalConstructor(OrderStatusHistoryInterface::class);
