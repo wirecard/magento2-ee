@@ -99,6 +99,7 @@ class Notify extends Action implements CsrfAwareActionInterface
 
     /**
      * @var PaymentTokenResourceModel
+     * @since 2.0.1
      */
     protected $paymentTokenResourceModel;
 
@@ -122,6 +123,8 @@ class Notify extends Action implements CsrfAwareActionInterface
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
+     *
+     * @since 2.0.1 Add PaymentTokenResourceModel
      */
     public function __construct(
         Context $context,
@@ -370,6 +373,7 @@ class Notify extends Action implements CsrfAwareActionInterface
      * @param Order\Payment $payment
      *
      * @throws \Exception
+     * @since 2.0.1
      */
     protected function saveCreditCardToken($response, $customerId, $payment)
     {
@@ -406,6 +410,7 @@ class Notify extends Action implements CsrfAwareActionInterface
      * @param PaymentTokenInterface $paymentToken
      *
      * @return string
+     * @since 2.0.1
      */
     protected function generatePublicHash(PaymentTokenInterface $paymentToken)
     {
@@ -414,12 +419,14 @@ class Notify extends Action implements CsrfAwareActionInterface
             $customerId = $paymentToken->getCustomerId();
         }
 
-        $hashKey = sprintf('%s%s%s%s%s',
+        $hashKey = sprintf(
+            '%s%s%s%s%s',
             $paymentToken->getGatewayToken(),
             $customerId,
             $paymentToken->getPaymentMethodCode(),
             $paymentToken->getType(),
-            $paymentToken->getTokenDetails());
+            $paymentToken->getTokenDetails()
+        );
 
         return $this->encryptor->getHash($hashKey);
     }
@@ -433,6 +440,7 @@ class Notify extends Action implements CsrfAwareActionInterface
      * @param Order\Payment $payment
      *
      * @throws \Exception
+     * @since 2.0.1
      */
     protected function migrateToken($response, $customerId, $payment)
     {
@@ -456,6 +464,7 @@ class Notify extends Action implements CsrfAwareActionInterface
      * @param Order\Payment $payment
      *
      * @return string
+     * @since 2.0.1
      */
     private function generatePublicLegacyHash($response, $customerId, $payment)
     {
@@ -479,6 +488,7 @@ class Notify extends Action implements CsrfAwareActionInterface
      * @param $gatewayToken
      *
      * @throws LocalizedException
+     * @since 2.0.1
      */
     protected function removeTokenByGatewayToken($customerId, $gatewayToken)
     {
