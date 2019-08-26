@@ -234,6 +234,8 @@ class Creditcard extends Action
      *
      * @param OrderDto $orderDto data transfer object holds all order data
      * @param string $txType frontend key to specify the transaction type
+     *
+     * @since 2.0.1 set order-number
      */
     private function processCreditCard(OrderDTO $orderDto, string $txType)
     {
@@ -244,10 +246,7 @@ class Creditcard extends Action
         $currency         = $orderDto->quote->getBaseCurrencyCode();
         $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
-
-        $orderDto->customFields = new CustomFieldCollection();
-        $orderDto->customFields->add(new CustomField('orderId', $orderDto->orderId));
-        $orderDto->transaction->setCustomFields($orderDto->customFields);
+        $this->addOrderIdToTransaction($orderDto);
 
         $orderDto->transaction->setEntryMode('ecommerce');
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
@@ -297,7 +296,6 @@ class Creditcard extends Action
             $orderDto->orderId
         ));
 
-        $orderDto->transaction->setOrderNumber($orderDto->orderId);
         $orderDto->basket = new Basket();
         $this->addOrderItemsToBasket($orderDto);
         $orderDto->transaction->setIpAddress($orderDto->quote->getRemoteIp());
@@ -401,5 +399,22 @@ class Creditcard extends Action
             return $language;
         }
         return $language;
+    }
+
+    /**
+     * Add mandatory order-number to transaction in DTO and custom field orderId for backwards compatibility
+     *
+     * NOTE: the resulting transaction also stored in the DTO so there is
+     *       no return here.
+     *
+     * @param OrderDto $orderDto data transfer object holds all order data
+     * @since 2.0.1
+     */
+    private function addOrderIdToTransaction(OrderDTO $orderDto)
+    {
+        $orderDto->customFields = new CustomFieldCollection();
+        $orderDto->customFields->add(new CustomField('orderId', $orderDto->orderId));
+        $orderDto->transaction->setCustomFields($orderDto->customFields);
+        $orderDto->transaction->setOrderNumber($orderDto->orderId);
     }
 }

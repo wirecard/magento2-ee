@@ -137,6 +137,7 @@ class GiropayTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setCustomFields($customFields);
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
+        $expected->setOrderNumber(self::ORDER_ID);
         $bankAccount = new BankAccount();
         $bankAccount->setBic('GENODETT488');
         $expected->setBankAccount($bankAccount);
