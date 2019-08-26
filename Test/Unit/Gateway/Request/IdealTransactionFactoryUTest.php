@@ -138,6 +138,7 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setLocale('en');
         $expected->setEntryMode('ecommerce');
         $expected->setBic(IdealBic::INGBNL2A);
+        $expected->setOrderNumber(self::ORDER_ID);
 
         return $expected;
     }

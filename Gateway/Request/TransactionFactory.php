@@ -140,6 +140,8 @@ class TransactionFactory
      * @return Transaction
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
+     *
+     * @since 2.0.1 set order-number
      */
     public function create($commandSubject)
     {
@@ -159,9 +161,7 @@ class TransactionFactory
         $this->transaction->setAmount($amount);
 
         $this->orderId = $order->getOrderIncrementId();
-        $customFields = new CustomFieldCollection();
-        $customFields->add(new CustomField('orderId', $this->orderId));
-        $this->transaction->setCustomFields($customFields);
+        $this->addOrderIdToTransaction($this->orderId);
 
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
@@ -303,7 +303,6 @@ class TransactionFactory
         if (null != $order->getShippingAddress()) {
             $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
         }
-        $this->transaction->setOrderNumber($this->orderId);
         $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
         $this->transaction->setIpAddress($order->getRemoteIp());
         $this->transaction->setConsumerId($order->getCustomerId());
@@ -336,5 +335,19 @@ class TransactionFactory
             ->create();
 
         return $this->transactionRepository->getList($searchCriteria)->toArray();
+    }
+
+    /**
+     * Add mandatory order-number to transaction and custom field orderId for backwards compatibility
+     *
+     * @param $orderId
+     * @since 2.0.1
+     */
+    protected function addOrderIdToTransaction($orderId)
+    {
+        $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('orderId', $orderId));
+        $this->transaction->setCustomFields($customFields);
+        $this->transaction->setOrderNumber($orderId);
     }
 }

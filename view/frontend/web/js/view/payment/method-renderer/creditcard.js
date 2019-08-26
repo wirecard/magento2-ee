@@ -37,30 +37,36 @@ define(
                 let wrappingDivId = this.getCode() + "_seamless_form";
                 let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
+                let hideSpinner = this.hideSpinner.bind(this);
                 let messageContainer = this.messageContainer;
-
-                // Build seamless renderform with full transaction data
-                $.ajax({
-                    url: url.build("wirecard_elasticengine/frontend/creditcard"),
-                    type: "post",
-                    data: uiInitData,
-                    success: function (result) {
-                        if ("OK" === result.status) {
-                            let uiInitData = JSON.parse(result.uiData);
-                            WPP.seamlessRender({
-                                requestData: uiInitData,
-                                wrappingDivId: wrappingDivId,
-                                onSuccess: formSizeHandler,
-                                onError: formInitHandler
-                            });
-                        } else {
+                this.showSpinner();
+                // wait until WPP-js has been loaded
+                $.getScript(this.getPaymentPageScript(), function () {
+                    // Build seamless renderform with full transaction data
+                    $.ajax({
+                        url: url.build("wirecard_elasticengine/frontend/creditcard"),
+                        type: "post",
+                        data: uiInitData,
+                        success: function (result) {
+                            if ("OK" === result.status) {
+                                let uiInitData = JSON.parse(result.uiData);
+                                WPP.seamlessRender({
+                                    requestData: uiInitData,
+                                    wrappingDivId: wrappingDivId,
+                                    onSuccess: formSizeHandler,
+                                    onError: formInitHandler
+                                });
+                            } else {
+                                hideSpinner();
+                                messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                            }
+                        },
+                        error: function (err) {
+                            hideSpinner();
                             messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                            console.error("Error : " + JSON.stringify(err));
                         }
-                    },
-                    error: function (err) {
-                        messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                        console.error("Error : " + JSON.stringify(err));
-                    }
+                    });
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
@@ -125,6 +131,8 @@ define(
                 console.error(response);
             },
             seamlessFormSubmitErrorHandler: function (response) {
+                this.hideSpinner();
+
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
                 console.error(response);
 
@@ -133,6 +141,7 @@ define(
                 }, 3000);
             },
             seamlessFormSizeHandler: function () {
+                this.hideSpinner();
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
                 let seamlessForm = document.getElementById(this.getCode() + "_seamless_form");
                 if (seamlessForm !== null) {
@@ -190,7 +199,16 @@ define(
              */
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
-            }
+            },
+
+            showSpinner: function () {
+                $("body").trigger("processStart");
+            },
+
+            hideSpinner: function () {
+                $("body").trigger("processStop");
+            },
+
         });
     }
 );
