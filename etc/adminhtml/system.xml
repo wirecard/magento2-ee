@@ -173,6 +173,11 @@
                     <label>config_payment_action</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
+                <field id="challenge_ind" translate="label" type="select" sortOrder="90" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>config_challenge_ind</label>
+                    <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\ChallengeIndicator</source_model>
+                </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                        showInStore="0">
                     <label>config_sort_order</label>
