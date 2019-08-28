@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
+use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -177,6 +178,12 @@ class Creditcard extends Action
         } catch (\Exception $e) {
             return $this->buildErrorResponse('cannot create UI', ['exception' => get_class($e)]);
         }
+    }
+
+    private function createThreeDSData($order) {
+        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
+        $challengeIndicator = $method->getConfigData('challenge_ind');
+        $accountInfo = new AccountInfoFactory($order, $challengeIndicator);
     }
 
     /**
