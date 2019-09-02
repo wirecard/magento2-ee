@@ -270,9 +270,29 @@ class Creditcard extends Action
         $notificationUrl = $wdBaseUrl . 'frontend/notify?orderId=' . $orderDto->orderId;
         $orderDto->transaction->setNotificationUrl($notificationUrl);
 
+        // here send 3D Secure parameter
+        $this->setThreeDSTransactionFields($orderDto);
+
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
+    }
+
+    private function setThreeDSTransactionFields(OrderDto $orderDto)
+    {
+        //@TODO add AccountInfoFactory DI
+        //$accountInfo = new AccountInfoFactory();
+        $accountHolder = $this->fetchAccountHolder($orderDto->quote->getBillingAddress());
+        $orderDto->transaction->setAccountHolder($accountHolder);
+
+        $shippingAddress = $orderDto->quote->getShippingAddress();
+        if (isset($shippingAddress)) {
+            $orderDto->transaction->setShipping(
+                $this->fetchAccountHolder($orderDto->quote->getShippingAddress())
+            );
+        }
+        //set merchant-crm-id
+        //$orderDto->quote->getCustomerId();
     }
 
     /**
@@ -312,7 +332,7 @@ class Creditcard extends Action
     /**
      * Helper method to build the AccountHolder structure by an address
      *
-     * @param \Magento\Customer\Model\Address $address Magento2 address from session
+     * @param \Magento\Quote\Model\Quote\Address $address Magento2 address from session
      * @return AccountHolder paymentSdk entity AccountHolder
      */
     private function fetchAccountHolder($address)

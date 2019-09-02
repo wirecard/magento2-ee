@@ -9,7 +9,9 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
-use Magento\Customer\Model\Session;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\Session as CustomerSession;
+use Wirecard\ElasticEngine\Model\Adminhtml\Source\ChallengeIndicator;
 use Wirecard\PaymentSdk\Constant\AuthMethod;
 use Wirecard\PaymentSdk\Entity\AccountInfo;
 
@@ -21,12 +23,16 @@ class AccountInfoFactory
 {
     protected $customerSession;
 
-    public function __construct(Session $session)
+    public function __construct(CustomerSession $customerSession)
     {
-        $this->customerSession = $session;
+        $this->customerSession = $customerSession;
     }
 
-    public function create($order, $challengeIndicator)
+    /**
+     * @param ChallengeIndicator $challengeIndicator
+     * @return AccountInfo
+     */
+    public function create($challengeIndicator)
     {
         $accountInfo = new AccountInfo();
         $accountInfo->setAuthMethod(AuthMethod::GUEST_CHECKOUT);
@@ -35,11 +41,18 @@ class AccountInfoFactory
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
             $this->setUserData();
         }
+        $accountInfo->setChallengeInd($challengeIndicator);
 
         return $accountInfo;
     }
 
     private function setUserData() {
         // TODO Implement account info based on logged in user
+        /** @var CustomerInterface $dataModel */
+        $dataModel = $this->customerSession->getCustomerData();
+        $created = $dataModel->getCreatedAt();
+        $updated = $dataModel->getUpdatedAt();
+        //customer login timestamp
+
     }
 }
