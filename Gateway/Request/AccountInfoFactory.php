@@ -54,7 +54,7 @@ class AccountInfoFactory
 
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
-            //$this->getCustomerOrders();
+            //$this->getCustomerOrderIdsLastDay();
             //$this->setUserData();
         }
         $accountInfo->setChallengeInd($challengeIndicator);
@@ -99,7 +99,20 @@ class AccountInfoFactory
             ->addAttributeToFilter('created_at', $this->getDateRangeFilter($startDate));
 
         $orderIds = array_values($orderCollection->getAllIds());
+        //$this->getTransactions($orderIds);
 
         //check for state or status
+    }
+
+    private function getTransactions($order_ids)
+    {
+        if ($this->transactionRepository === null) {
+            return [];
+        }
+
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $order_ids, 'IN')->create();
+        $amountTransactions = $this->transactionRepository->getList($searchCriteria)->getTotalCount();
+
+        //$this->logger->error($amountTransactions);
     }
 }
