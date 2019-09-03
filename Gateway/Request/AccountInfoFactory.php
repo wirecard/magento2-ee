@@ -11,6 +11,11 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\ChallengeIndicator;
 use Wirecard\PaymentSdk\Constant\AuthMethod;
 use Wirecard\PaymentSdk\Entity\AccountInfo;
@@ -22,10 +27,20 @@ use Wirecard\PaymentSdk\Entity\AccountInfo;
 class AccountInfoFactory
 {
     protected $customerSession;
+    protected $transactionRepository;
+    protected $filterBuilder;
+    protected $searchCriteriaBuilder;
+    protected $orderCollection;
+    protected $logger;
 
-    public function __construct(CustomerSession $customerSession)
+    public function __construct(CustomerSession $customerSession, LoggerInterface $logger, CollectionFactory $orderCollection, Repository $transactionRepository, FilterBuilder $filterBuilder, SearchCriteriaBuilder $searchCriteriaBuilder)
     {
         $this->customerSession = $customerSession;
+        $this->logger = $logger;
+        $this->transactionRepository = $transactionRepository;
+        $this->filterBuilder = $filterBuilder;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->orderCollection = $orderCollection;
     }
 
     /**
@@ -39,7 +54,8 @@ class AccountInfoFactory
 
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
-            $this->setUserData();
+            //$this->getCustomerOrders();
+            //$this->setUserData();
         }
         $accountInfo->setChallengeInd($challengeIndicator);
 
@@ -52,7 +68,38 @@ class AccountInfoFactory
         $dataModel = $this->customerSession->getCustomerData();
         $created = $dataModel->getCreatedAt();
         $updated = $dataModel->getUpdatedAt();
+        $addresses = $dataModel->getAddresses();
+        foreach ($addresses as $address) {
+            $addressId = $address->getId();
+        }
         //customer login timestamp
+    }
 
+    /**
+     * Create from-to date range array where from is set with date/time string
+     *
+     * @param string $startDateStatement
+     * @return array
+     */
+    private function getDateRangeFilter($startDateStatement)
+    {
+        $endDate = date('Y-m-d H:i:s');
+        $startDate = date('Y-m-d H:i:s', strtotime($startDateStatement));
+        $dateFilter = array('from'=>$startDate, 'to'=>$endDate);
+
+        return $dateFilter;
+    }
+
+    private function getCustomerOrderIdsLastDay()
+    {
+        $startDate = 'yesterday';
+
+        $orderCollection = $this->orderCollection->create($this->customerSession->getCustomerId())
+            ->addFieldToSelect('entity_id')
+            ->addAttributeToFilter('created_at', $this->getDateRangeFilter($startDate));
+
+        $orderIds = array_values($orderCollection->getAllIds());
+
+        //check for state or status
     }
 }

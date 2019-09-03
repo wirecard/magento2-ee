@@ -81,6 +81,8 @@ class Creditcard extends Action
     /** @var LoggerInterface */
     protected $logger;
 
+    protected $accountInfoFactory;
+
     /**
      * Creditcard constructor.
      *
@@ -95,6 +97,7 @@ class Creditcard extends Action
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
      * @param LoggerInterface $logger
+     * @param AccountInfoFactory $accountInfoFactory
      */
     public function __construct(
         Context $context,
@@ -107,7 +110,8 @@ class Creditcard extends Action
         StoreManagerInterface $storeManager,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        AccountInfoFactory $accountInfoFactory
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
@@ -120,6 +124,7 @@ class Creditcard extends Action
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
         $this->logger = $logger;
+        $this->accountInfoFactory = $accountInfoFactory;
         parent::__construct($context);
     }
 
@@ -183,7 +188,7 @@ class Creditcard extends Action
     private function createThreeDSData($order) {
         $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
         $challengeIndicator = $method->getConfigData('challenge_ind');
-        $accountInfo = new AccountInfoFactory($order, $challengeIndicator);
+        $accountInfo = $this->accountInfoFactory->create($challengeIndicator);
     }
 
     /**
@@ -271,7 +276,8 @@ class Creditcard extends Action
         $orderDto->transaction->setNotificationUrl($notificationUrl);
 
         // here send 3D Secure parameter
-        $this->setThreeDSTransactionFields($orderDto);
+        //$this->setThreeDSTransactionFields($orderDto);
+        $this->createThreeDSData($orderDto);
 
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
@@ -286,6 +292,7 @@ class Creditcard extends Action
         $orderDto->transaction->setAccountHolder($accountHolder);
 
         $shippingAddress = $orderDto->quote->getShippingAddress();
+        $shippingFirstUse = $shippingAddress->getCreatedAt();
         if (isset($shippingAddress)) {
             $orderDto->transaction->setShipping(
                 $this->fetchAccountHolder($orderDto->quote->getShippingAddress())
