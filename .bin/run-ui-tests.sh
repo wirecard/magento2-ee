@@ -43,7 +43,7 @@ TEST_GROUP=''
 
 if [[ $GIT_BRANCH =~ "batch" ]]
 then
-   TEST_GROUP='major'
+   TEST_GROUP='batch'
 elif [[ $GIT_BRANCH =~ "minor" ]]
 then
    TEST_GROUP='minor'
