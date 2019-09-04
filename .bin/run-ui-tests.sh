@@ -37,4 +37,18 @@ done
 
 bash .bin/start-shopsystem.sh
 
-vendor/bin/codecept run acceptance  -g "${GATEWAY}" --html --xml
+
+GIT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
+TEST_GROUP=''
+
+if [[ $GIT_BRANCH =~ "batch" ]]
+then
+   TEST_GROUP='major'
+elif [[ $GIT_BRANCH =~ "minor" ]]
+then
+   TEST_GROUP='minor'
+else
+   TEST_GROUP='major'
+fi
+
+vendor/bin/codecept run acceptance  -g "${GATEWAY}" -g ${TEST_GROUP} --html --xml
