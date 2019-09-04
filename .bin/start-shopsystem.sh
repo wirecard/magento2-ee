@@ -8,13 +8,13 @@
 #input argument version of extension to install
 set -e
 
+
 EXTENSION_VERSION="dev-master"
 if [ "$1" != "" ]; then
     EXTENSION_VERSION="$1"
 fi
 
-
-docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
+docker-compose build --build-arg PHP_VERSION=${PHP} --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
 docker-compose up -d
 sleep 30
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
@@ -27,7 +27,7 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento.sh
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata.sh
 
 # install wirecard magento2 plugin
-docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:dev-master
+docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:dev-${EXTENSION_VERSION}
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 #this gives the shop time to init

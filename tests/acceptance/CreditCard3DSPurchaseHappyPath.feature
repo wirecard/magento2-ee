@@ -1,3 +1,4 @@
+
 Feature: CreditCard3DSPurchaseHappyPath
   As a guest  user
   I want to make a purchase with a Credit Card 3DS
@@ -9,7 +10,7 @@ Feature: CreditCard3DSPurchaseHappyPath
     And I am redirected to "Checkout" page
     Then I fill fields with "Customer data"
 
-  @API-TEST @API-WDCEE-TEST @NOVA @batch @minor @major @shop-update
+  @batch @minor @major
   Scenario: purchase
     Given I am redirected to "Payment" page
     When I fill fields with "Valid Credit Card Data"

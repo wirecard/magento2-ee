@@ -9,7 +9,7 @@ Feature: CreditCardDSPurchasePostprocessingDummyHappyPath
     And I am redirected to "Checkout" page
     Then I fill fields with "Customer data"
 
-  @API-TEST @API-WDCEE-TEST  @minor @major @shop-update
+  @minor @major
   Scenario: postprocessing_dummy
     Given I am redirected to "Payment" page
     When I fill fields with "Valid Credit Card Data"

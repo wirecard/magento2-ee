@@ -5,14 +5,13 @@
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
+
 set -e
-
-export VERSION=`jq .[0].release SHOPVERSIONS`
-
-
 set -a # automatically export all variables from .env file
 source .env
 set +a
+
+export SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
 
 curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > ngrok.zip
 unzip ngrok.zip
@@ -35,20 +34,32 @@ while [ ! ${NGROK_URL_HTTPS} ] || [ ${NGROK_URL_HTTPS} = 'null' ];  do
     sleep 1
 done
 
-#bash .bin/start-shopsystem.sh
+
+#get current git branch and adapt it's name as composer dependency
+GIT_BRANCH="dev-$(git branch | grep \* | cut -d ' ' -f2)"
+echo "Current git branch ${GIT_BRANCH}"
+echo "LATEST_EXTENSION_RELEASE variable value: ${LATEST_EXTENSION_RELEASE}"
 
 
-GIT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
-TEST_GROUP=''
-
-if [[ $GIT_BRANCH =~ "batch" ]]
-then
-   TEST_GROUP='batch'
-elif [[ $GIT_BRANCH =~ "minor" ]]
-then
-   TEST_GROUP='minor'
-else
-   TEST_GROUP='major'
+if [ "${LATEST_EXTENSION_RELEASE}" == "1" ]; then
+# get latest released extension version
+    GIT_BRANCH="${SHOP_EXTENSION_VERSION}"
 fi
 
-vendor/bin/codecept run acceptance  -g "${GATEWAY}" -g ${TEST_GROUP} --html --xml
+#start shop system with plugin installed from this branch/extension version
+bash .bin/start-shopsystem.sh ${GIT_BRANCH}
+
+TEST_GROUP=''
+
+if [[ $GIT_BRANCH =~ "${BATCH_RELEASE}" ]]
+then
+   TEST_GROUP="${BATCH_RELEASE}"
+elif [[ $GIT_BRANCH =~ "${MINOR_RELEASE}" ]]
+then
+   TEST_GROUP="${MINOR_RELEASE}"
+#run all tests in nothing else specified
+else
+   TEST_GROUP=''
+fi
+
+vendor/bin/codecept run acceptance -g ${TEST_GROUP} --html --xml
