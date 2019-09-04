@@ -6,6 +6,7 @@ env:
   global:
   - COMPOSER_ARGS="--no-interaction"
   - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/shop-releases.txt
+  - SHOP_SYSTEM_UPDATE_COMMIT = "[skip ci] Update latest shop releases"
   - BATCH_RELEASE="batch"
   - MINOR_RELEASE="minor"
   - MAJOR_RELEASE="major"
@@ -31,8 +32,8 @@ matrix:
 #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #   or when there is a new shop system version
     if: (type = pull_request AND \
-      ((head_branch =~ batch ) || (head_branch =~ minor )|| (head_branch =~ major ))) || \
-       commit_message =~ concat("Update", " ", "latest", " ", "shop" , " ", "releases")
+      ((head_branch =~ env(BATCH_RELEASE) ) || (head_branch =~ env(MINOR_RELEASE) )|| (head_branch =~ env(MAJOR_RELEASE) ))) || \
+      commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
 #   run tests with shop extension current branch version (master or RC-X.X.X-type)
     php: 7.1
     env:
@@ -55,7 +56,7 @@ matrix:
 #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #    run tests with shop extension current branch version (master or RC-X.X.X-type)
     if: type = pull_request AND \
-      ((head_branch =~ batch ) || (head_branch =~ minor )|| (head_branch =~ major ))
+      ((head_branch =~ env(BATCH_RELEASE) ) || (head_branch =~ env(MINOR_RELEASE) )|| (head_branch =~ env(MAJOR_RELEASE) ))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
@@ -66,14 +67,14 @@ matrix:
     #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
     #    run tests with shop extension current branch version (master or RC-X.X.X-type)
     if: type = pull_request AND \
-      ((head_branch =~ batch ) || (head_branch =~ minor )|| (head_branch =~ major ))
+      ((head_branch =~ env(BATCH_RELEASE) ) || (head_branch =~ env(MINOR_RELEASE) )|| (head_branch =~ env(MAJOR_RELEASE) ))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=3
 #    run this stage when shop system updated with latest shop extension release version
   - <<: *acceptance-test
     # when commit message contains string "Update latest shop releases"
-    if: commit_message =~ concat("Update", " ", "latest", " ", "shop" , " ", "releases")
+    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=1
