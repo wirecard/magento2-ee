@@ -5,7 +5,14 @@
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
+#input argument version of extension to install
 set -e
+
+EXTENSION_VERSION="dev-master"
+if [ "$1" != "" ]; then
+    EXTENSION_VERSION="$1"
+fi
+
 
 docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
 docker-compose up -d

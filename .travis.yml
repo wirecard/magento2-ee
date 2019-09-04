@@ -12,7 +12,7 @@ matrix:
     - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1' AND type != cron
+    if: env(PHRASEAPP_PULL) != '1' AND type = cron
 
   - stage: get-magento2-versions
     if: type = cron
@@ -25,7 +25,7 @@ matrix:
 
   - &acceptance-test
     stage: acceptance-test
-    if: type = cron
+    if: (type = pull_request) AND ((head_branch =~ ^batch ) || (head_branch =~ ^minor )|| (head_branch =~ ^major ))
     php: 7.1
     env:
     - GATEWAY=API-TEST
@@ -43,6 +43,7 @@ matrix:
     after_failure:
       - bash .bin/upload-logs-and-notify.sh fail
   - <<: *acceptance-test
+    if
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
@@ -50,18 +51,7 @@ matrix:
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=3
-  - <<: *acceptance-test
-    env:
-    - GATEWAY=API-WDCEE-TEST
-    - MAGENTO2_RELEASE_VERSION=1
-  - <<: *acceptance-test
-    env:
-    - GATEWAY=API-WDCEE-TEST
-    - MAGENTO2_RELEASE_VERSION=2
-  - <<: *acceptance-test
-    env:
-    - GATEWAY=API-WDCEE-TEST
-    - MAGENTO2_RELEASE_VERSION=3
+
 
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
