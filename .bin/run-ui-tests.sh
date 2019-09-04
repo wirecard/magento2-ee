@@ -35,7 +35,7 @@ while [ ! ${NGROK_URL_HTTPS} ] || [ ${NGROK_URL_HTTPS} = 'null' ];  do
     sleep 1
 done
 
-bash .bin/start-shopsystem.sh
+#bash .bin/start-shopsystem.sh
 
 
 GIT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
