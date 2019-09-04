@@ -25,7 +25,7 @@ matrix:
 
   - &acceptance-test
     stage: acceptance-test
-    if: (type = pull_request) AND ((head_branch =~ ^batch ) || (head_branch =~ ^minor )|| (head_branch =~ ^major ))
+    if: (type = pull_request) AND ((head_branch =~ ^batch$ ) || (head_branch =~ ^minor$ )|| (head_branch =~ ^major$ ))
     php: 7.1
     env:
     - GATEWAY=API-TEST
@@ -65,7 +65,7 @@ matrix:
     after_script: skip
 
   - stage: phraseapp-check-if-in-sync
-    if: type != cron AND type = pull_request
+    if: type != cron AND type != pull_request
     language: ruby
     ruby: 2.5.3
     before_install: skip
