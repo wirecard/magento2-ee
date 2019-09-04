@@ -9,7 +9,6 @@ env:
   - BATCH_RELEASE="batch"
   - MINOR_RELEASE="minor"
   - MAJOR_RELEASE="major"
-  - SHOP_SYSTEM_UPDATE_COMMIT="[skip ci] Update latest shop releases"
 
 matrix:
   allow_failures:
@@ -32,8 +31,8 @@ matrix:
 #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #   or when there is a new shop system version
     if: (type = pull_request AND \
-      ((head_branch =~ "${BATCH_RELEASE}" ) || (head_branch =~ "${MINOR_RELEASE}" )|| (head_branch =~ "${MAJOR_RELEASE}" ))) || \
-       commit_message =~ "${SHOP_SYSTEM_UPDATE_COMMIT}"
+      ((head_branch =~ "batch" ) || (head_branch =~ "minor" )|| (head_branch =~ "major" ))) || \
+       commit_message =~ "Update latest shop releases"
 #   run tests with shop extension current branch version (master or RC-X.X.X-type)
     php: 7.1
     env:
@@ -56,7 +55,7 @@ matrix:
 #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #    run tests with shop extension current branch version (master or RC-X.X.X-type)
     if: type = pull_request AND \
-      ((head_branch =~ "${BATCH_RELEASE}" ) || (head_branch =~ "${MINOR_RELEASE}" )|| (head_branch =~ "${MAJOR_RELEASE}" ))
+      ((head_branch =~ "batch" ) || (head_branch =~ "minor" )|| (head_branch =~ "major" ))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
@@ -67,13 +66,13 @@ matrix:
     #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
     #    run tests with shop extension current branch version (master or RC-X.X.X-type)
     if: type = pull_request AND \
-      ((head_branch =~ "${BATCH_RELEASE}" ) || (head_branch =~ "${MINOR_RELEASE}" )|| (head_branch =~ "${MAJOR_RELEASE}" ))
+      ((head_branch =~ "batch" ) || (head_branch =~ "minor" )|| (head_branch =~ "major" ))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=3
 #    run this stage when shop system updated with latest shop extension release version
   - <<: *acceptance-test
-    if: commit_message =~ "${SHOP_SYSTEM_UPDATE_COMMIT}"
+    if: commit_message =~ "Update latest shop releases"
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=1
