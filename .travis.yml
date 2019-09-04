@@ -32,7 +32,7 @@ matrix:
 #   or when there is a new shop system version
     if: (type = pull_request AND \
       ((head_branch =~ batch ) || (head_branch =~ minor )|| (head_branch =~ major ))) || \
-       commit_message =~ "Update latest shop releases"
+       commit_message =~ concat("Update", " ", "latest", " ", "shop" , " ", "releases")
 #   run tests with shop extension current branch version (master or RC-X.X.X-type)
     php: 7.1
     env:
