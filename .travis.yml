@@ -43,7 +43,6 @@ matrix:
     after_failure:
       - bash .bin/upload-logs-and-notify.sh fail
   - <<: *acceptance-test
-    if
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
