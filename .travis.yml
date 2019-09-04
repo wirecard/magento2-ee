@@ -19,7 +19,7 @@ matrix:
     if: env(PHRASEAPP_PULL) != '1' AND type = cron
 
   - stage: get-magento2-versions
-    if: type = cron
+    if: type != cron
     php: 7.1
     install: skip
     before_script: skip
