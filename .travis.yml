@@ -6,7 +6,7 @@ env:
   global:
   - COMPOSER_ARGS="--no-interaction"
   - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/shop-releases.txt
-  - SHOP_SYSTEM_UPDATE_COMMIT="[skip ci] Update latest shop releases"
+  - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
   - BATCH_RELEASE="batch"
   - MINOR_RELEASE="minor"
   - MAJOR_RELEASE="major"
@@ -16,10 +16,10 @@ matrix:
     - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1' AND type = cron
+    if: env(PHRASEAPP_PULL) != '1' AND type = cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT)
 
   - stage: get-magento2-versions
-    if: type != cron
+    if: type = cron
     php: 7.1
     install: skip
     before_script: skip
