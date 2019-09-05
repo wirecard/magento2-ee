@@ -27,6 +27,7 @@ matrix:
     after_script: skip
     after_failure: skip
 
+
   - &acceptance-test
     stage: acceptance-test
 #   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
