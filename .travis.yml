@@ -56,7 +56,7 @@ matrix:
   - <<: *acceptance-test
 #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #    run tests with shop extension current branch version (master or RC-X.X.X-type)
-    if: if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
+    if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
 
     env:
     - GATEWAY=API-TEST
