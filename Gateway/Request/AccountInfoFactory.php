@@ -54,7 +54,8 @@ class AccountInfoFactory
 
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
-            //$this->getCustomerOrderIdsLastDay();
+            $transactionsLastDay = $this->getCustomerTransactionCountForPeriod('-1 day');
+            $transactionsLastYear = $this->getCustomerTransactionCountForPeriod('-1 year');
             //$this->setUserData();
         }
         $accountInfo->setChallengeInd($challengeIndicator);
@@ -90,21 +91,19 @@ class AccountInfoFactory
         return $dateFilter;
     }
 
-    private function getCustomerOrderIdsLastDay()
+    private function getCustomerTransactionCountForPeriod($timePeriod)
     {
-        $startDate = 'yesterday';
-
         $orderCollection = $this->orderCollection->create($this->customerSession->getCustomerId())
             ->addFieldToSelect('entity_id')
-            ->addAttributeToFilter('created_at', $this->getDateRangeFilter($startDate));
+            ->addAttributeToFilter('created_at', $this->getDateRangeFilter($timePeriod));
 
         $orderIds = array_values($orderCollection->getAllIds());
-        //$this->getTransactions($orderIds);
+        $transactionCount = $this->getTransactionCountForOrderIds($orderIds);
 
-        //check for state or status
+        return $transactionCount;
     }
 
-    private function getTransactions($order_ids)
+    private function getTransactionCountForOrderIds($order_ids)
     {
         if ($this->transactionRepository === null) {
             return [];
@@ -113,6 +112,6 @@ class AccountInfoFactory
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $order_ids, 'IN')->create();
         $amountTransactions = $this->transactionRepository->getList($searchCriteria)->getTotalCount();
 
-        //$this->logger->error($amountTransactions);
+        return $amountTransactions;
     }
 }
