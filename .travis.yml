@@ -31,9 +31,7 @@ matrix:
     stage: acceptance-test
 #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #   or when there is a new shop system version
-    if: (type = pull_request AND \
-    (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR \
-    (commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT))
+    if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT))
     #    if: (type = pull_request AND \
 #    ((head_branch =~ env(BATCH_RELEASE)) OR (head_branch =~ env(MINOR_RELEASE)) OR (head_branch =~ env(MAJOR_RELEASE)))) OR \
 #      (commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT))
@@ -55,33 +53,33 @@ matrix:
     after_failure:
       - bash .bin/upload-logs-and-notify.sh fail
  
-#  - <<: *acceptance-test
-##    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-##    run tests with shop extension current branch version (master or RC-X.X.X-type)
-#    if: type = pull_request AND \
-#      ((head_branch =~ env(BATCH_RELEASE)) OR (head_branch =~ env(MINOR_RELEASE)) OR (head_branch =~ env(MAJOR_RELEASE)))
-#    env:
-#    - GATEWAY=API-TEST
-#    - MAGENTO2_RELEASE_VERSION=2
-##   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-##   run tests with shop extension current branch version (master or RC-X.X.X-type)
-#
-#  - <<: *acceptance-test
-#    #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-#    #    run tests with shop extension current branch version (master or RC-X.X.X-type)
-#    if: type = pull_request AND \
-#      ((head_branch =~ env(BATCH_RELEASE) ) OR (head_branch =~ env(MINOR_RELEASE)) OR (head_branch =~ env(MAJOR_RELEASE)))
-#    env:
-#    - GATEWAY=API-TEST
-#    - MAGENTO2_RELEASE_VERSION=3
-##    run this stage when shop system updated with latest shop extension release version
-#  - <<: *acceptance-test
-#    # when commit message contains string "Update latest shop releases"
-#    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
-#    env:
-#    - GATEWAY=API-TEST
-#    - MAGENTO2_RELEASE_VERSION=1
-#    - LATEST_EXTENSION_RELEASE=1
+  - <<: *acceptance-test
+#    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
+#    run tests with shop extension current branch version (master or RC-X.X.X-type)
+    if: if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
+
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO2_RELEASE_VERSION=2
+#   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
+#   run tests with shop extension current branch version (master or RC-X.X.X-type)
+
+  - <<: *acceptance-test
+    #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
+    #    run tests with shop extension current branch version (master or RC-X.X.X-type)
+    if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
+
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO2_RELEASE_VERSION=3
+#    run this stage when shop system updated with latest shop extension release version
+  - <<: *acceptance-test
+    # when commit message contains string "Update latest shop releases"
+    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO2_RELEASE_VERSION=1
+    - LATEST_EXTENSION_RELEASE=1
 
 
   - stage: phraseapp-pull
