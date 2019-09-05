@@ -9,13 +9,14 @@
 
 namespace Wirecard\ElasticEngine\Model\Adminhtml\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
+use Wirecard\PaymentSdk\Constant\ChallengeInd;
 
-class ChallengeIndicator implements ArrayInterface
+class ChallengeIndicator implements OptionSourceInterface
 {
-    const NO_PREFERENCE = 'no_preference';
-    const NO_CHALLENGE = 'no_challenge';
-    const CHALLENGE_THREED = 'challenge_threed';
+    const NO_PREFERENCE = ChallengeInd::NO_PREFERENCE;
+    const NO_CHALLENGE = ChallengeInd::NO_CHALLENGE;
+    const CHALLENGE_THREED = ChallengeInd::CHALLENGE_THREED;
 
     /**
      * {@inheritdoc}

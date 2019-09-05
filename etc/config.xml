@@ -106,7 +106,7 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <ssl_max_limit>100.0</ssl_max_limit>
                 <three_d_min_limit>50.0</three_d_min_limit>
                 <default_currency>EUR</default_currency>
-                <challenge_ind>no_preference</challenge_ind>
+                <challenge_ind>01</challenge_ind>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_creditcard>
             <wirecard_elasticengine_sepadirectdebit>

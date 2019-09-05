@@ -29,7 +29,9 @@ use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
+use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\PaymentSdk\Entity\AccountInfo;
 use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -185,10 +187,28 @@ class Creditcard extends Action
         }
     }
 
+    /**
+     * @param OrderDto $order
+     * @throws LocalizedException
+     */
     private function createThreeDSData($order) {
         $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
         $challengeIndicator = $method->getConfigData('challenge_ind');
         $accountInfo = $this->accountInfoFactory->create($challengeIndicator);
+
+        $accountHolder = $this->fetchAccountHolder($order->quote->getBillingAddress());
+
+        $shippingAddress = $order->quote->getShippingAddress();
+        if (isset($shippingAddress)) {
+            $shippingFirstUse = new \DateTime($shippingAddress->getCreatedAt());
+            $shippingFirstUse->format(AccountInfo::DATE_FORMAT);
+            $accountInfo->setShippingAddressFirstUse($shippingFirstUse);
+            $order->transaction->setShipping(
+                $this->fetchAccountHolder($order->quote->getShippingAddress())
+            );
+        }
+        $accountHolder->setAccountInfo($accountInfo);
+        $order->transaction->setAccountHolder($accountHolder);
     }
 
     /**
@@ -275,31 +295,12 @@ class Creditcard extends Action
         $notificationUrl = $wdBaseUrl . 'frontend/notify?orderId=' . $orderDto->orderId;
         $orderDto->transaction->setNotificationUrl($notificationUrl);
 
-        // here send 3D Secure parameter
-        //$this->setThreeDSTransactionFields($orderDto);
-        $this->createThreeDSData($orderDto);
-
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
-    }
-
-    private function setThreeDSTransactionFields(OrderDto $orderDto)
-    {
-        //@TODO add AccountInfoFactory DI
-        //$accountInfo = new AccountInfoFactory();
-        $accountHolder = $this->fetchAccountHolder($orderDto->quote->getBillingAddress());
-        $orderDto->transaction->setAccountHolder($accountHolder);
-
-        $shippingAddress = $orderDto->quote->getShippingAddress();
-        $shippingFirstUse = $shippingAddress->getCreatedAt();
-        if (isset($shippingAddress)) {
-            $orderDto->transaction->setShipping(
-                $this->fetchAccountHolder($orderDto->quote->getShippingAddress())
-            );
-        }
-        //set merchant-crm-id
-        //$orderDto->quote->getCustomerId();
+        // Add 3D Secure 2 parameters
+        $this->createThreeDSData($orderDto);
+        $orderDto->transaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);
     }
 
     /**

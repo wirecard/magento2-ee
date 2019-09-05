@@ -54,33 +54,43 @@ class AccountInfoFactory
 
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
+            $this->setUserData($accountInfo);
+
+            // @TODO clarify if transactions should be exchanged with orders due to customer based init
             $transactionsLastDay = $this->getCustomerTransactionCountForPeriod('-1 day');
             $transactionsLastYear = $this->getCustomerTransactionCountForPeriod('-1 year');
-            //$this->setUserData();
+
+            $purchasesLastMonths = $this->getCustomerFinalOrderCountForPeriod('-6 months');
         }
         $accountInfo->setChallengeInd($challengeIndicator);
 
         return $accountInfo;
     }
 
-    private function setUserData() {
-        // TODO Implement account info based on logged in user
+    /**
+     * @param AccountInfo $accountInfo
+     */
+    private function setUserData($accountInfo) {
+        // @TODO Implement account info based on logged in user
         /** @var CustomerInterface $dataModel */
         $dataModel = $this->customerSession->getCustomerData();
-        $created = $dataModel->getCreatedAt();
-        $updated = $dataModel->getUpdatedAt();
-        $addresses = $dataModel->getAddresses();
-        foreach ($addresses as $address) {
-            $addressId = $address->getId();
-        }
-        //customer login timestamp
+        // @TODO Improve...
+        $customerCreated = new \DateTime($dataModel->getCreatedAt());
+        $customerCreated->format(AccountInfo::DATE_FORMAT);
+        $customerUpdated = new \DateTime($dataModel->getUpdatedAt());
+        $customerUpdated->format(AccountInfo::DATE_FORMAT);
+
+        $accountInfo->setCreationDate($customerCreated);
+        $accountInfo->setUpdateDate($customerUpdated);
     }
 
     /**
-     * Create from-to date range array where from is set with date/time string
+     * Create from-to date range array where from is set with datetime string
+     * $startDateStatement can be specified with relative datetime formats (e.g. 'yesterday' or '-1 day')
      *
      * @param string $startDateStatement
      * @return array
+     * @since 2.1.0
      */
     private function getDateRangeFilter($startDateStatement)
     {
@@ -91,6 +101,14 @@ class AccountInfoFactory
         return $dateFilter;
     }
 
+    /**
+     * Get number of transactions based on customer and specific time period
+     * $timePeriod can be specified with relative datetime formats (e.g. 'yesterday' or '-1 day')
+     *
+     * @param string $timePeriod
+     * @return int
+     * @since 2.1.0
+     */
     private function getCustomerTransactionCountForPeriod($timePeriod)
     {
         $orderCollection = $this->orderCollection->create($this->customerSession->getCustomerId())
@@ -98,20 +116,49 @@ class AccountInfoFactory
             ->addAttributeToFilter('created_at', $this->getDateRangeFilter($timePeriod));
 
         $orderIds = array_values($orderCollection->getAllIds());
+        //@TODO use total count of orders for customer related transactions?
+        //$transactionCount = $orderCollection->getTotalCount();
         $transactionCount = $this->getTransactionCountForOrderIds($orderIds);
 
         return $transactionCount;
     }
 
+    // @TODO testing filter and searchcriteria
+    private function getCustomerFinalOrderCountForPeriod($timePeriod)
+    {
+        $orderCollection = $this->orderCollection->create($this->customerSession->getCustomerId())
+            ->addFieldToSelect('entity_id')
+            ->addAttributeToFilter('created_at', $this->getDateRangeFilter($timePeriod))
+            ->setSearchCriteria($this->getOrdersBasedOnStatus());
+
+        $orderCount = $orderCollection->getTotalCount();
+
+        return $orderCount;
+    }
+
+    /**
+     * Get number of transactions based on order_id(s)
+     *
+     * @param array $order_ids
+     * @return int
+     * @since 2.1.0
+     */
     private function getTransactionCountForOrderIds($order_ids)
     {
-        if ($this->transactionRepository === null) {
-            return [];
+        if ($this->transactionRepository === null || empty($order_ids)) {
+            return 0;
         }
 
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $order_ids, 'IN')->create();
         $amountTransactions = $this->transactionRepository->getList($searchCriteria)->getTotalCount();
 
         return $amountTransactions;
+    }
+
+    // @TODO check if searchCriteria behaves correct
+    private function getOrdersBasedOnStatus()
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('status', array('processing', 'canceled', 'closed', 'complete'), 'IN')->create();
+        return $searchCriteria;
     }
 }
