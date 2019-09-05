@@ -33,7 +33,7 @@ matrix:
 #   or when there is a new shop system version
     if: ( type = pull_request AND \
       ( (head_branch =~ env(BATCH_RELEASE)) || (head_branch =~ env(MINOR_RELEASE)) || (head_branch =~ env(MAJOR_RELEASE) )) || \
-      commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT
+      commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
 #   run tests with shop extension current branch version (master or RC-X.X.X-type)
     php: 7.1
     env:
