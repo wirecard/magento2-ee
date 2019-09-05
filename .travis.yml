@@ -29,13 +29,9 @@ matrix:
 
   - &acceptance-test
     stage: acceptance-test
-#    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
+#   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #   or when there is a new shop system version
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT))
-    #    if: (type = pull_request AND \
-#    ((head_branch =~ env(BATCH_RELEASE)) OR (head_branch =~ env(MINOR_RELEASE)) OR (head_branch =~ env(MAJOR_RELEASE)))) OR \
-#      (commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT))
-#   run tests with shop extension current branch version (master or RC-X.X.X-type)
     php: 7.1
     env:
     - GATEWAY=API-TEST
@@ -52,23 +48,15 @@ matrix:
       - bash .bin/upload-logs-and-notify.sh
     after_failure:
       - bash .bin/upload-logs-and-notify.sh fail
- 
+  #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
   - <<: *acceptance-test
-#    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-#    run tests with shop extension current branch version (master or RC-X.X.X-type)
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
-
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
 #   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-#   run tests with shop extension current branch version (master or RC-X.X.X-type)
-
   - <<: *acceptance-test
-    #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-    #    run tests with shop extension current branch version (master or RC-X.X.X-type)
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
-
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=3
