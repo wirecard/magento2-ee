@@ -125,7 +125,6 @@ class IdealTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new IdealTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             'http://magen.to/frontend/redirect?method=ideal',
             'http://magen.to/frontend/cancel?method=ideal',

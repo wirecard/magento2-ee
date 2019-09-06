@@ -15,6 +15,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper\Payment as PaymentHelper;
 use Wirecard\ElasticEngine\Gateway\Response\ResponseHandler;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Entity\StatusCollection;
@@ -34,6 +35,9 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject|Session
+     */
     private $session;
 
     /**
@@ -47,9 +51,19 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     private $paymentDataAuthorization;
 
     /**
+     * @var PaymentHelper|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $paymentHelper;
+
+    /**
      * @var UrlInterface
      */
     private $urlBuilder;
+
+    /**
+     * @var array
+     */
+    private $subject = [];
 
     public function setUp()
     {
@@ -90,12 +104,14 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
         $this->urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
+
+        $this->paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentHelper::class);
     }
 
     public function testHandlingReturnsRedirect()
     {
         $sessionMock = $this->session;
-        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder);
+        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder, $this->paymentHelper);
 
         $response = $this->getMockBuilder(InteractionResponse::class)->disableOriginalConstructor()->getMock();
         $response->method('getRedirectUrl')->willReturn('http://redir.ect');
@@ -109,7 +125,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     public function testHandlingAutorization()
     {
         $sessionMock = $this->session;
-        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder);
+        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder, $this->paymentHelper);
 
         $response = $this->getMockBuilder(InteractionResponse::class)->disableOriginalConstructor()->getMock();
         $response->method('getRedirectUrl')->willReturn('http://redir.ect');
@@ -123,7 +139,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     public function testHandlingReturnsForm()
     {
         $sessionMock = $this->session;
-        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder);
+        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder, $this->paymentHelper);
 
         $response = $this->getMockBuilder(FormInteractionResponse::class)->disableOriginalConstructor()->getMock();
         $response->method('getMethod')->willReturn('post');
@@ -141,7 +157,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     public function testHandlingReturnsSuccess()
     {
         $sessionMock = $this->session;
-        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder);
+        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder, $this->paymentHelper);
 
         $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $response->method(self::GET_DATA)->willReturn($this->paymentData);
@@ -154,7 +170,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     public function testHandlingLogsFailure()
     {
         $loggerMock = $this->logger;
-        $handler = new ResponseHandler($loggerMock, $this->session, $this->urlBuilder);
+        $handler = new ResponseHandler($loggerMock, $this->session, $this->urlBuilder, $this->paymentHelper);
 
         $statusCollection = new StatusCollection();
         $statusCollection->add(new Status('123', 'error_description', 'severity'));
@@ -173,7 +189,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     public function testHandlingLogsOther()
     {
         $loggerMock = $this->logger;
-        $handler = new ResponseHandler($loggerMock, $this->session, $this->urlBuilder);
+        $handler = new ResponseHandler($loggerMock, $this->session, $this->urlBuilder, $this->paymentHelper);
 
         $loggerString ='Unexpected result object for notifications.';
 

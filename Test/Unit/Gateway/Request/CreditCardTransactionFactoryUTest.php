@@ -199,7 +199,6 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setAmount(new Amount(1.0, 'EUR'));
         $expected->setThreeD(false);
         $expected->setAccountHolder($accountHolder);
-        $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel?method=creditcard',
@@ -222,7 +221,6 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedCaptureTransaction()
     {
         $expected = new CreditCardTransaction();
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setParentTransactionId('123456PARENT');
         $expected->setAmount(new Amount(1.0, 'EUR'));
 

@@ -94,6 +94,7 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
         $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
+        $this->order->method('getId')->willReturn(self::ORDER_ID);
         $this->order->method('getGrandTotalAmount')->willReturn(1.0);
         $this->order->method('getCurrencyCode')->willReturn('GBP');
 
@@ -221,7 +222,6 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new PayByBankAppTransaction();
         $expected->setAmount(new Amount(1.0, 'GBP'));
-        $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel?method=zapp',
@@ -229,6 +229,7 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         ));
 
         $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $customFields->add($this->makeCustomField('MerchantRtnStrng', self::RETURNSTRING));
         $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
         $customFields->add($this->makeCustomField('DeliveryType', 'DELTAD'));
@@ -258,6 +259,7 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setEntryMode('ecommerce');
 
         $customFields = new CustomFieldCollection();
+        $customFields->add(new CustomField('orderId', self::ORDER_ID));
         $customFields->add($this->makeCustomField('RefundReasonType', 'LATECONFIRMATION'));
         $customFields->add($this->makeCustomField('RefundMethod', 'BACS'));
         $expected->setCustomFields($customFields);
