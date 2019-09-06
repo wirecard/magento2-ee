@@ -10,13 +10,14 @@
 namespace Wirecard\ElasticEngine\Gateway\Response;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Response\HandlerInterface;
-use Magento\Sales\Api\Data\TransactionInterface;
-use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Sales\Model\Order\Payment;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
@@ -26,6 +27,7 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Class ResponseHandler
+ *
  * @package Wirecard\ElasticEngine\Gateway\Response
  */
 class ResponseHandler implements HandlerInterface
@@ -48,16 +50,28 @@ class ResponseHandler implements HandlerInterface
     protected $urlBuilder;
 
     /**
+     * @var Helper\Payment
+     */
+    private $paymentHelper;
+
+    /**
      * ResponseHandler constructor.
+     *
      * @param LoggerInterface $logger
      * @param Session $session
      * @param UrlInterface $urlBuilder
+     * @param Helper\Payment $paymentHelper
      */
-    public function __construct(LoggerInterface $logger, Session $session, UrlInterface $urlBuilder)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        Session $session,
+        UrlInterface $urlBuilder,
+        Helper\Payment $paymentHelper
+    ) {
         $this->logger = $logger;
         $this->session = $session;
         $this->urlBuilder = $urlBuilder;
+        $this->paymentHelper = $paymentHelper;
     }
 
     /**
@@ -65,16 +79,18 @@ class ResponseHandler implements HandlerInterface
      *
      * @param array $handlingSubject
      * @param array $response
+     *
      * @return void
+     * @throws LocalizedException
      */
     public function handle(array $handlingSubject, array $response)
     {
-        /** @var $sdkResponse Response */
+        /** @var Response $sdkResponse */
         $sdkResponse = $response['paymentSDK-php'];
 
-        /** @var $paymentDO PaymentDataObjectInterface */
+        /** @var PaymentDataObjectInterface $paymentDO */
         $paymentDO = SubjectReader::readPayment($handlingSubject);
-        /** @var $payment \Magento\Sales\Model\Order\Payment */
+        /** @var Payment $payment */
         $payment = $paymentDO->getPayment();
 
         // clear session variables
@@ -86,7 +102,7 @@ class ResponseHandler implements HandlerInterface
         if ($sdkResponse instanceof InteractionResponse) {
             $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
 
-            $this->setTransaction($payment, $sdkResponse);
+            $this->paymentHelper->addTransaction($payment, $sdkResponse);
         } elseif ($sdkResponse instanceof FormInteractionResponse) {
             $this->session->setFormMethod($sdkResponse->getMethod());
             $this->session->setFormUrl($sdkResponse->getUrl());
@@ -100,48 +116,19 @@ class ResponseHandler implements HandlerInterface
             }
             $this->session->setFormFields($formFields);
 
-            $this->setTransaction($payment, $sdkResponse);
+            $this->paymentHelper->addTransaction($payment, $sdkResponse);
         } elseif ($sdkResponse instanceof SuccessResponse) {
             $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
             $this->session->setRedirectUrl($wdBaseUrl . 'frontend/redirect');
 
-            $this->setTransaction($payment, $sdkResponse);
+            $this->paymentHelper->addTransaction($payment, $sdkResponse);
         } elseif ($sdkResponse instanceof FailureResponse) {
             foreach ($sdkResponse->getStatusCollection() as $status) {
-                /** @var $status Status */
+                /** @var Status $status */
                 $this->logger->error(sprintf('Error occurred: %s (%s).', $status->getDescription(), $status->getCode()));
             }
         } else {
             $this->logger->warning(sprintf('Unexpected result object for notifications.'));
-        }
-    }
-
-    /**
-     * @param \Magento\Sales\Model\Order\Payment $payment
-     * @param Response $sdkResponse
-     */
-    private function setTransaction($payment, $sdkResponse)
-    {
-        $payment->setTransactionId($sdkResponse->getTransactionId());
-        $payment->setLastTransId($sdkResponse->getTransactionId());
-        $payment->setIsTransactionClosed(false);
-        $payment->setAdditionalInformation(self::TRANSACTION_ID, $sdkResponse->getTransactionId());
-        $data = $sdkResponse->getData();
-        $payment->setAdditionalInformation($data);
-        $additionalInfo = [];
-
-        if ($data !== []) {
-            foreach ($data as $key => $value) {
-                $additionalInfo[$key] = $value;
-            }
-        }
-        if ($additionalInfo !== []) {
-            $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $additionalInfo);
-        }
-        if (isset($additionalInfo['transaction-type']) && $additionalInfo['transaction-type'] == 'authorization') {
-            $payment->addTransaction(TransactionInterface::TYPE_AUTH);
-        } else {
-            $payment->addTransaction(TransactionInterface::TYPE_ORDER);
         }
     }
 }
