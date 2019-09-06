@@ -86,6 +86,7 @@ class PayByBankAppTransactionFactory extends TransactionFactory
 
         $customFields = new CustomFieldCollection();
         $this->transaction->setCustomFields($customFields);
+        $customFields->add(new CustomField('orderId', $this->orderId));
 
         $customFields->add($this->makeCustomField(
             'MerchantRtnStrng',
@@ -124,6 +125,7 @@ class PayByBankAppTransactionFactory extends TransactionFactory
 
         $customFields = new CustomFieldCollection();
         $this->transaction->setCustomFields($customFields);
+        $customFields->add(new CustomField('orderId', $this->orderId));
 
         $customFields->add($this->makeCustomField('RefundReasonType', 'LATECONFIRMATION'));
         $customFields->add($this->makeCustomField('RefundMethod', 'BACS'));
