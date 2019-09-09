@@ -34,17 +34,23 @@ while [ ! ${NGROK_URL_HTTPS} ] || [ ${NGROK_URL_HTTPS} = 'null' ];  do
     sleep 1
 done
 
-
-#get current git branch and adapt it's name as composer dependency
+#if tests triggered by
 GIT_BRANCH="dev-$(git branch | grep \* | cut -d ' ' -f2)"
-echo "Current git branch ${GIT_BRANCH}"
-echo "LATEST_EXTENSION_RELEASE variable value: ${LATEST_EXTENSION_RELEASE}"
+# if tests triggered by PR, use extension version (branch) which originated PR
+if [ ${TRAVIS_PULL_REQUEST} != false ]; then
+  GIT_BRANCH="dev-${TRAVIS_PULL_REQUEST_BRANCH}"
+fi
 
-
+# this means we want to test with latest released extension version
 if [ "${LATEST_EXTENSION_RELEASE}" == "1" ]; then
 # get latest released extension version
     GIT_BRANCH="${LATEST_RELEASED_SHOP_EXTENSION_VERSION}"
 fi
+
+echo "Current git branch ${GIT_BRANCH}"
+echo "LATEST_EXTENSION_RELEASE variable value: ${LATEST_EXTENSION_RELEASE}"
+# THIS IS FOR TEST PURPOSES! TO BE REMOVED
+GIT_BRANCH="dev-master"
 
 #start shop system with plugin installed from this branch/extension version
 bash .bin/start-shopsystem.sh ${GIT_BRANCH}
