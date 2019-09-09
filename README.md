@@ -15,6 +15,8 @@ With the new major release of the Wirecard Magento 2 Extension comes an updated 
 ## General Information 
 Before you proceed, please read our [General Information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Extensions-General-Information) for more details on Wirecard Shop Extension functionality and features.
 
+The Wirecard Magento 2 Extension is **fully [PSD2](https://doc.wirecard.com/CreditCard.html#CreditCard_PSD2) compliant.**
+
 ***
 ## Documentation
 Our [documentation](https://github.com/wirecard/magento2-ee/wiki) provides detailed technical information: it includes extensive instructions on how to [install](https://github.com/wirecard/magento2-ee/wiki/Installation) and [configure](https://github.com/wirecard/magento2-ee/wiki/Configuration) the extension. It also lists all available [payment methods](https://github.com/wirecard/magento2-ee/wiki#supported-payment-methods) and post-processing operations.
