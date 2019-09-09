@@ -13,6 +13,8 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Psr\Log\LoggerInterface;
@@ -26,14 +28,22 @@ use Wirecard\PaymentSdk\Entity\AccountInfo;
  */
 class AccountInfoFactory
 {
+    const PURCHASE_SUCCESS = array(
+        Order::STATE_PROCESSING,
+        Order::STATE_CANCELED,
+        Order::STATE_CLOSED,
+        Order::STATE_COMPLETE
+    );
+
     protected $customerSession;
     protected $transactionRepository;
     protected $filterBuilder;
     protected $searchCriteriaBuilder;
     protected $orderCollection;
     protected $logger;
+    protected $collection;
 
-    public function __construct(CustomerSession $customerSession, LoggerInterface $logger, CollectionFactory $orderCollection, Repository $transactionRepository, FilterBuilder $filterBuilder, SearchCriteriaBuilder $searchCriteriaBuilder)
+    public function __construct(CustomerSession $customerSession, LoggerInterface $logger, CollectionFactory $orderCollection, OrderCollection $collection, Repository $transactionRepository, FilterBuilder $filterBuilder, SearchCriteriaBuilder $searchCriteriaBuilder)
     {
         $this->customerSession = $customerSession;
         $this->logger = $logger;
@@ -41,6 +51,7 @@ class AccountInfoFactory
         $this->filterBuilder = $filterBuilder;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->orderCollection = $orderCollection;
+        $this->collection = $collection;
     }
 
     /**
@@ -55,12 +66,12 @@ class AccountInfoFactory
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
             $this->setUserData($accountInfo);
+            $purchasesLastSixMonths = $this->getCustomerFinalOrderCountForPeriod('-6 months');
+            $accountInfo->setAmountPurchasesLastSixMonths($purchasesLastSixMonths);
 
             // @TODO clarify if transactions should be exchanged with orders due to customer based init
             $transactionsLastDay = $this->getCustomerTransactionCountForPeriod('-1 day');
             $transactionsLastYear = $this->getCustomerTransactionCountForPeriod('-1 year');
-
-            $purchasesLastMonths = $this->getCustomerFinalOrderCountForPeriod('-6 months');
         }
         $accountInfo->setChallengeInd($challengeIndicator);
 
@@ -111,27 +122,31 @@ class AccountInfoFactory
      */
     private function getCustomerTransactionCountForPeriod($timePeriod)
     {
-        $orderCollection = $this->orderCollection->create($this->customerSession->getCustomerId())
-            ->addFieldToSelect('entity_id')
-            ->addAttributeToFilter('created_at', $this->getDateRangeFilter($timePeriod));
+        $this->collection->addFieldToFilter('customer_id', $this->customerSession->getCustomerId())
+            ->addFieldToFilter('created_at', $this->getDateRangeFilter($timePeriod));
 
-        $orderIds = array_values($orderCollection->getAllIds());
+        $orderIds = array_values($this->collection->getAllIds());
         //@TODO use total count of orders for customer related transactions?
-        //$transactionCount = $orderCollection->getTotalCount();
+        //$transactionCount = $this->collection->getTotalCount();
         $transactionCount = $this->getTransactionCountForOrderIds($orderIds);
 
         return $transactionCount;
     }
 
-    // @TODO testing filter and searchcriteria
+    /**
+     * Get orders with predefined order status for customer id with specific timeperiod
+     * $timePeriod can be specified with relative datetime formats (e.g. 'yesterday' or '-1 day')
+     *
+     * @param string $timePeriod
+     * @return int
+     * @since 2.1.0
+     */
     private function getCustomerFinalOrderCountForPeriod($timePeriod)
     {
-        $orderCollection = $this->orderCollection->create($this->customerSession->getCustomerId())
-            ->addFieldToSelect('entity_id')
-            ->addAttributeToFilter('created_at', $this->getDateRangeFilter($timePeriod))
-            ->setSearchCriteria($this->getOrdersBasedOnStatus());
-
-        $orderCount = $orderCollection->getTotalCount();
+        $this->collection->addFieldToFilter('customer_id', $this->customerSession->getCustomerId())
+            ->addFieldToFilter('created_at', $this->getDateRangeFilter($timePeriod))
+            ->addFieldToFilter('status', ['in' => self::PURCHASE_SUCCESS]);
+        $orderCount = $this->collection->getTotalCount();
 
         return $orderCount;
     }
@@ -153,12 +168,5 @@ class AccountInfoFactory
         $amountTransactions = $this->transactionRepository->getList($searchCriteria)->getTotalCount();
 
         return $amountTransactions;
-    }
-
-    // @TODO check if searchCriteria behaves correct
-    private function getOrdersBasedOnStatus()
-    {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('status', array('processing', 'canceled', 'closed', 'complete'), 'IN')->create();
-        return $searchCriteria;
     }
 }

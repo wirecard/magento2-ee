@@ -198,6 +198,7 @@ class Creditcard extends Action
 
         $accountHolder = $this->fetchAccountHolder($order->quote->getBillingAddress());
 
+        // @TODO check for shipping address first usage
         $shippingAddress = $order->quote->getShippingAddress();
         if (isset($shippingAddress)) {
             $shippingFirstUse = new \DateTime($shippingAddress->getCreatedAt());
