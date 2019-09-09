@@ -30,7 +30,7 @@ class RetreiveTransaction
      */
     public function __construct(ClientFactory $httpClientFactory)
     {
-        $this->httpClientFactory         = $httpClientFactory;
+        $this->httpClientFactory = $httpClientFactory;
     }
 
     /**
@@ -72,6 +72,10 @@ class RetreiveTransaction
         }
 
         $data = json_decode($body);
+        if (!is_object($data)) {
+            return false;
+        }
+
         if (!property_exists($data, 'payment') || !property_exists($data->payment, 'parent-transaction-id')) {
             return false;
         }
@@ -87,6 +91,9 @@ class RetreiveTransaction
         }
 
         $data = json_decode($body);
+        if (!is_object($data)) {
+            return false;
+        }
 
         if (!property_exists($data, 'payments') || !property_exists($data->payments, 'payment')) {
             return false;
