@@ -198,7 +198,9 @@ class Redirect extends Action implements CsrfAwareActionInterface
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
 
         $order = $this->checkoutSession->getLastRealOrder();
-        $this->paymentHelper->addTransaction($order->getPayment(), $response, true);
+
+        // append -order prefix to get a new transaction record, if transactionId does not change
+        $this->paymentHelper->addTransaction($order->getPayment(), $response, true, '-order');
 
         if ($response instanceof SuccessResponse) {
             return $this->getRedirectData($result, 'onepage/success');
