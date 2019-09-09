@@ -16,7 +16,6 @@ use PHPUnit_Framework_TestCase;
 use Wirecard\ElasticEngine\Gateway\Model\RetreiveTransaction;
 use Wirecard\PaymentSdk\Config\Config;
 
-
 class RetreiveTransactionUTest extends PHPUnit_Framework_TestCase
 {
     /**
