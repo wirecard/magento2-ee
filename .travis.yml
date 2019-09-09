@@ -32,6 +32,7 @@ matrix:
     stage: acceptance-test
 #   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
 #   or when there is a new shop system version
+#   tests will use extension branch master (in case of new shop system version) or head branch
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT))
     php: 7.1
     env:
@@ -50,18 +51,21 @@ matrix:
     after_failure:
       - bash .bin/upload-logs-and-notify.sh fail
   #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
+  #   tests will use extension branch head branch
   - <<: *acceptance-test
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
 #   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
+#   tests will use extension branch head branch
   - <<: *acceptance-test
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=3
 #    run this stage when shop system updated with latest shop extension release version
+#   tests will use latest released extension version
   - <<: *acceptance-test
     # when commit message contains string "Update latest shop releases"
     if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)

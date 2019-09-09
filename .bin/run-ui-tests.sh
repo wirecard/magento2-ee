@@ -11,7 +11,7 @@ set -a # automatically export all variables from .env file
 source .env
 set +a
 
-export SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
+export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
 
 curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > ngrok.zip
 unzip ngrok.zip
@@ -20,7 +20,7 @@ chmod +x $PWD/ngrok
 curl -sO http://stedolan.github.io/jq/download/linux64/jq
 chmod +x $PWD/jq
 
-$PWD/ngrok authtoken $NGROK_TOKEN
+$PWD/ngrok authtoken ${NGROK_TOKEN}
 TIMESTAMP=$(date +%s)
 $PWD/ngrok http 9090 -subdomain="${TIMESTAMP}-magento2-${GATEWAY}-${MAGENTO2_RELEASE_VERSION}" > /dev/null &
 
@@ -43,7 +43,7 @@ echo "LATEST_EXTENSION_RELEASE variable value: ${LATEST_EXTENSION_RELEASE}"
 
 if [ "${LATEST_EXTENSION_RELEASE}" == "1" ]; then
 # get latest released extension version
-    GIT_BRANCH="${SHOP_EXTENSION_VERSION}"
+    GIT_BRANCH="${LATEST_RELEASED_SHOP_EXTENSION_VERSION}"
 fi
 
 #start shop system with plugin installed from this branch/extension version
