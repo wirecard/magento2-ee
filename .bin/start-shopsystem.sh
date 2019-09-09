@@ -14,7 +14,7 @@ if [ "$1" != "" ]; then
     EXTENSION_VERSION="$1"
 fi
 
-docker-compose build --build-arg PHP_VERSION=${PHP} --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
+docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
 docker-compose up -d
 sleep 30
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
