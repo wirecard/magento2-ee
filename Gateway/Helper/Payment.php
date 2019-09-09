@@ -13,7 +13,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction;
-use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\FormInteractionResponse;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Class Payment
@@ -49,7 +52,7 @@ class Payment
 
     /**
      * @param Order\Payment $payment
-     * @param Response $sdkResponse
+     * @param SuccessResponse|FormInteractionResponse|InteractionResponse $sdkResponse
      * @param bool $save whether payment and transaction should be saved to db
      *
      * @return Transaction|null
@@ -57,6 +60,9 @@ class Payment
      */
     public function addTransaction($payment, $sdkResponse, $save = false)
     {
+        if ($sdkResponse instanceof FailureResponse) {
+            return null;
+        }
         $payment->setTransactionId($sdkResponse->getTransactionId());
         $payment->setLastTransId($sdkResponse->getTransactionId());
         $payment->setIsTransactionClosed(false);
