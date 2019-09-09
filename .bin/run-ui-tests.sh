@@ -34,18 +34,20 @@ while [ ! ${NGROK_URL_HTTPS} ] || [ ${NGROK_URL_HTTPS} = 'null' ];  do
     sleep 1
 done
 
-#if tests triggered by
-GIT_BRANCH="dev-$(git branch | grep \* | cut -d ' ' -f2)"
+echo "TRAVIS_PULL_REQUEST = ${TRAVIS_PULL_REQUEST}"
+
+
 # if tests triggered by PR, use extension version (branch) which originated PR
 if [ ${TRAVIS_PULL_REQUEST} != "false" ]; then
-  GIT_BRANCH="dev-${TRAVIS_PULL_REQUEST_BRANCH}"
-fi
-
+    GIT_BRANCH="dev-${TRAVIS_PULL_REQUEST_BRANCH}"
 # this means we want to test with latest released extension version
-if [ "${LATEST_EXTENSION_RELEASE}" == "1" ]; then
+elif [ "${LATEST_EXTENSION_RELEASE}" == "1" ]; then
 # get latest released extension version
     GIT_BRANCH="${LATEST_RELEASED_SHOP_EXTENSION_VERSION}"
+else
+    GIT_BRANCH="dev-$(git branch | grep \* | cut -d ' ' -f2)"
 fi
+
 
 echo "Current git branch ${GIT_BRANCH}"
 echo "LATEST_EXTENSION_RELEASE variable value: ${LATEST_EXTENSION_RELEASE}"
