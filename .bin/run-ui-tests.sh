@@ -37,7 +37,7 @@ done
 #if tests triggered by
 GIT_BRANCH="dev-$(git branch | grep \* | cut -d ' ' -f2)"
 # if tests triggered by PR, use extension version (branch) which originated PR
-if [ ${TRAVIS_PULL_REQUEST} != false ]; then
+if [ ${TRAVIS_PULL_REQUEST} != "false" ]; then
   GIT_BRANCH="dev-${TRAVIS_PULL_REQUEST_BRANCH}"
 fi
 
