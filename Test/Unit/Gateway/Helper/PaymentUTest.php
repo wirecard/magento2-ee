@@ -102,6 +102,20 @@ class PaymentUTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->transacion, $t);
     }
 
+    public function testAddPaymentWithPostfix()
+    {
+        $this->paymentMethod->method('getCode')->willReturn('wirecard_elasticengine_creditcard');
+        $this->response->method('getData')->willReturn([]);
+        $this->payment->expects($this->once())->method('setTransactionAdditionalInfo')
+            ->with(Transaction::RAW_DETAILS, ['has-notify' => true]);
+        $this->payment->method('setTransactionId')
+            ->with(self::$TRID . '-order');
+        $this->paymentRepository->expects($this->never())->method('save');
+        $this->paymentTransactionRepository->expects($this->never())->method('save');
+        $t = $this->helper->addTransaction($this->payment, $this->response, false, '-order');
+        $this->assertSame($this->transacion, $t);
+    }
+
     public function testAddPaymentWithFailureResponse()
     {
         $response = $this->getMockBuilder(FailureResponse::class)
@@ -122,20 +136,6 @@ class PaymentUTest extends \PHPUnit_Framework_TestCase
         $this->paymentRepository->expects($this->once())->method('save');
         $this->paymentTransactionRepository->expects($this->once())->method('save');
         $t = $this->helper->addTransaction($this->payment, $this->response, true);
-        $this->assertSame($this->transacion, $t);
-    }
-
-    public function testAddPaymentSepa()
-    {
-        $this->paymentMethod->method('getCode')->willReturn('wirecard_elasticengine_sepa');
-        $this->response->method('getData')->willReturn([]);
-        $this->payment->method('setAdditionalInformation')
-            ->withConsecutive(
-                ['transactionId', self::$TRID],
-                []
-            );
-
-        $t = $this->helper->addTransaction($this->payment, $this->response, false);
         $this->assertSame($this->transacion, $t);
     }
 }
