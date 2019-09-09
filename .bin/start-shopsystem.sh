@@ -27,7 +27,7 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento.sh
 docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata.sh
 
 # install wirecard magento2 plugin
-docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:dev-${EXTENSION_VERSION}
+docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:${EXTENSION_VERSION}
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 #this gives the shop time to init
