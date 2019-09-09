@@ -21,7 +21,9 @@ use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
@@ -159,6 +161,7 @@ class Callback extends Action
         $response = $transactionService->processJsResponse($response['jsresponse'], $url);
         $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
 
+        /** @var SuccessResponse|InteractionResponse|FormInteractionResponse $response */
         $order = $this->session->getLastRealOrder();
         $this->paymentHelper->addTransaction($order->getPayment(), $response, true);
 
