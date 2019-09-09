@@ -54,29 +54,24 @@ class Payment
      * @param Order\Payment $payment
      * @param SuccessResponse|FormInteractionResponse|InteractionResponse $sdkResponse
      * @param bool $save whether payment and transaction should be saved to db
+     * @param string $transactionIdPostfix optionally add postfix to the transaction-id
      *
      * @return Transaction|null
      * @throws LocalizedException
      */
-    public function addTransaction($payment, $sdkResponse, $save = false)
+    public function addTransaction($payment, $sdkResponse, $save = false, $transactionIdPostfix = '')
     {
         if ($sdkResponse instanceof FailureResponse) {
             return null;
         }
-        $payment->setTransactionId($sdkResponse->getTransactionId());
-        $payment->setLastTransId($sdkResponse->getTransactionId());
+        $transactionId = $sdkResponse->getTransactionId() . $transactionIdPostfix;
+        $payment->setTransactionId($transactionId);
+        $payment->setLastTransId($transactionId);
         $payment->setIsTransactionClosed(false);
-        $payment->setAdditionalInformation('transactionId', $sdkResponse->getTransactionId());
+        $payment->setAdditionalInformation('transactionId', $transactionId);
 
         $data = $sdkResponse->getData();
-
-        $excluded = [
-            'wirecard_elasticengine_poipia',
-            'wirecard_elasticengine_sepa'
-        ];
-        if (!in_array($payment->getMethodInstance()->getCode(), $excluded)) {
-            $data['has-notify'] = true;
-        }
+        $data['has-notify'] = true;
 
         $payment->setAdditionalInformation($data);
         $additionalInfo = [];
