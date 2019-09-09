@@ -21,6 +21,7 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
 /**
  * @since 2.1.0
@@ -145,6 +146,9 @@ class TransactionUpdater
 
         $rawData    = null;
         $additional = json_decode($transaction->getData('additional_information'));
+        if (!is_object($additional)) {
+            return null;
+        }
         if (property_exists($additional, Order\Payment\Transaction::RAW_DETAILS)) {
             $rawData = $additional->{Order\Payment\Transaction::RAW_DETAILS};
         }
@@ -164,6 +168,7 @@ class TransactionUpdater
         if (!property_exists($rawData, 'request-id')
             || !strlen($paymentMethod)
             || !property_exists($rawData, 'transaction-type')
+            || !property_exists($rawData, 'transaction-id')
             || !property_exists($rawData, 'merchant-account-id')) {
             return null;
         }
@@ -226,7 +231,7 @@ class TransactionUpdater
     protected function getConfig($methodCode)
     {
         if ($methodCode === 'ratepay-invoice') {
-            $methodCode = 'ratepayinvoice';
+            $methodCode = RatepayInvoiceTransaction::NAME;
         }
 
         $transaction = $this->transactionServiceFactory->create($methodCode);
