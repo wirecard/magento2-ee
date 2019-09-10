@@ -11,14 +11,12 @@ namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
-use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Vault\Model\ResourceModel\PaymentToken\Collection as VaultCollection;
 use Psr\Log\LoggerInterface;
-use Wirecard\ElasticEngine\Model\Adminhtml\Source\ChallengeIndicator;
 use Wirecard\PaymentSdk\Constant\AuthMethod;
 use Wirecard\PaymentSdk\Entity\AccountInfo;
 
@@ -37,28 +35,27 @@ class AccountInfoFactory
 
     protected $customerSession;
     protected $transactionRepository;
-    protected $filterBuilder;
     protected $searchCriteriaBuilder;
-    protected $orderCollection;
     protected $logger;
-    protected $collection;
+    protected $orderCollection;
+    protected $vaultCollection;
 
-    public function __construct(CustomerSession $customerSession, LoggerInterface $logger, CollectionFactory $orderCollection, OrderCollection $collection, Repository $transactionRepository, FilterBuilder $filterBuilder, SearchCriteriaBuilder $searchCriteriaBuilder)
+    public function __construct(CustomerSession $customerSession, LoggerInterface $logger, OrderCollection $orderCollection, Repository $transactionRepository, SearchCriteriaBuilder $searchCriteriaBuilder, VaultCollection $vaultCollection)
     {
         $this->customerSession = $customerSession;
         $this->logger = $logger;
         $this->transactionRepository = $transactionRepository;
-        $this->filterBuilder = $filterBuilder;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->orderCollection = $orderCollection;
-        $this->collection = $collection;
+        $this->vaultCollection = $vaultCollection;
     }
 
     /**
-     * @param ChallengeIndicator $challengeIndicator
+     * @param string $challengeIndicator
+     * @param string|null $token
      * @return AccountInfo
      */
-    public function create($challengeIndicator)
+    public function create($challengeIndicator, $token = null)
     {
         $accountInfo = new AccountInfo();
         $accountInfo->setAuthMethod(AuthMethod::GUEST_CHECKOUT);
@@ -66,12 +63,9 @@ class AccountInfoFactory
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
             $this->setUserData($accountInfo);
+            $this->setCreditCardCreationDate($accountInfo, $token);
             $purchasesLastSixMonths = $this->getCustomerFinalOrderCountForPeriod('-6 months');
             $accountInfo->setAmountPurchasesLastSixMonths($purchasesLastSixMonths);
-
-            // @TODO clarify if transactions should be exchanged with orders due to customer based init
-            $transactionsLastDay = $this->getCustomerTransactionCountForPeriod('-1 day');
-            $transactionsLastYear = $this->getCustomerTransactionCountForPeriod('-1 year');
         }
         $accountInfo->setChallengeInd($challengeIndicator);
 
@@ -82,17 +76,49 @@ class AccountInfoFactory
      * @param AccountInfo $accountInfo
      */
     private function setUserData($accountInfo) {
-        // @TODO Implement account info based on logged in user
         /** @var CustomerInterface $dataModel */
         $dataModel = $this->customerSession->getCustomerData();
-        // @TODO Improve...
-        $customerCreated = new \DateTime($dataModel->getCreatedAt());
-        $customerCreated->format(AccountInfo::DATE_FORMAT);
-        $customerUpdated = new \DateTime($dataModel->getUpdatedAt());
-        $customerUpdated->format(AccountInfo::DATE_FORMAT);
 
-        $accountInfo->setCreationDate($customerCreated);
-        $accountInfo->setUpdateDate($customerUpdated);
+        $accountInfo->setCreationDate($this->createDateWithFormat(
+            $dataModel->getCreatedAt(),
+            AccountInfo::DATE_FORMAT
+        ));
+        $accountInfo->setUpdateDate($this->createDateWithFormat(
+            $dataModel->getCreatedAt(),
+            AccountInfo::DATE_FORMAT
+        ));
+    }
+
+    /**
+     * Set card creation date for existing token
+     *
+     * @param AccountInfo $accountInfo
+     * @param string $token
+     * @since 2.1.0
+     */
+    private function setCreditCardCreationDate($accountInfo, $token) {
+        if (!empty($token)) {
+            $createdDates = $this->vaultCollection->addFieldToFilter('gateway_token', $token)
+                ->getColumnValues('created_at');
+
+            $creationDate = new \DateTime(reset($createdDates));
+            $creationDate->format(AccountInfo::DATE_FORMAT);
+
+            $accountInfo->setCardCreationDate($creationDate);
+        }
+    }
+
+    /**
+     * @param string $dateString
+     * @param string $format
+     * @return \DateTime
+     * @since 2.1.0
+     */
+    private function createDateWithFormat($dateString, $format) {
+        $date = new \DateTime($dateString);
+        $date->format($format);
+
+        return $date;
     }
 
     /**
@@ -122,10 +148,11 @@ class AccountInfoFactory
      */
     private function getCustomerTransactionCountForPeriod($timePeriod)
     {
-        $this->collection->addFieldToFilter('customer_id', $this->customerSession->getCustomerId())
+        //@TODO use for transactionsLastDay + Year when clarified
+        $this->orderCollection->addFieldToFilter('customer_id', $this->customerSession->getCustomerId())
             ->addFieldToFilter('created_at', $this->getDateRangeFilter($timePeriod));
 
-        $orderIds = array_values($this->collection->getAllIds());
+        $orderIds = array_values($this->orderCollection->getAllIds());
         //@TODO use total count of orders for customer related transactions?
         //$transactionCount = $this->collection->getTotalCount();
         $transactionCount = $this->getTransactionCountForOrderIds($orderIds);
@@ -143,10 +170,10 @@ class AccountInfoFactory
      */
     private function getCustomerFinalOrderCountForPeriod($timePeriod)
     {
-        $this->collection->addFieldToFilter('customer_id', $this->customerSession->getCustomerId())
+        $this->orderCollection->addFieldToFilter('customer_id', $this->customerSession->getCustomerId())
             ->addFieldToFilter('created_at', $this->getDateRangeFilter($timePeriod))
             ->addFieldToFilter('status', ['in' => self::PURCHASE_SUCCESS]);
-        $orderCount = $this->collection->getTotalCount();
+        $orderCount = $this->orderCollection->getTotalCount();
 
         return $orderCount;
     }

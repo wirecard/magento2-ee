@@ -36,6 +36,11 @@ class CreditCardTransactionFactory extends TransactionFactory
     protected $transaction;
 
     /**
+     * @var AccountInfoFactory
+     */
+    protected $accountInfoFactory;
+
+    /**
      * CreditCardTransactionFactory constructor.
      * @param UrlInterface $urlBuilder
      * @param ResolverInterface $resolver
@@ -44,6 +49,9 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
+     * @param AccountInfoFactory $accountInfoFactory
+     *
+     * @since 2.1.0 added AccountInfoFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -52,7 +60,8 @@ class CreditCardTransactionFactory extends TransactionFactory
         Transaction $transaction,
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        AccountInfoFactory $accountInfoFactory
     ) {
         parent::__construct(
             $urlBuilder,
@@ -63,6 +72,8 @@ class CreditCardTransactionFactory extends TransactionFactory
             $accountHolderFactory,
             $basketFactory
         );
+
+        $this->accountInfoFactory = $accountInfoFactory;
     }
 
     /**
@@ -75,7 +86,7 @@ class CreditCardTransactionFactory extends TransactionFactory
     {
         parent::create($commandSubject);
 
-        /** @var PaymentDataObjectInterface $payment */
+        /** @var PaymentDataObjectInterface $paymentDO */
         $paymentDO = $commandSubject[self::PAYMENT];
         $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(
             CreditCardDataAssignObserver::TOKEN_ID
@@ -88,15 +99,37 @@ class CreditCardTransactionFactory extends TransactionFactory
             $this->transaction->setThreeD(false);
         }
 
-        $order = $paymentDO->getOrder();
-        $billingAddress = $order->getBillingAddress();
-
-        $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
+        $this->createThreeDSData($paymentDO);
         $this->transaction->setCustomFields($customFields);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect?method=' . $this->transaction->getConfigKey());
         return $this->transaction;
+    }
+
+    /**
+     * @TODO add missing fields
+     * @param PaymentDataObjectInterface $paymentDO
+     */
+    private function createThreeDSData($paymentDO) {
+        $token = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID);
+        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
+        $accountInfo = $this->accountInfoFactory->create($challengeIndicator, $token);
+
+        $order = $paymentDO->getOrder();
+        $billingAddress = $order->getBillingAddress();
+        $shippingAddress = $order->getShippingAddress();
+
+        $accountHolder = $this->accountHolderFactory->create($billingAddress);
+        $accountHolder->setAccountInfo($accountInfo);
+        if (isset($shippingAddress)) {
+            $shipping = $this->accountHolderFactory->create($shippingAddress);
+            $this->transaction->setShipping($shipping);
+            // @TODO add shipping address first usage here
+        }
+
+        $accountHolder->setAccountInfo($accountInfo);
+        $this->transaction->setAccountHolder($accountHolder);
     }
 
     /**
