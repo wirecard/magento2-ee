@@ -13,7 +13,7 @@ modules:
         url: '%NGROK_URL%'
         browser: chrome # 'chrome' or 'firefox'
         capabilities:
-          'build': '%VERSION%'
+          'build': '%LATEST_RELEASED_SHOP_EXTENSION_VERSION%'
           'project': 'magento2-ee-%GATEWAY%-%MAGENTO2_RELEASE_VERSION%'
           'browserstack.user': '%BROWSERSTACK_USER%'
           'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
