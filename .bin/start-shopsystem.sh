@@ -5,10 +5,9 @@
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
-#input argument version of extension to install
 set -e
 
-
+# input argument version of extension to install
 EXTENSION_VERSION="dev-master"
 if [ "$1" != "" ]; then
     EXTENSION_VERSION="$1"

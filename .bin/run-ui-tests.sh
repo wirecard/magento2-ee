@@ -13,7 +13,7 @@ set +a
 # get latest release shop extension version from SHOPVERSIONS file
 export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
 
-#get ngrok
+# get ngrok
 curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > ngrok.zip
 unzip ngrok.zip
 chmod +x $PWD/ngrok
@@ -62,7 +62,7 @@ then
 elif [[ $GIT_BRANCH =~ "${MINOR_RELEASE}" ]]
 then
    TEST_GROUP="${MINOR_RELEASE}"
-#run all tests in nothing else specified
+# run all tests in nothing else specified
 else
    TEST_GROUP="${MAJOR_RELEASE}"
 fi

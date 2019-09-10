@@ -17,7 +17,7 @@ matrix:
   - stage: acceptance-test
   include:
   - php: 7.0
-    if: env(PHRASEAPP_PULL) != '1' AND type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+    if: env(PHRASEAPP_PULL) != '1' AND type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
   
   - stage: get-magento2-versions
     if: type = cron
@@ -34,7 +34,9 @@ matrix:
     #   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
     #   or when there is a new shop system version
     #   or when build triggered ad-hoc with special commit message
-    #   tests will use extension branch master (in case of new shop system version) or head branch
+    #   tests will use extension version = branch master (in case of new shop system version)
+    #   or branch which originated pull request
+    #   or branch which was defined in ad-hoc trigger in Travis UI
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
     php: 7.1
     env:
@@ -52,21 +54,21 @@ matrix:
     - bash .bin/upload-logs-and-notify.sh
     after_failure:
     - bash .bin/upload-logs-and-notify.sh fail
-  #    run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-  #   tests will use extension branch head branch
+  #   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
+  #   tests will use extension version = branch which originated pull request
   - <<: *acceptance-test
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
   #   run this stage on pull request if head branch name contains one of these words (batch, major, minor)
-  #   tests will use extension branch head branch
+  #   tests will use extension version = branch which originated pull request
   - <<: *acceptance-test
     if: (type = pull_request AND (head_branch =~ env(BATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=3
-  #    run this stage when shop system updated with latest shop extension release version
+  #   run this stage when shop system updated with latest shop extension release version
   #   tests will use latest released extension version
   - <<: *acceptance-test
     # when commit message contains string "Update latest shop releases"
@@ -90,7 +92,7 @@ matrix:
     after_script: skip
   
   - stage: phraseapp-check-if-in-sync
-    if: type != cron AND type != pull_request AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+    if: type != cron AND type != pull_request AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
     language: ruby
     ruby: 2.5.3
     before_install: skip

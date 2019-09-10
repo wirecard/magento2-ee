@@ -17,10 +17,10 @@ RANDOM_VALUE=$[ ( RANDOM % 30 ) * $MAGENTO2_RELEASE_VERSION + 1 ]
 echo "Sleeping for: ${RANDOM_VALUE}"
 sleep ${RANDOM_VALUE}s
 
-#clone the repository where the screenshot should be uploaded
+# clone the repository where the screenshot should be uploaded
 git clone ${REPO_ADDRESS}
 
-#get current date to create a folder
+# get current date to create a folder
 export TODAY=$(date +%Y-%m-%d)
 
 export PROJECT_FOLDER="magento2-ee-${MAGENTO2_VERSION}"
@@ -42,12 +42,11 @@ fi
 
 export RELATIVE_REPORTS_LOCATION=${PROJECT_FOLDER}/${GATEWAY}/${TODAY}/${BRANCH_FOLDER}
 
-
 if [ ! -d "${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}" ]; then
-mkdir ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
+    mkdir ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
 fi
 
-#copy report files
+# copy report files
 cp tests/_output/*.html ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
 cp tests/_output/*.xml ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
 if [[ $1 == 'fail' ]]; then
@@ -55,16 +54,16 @@ if [[ $1 == 'fail' ]]; then
 fi
 
 cd ${REPO_NAME}
-#push report files to the repository
+# push report files to the repository
 git add ${PROJECT_FOLDER}/${GATEWAY}/${TODAY}/*
 git commit -m "Add failed test screenshots from ${TRAVIS_BUILD_WEB_URL}"
 git push -q https://${GITHUB_TOKEN}@github.com/wirecard/${REPO_NAME}.git master
 
-#save commit hash
+# save commit hash
 export SCREENSHOT_COMMIT_HASH=$(git rev-parse --verify HEAD)
 # send notification if some tests failed
 if [[ $1 == 'fail' ]]; then
     cd ..
-    #send slack notification
+    # send slack notification
     bash .bin/send-notify.sh
 fi
