@@ -79,10 +79,7 @@ class RetrieveTransaction
      */
     public function byTransactionId(Config $config, $transactionId, $transactionType, $maid)
     {
-        // step1: get payments by transaction-id
-        $data = $this->sendRequest($config,
-            sprintf(self::URL_PAYMENTS_FMT, $config->getBaseUrl(), $maid, $transactionId), self::CONTENTTYPE_JSON);
-
+        $data = $this->paymentByTransactionId($config, $transactionId, $maid);
         if (!is_object($data)) {
             return null;
         }
@@ -93,21 +90,34 @@ class RetrieveTransaction
             return null;
         }
 
-        // step2: search all payments by parent-transaction-id
-        $data = $this->sendRequest($config,
-            sprintf(self::URL_PAYMENTS_BYTRANSACTIONID_FMT, $config->getBaseUrl(), $maid, $parentTransactionId),
-            self::CONTENTTYPE_JSON);
-
-        if (!is_object($data)) {
-            return null;
-        }
-
-        $payments = $this->nestedObjectHelper->getIn($data, [self::FIELD_PAYMENTS, Transaction::PARAM_PAYMENT]);
+        $payments = $this->paymentsByTransactionId($config, $parentTransactionId, $maid);
         if (!is_array($payments)) {
             return null;
         }
 
-        // we need the latest payment which maches the transaction-type of the originating transaction
+        $payment = $this->findTransactionByType($payments, $transactionType);
+        if (is_null($payment)) {
+            return null;
+        }
+
+        $requestId = $this->nestedObjectHelper->get($payment, self::FIELD_REQUEST_ID);
+        if (is_null($requestId)) {
+            return null;
+        }
+
+        return $this->byRequestId($config, $requestId, $maid);
+    }
+
+    /**
+     * seek through payments result array for a matching transaction, search from behind
+     *
+     * @param $payments
+     * @param $transactionType
+     *
+     * @return |null
+     */
+    protected function findTransactionByType($payments, $transactionType)
+    {
         $payment = null;
         foreach (array_reverse($payments) as $p) {
             $paymentTransactionType = $this->nestedObjectHelper->get($p, Transaction::PARAM_TRANSACTION_TYPE);
@@ -121,16 +131,45 @@ class RetrieveTransaction
             }
         }
 
-        if (is_null($payment)) {
+        return $payment;
+    }
+
+    /**
+     * get payment by transaction-id
+     * response contains parent transaction id
+     *
+     * @param Config $config
+     * @param $transactionId
+     * @param $maid
+     *
+     * @return object|null
+     */
+    protected function paymentByTransactionId(Config $config, $transactionId, $maid)
+    {
+        return $this->sendRequest($config,
+            sprintf(self::URL_PAYMENTS_FMT, $config->getBaseUrl(), $maid, $transactionId), self::CONTENTTYPE_JSON);
+    }
+
+    /**
+     * get payments by parent transaction-id
+     *
+     * @param Config $config
+     * @param $transactionId
+     * @param $maid
+     *
+     * @return array|null
+     */
+    protected function paymentsByTransactionId(Config $config, $transactionId, $maid)
+    {
+        $data = $this->sendRequest($config,
+            sprintf(self::URL_PAYMENTS_BYTRANSACTIONID_FMT, $config->getBaseUrl(), $maid, $transactionId),
+            self::CONTENTTYPE_JSON);
+
+        if (!is_object($data)) {
             return null;
         }
 
-        $requestId = $this->nestedObjectHelper->get($payment, self::FIELD_REQUEST_ID);
-        if (is_null($requestId)) {
-            return null;
-        }
-
-        return $this->byRequestId($config, $requestId, $maid);
+        return $this->nestedObjectHelper->getIn($data, [self::FIELD_PAYMENTS, Transaction::PARAM_PAYMENT]);
     }
 
     /**
