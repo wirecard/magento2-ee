@@ -31,7 +31,6 @@ use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
 use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
-use Wirecard\PaymentSdk\Entity\AccountInfo;
 use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -188,28 +187,29 @@ class Creditcard extends Action
     }
 
     /**
-     * @param OrderDto $order
+     * Add fields for 3D Secure 2
+     *
+     * @param OrderDto $orderDto
      * @throws LocalizedException
+     * @since 2.1.0
      */
-    private function createThreeDSData($order) {
+    private function createThreeDSData($orderDto)
+    {
         $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
         $challengeIndicator = $method->getConfigData('challenge_ind');
         $accountInfo = $this->accountInfoFactory->create($challengeIndicator);
+        $accountHolder = $this->fetchAccountHolder($orderDto->quote->getBillingAddress());
 
-        $accountHolder = $this->fetchAccountHolder($order->quote->getBillingAddress());
-
-        // @TODO check for shipping address first usage
-        $shippingAddress = $order->quote->getShippingAddress();
-        if (isset($shippingAddress)) {
-            $shippingFirstUse = new \DateTime($shippingAddress->getCreatedAt());
-            $shippingFirstUse->format(AccountInfo::DATE_FORMAT);
-            $accountInfo->setShippingAddressFirstUse($shippingFirstUse);
-            $order->transaction->setShipping(
-                $this->fetchAccountHolder($order->quote->getShippingAddress())
+        // @TODO Shipping address first usage not possible via quote_address_id - clarification needed
+        /** @var \Magento\Quote\Model\Quote\Address $shippingAddress */
+        $shippingAddress = $orderDto->quote->getShippingAddress();
+        if (isset($shippingAddress) && !$orderDto->quote->getIsVirtual()) {
+            $orderDto->transaction->setShipping(
+                $this->fetchAccountHolder($shippingAddress)
             );
         }
         $accountHolder->setAccountInfo($accountInfo);
-        $order->transaction->setAccountHolder($accountHolder);
+        $orderDto->transaction->setAccountHolder($accountHolder);
     }
 
     /**

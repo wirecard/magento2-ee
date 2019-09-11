@@ -13,8 +13,8 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
 use Magento\Vault\Model\ResourceModel\PaymentToken\Collection as VaultCollection;
 use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Constant\AuthMethod;
@@ -26,12 +26,12 @@ use Wirecard\PaymentSdk\Entity\AccountInfo;
  */
 class AccountInfoFactory
 {
-    const PURCHASE_SUCCESS = array(
+    const PURCHASE_SUCCESS = [
         Order::STATE_PROCESSING,
         Order::STATE_CANCELED,
         Order::STATE_CLOSED,
         Order::STATE_COMPLETE
-    );
+    ];
 
     protected $customerSession;
     protected $transactionRepository;
@@ -75,7 +75,8 @@ class AccountInfoFactory
     /**
      * @param AccountInfo $accountInfo
      */
-    private function setUserData($accountInfo) {
+    private function setUserData($accountInfo)
+    {
         /** @var CustomerInterface $dataModel */
         $dataModel = $this->customerSession->getCustomerData();
 
@@ -96,7 +97,8 @@ class AccountInfoFactory
      * @param string $token
      * @since 2.1.0
      */
-    private function setCreditCardCreationDate($accountInfo, $token) {
+    private function setCreditCardCreationDate($accountInfo, $token)
+    {
         if (!empty($token)) {
             $createdDates = $this->vaultCollection->addFieldToFilter('gateway_token', $token)
                 ->getColumnValues('created_at');
@@ -114,7 +116,8 @@ class AccountInfoFactory
      * @return \DateTime
      * @since 2.1.0
      */
-    private function createDateWithFormat($dateString, $format) {
+    private function createDateWithFormat($dateString, $format)
+    {
         $date = new \DateTime($dateString);
         $date->format($format);
 
@@ -133,7 +136,7 @@ class AccountInfoFactory
     {
         $endDate = date('Y-m-d H:i:s');
         $startDate = date('Y-m-d H:i:s', strtotime($startDateStatement));
-        $dateFilter = array('from'=>$startDate, 'to'=>$endDate);
+        $dateFilter = ['from'=>$startDate, 'to'=>$endDate];
 
         return $dateFilter;
     }

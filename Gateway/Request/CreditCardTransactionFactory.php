@@ -108,10 +108,13 @@ class CreditCardTransactionFactory extends TransactionFactory
     }
 
     /**
-     * @TODO add missing fields
+     * Add fields for 3D Secure 2
+     *
      * @param PaymentDataObjectInterface $paymentDO
+     * @since 2.1.0
      */
-    private function createThreeDSData($paymentDO) {
+    private function createThreeDSData($paymentDO)
+    {
         $token = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID);
         $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
         $accountInfo = $this->accountInfoFactory->create($challengeIndicator, $token);
@@ -125,7 +128,6 @@ class CreditCardTransactionFactory extends TransactionFactory
         if (isset($shippingAddress)) {
             $shipping = $this->accountHolderFactory->create($shippingAddress);
             $this->transaction->setShipping($shipping);
-            // @TODO add shipping address first usage here
         }
 
         $accountHolder->setAccountInfo($accountInfo);

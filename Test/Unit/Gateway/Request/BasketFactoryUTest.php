@@ -141,8 +141,14 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     }
 
     protected function getOrderItemMock(
-        $priceInc = 1.0, $origData = 1, $qtyInvoice = 2, $discountInvoices = 2.0,
-        $baseRowInvoiced = 1, $qtyRefunded = 2, $discountRefunded = 2.0, $baseAmountRefunded = 1,
+        $priceInc = 1.0,
+        $origData = 1,
+        $qtyInvoice = 2,
+        $discountInvoices = 2.0,
+        $baseRowInvoiced = 1,
+        $qtyRefunded = 2,
+        $discountRefunded = 2.0,
+        $baseAmountRefunded = 1,
         $type = Type::TYPE_SIMPLE
     ) {
         $item = $this->getMockBuilder(OrderItemInterface::class)
