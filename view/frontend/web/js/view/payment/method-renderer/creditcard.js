@@ -142,9 +142,9 @@ define(
                 this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
                 console.error(response);
 
-                // setTimeout(function () {
-                //     location.reload();
-                // }, 3000);
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
             },
             seamlessFormSizeHandler: function () {
                 this.hideSpinner();
