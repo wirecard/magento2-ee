@@ -74,16 +74,12 @@ class Payment
         $data['has-notify'] = true;
 
         $payment->setAdditionalInformation($data);
-        $additionalInfo = [];
 
-        if ($data !== []) {
-            foreach ($data as $key => $value) {
-                $additionalInfo[$key] = $value;
-            }
+        $additionalInfo = [];
+        foreach ($data as $key => $value) {
+            $additionalInfo[$key] = $value;
         }
-        if ($additionalInfo !== []) {
-            $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $additionalInfo);
-        }
+        $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $additionalInfo);
 
         $transaction = $payment->addTransaction(TransactionInterface::TYPE_ORDER);
 
