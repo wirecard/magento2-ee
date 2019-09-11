@@ -68,6 +68,5 @@ class Notify extends Action implements CsrfAwareActionInterface
             $response = $this->notify->fromXmlResponse($payload);
             $this->notify->process($response);
         }
-        //$this->transactionUpdater->run();
     }
 }
