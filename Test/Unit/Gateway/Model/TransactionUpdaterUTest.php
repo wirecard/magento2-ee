@@ -16,6 +16,8 @@ use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
+use stdClass;
+use Wirecard\ElasticEngine\Gateway\Helper\NestedObject;
 use Wirecard\ElasticEngine\Gateway\Model\Notify;
 use Wirecard\ElasticEngine\Gateway\Model\RetrieveTransaction;
 use Wirecard\ElasticEngine\Gateway\Model\TransactionUpdater;
@@ -73,6 +75,11 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
      */
     protected $notify;
 
+    /**
+     * @var NestedObject|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $nestedObject;
+
     public function setUp()
     {
         $this->transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
@@ -93,13 +100,16 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
         $this->notify = $this->getMockWithoutInvokingTheOriginalConstructor(Notify::class);
 
+        $this->nestedObject = $this->getMockWithoutInvokingTheOriginalConstructor(NestedObject::class);
+
         $this->updater = new TransactionUpdater(
             $this->logger,
             $this->transactionServiceFactory,
             $this->transactionCollection,
             $this->transactionRepository,
             $this->retreiveTransaction,
-            $this->notify
+            $this->notify,
+            $this->nestedObject
         );
     }
 
@@ -107,14 +117,19 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
     {
         $rawData = (object)[
             "raw_details_info" => [
-                "payment-method"      => "creditcard",
-                "request-id"          => "rid",
-                "transaction-type"    => "ttype",
-                "transaction-id"      => "tid",
-                "merchant-account-id" => "maid"
+                "payment-methods.0.name" => "creditcard",
+                "request-id"             => "rid",
+                "transaction-type"       => "ttype",
+                "transaction-id"         => "tid",
+                "merchant-account-id"    => "maid"
             ]
         ];
         $this->transaction->method('getData')->willReturn(json_encode($rawData));
+
+        $this->nestedObject->method('get')->willReturnCallback(function ($object, $param) use ($rawData) {
+            return $object->$param;
+        });
+
         $this->retreiveTransaction->method('byRequestId')->willReturn('<xml/>');
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $sdkResponse */
@@ -160,6 +175,9 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
         $this->transaction->method('getData')->willReturn(json_encode($rawData));
         $this->retreiveTransaction->method('byRequestId')->willThrowException(new Exception('foo'));
+        $this->nestedObject->method('get')->willReturnCallback(function ($object, $param) {
+            return $object->$param;
+        });
 
         $this->notify->expects($this->never())->method('process');
         $this->transactionCollection->method('fetchItem')->willReturnOnConsecutiveCalls(
@@ -183,16 +201,16 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyWithAltMethodName()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => "creditcard",
-                "request-id"             => "rid",
-                "transaction-id"         => "tid",
-                "transaction-type"       => "ttype",
-                "merchant-account-id"    => "maid"
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            null,
+            'creditcard',
+            'rid',
+            'tid',
+            'ttype',
+            'maid'
+        );
 
         $this->retreiveTransaction->method('byRequestId')->with($this->config, 'rid', 'maid');
         $this->updater->fetchNotify($this->transaction);
@@ -200,16 +218,16 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyWithoutMethodName()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "request-id"          => "rid",
-                "transaction-type"    => "ttype",
-                "merchant-account-id" => "maid",
-                "transaction-id"      => "tid"
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            null,
+            null,
+            'rid',
+            'tid',
+            'ttype',
+            'maid'
+        );
         $this->retreiveTransaction->expects($this->never())->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
@@ -217,33 +235,15 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyWithoutRequestId()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => "creditcard",
-                "transaction-type"       => "ttype",
-                "transaction-id"         => "tid",
-                "merchant-account-id"    => "maid"
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-
-        $this->retreiveTransaction->expects($this->never())->method('byRequestId');
-        $ret = $this->updater->fetchNotify($this->transaction);
-        $this->assertNull($ret);
-    }
-
-    public function testFetchNotifyWithoutTransactionType()
-    {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => "creditcard",
-                "request-id"             => "rid",
-                "transaction-id"         => "tid",
-                "merchant-account-id"    => "maid"
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            'creditcard',
+            null,
+            'tid',
+            'ttype',
+            'maid'
+        );
         $this->retreiveTransaction->expects($this->never())->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
@@ -251,17 +251,31 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyWithoutTransactionId()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => "creditcard",
-                "request-id"             => "rid",
-                "transaction-type"       => "ttype",
-                "merchant-account-id"    => "maid"
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            'creditcard',
+            'rid',
+            null,
+            'ttype',
+            'maid'
+        );
+        $this->retreiveTransaction->expects($this->never())->method('byRequestId');
+        $ret = $this->updater->fetchNotify($this->transaction);
+        $this->assertNull($ret);
+    }
 
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-
+    public function testFetchNotifyWithoutTransactionType()
+    {
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            'creditcard',
+            'rid',
+            'tid',
+            null,
+            'maid'
+        );
         $this->retreiveTransaction->expects($this->never())->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
@@ -269,16 +283,15 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyWithoutMaid()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => "creditcard",
-                "request-id"             => "rid",
-                "transaction-id"         => "tid",
-                "transaction-type"       => "ttype",
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            'creditcard',
+            'rid',
+            'tid',
+            'ttype',
+            null
+        );
         $this->retreiveTransaction->expects($this->never())->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
@@ -296,8 +309,11 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
             ]
         ];
         $this->transaction->method('getData')->willReturn(json_encode($rawData));
+        $this->nestedObject->method('get')->willReturnCallback(function ($object, $param) {
+            return $object->$param;
+        });
 
-        $this->retreiveTransaction->method('byRequestId')->willReturn(false);
+        $this->retreiveTransaction->method('byRequestId')->willReturn(null);
 
         $this->retreiveTransaction->method('byTransactionId')
             ->with($this->config, "tid", "ttype", "maid")
@@ -308,37 +324,35 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyNothingFound()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => "creditcard",
-                "request-id"             => "rid",
-                "transaction-id"         => "tid",
-                "transaction-type"       => "ttype",
-                "merchant-account-id"    => "maid"
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            'creditcard',
+            'rid',
+            'tid',
+            'ttype',
+            'maid'
+        );
 
-        $this->retreiveTransaction->method('byRequestId')->willReturn(false);
-        $this->retreiveTransaction->method('byTransactionId')->willReturn(false);
+        $this->retreiveTransaction->method('byRequestId')->willReturn(null);
+        $this->retreiveTransaction->method('byTransactionId')->willReturn(null);
 
+        $this->logger->method('debug')->with('WirecardTransactionUpdater::transaction: order: no notify found');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
     }
 
     public function testFetchNotifyAlipay()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => AlipayCrossborderTransaction::NAME,
-                "request-id"             => "rid-get-url", // alipay has -get-url appended
-                "transaction-id"         => "tid",
-                "transaction-type"       => "ttype",
-                "merchant-account-id"    => "maid"
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            AlipayCrossborderTransaction::NAME,
+            'rid-get-url',
+            'tid',
+            'ttype',
+            'maid'
+        );
         $this->retreiveTransaction->method('byRequestId')
             ->with($this->config, "rid", "maid")
             ->willReturn('<xml/>');
@@ -349,17 +363,15 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyRatepayInvoice()
     {
-        $rawData = (object)[
-            "raw_details_info" => [
-                "payment-methods.0.name" => "ratepay-invoice", // must be converted to ratepayinvoice
-                "request-id"             => "rid",
-                "transaction-id"         => "tid",
-                "transaction-type"       => "ttype",
-                "merchant-account-id"    => "maid"
-            ]
-        ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-
+        $this->transaction->method('getData')->willReturn('{}');
+        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
+            new stdClass(),
+            'ratepay-invoice',
+            'rid',
+            'tid',
+            'ttype',
+            'maid'
+        );
         $this->retreiveTransaction->method('byRequestId')
             ->with($this->config, "rid", "maid")
             ->willReturn('<xml/>');

@@ -11,26 +11,45 @@ namespace Wirecard\ElasticEngine\Gateway\Model;
 
 use Magento\Framework\HTTP\ClientFactory;
 use Magento\Framework\HTTP\ClientInterface;
+use Wirecard\ElasticEngine\Gateway\Helper\NestedObject;
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * @since 2.1.0
  */
 class RetrieveTransaction
 {
+    const URL_PAYMENT_BYREQUESTID_FMT = '%s/engine/rest/merchants/%s/payments/search?payment.request-id=%s';
+    const URL_PAYMENTS_FMT = '%s/engine/rest/merchants/%s/payments/%s';
+    const URL_PAYMENTS_BYTRANSACTIONID_FMT = '%s/engine/rest/merchants/%s/payments/?group_transaction_id=%s';
+
+    const FIELD_PAYMENTS = 'payments';
+    const FIELD_REQUEST_ID = 'request-id';
+
+    const CONTENTTYPE_JSON = 'json';
+    const CONTENTTYPE_XML = 'xml';
+
     /**
      * @var ClientFactory
      */
     protected $httpClientFactory;
 
     /**
+     * @var NestedObject
+     */
+    protected $nestedObjectHelper;
+
+    /**
      * PaymentStatus constructor.
      *
      * @param ClientFactory $httpClientFactory
+     * @param NestedObject $nestedObjectHelper
      */
-    public function __construct(ClientFactory $httpClientFactory)
+    public function __construct(ClientFactory $httpClientFactory, NestedObject $nestedObjectHelper)
     {
-        $this->httpClientFactory = $httpClientFactory;
+        $this->httpClientFactory  = $httpClientFactory;
+        $this->nestedObjectHelper = $nestedObjectHelper;
     }
 
     /**
@@ -38,15 +57,12 @@ class RetrieveTransaction
      * @param string $requestId
      * @param string $maid we can not use the configured maid (maid might change during a 3ds fallback)
      *
-     * @return string|false
+     * @return string|null
      */
     public function byRequestId(Config $config, $requestId, $maid)
     {
-        $urlFormat = '%s/engine/rest/merchants/%s/payments/search?payment.request-id=%s';
-
-        $httpClient = $this->sendRequest($config, sprintf($urlFormat, $config->getBaseUrl(), $maid, $requestId));
-
-        return $this->checkResponse($httpClient);
+        return $this->sendRequest($config,
+            sprintf(self::URL_PAYMENT_BYREQUESTID_FMT, $config->getBaseUrl(), $maid, $requestId));
     }
 
     /**
@@ -59,63 +75,60 @@ class RetrieveTransaction
      * @param string $transactionType the transaction-type to be matched
      * @param string $maid
      *
-     * @return bool|ClientInterface
+     * @return string|null
      */
     public function byTransactionId(Config $config, $transactionId, $transactionType, $maid)
     {
-        $urlFormat  = '%s/engine/rest/merchants/%s/payments/%s';
-        $httpClient = $this->sendRequest($config,
-            sprintf($urlFormat, $config->getBaseUrl(), $maid, $transactionId), 'json');
-        $body       = $this->checkResponse($httpClient);
-        if ($body === false) {
-            return false;
-        }
+        // step1: get payments by transaction-id
+        $data = $this->sendRequest($config,
+            sprintf(self::URL_PAYMENTS_FMT, $config->getBaseUrl(), $maid, $transactionId), self::CONTENTTYPE_JSON);
 
-        $data = json_decode($body);
         if (!is_object($data)) {
-            return false;
+            return null;
         }
 
-        if (!property_exists($data, 'payment') || !property_exists($data->payment, 'parent-transaction-id')) {
-            return false;
+        $parentTransactionId = $this->nestedObjectHelper->getIn($data,
+            [Transaction::PARAM_PAYMENT, Transaction::PARAM_PARENT_TRANSACTION_ID]);
+        if (is_null($parentTransactionId)) {
+            return null;
         }
 
-        $parentTransactionId = $data->payment->{'parent-transaction-id'};
+        // step2: search all payments by parent-transaction-id
+        $data = $this->sendRequest($config,
+            sprintf(self::URL_PAYMENTS_BYTRANSACTIONID_FMT, $config->getBaseUrl(), $maid, $parentTransactionId),
+            self::CONTENTTYPE_JSON);
 
-        $urlFormat  = '%s/engine/rest/merchants/%s/payments/?group_transaction_id=%s';
-        $httpClient = $this->sendRequest($config,
-            sprintf($urlFormat, $config->getBaseUrl(), $maid, $parentTransactionId), 'json');
-        $body       = $this->checkResponse($httpClient);
-        if ($body === false) {
-            return false;
-        }
-
-        $data = json_decode($body);
         if (!is_object($data)) {
-            return false;
+            return null;
         }
 
-        if (!property_exists($data, 'payments') || !property_exists($data->payments, 'payment')) {
-            return false;
+        $payments = $this->nestedObjectHelper->getIn($data, [self::FIELD_PAYMENTS, Transaction::PARAM_PAYMENT]);
+        if (!is_array($payments)) {
+            return null;
         }
 
+        // we need the latest payment which maches the transaction-type of the originating transaction
         $payment = null;
-        foreach (array_reverse($data->payments->payment) as $p) {
-            if (!property_exists($p, 'transaction-type')) {
+        foreach (array_reverse($payments) as $p) {
+            $paymentTransactionType = $this->nestedObjectHelper->get($p, Transaction::PARAM_TRANSACTION_TYPE);
+            if (is_null($paymentTransactionType)) {
                 continue;
             }
 
-            if ($p->{'transaction-type'} === $transactionType) {
+            if ($paymentTransactionType === $transactionType) {
                 $payment = $p;
                 break;
             }
         }
 
-        if ($payment === null) {
-            return false;
+        if (is_null($payment)) {
+            return null;
         }
 
-        $requestId = $payment->{'request-id'};
+        $requestId = $this->nestedObjectHelper->get($payment, self::FIELD_REQUEST_ID);
+        if (is_null($requestId)) {
+            return null;
+        }
 
         return $this->byRequestId($config, $requestId, $maid);
     }
@@ -123,35 +136,47 @@ class RetrieveTransaction
     /**
      * @param Config $config
      * @param string $url
-     * @param string $type
+     * @param string $contentType the accepted content-type
      *
-     * @return ClientInterface
+     * @return string|object|null
      */
-    protected function sendRequest(Config $config, $url, $type = 'xml')
+    protected function sendRequest(Config $config, $url, $contentType = self::CONTENTTYPE_XML)
     {
         $httpClient = $this->httpClientFactory->create();
-        $httpClient->addHeader('Accept', 'application/' . $type);
+        $httpClient->addHeader('Accept', 'application/' . $contentType);
         $httpClient->setCredentials($config->getHttpUser(), $config->getHttpPassword());
         $httpClient->get($url);
 
-        return $httpClient;
+        return $this->checkResponse($httpClient, $contentType);
     }
 
     /**
-     * @param ClientInterface $httpClient
+     * We can not use the Magento\Framework\HTTP\ResponseFactory, it does not exists in magento < 2.3
      *
-     * @return bool|string
+     * @param ClientInterface $httpClient
+     * @param null $decodeAs
+     *
+     * @return null|string
      */
-    protected function checkResponse(ClientInterface $httpClient)
+    protected function checkResponse(ClientInterface $httpClient, $decodeAs = null)
     {
         if ($httpClient->getStatus() == 404) {
-            return false;
+            return null;
         }
 
         if ($httpClient->getStatus() < 200 || $httpClient->getStatus() > 299) {
-            return false;
+            return null;
         }
 
-        return $httpClient->getBody();
+        $body = $httpClient->getBody();
+        if (!strlen($body)) {
+            return null;
+        }
+
+        if ($decodeAs === self::CONTENTTYPE_JSON) {
+            return json_decode($body);
+        }
+
+        return $body;
     }
 }
