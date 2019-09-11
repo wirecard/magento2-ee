@@ -162,7 +162,7 @@ class Notify
     public function process(Response $response)
     {
         $orderId = $response->getCustomFields()->get('orderId');
-        if ($orderId === null) {
+        if (is_null($orderId)) {
             $this->logger->error('No orderID found in custom fields');
 
             return;
