@@ -17,7 +17,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Model\Notify;
-use Wirecard\ElasticEngine\Gateway\Model\RetreiveTransaction;
+use Wirecard\ElasticEngine\Gateway\Model\RetrieveTransaction;
 use Wirecard\ElasticEngine\Gateway\Model\TransactionUpdater;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Config\Config;
@@ -54,7 +54,7 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
     protected $transaction;
 
     /**
-     * @var RetreiveTransaction|PHPUnit_Framework_MockObject_MockObject
+     * @var RetrieveTransaction|PHPUnit_Framework_MockObject_MockObject
      */
     protected $retreiveTransaction;
 
@@ -89,7 +89,7 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
         $this->transaction           = $this->getMockWithoutInvokingTheOriginalConstructor(Transaction::class);
         $this->transactionRepository->method('get')->willReturn($this->transaction);
 
-        $this->retreiveTransaction = $this->getMockWithoutInvokingTheOriginalConstructor(RetreiveTransaction::class);
+        $this->retreiveTransaction = $this->getMockWithoutInvokingTheOriginalConstructor(RetrieveTransaction::class);
 
         $this->notify = $this->getMockWithoutInvokingTheOriginalConstructor(Notify::class);
 

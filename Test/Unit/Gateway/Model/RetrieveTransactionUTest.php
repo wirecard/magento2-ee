@@ -13,13 +13,13 @@ use Magento\Framework\HTTP\ClientFactory;
 use Magento\Framework\HTTP\ClientInterface;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
-use Wirecard\ElasticEngine\Gateway\Model\RetreiveTransaction;
+use Wirecard\ElasticEngine\Gateway\Model\RetrieveTransaction;
 use Wirecard\PaymentSdk\Config\Config;
 
-class RetreiveTransactionUTest extends PHPUnit_Framework_TestCase
+class RetrieveTransactionUTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var RetreiveTransaction
+     * @var RetrieveTransaction
      */
     protected $transaction;
 
@@ -43,7 +43,7 @@ class RetreiveTransactionUTest extends PHPUnit_Framework_TestCase
 
         $this->config = $this->getMockWithoutInvokingTheOriginalConstructor(Config::class);
 
-        $this->transaction = new RetreiveTransaction(
+        $this->transaction = new RetrieveTransaction(
             $clientFactory
         );
     }

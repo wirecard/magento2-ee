@@ -16,7 +16,7 @@ use Wirecard\PaymentSdk\Config\Config;
 /**
  * @since 2.1.0
  */
-class RetreiveTransaction
+class RetrieveTransaction
 {
     /**
      * @var ClientFactory

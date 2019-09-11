@@ -44,9 +44,9 @@ class TransactionUpdater
     protected $transactionServiceFactory;
 
     /**
-     * @var RetreiveTransaction
+     * @var RetrieveTransaction
      */
-    protected $retreiveTransaction;
+    protected $retrieveTransaction;
 
     /**
      * @var Notify
@@ -65,7 +65,7 @@ class TransactionUpdater
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param Collection $transactionCollection
      * @param Payment\Transaction\Repository $transactionRepository
-     * @param RetreiveTransaction $retreiveTransaction
+     * @param RetrieveTransaction $retreiveTransaction
      * @param Notify $notify
      */
     public function __construct(
@@ -73,14 +73,14 @@ class TransactionUpdater
         TransactionServiceFactory $transactionServiceFactory,
         Collection $transactionCollection,
         Payment\Transaction\Repository $transactionRepository,
-        RetreiveTransaction $retreiveTransaction,
+        RetrieveTransaction $retreiveTransaction,
         Notify $notify
     ) {
         $this->logger              = $logger;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->transactionCollection     = $transactionCollection;
         $this->transactionRepository     = $transactionRepository;
-        $this->retreiveTransaction = $retreiveTransaction;
+        $this->retrieveTransaction = $retreiveTransaction;
         $this->notify              = $notify;
     }
 
@@ -178,7 +178,7 @@ class TransactionUpdater
 
         $requestId = $this->normalizeRequestId($paymentMethod, $requestId);
 
-        $result = $this->retreiveTransaction->byRequestId(
+        $result = $this->retrieveTransaction->byRequestId(
             $this->getConfig($paymentMethod),
             $requestId,
             $maid);
@@ -186,7 +186,7 @@ class TransactionUpdater
         if ($result === false) {
             // try to get transaction by transaction-id for CC 3ds payments
             if ($paymentMethod === CreditCardTransaction::NAME) {
-                $result = $this->retreiveTransaction->byTransactionId(
+                $result = $this->retrieveTransaction->byTransactionId(
                     $this->getConfig($paymentMethod),
                     $rawData->{'transaction-id'},
                     $rawData->{'transaction-type'},
