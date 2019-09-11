@@ -210,6 +210,7 @@ class Creditcard extends Action
         }
         $accountHolder->setAccountInfo($accountInfo);
         $orderDto->transaction->setAccountHolder($accountHolder);
+        $orderDto->transaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);
     }
 
     /**
@@ -301,7 +302,6 @@ class Creditcard extends Action
         }
         // Add 3D Secure 2 parameters
         $this->createThreeDSData($orderDto);
-        $orderDto->transaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);
     }
 
     /**
