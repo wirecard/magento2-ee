@@ -114,7 +114,7 @@ class RetrieveTransaction
      * @param $payments
      * @param $transactionType
      *
-     * @return |null
+     * @return object|null
      */
     protected function findTransactionByType($payments, $transactionType)
     {
