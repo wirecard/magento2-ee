@@ -82,6 +82,7 @@ class Creditcard extends Action
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var AccountInfoFactory  */
     protected $accountInfoFactory;
 
     /**
@@ -99,6 +100,8 @@ class Creditcard extends Action
      * @param ConfigInterface $methodConfig
      * @param LoggerInterface $logger
      * @param AccountInfoFactory $accountInfoFactory
+     *
+     * @since 2.2.0 added AccountInfoFactory
      */
     public function __construct(
         Context $context,
@@ -200,7 +203,7 @@ class Creditcard extends Action
         $accountInfo = $this->accountInfoFactory->create($challengeIndicator);
         $accountHolder = $this->fetchAccountHolder($orderDto->quote->getBillingAddress());
 
-        // @TODO Shipping address first usage not possible via quote_address_id - clarification needed
+        // @TODO shipping-address-first-usage not possible via quote_address_id
         /** @var \Magento\Quote\Model\Quote\Address $shippingAddress */
         $shippingAddress = $orderDto->quote->getShippingAddress();
         if (isset($shippingAddress) && !$orderDto->quote->getIsVirtual()) {
@@ -208,6 +211,7 @@ class Creditcard extends Action
                 $this->fetchAccountHolder($shippingAddress)
             );
         }
+        $accountHolder->setCrmId($orderDto->quote->getCustomerId());
         $accountHolder->setAccountInfo($accountInfo);
         $orderDto->transaction->setAccountHolder($accountHolder);
         $orderDto->transaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);

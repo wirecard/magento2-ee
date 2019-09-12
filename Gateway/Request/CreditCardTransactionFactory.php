@@ -51,7 +51,7 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @param ConfigInterface $methodConfig
      * @param AccountInfoFactory $accountInfoFactory
      *
-     * @since 2.1.0 added AccountInfoFactory
+     * @since 2.2.0 added AccountInfoFactory
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -111,7 +111,7 @@ class CreditCardTransactionFactory extends TransactionFactory
      * Add fields for 3D Secure 2
      *
      * @param PaymentDataObjectInterface $paymentDO
-     * @since 2.1.0
+     * @since 2.2.0
      */
     private function createThreeDSData($paymentDO)
     {
@@ -124,6 +124,7 @@ class CreditCardTransactionFactory extends TransactionFactory
         $shippingAddress = $order->getShippingAddress();
 
         $accountHolder = $this->accountHolderFactory->create($billingAddress);
+        $accountHolder->setCrmId($order->getCustomerId());
         $accountHolder->setAccountInfo($accountInfo);
         if (isset($shippingAddress)) {
             $shipping = $this->accountHolderFactory->create($shippingAddress);

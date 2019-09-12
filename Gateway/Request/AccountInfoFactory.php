@@ -16,7 +16,6 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
 use Magento\Vault\Model\ResourceModel\PaymentToken\Collection as VaultCollection;
-use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\Constant\AuthMethod;
 use Wirecard\PaymentSdk\Entity\AccountInfo;
 
@@ -26,6 +25,7 @@ use Wirecard\PaymentSdk\Entity\AccountInfo;
  */
 class AccountInfoFactory
 {
+    /** @var array Order states counting for purchases */
     const PURCHASE_SUCCESS = [
         Order::STATE_PROCESSING,
         Order::STATE_CANCELED,
@@ -33,17 +33,29 @@ class AccountInfoFactory
         Order::STATE_COMPLETE
     ];
 
+    /** @var CustomerSession containing login data */
     protected $customerSession;
+
+    /** @var Repository containing entries of transactions based on payments */
     protected $transactionRepository;
+
+    /** @var SearchCriteriaBuilder  */
     protected $searchCriteriaBuilder;
-    protected $logger;
+
+    /** @var OrderCollection  */
     protected $orderCollection;
+
+    /** @var VaultCollection  */
     protected $vaultCollection;
 
-    public function __construct(CustomerSession $customerSession, LoggerInterface $logger, OrderCollection $orderCollection, Repository $transactionRepository, SearchCriteriaBuilder $searchCriteriaBuilder, VaultCollection $vaultCollection)
-    {
+    public function __construct(
+        CustomerSession $customerSession,
+        OrderCollection $orderCollection,
+        Repository $transactionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        VaultCollection $vaultCollection
+    ) {
         $this->customerSession = $customerSession;
-        $this->logger = $logger;
         $this->transactionRepository = $transactionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->orderCollection = $orderCollection;
@@ -51,9 +63,12 @@ class AccountInfoFactory
     }
 
     /**
+     * Create AccountInfo entity
+     *
      * @param string $challengeIndicator
      * @param string|null $token
      * @return AccountInfo
+     * @since 2.2.0
      */
     public function create($challengeIndicator, $token = null)
     {
@@ -62,7 +77,7 @@ class AccountInfoFactory
 
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
-            $this->setUserData($accountInfo);
+            $this->setUserCreationData($accountInfo);
             $this->setCreditCardCreationDate($accountInfo, $token);
             $purchasesLastSixMonths = $this->getCustomerFinalOrderCountForPeriod('-6 months');
             $accountInfo->setAmountPurchasesLastSixMonths($purchasesLastSixMonths);
@@ -73,9 +88,12 @@ class AccountInfoFactory
     }
 
     /**
+     * Set user creation data for accountInfo
+     *
      * @param AccountInfo $accountInfo
+     * @since 2.2.0
      */
-    private function setUserData($accountInfo)
+    private function setUserCreationData($accountInfo)
     {
         /** @var CustomerInterface $dataModel */
         $dataModel = $this->customerSession->getCustomerData();
@@ -95,7 +113,7 @@ class AccountInfoFactory
      *
      * @param AccountInfo $accountInfo
      * @param string $token
-     * @since 2.1.0
+     * @since 2.2.0
      */
     private function setCreditCardCreationDate($accountInfo, $token)
     {
@@ -111,10 +129,12 @@ class AccountInfoFactory
     }
 
     /**
+     * Create DateTime from date string with specific format
+     *
      * @param string $dateString
      * @param string $format
      * @return \DateTime
-     * @since 2.1.0
+     * @since 2.2.0
      */
     private function createDateWithFormat($dateString, $format)
     {
@@ -130,7 +150,7 @@ class AccountInfoFactory
      *
      * @param string $startDateStatement
      * @return array
-     * @since 2.1.0
+     * @since 2.2.0
      */
     private function getDateRangeFilter($startDateStatement)
     {
@@ -147,7 +167,7 @@ class AccountInfoFactory
      *
      * @param string $timePeriod
      * @return int
-     * @since 2.1.0
+     * @since 2.2.0
      */
     private function getCustomerTransactionCountForPeriod($timePeriod)
     {
@@ -169,7 +189,7 @@ class AccountInfoFactory
      *
      * @param string $timePeriod
      * @return int
-     * @since 2.1.0
+     * @since 2.2.0
      */
     private function getCustomerFinalOrderCountForPeriod($timePeriod)
     {
@@ -186,11 +206,11 @@ class AccountInfoFactory
      *
      * @param array $order_ids
      * @return int
-     * @since 2.1.0
+     * @since 2.2.0
      */
     private function getTransactionCountForOrderIds($order_ids)
     {
-        if ($this->transactionRepository === null || empty($order_ids)) {
+        if (is_null($this->transactionRepository) || empty($order_ids)) {
             return 0;
         }
 
