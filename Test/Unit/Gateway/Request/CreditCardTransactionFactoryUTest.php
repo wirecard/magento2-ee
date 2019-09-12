@@ -204,6 +204,7 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedTransaction()
     {
         $accountHolder = new AccountHolder();
+        $accountHolder->setAccountInfo(new AccountInfo());
 
         $expected = new CreditCardTransaction();
         $expected->setTokenId('mypersonaltoken');
