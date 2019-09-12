@@ -19,9 +19,11 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
+use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
 use Wirecard\ElasticEngine\Gateway\Request\CreditCardTransactionFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\PaymentSdk\Entity\AccountInfo;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
@@ -58,6 +60,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     private $accountHolderFactory;
 
+    private $accountInfoFactory;
+
     public function setUp()
     {
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
@@ -77,6 +81,9 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
         $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
+
+        $this->accountInfoFactory = $this->getMockBuilder(AccountInfoFactory::class)->disableOriginalConstructor()->getMock();
+        $this->accountInfoFactory->method('create')->willReturn(new AccountInfo());
 
         $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
 
@@ -108,7 +115,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             new CreditCardTransaction(),
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->accountInfoFactory
         );
         $expected = Operation::REFUND;
         $this->assertEquals($expected, $transactionFactory->getRefundOperation());
@@ -124,7 +132,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->accountInfoFactory
         );
 
         $expected = $this->minimumExpectedTransaction();
@@ -142,7 +151,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->accountInfoFactory
         );
 
         $expected = $this->minimumExpectedCaptureTransaction();
@@ -162,7 +172,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->accountInfoFactory
         );
 
         $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
@@ -178,7 +189,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->accountInfoFactory
         );
 
         $expected = $this->minimumExpectedVoidTransaction();
@@ -277,7 +289,8 @@ class CreditCardTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $transaction,
             $this->basketFactory,
             $this->accountHolderFactory,
-            $this->config
+            $this->config,
+            $this->accountInfoFactory
         );
 
         $this->assertEquals($this->minimumExpectedVoidTransaction(), $transactionFactory->void([]));

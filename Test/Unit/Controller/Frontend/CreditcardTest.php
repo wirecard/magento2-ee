@@ -25,9 +25,11 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Creditcard;
+use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
+use Wirecard\PaymentSdk\Entity\AccountInfo;
 use Wirecard\PaymentSdk\TransactionService;
 
 class CreditcardTest extends \PHPUnit_Framework_TestCase
@@ -51,6 +53,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
     /** @var TransactionService */
     private $transactionServiceFactory;
+
+    /** @var AccountInfoFactory */
+    private $accountInfoFactory;
 
     public function testExecuteWithEmptyCheckoutSession()
     {
@@ -190,6 +195,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
+        $this->accountInfoFactory = $this->getMockBuilder(AccountInfoFactory::class)->disableOriginalConstructor()->getMock();
+        $this->accountInfoFactory->method('create')->willReturn(new AccountInfo());
+
         $this->controller = new Creditcard(
             $context,
             $resultJsonFactory,
@@ -201,7 +209,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             $storeManager,
             $this->paymentHelper,
             $methodConfig,
-            $logger
+            $logger,
+            $this->accountInfoFactory
         );
     }
 }
