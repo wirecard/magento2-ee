@@ -34,6 +34,9 @@ class ResponseHandler implements HandlerInterface
 {
     const TRANSACTION_ID = 'transactionId';
 
+    /** @var string key CREDITCARD as sent by frontend */
+    const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
+
     /**
      * @var LoggerInterface
      */
@@ -116,7 +119,13 @@ class ResponseHandler implements HandlerInterface
             }
             $this->session->setFormFields($formFields);
 
-            $this->paymentHelper->addTransaction($payment, $sdkResponse);
+            $postfix = '';
+            // add postfix for vault checkouts to avoid overwritten sales_payment_transactions
+            // when processing the notify
+            if ($payment->getMethod() === self::FRONTEND_CODE_CREDITCARD) {
+                $postfix = '-order';
+            }
+            $this->paymentHelper->addTransaction($payment, $sdkResponse, false, $postfix);
         } elseif ($sdkResponse instanceof SuccessResponse) {
             $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
             $this->session->setRedirectUrl($wdBaseUrl . 'frontend/redirect');

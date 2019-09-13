@@ -61,6 +61,11 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
     private $urlBuilder;
 
     /**
+     * @var Payment|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $payment;
+
+    /**
      * @var array
      */
     private $subject = [];
@@ -96,8 +101,8 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         ];
 
         $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
-        $payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
-        $paymentDO->method('getPayment')->willReturn($payment);
+        $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
+        $paymentDO->method('getPayment')->willReturn($this->payment);
         $this->subject = [
             'payment' => $paymentDO
         ];
@@ -151,6 +156,23 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $sessionMock->expects($this->once())->method('setFormMethod')->with('post');
         $sessionMock->expects($this->once())->method('setFormUrl')->with('http://redirpost.ect');
         $sessionMock->expects($this->once())->method('setFormFields')->with([['key' => 'food', 'value' => 'burger']]);
+        $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
+    }
+
+    public function testHandlingReturnsFormCreditCard()
+    {
+        $sessionMock = $this->session;
+        $handler = new ResponseHandler($this->logger, $sessionMock, $this->urlBuilder, $this->paymentHelper);
+
+        $response = $this->getMockBuilder(FormInteractionResponse::class)->disableOriginalConstructor()->getMock();
+        $response->method('getMethod')->willReturn('post');
+        $response->method('getUrl')->willReturn('http://redirpost.ect');
+        $response->method('getFormFields')->willReturn(['food' => 'burger']);
+        $response->method(self::GET_DATA)->willReturn($this->paymentData);
+
+        $this->payment->method('getMethod')->willReturn(ResponseHandler::FRONTEND_CODE_CREDITCARD);
+
+        $this->paymentHelper->method('addTransaction')->with($this->payment, $response, false, '-order');
         $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
     }
 
