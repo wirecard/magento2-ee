@@ -10,6 +10,10 @@ config_base_url_desc,Wirecard Server Address (URL) (e.g. https://api.wirecard.co
 config_basket_max,Maximum Amount,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
 config_basket_min,Minimum Amount,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
 config_billing_shipping,Identical Billing/Shipping Address,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_challenge_challenge_threed,Challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:306
+config_challenge_indicator,Challenge Indicator,: classes/includes/class-wc-gateway-wirecard-creditcard.php:271
+config_challenge_no_challenge,No challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:305
+config_challenge_no_preference,No preference,: classes/includes/class-wc-gateway-wirecard-creditcard.php:304
 config_creditor_city,Creditor City,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
 config_creditor_city_desc,SEPA Direct Debit requires a Creditor City for the SEPA Direct Debit Mandate page.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
 config_creditor_id,Creditor ID,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156
@@ -63,7 +67,7 @@ heading_title_sofortbanking,Wirecard Sofort.,": classes/includes/class-wc-gatewa
 iban,IBAN,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
 ideal_legend,Select your bank
 last_name_input,Last Name
-module_display_name,Wirecard Payment Processing Gateway
+module_display_name,Wirecard Payment Gateway
 no_such_order_error,This order doesn't exist.
 order_error,An error occurred during the payment process. Please try again.,": classes/includes/class-wc-wirecard-payment-gateway.php:212, : classes/includes/class-wc-wirecard-payment-gateway.php:228, : classes/includes/class-wc-wirecard-payment-gateway.php:340"
 payment_from_applicable_countries,Payment from Applicable Countries

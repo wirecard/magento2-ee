@@ -11,7 +11,7 @@ matrix:
   allow_failures:
     - stage: acceptance-test
   include:
-  - php: 7.0
+  - php: 7.1
     if: env(PHRASEAPP_PULL) != '1' AND type != cron
 
   - stage: get-magento2-versions
@@ -90,7 +90,7 @@ matrix:
   - stage: deploy
     if: tag IS present AND type = push
     language: php
-    php: 7.0
+    php: 7.1
     before_install: skip
     install:
       - travis_retry composer install $COMPOSER_ARGS
