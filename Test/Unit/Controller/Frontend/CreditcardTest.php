@@ -25,9 +25,11 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Creditcard;
+use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 class CreditcardTest extends \PHPUnit_Framework_TestCase
@@ -51,6 +53,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
     /** @var TransactionService */
     private $transactionServiceFactory;
+
+    /** @var ThreeDsHelper */
+    private $threeDsHelper;
 
     public function testExecuteWithEmptyCheckoutSession()
     {
@@ -86,7 +91,13 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
 
         $quote = $this->getMockBuilder(Quote::class)
-            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId', 'save'])
+            ->setMethods([
+                'getBaseCurrencyCode',
+                'getGrandTotal',
+                'reserveOrderId',
+                'getReservedOrderId',
+                'save'
+            ])
             ->disableOriginalConstructor()
             ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
@@ -96,7 +107,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $this->paymentHelper->expects($this->once())->method('getMethodInstance')->wilLReturn($method);
+        $this->paymentHelper->expects($this->any())->method('getMethodInstance')->wilLReturn($method);
 
         $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
@@ -123,7 +134,13 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
 
         $quote = $this->getMockBuilder(Quote::class)
-            ->setMethods(['getBaseCurrencyCode', 'getGrandTotal', 'reserveOrderId', 'getReservedOrderId', 'save'])
+            ->setMethods([
+                'getBaseCurrencyCode',
+                'getGrandTotal',
+                'reserveOrderId',
+                'getReservedOrderId',
+                'save'
+            ])
             ->disableOriginalConstructor()
             ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
@@ -133,7 +150,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $this->paymentHelper->expects($this->once())->method('getMethodInstance')->wilLReturn($method);
+        $this->paymentHelper->expects($this->any())->method('getMethodInstance')->wilLReturn($method);
 
         $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
@@ -190,6 +207,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
+        $this->threeDsHelper = $this->getMockBuilder(ThreeDsHelper::class)->disableOriginalConstructor()->getMock();
+        $this->threeDsHelper->method('getThreeDsTransaction')->willReturn(new CreditCardTransaction());
+
         $this->controller = new Creditcard(
             $context,
             $resultJsonFactory,
@@ -201,7 +221,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             $storeManager,
             $this->paymentHelper,
             $methodConfig,
-            $logger
+            $logger,
+            $this->threeDsHelper
         );
     }
 }

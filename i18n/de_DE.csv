@@ -10,6 +10,10 @@ config_base_url_desc,Wirecard Server Adresse (URL) (z. B. https://api.wirecard.c
 config_basket_max,Höchstbetrag,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
 config_basket_min,Mindestbetrag,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
 config_billing_shipping,Identische Rechnungs- und Lieferadresse,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_challenge_challenge_threed,Challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:306
+config_challenge_indicator,Challenge Indicator,: classes/includes/class-wc-gateway-wirecard-creditcard.php:271
+config_challenge_no_challenge,No challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:305
+config_challenge_no_preference,No preference,: classes/includes/class-wc-gateway-wirecard-creditcard.php:304
 config_creditor_city,Creditor-Stadt,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
 config_creditor_city_desc,Für das SEPA-Lastschriftmandat wird die Creditor-Stadt benötigt.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
 config_creditor_id,Creditor ID,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156
