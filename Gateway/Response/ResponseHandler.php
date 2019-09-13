@@ -123,7 +123,7 @@ class ResponseHandler implements HandlerInterface
             // add postfix for vault checkouts to avoid overwritten sales_payment_transactions
             // when processing the notify
             if ($payment->getMethod() === self::FRONTEND_CODE_CREDITCARD) {
-                $postfix = '-order';
+                $postfix = Helper\Payment::POSTFIX_ORDER;
             }
             $this->paymentHelper->addTransaction($payment, $sdkResponse, false, $postfix);
         } elseif ($sdkResponse instanceof SuccessResponse) {

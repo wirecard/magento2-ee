@@ -26,6 +26,8 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class Payment
 {
+    const POSTFIX_ORDER = '-order';
+
     /**
      * @var Order\Payment\Repository
      */

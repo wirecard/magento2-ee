@@ -200,7 +200,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
         $order = $this->checkoutSession->getLastRealOrder();
 
         // append -order prefix to get a new transaction record, if transactionId does not change
-        $this->paymentHelper->addTransaction($order->getPayment(), $response, true, '-order');
+        $this->paymentHelper->addTransaction($order->getPayment(), $response, true, Helper\Payment::POSTFIX_ORDER);
 
         if ($response instanceof SuccessResponse) {
             return $this->getRedirectData($result, 'onepage/success');

@@ -109,10 +109,10 @@ class PaymentUTest extends \PHPUnit_Framework_TestCase
         $this->payment->expects($this->once())->method('setTransactionAdditionalInfo')
             ->with(Transaction::RAW_DETAILS, ['has-notify' => true]);
         $this->payment->method('setTransactionId')
-            ->with(self::$TRID . '-order');
+            ->with(self::$TRID . Helper\Payment::POSTFIX_ORDER);
         $this->paymentRepository->expects($this->never())->method('save');
         $this->paymentTransactionRepository->expects($this->never())->method('save');
-        $t = $this->helper->addTransaction($this->payment, $this->response, false, '-order');
+        $t = $this->helper->addTransaction($this->payment, $this->response, false, Helper\Payment::POSTFIX_ORDER);
         $this->assertSame($this->transacion, $t);
     }
 
