@@ -304,6 +304,7 @@ class Creditcard extends Action
 
         $orderDto->basket = new Basket();
         $this->addOrderItemsToBasket($orderDto);
+        $orderDto->transaction->setBasket($orderDto->basket);
         $orderDto->transaction->setIpAddress($orderDto->quote->getRemoteIp());
         $orderDto->transaction->setConsumerId($orderDto->quote->getCustomerId());
     }

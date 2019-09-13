@@ -141,7 +141,10 @@ class ThreeDsHelper
         $accountHolder->setEmail($address->getEmail());
         $accountHolder->setPhone($address->getTelephone());
 
-        $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetFull());
+        $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
+        if (!empty($address->getStreetLine(2))) {
+            $sdkAddress->setStreet2($address->getStreetLine(2));
+        }
         $sdkAddress->setPostalCode($address->getPostcode());
         $accountHolder->setAddress($sdkAddress);
 
