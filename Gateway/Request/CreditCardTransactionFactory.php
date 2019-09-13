@@ -14,6 +14,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -36,9 +37,9 @@ class CreditCardTransactionFactory extends TransactionFactory
     protected $transaction;
 
     /**
-     * @var AccountInfoFactory
+     * @var ThreeDsHelper
      */
-    protected $accountInfoFactory;
+    protected $threeDsHelper;
 
     /**
      * CreditCardTransactionFactory constructor.
@@ -49,9 +50,9 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @param BasketFactory $basketFactory
      * @param AccountHolderFactory $accountHolderFactory
      * @param ConfigInterface $methodConfig
-     * @param AccountInfoFactory $accountInfoFactory
+     * @param ThreeDsHelper $threeDsHelper
      *
-     * @since 2.2.0 added AccountInfoFactory
+     * @since 2.1.0 added ThreeDsHelper
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -61,7 +62,7 @@ class CreditCardTransactionFactory extends TransactionFactory
         BasketFactory $basketFactory,
         AccountHolderFactory $accountHolderFactory,
         ConfigInterface $methodConfig,
-        AccountInfoFactory $accountInfoFactory
+        ThreeDsHelper $threeDsHelper
     ) {
         parent::__construct(
             $urlBuilder,
@@ -73,7 +74,7 @@ class CreditCardTransactionFactory extends TransactionFactory
             $basketFactory
         );
 
-        $this->accountInfoFactory = $accountInfoFactory;
+        $this->threeDsHelper = $threeDsHelper;
     }
 
     /**
@@ -99,40 +100,18 @@ class CreditCardTransactionFactory extends TransactionFactory
             $this->transaction->setThreeD(false);
         }
 
-        $this->createThreeDSData($paymentDO);
+        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
+        $this->transaction = $this->threeDsHelper->getThreeDsTransaction(
+            $challengeIndicator,
+            $this->transaction,
+            $paymentDO
+        );
+
         $this->transaction->setCustomFields($customFields);
 
         $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect?method=' . $this->transaction->getConfigKey());
         return $this->transaction;
-    }
-
-    /**
-     * Add fields for 3D Secure 2
-     *
-     * @param PaymentDataObjectInterface $paymentDO
-     * @since 2.2.0
-     */
-    private function createThreeDSData($paymentDO)
-    {
-        $token = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID);
-        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
-        $accountInfo = $this->accountInfoFactory->create($challengeIndicator, $token);
-
-        $order = $paymentDO->getOrder();
-        $billingAddress = $order->getBillingAddress();
-        $shippingAddress = $order->getShippingAddress();
-
-        $accountHolder = $this->accountHolderFactory->create($billingAddress);
-        $accountHolder->setCrmId($order->getCustomerId());
-        $accountHolder->setAccountInfo($accountInfo);
-        if (isset($shippingAddress)) {
-            $shipping = $this->accountHolderFactory->create($shippingAddress);
-            $this->transaction->setShipping($shipping);
-        }
-
-        $accountHolder->setAccountInfo($accountInfo);
-        $this->transaction->setAccountHolder($accountHolder);
     }
 
     /**

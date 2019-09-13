@@ -856,7 +856,7 @@
             <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
             <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
-            <argument name="accountInfoFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory</argument>
+            <argument name="threeDsHelper" xsi:type="object">ThreeDsHelper</argument>
         </arguments>
     </virtualType>
 
@@ -966,6 +966,13 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="ThreeDsHelper" type="Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper">
+        <arguments>
+            <argument name="accountInfoFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory</argument>
+            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="TransactionServiceFactory" type="Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory">
         <arguments>
             <argument name="paymentSdkConfigFactory" xsi:type="object">PaymentSdkConfigFactory</argument>
@@ -1051,7 +1058,7 @@
             <argument name="urlBuilder" xsi:type="object">Magento\Framework\UrlInterface</argument>
             <argument name="paymentHelper" xsi:type="object">Magento\Payment\Helper\Data</argument>
             <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
-            <argument name="accountInfoFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory</argument>
+            <argument name="threeDsHelper" xsi:type="object">ThreeDsHelper</argument>
         </arguments>
     </type>
 
