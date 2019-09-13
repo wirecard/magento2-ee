@@ -14,10 +14,6 @@ use Wirecard\PaymentSdk\Constant\ChallengeInd;
 
 class ChallengeIndicator implements OptionSourceInterface
 {
-    const NO_PREFERENCE = ChallengeInd::NO_PREFERENCE;
-    const NO_CHALLENGE = ChallengeInd::NO_CHALLENGE;
-    const CHALLENGE_THREED = ChallengeInd::CHALLENGE_THREED;
-
     /**
      * {@inheritdoc}
      */
@@ -25,15 +21,15 @@ class ChallengeIndicator implements OptionSourceInterface
     {
         return [
             [
-                'value' => self::NO_PREFERENCE,
+                'value' => ChallengeInd::NO_PREFERENCE,
                 'label' => __('config_challenge_no_preference')
             ],
             [
-                'value' => self::NO_CHALLENGE,
+                'value' => ChallengeInd::NO_CHALLENGE,
                 'label' => __('config_challenge_no_challenge')
             ],
             [
-                'value' => self::CHALLENGE_THREED,
+                'value' => ChallengeInd::CHALLENGE_THREED,
                 'label' => __('config_challenge_challenge_threed')
             ]
         ];
