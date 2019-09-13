@@ -10,6 +10,10 @@ config_base_url_desc,Elastic engine base url. (e.g. https://api.wirecard.com),":
 config_basket_max,Maksymalna kwota,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
 config_basket_min,Minimalna kwota,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
 config_billing_shipping,Adres dostawy i rachunku musi być identyczny,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_challenge_challenge_threed,Challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:306
+config_challenge_indicator,Challenge Indicator,: classes/includes/class-wc-gateway-wirecard-creditcard.php:271
+config_challenge_no_challenge,No challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:305
+config_challenge_no_preference,No preference,: classes/includes/class-wc-gateway-wirecard-creditcard.php:304
 config_creditor_city,Miasto odbiorcy,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
 config_creditor_city_desc,SEPA Direct Debit requires a Creditor City for the SEPA Direct Debit Mandate page.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
 config_creditor_id,Unikalny identyfikator odbiorcy,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156

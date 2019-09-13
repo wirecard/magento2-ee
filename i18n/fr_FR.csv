@@ -10,6 +10,10 @@ config_base_url_desc,L’adresse du serveur Wirecard (par ex. https://api.wireca
 config_basket_max,Montant plafond,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
 config_basket_min,Montant plancher,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
 config_billing_shipping,Adresse de facturation/livraison identique,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_challenge_challenge_threed,Challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:306
+config_challenge_indicator,Challenge Indicator,: classes/includes/class-wc-gateway-wirecard-creditcard.php:271
+config_challenge_no_challenge,No challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:305
+config_challenge_no_preference,No preference,: classes/includes/class-wc-gateway-wirecard-creditcard.php:304
 config_creditor_city,Ville du créancier,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
 config_creditor_city_desc,"Avec le mode paiement par prélèvement SEPA, le champ Ville du créancier est obligatoire sur la page du mandat de prélèvement SEPA.",: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
 config_creditor_id,Identifiant créancier,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156

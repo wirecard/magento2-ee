@@ -175,7 +175,7 @@
                 </field>
                 <field id="challenge_ind" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>config_challenge_ind</label>
+                    <label>config_challenge_indicator</label>
                     <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\ChallengeIndicator</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"

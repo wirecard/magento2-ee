@@ -10,6 +10,10 @@ config_base_url_desc,Wirecard 베이스 URL. (예: https://api.wirecard.com),": 
 config_basket_max,최대 금액,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
 config_basket_min,최소 금액,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
 config_billing_shipping,청구지/배송지 주소는 동일해야 합니다,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_challenge_challenge_threed,Challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:306
+config_challenge_indicator,Challenge Indicator,: classes/includes/class-wc-gateway-wirecard-creditcard.php:271
+config_challenge_no_challenge,No challenge requested,: classes/includes/class-wc-gateway-wirecard-creditcard.php:305
+config_challenge_no_preference,No preference,: classes/includes/class-wc-gateway-wirecard-creditcard.php:304
 config_creditor_city,채권자 도시,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
 config_creditor_city_desc,SEPA는 SEPA 자동 이체 위임 페이지 위에 표시할 채권자 도시를 요구합니다.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
 config_creditor_id,채권자 ID,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156
