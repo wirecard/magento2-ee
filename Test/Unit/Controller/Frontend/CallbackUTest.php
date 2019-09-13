@@ -54,6 +54,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
+
         $inline = $this->getMockForAbstractClass(InlineInterface::class);
         $inline->method('processResponseBody')->willReturn(null);
 
@@ -130,8 +132,6 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         /** @var $sessionMock Session */
         $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory);
         $redirect->execute();
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testGetFormUnsetsForm()
@@ -146,8 +146,6 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         /** @var $sessionMock Session */
         $redirect = new Callback($this->context, $sessionMock, $this->logger, $this->transactionServiceFactory);
         $redirect->execute();
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testGetFormWhenSet()
@@ -168,8 +166,6 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testGetRedirectWhenSet()
@@ -190,8 +186,6 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testGetRedirectWhenNotSet()
@@ -212,7 +206,5 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 }

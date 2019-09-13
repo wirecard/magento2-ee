@@ -48,6 +48,8 @@ class FormUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
+
         $this->objectManager = new ObjectManager($this);
         $this->context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
 
@@ -74,22 +76,16 @@ class FormUTest extends \PHPUnit_Framework_TestCase
     public function testGetTabLabel()
     {
         $this->assertEquals(__('support_email_title'), $this->form->getTabLabel());
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testCanShowTab()
     {
         $this->assertTrue($this->form->canShowTab());
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testIsHidden()
     {
         $this->assertFalse($this->form->isHidden());
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testPrepareForm()
@@ -99,8 +95,6 @@ class FormUTest extends \PHPUnit_Framework_TestCase
         $testForm = new TestForm($this->context, $this->registry, $this->formFactory, [], $requestInterface);
 
         $testForm->test_prepareForm();
-
-        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 }
 
