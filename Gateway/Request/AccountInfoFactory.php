@@ -34,13 +34,13 @@ class AccountInfoFactory
     ];
 
     /** @var string customer_id column within magento2 database*/
-    const CUSTOMER_ID = 'customer_id';
+    const CUSTOMER_ID_KEY = 'customer_id';
 
     /** @var string created_at column within magento2 database */
-    const CREATED_AT = 'created_at';
+    const CREATED_AT_KEY = 'created_at';
 
     /** @var string Dateformat within magento2 database entries */
-    const TABLE_DATE = 'Y-m-d H:i:s';
+    const TABLE_DATE_FORMAT = 'Y-m-d H:i:s';
 
     /** @var CustomerSession containing login data */
     protected $customerSession;
@@ -128,7 +128,7 @@ class AccountInfoFactory
     {
         if (!empty($token)) {
             $createdDates = $this->vaultCollection->addFieldToFilter('gateway_token', $token)
-                ->getColumnValues(self::CREATED_AT);
+                ->getColumnValues(self::CREATED_AT_KEY);
 
             $creationDate = new \DateTime(reset($createdDates));
             $creationDate->format(AccountInfo::DATE_FORMAT);
@@ -163,8 +163,8 @@ class AccountInfoFactory
      */
     private function getDateRangeFilter($startDateStatement)
     {
-        $endDate = date(self::TABLE_DATE);
-        $startDate = date(self::TABLE_DATE, strtotime($startDateStatement));
+        $endDate = date(self::TABLE_DATE_FORMAT);
+        $startDate = date(self::TABLE_DATE_FORMAT, strtotime($startDateStatement));
         $dateFilter = ['from'=>$startDate, 'to'=>$endDate];
 
         return $dateFilter;
@@ -181,8 +181,8 @@ class AccountInfoFactory
     private function getCustomerTransactionCountForPeriod($timePeriod)
     {
         //@TODO use for transactionsLastDay + Year when clarified
-        $this->orderCollection->addFieldToFilter(self::CUSTOMER_ID, $this->customerSession->getCustomerId())
-            ->addFieldToFilter(self::CREATED_AT, $this->getDateRangeFilter($timePeriod));
+        $this->orderCollection->addFieldToFilter(self::CUSTOMER_ID_KEY, $this->customerSession->getCustomerId())
+            ->addFieldToFilter(self::CREATED_AT_KEY, $this->getDateRangeFilter($timePeriod));
 
         $orderIds = array_values($this->orderCollection->getAllIds());
         //@TODO use total count of orders for customer related transactions?
@@ -202,8 +202,8 @@ class AccountInfoFactory
      */
     private function getCustomerFinalOrderCountForPeriod($timePeriod)
     {
-        $this->orderCollection->addFieldToFilter(self::CUSTOMER_ID, $this->customerSession->getCustomerId())
-            ->addFieldToFilter(self::CREATED_AT, $this->getDateRangeFilter($timePeriod))
+        $this->orderCollection->addFieldToFilter(self::CUSTOMER_ID_KEY, $this->customerSession->getCustomerId())
+            ->addFieldToFilter(self::CREATED_AT_KEY, $this->getDateRangeFilter($timePeriod))
             ->addFieldToFilter('status', ['in' => self::PURCHASE_SUCCESS]);
         $orderCount = $this->orderCollection->getTotalCount();
 

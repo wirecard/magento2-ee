@@ -25,11 +25,11 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Creditcard;
-use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
+use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
-use Wirecard\PaymentSdk\Entity\AccountInfo;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 class CreditcardTest extends \PHPUnit_Framework_TestCase
@@ -54,8 +54,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     /** @var TransactionService */
     private $transactionServiceFactory;
 
-    /** @var AccountInfoFactory */
-    private $accountInfoFactory;
+    /** @var ThreeDsHelper */
+    private $threeDsHelper;
 
     public function testExecuteWithEmptyCheckoutSession()
     {
@@ -90,26 +90,13 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     {
         $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
 
-        $address = $this->getMockBuilder(Quote\Address::class)
-            ->setMethods(['getEmail', 'getTelephone', 'getCountryId', 'getCity', 'getStreetFull'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $address->expects($this->any())->method('getEmail')->willReturn('max.mustermann@muster.at');
-        $address->expects($this->any())->method('getTelephone')->willReturn('06643123456');
-        $address->expects($this->any())->method('getCountryId')->willReturn('AT');
-        $address->expects($this->any())->method('getCity')->willReturn('Town');
-        $address->expects($this->any())->method('getStreetFull')->willReturn('Street 1');
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
                 'getBaseCurrencyCode',
                 'getGrandTotal',
                 'reserveOrderId',
                 'getReservedOrderId',
-                'save',
-                'getBillingAddress',
-                'getShippingAddress',
-                'getIsVirtual',
-                'getCustomerId'
+                'save'
             ])
             ->disableOriginalConstructor()
             ->getMock();
@@ -117,10 +104,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
         $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
         $quote->expects($this->once())->method('getGrandTotal')->willReturn(self::TOTAL_AMOUNT);
-        $quote->expects($this->once())->method('getBillingAddress')->willReturn($address);
-        $quote->expects($this->once())->method('getShippingAddress')->willReturn($address);
-        $quote->expects($this->once())->method('getIsVirtual')->willReturn(false);
-        $quote->expects($this->once())->method('getCustomerId')->willReturn(1);
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
@@ -150,27 +133,13 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
 
-        $address = $this->getMockBuilder(Quote\Address::class)
-            ->setMethods(['getEmail', 'getTelephone', 'getCountryId', 'getCity', 'getStreetFull'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $address->expects($this->any())->method('getEmail')->willReturn('max.mustermann@muster.at');
-        $address->expects($this->any())->method('getTelephone')->willReturn('06643123456');
-        $address->expects($this->any())->method('getCountryId')->willReturn('AT');
-        $address->expects($this->any())->method('getCity')->willReturn('Town');
-        $address->expects($this->any())->method('getStreetFull')->willReturn('Street 1');
-
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
                 'getBaseCurrencyCode',
                 'getGrandTotal',
                 'reserveOrderId',
                 'getReservedOrderId',
-                'save',
-                'getBillingAddress',
-                'getShippingAddress',
-                'getIsVirtual',
-                'getCustomerId'
+                'save'
             ])
             ->disableOriginalConstructor()
             ->getMock();
@@ -178,10 +147,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
         $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
         $quote->expects($this->once())->method('getGrandTotal')->willReturn(self::TOTAL_AMOUNT);
-        $quote->expects($this->once())->method('getBillingAddress')->willReturn($address);
-        $quote->expects($this->once())->method('getShippingAddress')->willReturn($address);
-        $quote->expects($this->once())->method('getIsVirtual')->willReturn(true);
-        $quote->expects($this->once())->method('getCustomerId')->willReturn(null);
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
@@ -242,8 +207,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
-        $this->accountInfoFactory = $this->getMockBuilder(AccountInfoFactory::class)->disableOriginalConstructor()->getMock();
-        $this->accountInfoFactory->method('create')->willReturn(new AccountInfo());
+        $this->threeDsHelper = $this->getMockBuilder(ThreeDsHelper::class)->disableOriginalConstructor()->getMock();
+        $this->threeDsHelper->method('getThreeDsTransaction')->willReturn(new CreditCardTransaction());
 
         $this->controller = new Creditcard(
             $context,
@@ -257,7 +222,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             $this->paymentHelper,
             $methodConfig,
             $logger,
-            $this->accountInfoFactory
+            $this->threeDsHelper
         );
     }
 }
