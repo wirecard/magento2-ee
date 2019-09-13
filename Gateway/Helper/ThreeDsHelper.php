@@ -64,7 +64,8 @@ class ThreeDsHelper
      * @return Transaction
      * @since 2.1.0
      */
-    public function getThreeDsTransaction($challengeIndicator, $transaction, $dataObject) {
+    public function getThreeDsTransaction($challengeIndicator, $transaction, $dataObject)
+    {
         if ($dataObject instanceof OrderDto) {
             $this->setParametersForQuoteData($dataObject);
         }
@@ -93,7 +94,8 @@ class ThreeDsHelper
      * @param OrderDto $orderDto
      * @since 2.1.0
      */
-    private function setParametersForQuoteData($orderDto) {
+    private function setParametersForQuoteData($orderDto)
+    {
         $billingAddress = $orderDto->quote->getBillingAddress();
         $this->accountHolder = $this->fetchAccountHolder($billingAddress);
         $this->accountHolder->setCrmId($orderDto->quote->getCustomerId());
@@ -110,7 +112,8 @@ class ThreeDsHelper
      * @param PaymentDataObjectInterface $paymentDO
      * @since 2.1.0
      */
-    private function setParametersForPaymentData($paymentDO) {
+    private function setParametersForPaymentData($paymentDO)
+    {
         $this->token = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID);
         /** @var OrderAdapterInterface $order */
         $order = $paymentDO->getOrder();
