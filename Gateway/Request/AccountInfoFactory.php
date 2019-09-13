@@ -83,6 +83,7 @@ class AccountInfoFactory
     {
         $accountInfo = new AccountInfo();
         $accountInfo->setAuthMethod(AuthMethod::GUEST_CHECKOUT);
+        $accountInfo->setAuthTimestamp(null);
 
         if ($this->customerSession->isLoggedIn()) {
             $accountInfo->setAuthMethod(AuthMethod::USER_CHECKOUT);
