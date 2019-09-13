@@ -138,4 +138,19 @@ class PaymentUTest extends \PHPUnit_Framework_TestCase
         $t = $this->helper->addTransaction($this->payment, $this->response, true);
         $this->assertSame($this->transacion, $t);
     }
+
+    public function testAddPaymentWithMergeAdditionalInformation()
+    {
+        $this->paymentMethod->method('getCode')->willReturn('wirecard_elasticengine_creditcard');
+        $this->response->method('getData')->willReturn([]);
+        $this->payment->method('getAdditionalInformation')->willReturn(['is_active_payment_token_enabler' => true]);
+        $this->payment->expects($this->once())->method('setTransactionAdditionalInfo')
+            ->with(Transaction::RAW_DETAILS, [
+                'has-notify'                      => true,
+                'is_active_payment_token_enabler' => true
+            ]);
+
+        $t = $this->helper->addTransaction($this->payment, $this->response);
+        $this->assertSame($this->transacion, $t);
+    }
 }

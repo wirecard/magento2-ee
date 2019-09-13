@@ -70,15 +70,19 @@ class Payment
         $payment->setIsTransactionClosed(false);
         $payment->setAdditionalInformation('transactionId', $transactionId);
 
-        $data = $sdkResponse->getData();
+        $data               = $sdkResponse->getData();
         $data['has-notify'] = true;
 
-        $payment->setAdditionalInformation($data);
-
-        $additionalInfo = [];
+        // merge additional information
+        $additionalInfo = $payment->getAdditionalInformation();
+        if (!is_array($additionalInfo)) {
+            $additionalInfo = [];
+        }
         foreach ($data as $key => $value) {
             $additionalInfo[$key] = $value;
         }
+
+        $payment->setAdditionalInformation($additionalInfo);
         $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $additionalInfo);
 
         $transaction = $payment->addTransaction(TransactionInterface::TYPE_ORDER);
