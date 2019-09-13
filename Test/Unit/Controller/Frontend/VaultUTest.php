@@ -91,5 +91,7 @@ class VaultUTest extends \PHPUnit_Framework_TestCase
         $result->setData(["token_id" => "12345", "method_code" => "Wirecard"]);
 
         $this->assertEquals($result, $vault->execute());
+
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 }

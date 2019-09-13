@@ -105,6 +105,8 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'Wirecard_ElasticEngine::system/config/form/test_credentials_button.phtml';
         $this->assertEquals($expected, $this->instance->getTemplate());
+
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testRender()
@@ -122,15 +124,21 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
             '<tr id="row_"><td class="label"><label for=""><span></span></label></td><td class="value"></td><td class=""></td></tr>',
             $this->instance->render($element)
         );
+
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testGetAjaxUrl()
     {
         $this->assertEquals(null, $this->instance->getAjaxUrl());
+
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 
     public function testGetButtonHtml()
     {
         $this->assertEquals(self::BUTTON, $this->instance->getButtonHtml());
+
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
     }
 }

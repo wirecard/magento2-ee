@@ -150,7 +150,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
 
-
         $address = $this->getMockBuilder(Quote\Address::class)
             ->setMethods(['getEmail', 'getTelephone', 'getCountryId', 'getCity', 'getStreetFull'])
             ->disableOriginalConstructor()
