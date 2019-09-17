@@ -10,7 +10,6 @@ curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/mage
 sort -nr tmp.txt > ${MAGENTO2_RELEASES_FILE}
 
 if [[ $(git diff HEAD ${MAGENTO2_RELEASES_FILE}) != '' ]]; then
-    export SHOP_UPDATE=1
     git config --global user.name "Travis CI"
     git config --global user.email "wirecard@travis-ci.org"
 
