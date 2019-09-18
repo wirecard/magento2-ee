@@ -42,6 +42,8 @@ matrix:
     - MAGENTO2_RELEASE_VERSION=1
     install:
     - export MAGENTO2_VERSION=$(awk "NR==$MAGENTO2_RELEASE_VERSION {print; exit}" ${MAGENTO2_RELEASES_FILE})
+    #   get latest release shop extension version from SHOPVERSIONS file
+    - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
     - bash .bin/remove-composer-lock-file.sh
     - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
     - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
