@@ -81,6 +81,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
+
         /** @var InlineInterface|PHPUnit_Framework_MockObject_MockObject $inline */
         $inline = $this->getMockForAbstractClass(InlineInterface::class);
         $inline->method('processResponseBody')->willReturn(null);

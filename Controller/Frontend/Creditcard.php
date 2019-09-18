@@ -26,10 +26,9 @@ use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
+use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Model\Adminhtml\Source\PaymentAction;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
-use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
 use Wirecard\PaymentSdk\Entity\CustomField;
@@ -80,6 +79,9 @@ class Creditcard extends Action
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var ThreeDsHelper */
+    protected $threeDsHelper;
+
     /**
      * Creditcard constructor.
      *
@@ -94,6 +96,9 @@ class Creditcard extends Action
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
      * @param LoggerInterface $logger
+     * @param ThreeDsHelper $threeDsHelper
+     *
+     * @since 2.1.0 added ThreeDsHelper
      */
     public function __construct(
         Context $context,
@@ -106,7 +111,8 @@ class Creditcard extends Action
         StoreManagerInterface $storeManager,
         Data $paymentHelper,
         ConfigInterface $methodConfig,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ThreeDsHelper $threeDsHelper
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
@@ -119,6 +125,7 @@ class Creditcard extends Action
         $this->paymentHelper = $paymentHelper;
         $this->methodConfig = $methodConfig;
         $this->logger = $logger;
+        $this->threeDsHelper = $threeDsHelper;
         parent::__construct($context);
     }
 
@@ -236,6 +243,7 @@ class Creditcard extends Action
      * @param string $txType frontend key to specify the transaction type
      *
      * @since 2.0.1 set order-number
+     * @since 2.1.0 add 3D Secure parameters via ThreeDsHelper
      */
     private function processCreditCard(OrderDTO $orderDto, string $txType)
     {
@@ -264,6 +272,14 @@ class Creditcard extends Action
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
+
+        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
+        $challengeIndicator = $method->getConfigData('challenge_ind');
+        $orderDto->transaction = $this->threeDsHelper->getThreeDsTransaction(
+            $challengeIndicator,
+            $orderDto->transaction,
+            $orderDto
+        );
     }
 
     /**
@@ -278,16 +294,6 @@ class Creditcard extends Action
     {
         $orderDto->basket = new Basket();
 
-        $accountHolder = $this->fetchAccountHolder($orderDto->quote->getBillingAddress());
-        $orderDto->transaction->setAccountHolder($accountHolder);
-
-        $shippingAddress = $orderDto->quote->getShippingAddress();
-        if (isset($shippingAddress)) {
-            $orderDto->transaction->setShipping(
-                $this->fetchAccountHolder($orderDto->quote->getShippingAddress())
-            );
-        }
-
         $orderDto->transaction->setDescriptor(sprintf(
             '%s %s',
             substr($this->storeManager->getStore()->getName(), 0, 9),
@@ -296,26 +302,9 @@ class Creditcard extends Action
 
         $orderDto->basket = new Basket();
         $this->addOrderItemsToBasket($orderDto);
+        $orderDto->transaction->setBasket($orderDto->basket);
         $orderDto->transaction->setIpAddress($orderDto->quote->getRemoteIp());
         $orderDto->transaction->setConsumerId($orderDto->quote->getCustomerId());
-    }
-
-    /**
-     * Helper method to build the AccountHolder structure by an address
-     *
-     * @param \Magento\Customer\Model\Address $address Magento2 address from session
-     * @return AccountHolder paymentSdk entity AccountHolder
-     */
-    private function fetchAccountHolder($address)
-    {
-        $accountHolder = new AccountHolder();
-        $accountHolder->setEmail($address->getEmail());
-        $accountHolder->setPhone($address->getTelephone());
-
-        $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetFull());
-        $accountHolder->setAddress($sdkAddress);
-
-        return $accountHolder;
     }
 
     /**

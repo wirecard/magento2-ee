@@ -23,7 +23,6 @@ curl -X POST -H 'Content-type: application/json' \
     Build Number: ${TRAVIS_BUILD_NUMBER}\n
     Branch: ${TRAVIS_BRANCH}', 'channel': '${CHANNEL}'}" ${SLACK_ROOMS}
 
-FAILED_TESTS=$(ls -1q tests/_output/*.fail.png | wc -l)
 
 # send link to the report into slack chat room
 curl -X POST -H 'Content-type: application/json' --data "{
@@ -31,8 +30,8 @@ curl -X POST -H 'Content-type: application/json' --data "{
         {
             'fallback': 'Failed test data',
             'text': 'There are failed tests.
-             Test report: ${PREVIEW_LINK}/${SCREENSHOT_COMMIT_HASH}/${PROJECT_FOLDER}/${GATEWAY}/${TODAY}/${REPORT_FILE} .
-             All screenshots can be found  ${REPO_LINK}/tree/${SCREENSHOT_COMMIT_HASH}/${PROJECT_FOLDER}/${GATEWAY}/${TODAY} .',
+             Test report: ${PREVIEW_LINK}/${SCREENSHOT_COMMIT_HASH}/${RELATIVE_REPORTS_LOCATION}/${REPORT_FILE} .
+             All screenshots can be found  ${REPO_LINK}/tree/${SCREENSHOT_COMMIT_HASH}/${RELATIVE_REPORTS_LOCATION} .',
             'color': '#764FA5'
         }
     ], 'channel': '${CHANNEL}'

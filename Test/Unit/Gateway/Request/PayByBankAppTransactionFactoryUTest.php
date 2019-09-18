@@ -88,7 +88,7 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->config->method('getValue')->withConsecutive(
             [$this->equalTo('send_additional'), $this->isNull()],
             [$this->equalTo('zapp_merchant_return_string')]
-            )
+        )
             ->willReturnOnConsecutiveCalls(0, self::RETURNSTRING);
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)

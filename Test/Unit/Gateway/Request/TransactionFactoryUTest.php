@@ -160,7 +160,8 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $redirect = new Redirect(
             'http://magen.to/frontend/redirect?method=paypal',
             'http://magen.to/frontend/cancel?method=paypal',
-            'http://magen.to/frontend/redirect?method=paypal');
+            'http://magen.to/frontend/redirect?method=paypal'
+        );
         $transactionMock->expects($this->Once())->method('setRedirect')->with($this->equalTo($redirect));
 
         $transactionFactory = new TransactionFactory(
