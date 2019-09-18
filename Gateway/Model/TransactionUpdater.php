@@ -116,12 +116,16 @@ class TransactionUpdater
             ]
         ]);
         // XXX ToDo: remove this filter, be aware, that authorizations can not be flagged as closed
-        $this->transactionCollection->addFieldToFilter('main_table.additional_information',
-            ['like' => '%"has-notify":true%']);
+        $this->transactionCollection->addFieldToFilter(
+            'main_table.additional_information',
+            ['like' => '%"has-notify":true%']
+        );
 
         // keep this, to be able to check, whether cronjon is running or not
-        $this->logger->info(sprintf('WirecardTransactionUpdater::found %d payments',
-            $this->transactionCollection->count()));
+        $this->logger->info(sprintf(
+            'WirecardTransactionUpdater::found %d payments',
+            $this->transactionCollection->count()
+        ));
 
         while (($transaction = $this->transactionCollection->fetchItem()) !== false) {
             /** @var Payment\Transaction $transaction */
@@ -160,8 +164,11 @@ class TransactionUpdater
     public function fetchNotify(Payment\Transaction $transaction)
     {
         // keep this debug log
-        $logStr = sprintf('WirecardTransactionUpdater::transaction:%s order:%s ',
-            $transaction->getTransactionId(), $transaction->getOrderId());
+        $logStr = sprintf(
+            'WirecardTransactionUpdater::transaction:%s order:%s ',
+            $transaction->getTransactionId(),
+            $transaction->getOrderId()
+        );
 
         $rawData    = null;
         $additional = json_decode($transaction->getData('additional_information'));
@@ -176,7 +183,8 @@ class TransactionUpdater
         $result = $this->retrieveTransaction->byRequestId(
             $this->getConfig($params->paymentMethod),
             $params->requestId,
-            $params->maid);
+            $params->maid
+        );
 
         if (is_null($result)) {
             // try to get transaction by transaction-id for CC 3ds payments
@@ -185,7 +193,8 @@ class TransactionUpdater
                     $this->getConfig($params->paymentMethod),
                     $params->transactionId,
                     $params->transactionType,
-                    $params->maid);
+                    $params->maid
+                );
             }
         }
 

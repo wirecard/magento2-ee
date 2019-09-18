@@ -174,7 +174,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
             $sessionMock,
             $this->logger,
             $this->transactionServiceFactory,
-            $this->paymentHelper);
+            $this->paymentHelper
+        );
         $redirect->execute();
     }
 
@@ -193,7 +194,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
             $sessionMock,
             $this->logger,
             $this->transactionServiceFactory,
-            $this->paymentHelper);
+            $this->paymentHelper
+        );
         $redirect->execute();
     }
 
@@ -209,7 +211,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
             $sessionMock,
             $this->logger,
             $this->transactionServiceFactory,
-            $this->paymentHelper);
+            $this->paymentHelper
+        );
         $result   = $redirect->execute();
 
         /** @var PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -234,7 +237,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
             $sessionMock,
             $this->logger,
             $this->transactionServiceFactory,
-            $this->paymentHelper);
+            $this->paymentHelper
+        );
         $result   = $redirect->execute();
 
         /** @var PHPUnit_Framework_MockObject_MockObject $responseMock */
@@ -259,7 +263,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
             $sessionMock,
             $this->logger,
             $this->transactionServiceFactory,
-            $this->paymentHelper);
+            $this->paymentHelper
+        );
         $result   = $redirect->execute();
 
         /** @var PHPUnit_Framework_MockObject_MockObject $responseMock */

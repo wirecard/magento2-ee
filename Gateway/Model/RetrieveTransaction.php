@@ -61,8 +61,10 @@ class RetrieveTransaction
      */
     public function byRequestId(Config $config, $requestId, $maid)
     {
-        return $this->sendRequest($config,
-            sprintf(self::URL_PAYMENT_BYREQUESTID_FMT, $config->getBaseUrl(), $maid, $requestId));
+        return $this->sendRequest(
+            $config,
+            sprintf(self::URL_PAYMENT_BYREQUESTID_FMT, $config->getBaseUrl(), $maid, $requestId)
+        );
     }
 
     /**
@@ -84,8 +86,10 @@ class RetrieveTransaction
             return null;
         }
 
-        $parentTransactionId = $this->nestedObjectHelper->getIn($data,
-            [Transaction::PARAM_PAYMENT, Transaction::PARAM_PARENT_TRANSACTION_ID]);
+        $parentTransactionId = $this->nestedObjectHelper->getIn(
+            $data,
+            [Transaction::PARAM_PAYMENT, Transaction::PARAM_PARENT_TRANSACTION_ID]
+        );
         if (is_null($parentTransactionId)) {
             return null;
         }
@@ -146,8 +150,11 @@ class RetrieveTransaction
      */
     protected function paymentByTransactionId(Config $config, $transactionId, $maid)
     {
-        return $this->sendRequest($config,
-            sprintf(self::URL_PAYMENTS_FMT, $config->getBaseUrl(), $maid, $transactionId), self::CONTENTTYPE_JSON);
+        return $this->sendRequest(
+            $config,
+            sprintf(self::URL_PAYMENTS_FMT, $config->getBaseUrl(), $maid, $transactionId),
+            self::CONTENTTYPE_JSON
+        );
     }
 
     /**
@@ -161,9 +168,11 @@ class RetrieveTransaction
      */
     protected function paymentsByTransactionId(Config $config, $transactionId, $maid)
     {
-        $data = $this->sendRequest($config,
+        $data = $this->sendRequest(
+            $config,
             sprintf(self::URL_PAYMENTS_BYTRANSACTIONID_FMT, $config->getBaseUrl(), $maid, $transactionId),
-            self::CONTENTTYPE_JSON);
+            self::CONTENTTYPE_JSON
+        );
 
         if (!is_object($data)) {
             return null;

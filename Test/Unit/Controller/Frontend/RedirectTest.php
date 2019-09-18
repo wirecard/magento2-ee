@@ -171,8 +171,14 @@ class RedirectTest extends PHPUnit_Framework_TestCase
 
         $this->session->method('getLastRealOrder')->willReturn($this->order);
 
-        $this->controller = new RedirectController($context, $this->session,
-            $transactionServiceFactory, $this->orderHelper, $this->logger, $this->paymentHelper);
+        $this->controller = new RedirectController(
+            $context,
+            $this->session,
+            $transactionServiceFactory,
+            $this->orderHelper,
+            $this->logger,
+            $this->paymentHelper
+        );
     }
 
     public function testExecuteWithoutParam()

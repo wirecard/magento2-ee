@@ -172,8 +172,12 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 
         $this->payment->method('getMethod')->willReturn(ResponseHandler::FRONTEND_CODE_CREDITCARD);
 
-        $this->paymentHelper->method('addTransaction')->with($this->payment, $response, false,
-            PaymentHelper::POSTFIX_ORDER);
+        $this->paymentHelper->method('addTransaction')->with(
+            $this->payment,
+            $response,
+            false,
+            PaymentHelper::POSTFIX_ORDER
+        );
         $handler->handle($this->subject, [self::PAYMENT_SDK_PHP => $response]);
     }
 
