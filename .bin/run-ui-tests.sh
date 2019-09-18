@@ -10,8 +10,6 @@ set -e
 set -a # automatically export all variables from .env file
 source .env
 set +a
-# get latest release shop extension version from SHOPVERSIONS file
-export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
 
 # get ngrok
 curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > ngrok.zip

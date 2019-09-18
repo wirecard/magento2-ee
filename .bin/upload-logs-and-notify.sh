@@ -38,6 +38,9 @@ export BRANCH_FOLDER=${TRAVIS_BRANCH}
 # if tests triggered by PR, use different Travis variable to get branch name
 if [ ${TRAVIS_PULL_REQUEST} != "false" ]; then
     export BRANCH_FOLDER="${TRAVIS_PULL_REQUEST_BRANCH}"
+# if we were testing latest released extension version
+elif [ "${LATEST_EXTENSION_RELEASE}" == "1" ]; then
+    export BRANCH_FOLDER="Release-${LATEST_RELEASED_SHOP_EXTENSION_VERSION}"
 fi
 
 export RELATIVE_REPORTS_LOCATION=${PROJECT_FOLDER}/${GATEWAY}/${TODAY}/${BRANCH_FOLDER}
