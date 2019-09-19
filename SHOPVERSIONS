@@ -7,8 +7,8 @@
     "changelog": [
       "Implement transaction polling",
       "Fixed missing transaction record #269",
-      "Improve credit card checkout",
-      "Ensure compatibility with magento CE 2.3.2"
+      "Improve Credit Card checkout",
+      "Ensure compatibility with Magento CE 2.3.2"
     ]
   },
   {
