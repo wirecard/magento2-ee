@@ -234,6 +234,10 @@ class AcceptanceTester extends \Codeception\Actor
         );
         //check that last transaction in the table is the one under test
         $transactionTypes = $this->getColumnFromDatabaseNoCriteria('sales_payment_transaction', 'txn_type');
-        $this->assertEquals(end($transactionTypes), $this->mappedPaymentActions['tx_table'][$paymentAction]);
+        $tempTxType = $this->mappedPaymentActions['tx_table'][$paymentAction];
+        if ($tempTxType) {
+            $tempTxType = 'order';
+        }
+        $this->assertEquals(end($transactionTypes), $tempTxType);
     }
 }
