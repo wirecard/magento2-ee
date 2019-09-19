@@ -19,7 +19,6 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\Url;
 use Magento\Framework\View\Element\Template\File\Resolver;
 use Magento\Framework\View\Element\Template\File\Validator;
-use Magento\Framework\View\LayoutInterface;
 use Magento\TestFramework\EventManager;
 use Monolog\Logger;
 use Wirecard\ElasticEngine\Block\Widget\TestCredentialsButton;
@@ -63,6 +62,19 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
         $logger = $this->getMock(Logger::class, ['critical'], [], '', false);
         $urlBuilder = $this->getMock(Url::class, ['getUrl'], [], '', false);
 
+        $layoutMock = $this->getMockBuilder('Magento\Framework\View\Layout')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $button = $this->getMockBuilder(Button::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setData', 'toHtml'])
+            ->getMock();
+        $button->method('setData')->willReturn($button);
+        $button->method('toHtml')->willReturn(self::BUTTON);
+
+        $layoutMock->method('createBlock')->willReturn($button);
+
         $context = $this->getMock(Context::class, [
             'getFilesystem',
             'getEventManager',
@@ -70,7 +82,8 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
             'getResolver',
             'getValidator',
             'getLogger',
-            'getUrlBuilder'
+            'getUrlBuilder',
+            'getLayout'
         ], [], '', false);
         $context->method('getFilesystem')->willReturn($filesystem);
         $context->method('getEventManager')->willReturn($eventManager);
@@ -79,27 +92,14 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
         $context->method('getValidator')->willReturn($validator);
         $context->method('getLogger')->willReturn($logger);
         $context->method('getUrlBuilder')->willReturn($urlBuilder);
+        $context->method('getLayout')->willReturn($layoutMock);
 
         $data = [
             'context' => $context,
         ];
 
         $this->instance = $this->objectManager->getObject(TestCredentialsButton::class, $data);
-
-        $layoutMock = $this->getMockBuilder('Magento\Framework\View\Layout')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $button = $this->getMockBuilder(Button::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $button->method('setData')->willReturn($button);
-        $button->method('toHtml')->willReturn(self::BUTTON);
-
-        $layoutMock->method('createBlock')->willReturn($button);
-
-        /** @var $layoutMock LayoutInterface */
-        $this->instance->setLayout($layoutMock);
+        //$this->instance = new TestCredentialsButton($context, []);
     }
 
     public function testConstructor()

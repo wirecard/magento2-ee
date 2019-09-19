@@ -10,6 +10,7 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
@@ -18,8 +19,8 @@ use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
+use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
@@ -108,30 +109,37 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => 1.0];
 
-        $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $this->transaction = $this->getMockBuilder(MasterpassTransaction::class)->disableOriginalConstructor()->getMock();
 
-        $this->transactionRepository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $this->transactionRepository->method('getList')->willReturn([
+        $collection =  $this->getMockBuilder(Transaction\Collection::class)->disableOriginalConstructor()->getMock();
+        $collection->method('toArray')->willReturn([
             'items' => [
                 [
+                    'parent-transaction-id' => '123456PARENT',
                     'transaction-id' => '11111',
                     'payment-methods.0.name' => 'creditcard',
                 ],
 
                 [
+                    'parent-transaction-id' => '123456PARENT',
                     'transaction-id' => '99999',
                     'payment-methods.0.name' => 'masterpass'
                 ]
             ]
         ]);
+        $this->transactionRepository = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
+        $this->transactionRepository->method('getList')->willReturn($collection);
+
+        $searchCriteria = $this->getMockBuilder(SearchCriteria::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)
             ->disableOriginalConstructor()
-            ->setMockClassName(SearchCriteriaBuilder::class)
             ->getMock();
 
         $this->searchCriteriaBuilder->method('addFilters')->willReturn($this->searchCriteriaBuilder);
-        $this->searchCriteriaBuilder->method('create')->willReturn($this->searchCriteriaBuilder);
+        $this->searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
 
         $this->filterBuilder = $this->getMockBuilder(FilterBuilder::class)->disableOriginalConstructor()->getMock();
         $this->filterBuilder->method('setField')->willReturn($this->filterBuilder);
@@ -250,11 +258,10 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new MasterpassTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
-            'http://magen.to/frontend/redirect',
-            'http://magen.to/frontend/cancel',
-            'http://magen.to/frontend/redirect'
+            'http://magen.to/frontend/redirect?method=masterpass',
+            'http://magen.to/frontend/cancel?method=masterpass',
+            'http://magen.to/frontend/redirect?method=masterpass'
         ));
 
         $customFields = new CustomFieldCollection();
@@ -279,7 +286,6 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedCaptureTransaction()
     {
         $expected = new MasterpassTransaction();
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setParentTransactionId('123456PARENT');
         $expected->setAmount(new Amount(1.0, 'EUR'));
 
@@ -348,6 +354,6 @@ class MasterpassTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $captureTransaction = $transactionFactory->capture($this->commandSubject);
         $parentTransactionId = $captureTransaction->getParentTransactionId();
 
-        $this->assertEquals('11111', $parentTransactionId);
+        $this->assertEquals('123456PARENT', $parentTransactionId);
     }
 }

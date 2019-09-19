@@ -181,7 +181,6 @@ class TransactionFactory
             $wdBaseUrl . 'frontend/cancel' . $methodAppend,
             $wdBaseUrl . 'frontend/redirect' . $methodAppend
         ));
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify?orderId=' . $this->orderId);
 
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($order);
@@ -219,9 +218,6 @@ class TransactionFactory
 
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $this->transaction->setNotificationUrl($wdBaseUrl . 'frontend/notify');
 
         return $this->transaction;
     }

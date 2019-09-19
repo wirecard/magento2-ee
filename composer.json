@@ -10,6 +10,7 @@
     "magento/module-checkout": ">=100.1.0",
     "magento/module-sales": ">=100.0.0",
     "magento/module-vault": ">=100.0.0",
+    "magento/module-cron": ">=100.0.0",
     "guzzlehttp/psr7": "1.4.2 || >= 1.5.2",
     "php-http/guzzle6-adapter": ">=1.1.1",
     "nyholm/psr7": "^0.2.3",

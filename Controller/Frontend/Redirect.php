@@ -14,10 +14,14 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
@@ -61,25 +65,45 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private $transactionService;
 
     /**
+     * @var Helper\Order
+     */
+    private $orderHelper;
+
+    /**
+     * @var Helper\Payment
+     */
+    private $paymentHelper;
+
+    /**
      * Redirect constructor.
+     *
      * @param Context $context
      * @param Session $checkoutSession
      * @param TransactionServiceFactory $transactionServiceFactory
+     * @param Helper\Order $orderHelper
      * @param LoggerInterface $logger
+     * @param Helper\Payment $paymentHelper
      */
     public function __construct(
         Context $context,
         Session $checkoutSession,
         TransactionServiceFactory $transactionServiceFactory,
-        LoggerInterface $logger
+        Helper\Order $orderHelper,
+        LoggerInterface $logger,
+        Helper\Payment $paymentHelper
     ) {
+        $this->context = $context;
         $this->checkoutSession = $checkoutSession;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->logger = $logger;
-        $this->context = $context;
+        $this->orderHelper = $orderHelper;
+        $this->paymentHelper = $paymentHelper;
         parent::__construct($context);
     }
 
+    /**
+     * @return ResponseInterface|Json|RedirectResult|ResultInterface
+     */
     public function execute()
     {
         $methodName = $this->getMethodName();
@@ -142,7 +166,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private function handleResponse($responseParams)
     {
         /**
-         * @var $resultRedirect RedirectResult
+         * @var RedirectResult $resultRedirect
          */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $response = $this->transactionService->handleResponse($responseParams);
@@ -161,7 +185,9 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * Handles credit card non-3D responses and returns redirect url in json
      *
      * @param $responseParams
+     *
      * @return Json
+     * @throws LocalizedException
      * @since 1.5.2
      */
     private function handleNonThreeDResponse($responseParams)
@@ -170,6 +196,11 @@ class Redirect extends Action implements CsrfAwareActionInterface
         $response = $this->transactionService->processJsResponse($responseParams, $resultRedirect);
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+
+        $order = $this->checkoutSession->getLastRealOrder();
+
+        // append -order prefix to get a new transaction record, if transactionId does not change
+        $this->paymentHelper->addTransaction($order->getPayment(), $response, true, Helper\Payment::POSTFIX_ORDER);
 
         if ($response instanceof SuccessResponse) {
             return $this->getRedirectData($result, 'onepage/success');

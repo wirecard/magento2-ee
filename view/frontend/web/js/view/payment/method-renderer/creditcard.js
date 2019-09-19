@@ -19,8 +19,10 @@ define(
     function ($, Component, $t, url, VaultEnabler) {
         "use strict";
         return Component.extend({
+            seamlessResponse: null,
             defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-creditcard"
+                template: "Wirecard_ElasticEngine/payment/method-creditcard",
+                redirectAfterPlaceOrder: false
             },
 
             getPaymentPageScript: function () {
@@ -70,15 +72,19 @@ define(
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
-                if (response.hasOwnProperty("acs_url")) {
-                    this.redirectCreditCard(response);
+                this.seamlessResponse = response;
+                this.placeOrder();
+            },
+            afterPlaceOrder: function () {
+                if (this.seamlessResponse.hasOwnProperty("acs_url")) {
+                    this.redirectCreditCard(this.seamlessResponse);
                 } else {
                     // Handle redirect for Non-3D transactions
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/redirect"),
                         type: "post",
                         data: {
-                            "data": response,
+                            "data": this.seamlessResponse,
                             "method": "creditcard"
                         }
                     }).done(function (data) {
@@ -160,7 +166,6 @@ define(
                     }
                 }
             },
-
             getData: function () {
                 return {
                     "method": this.getCode(),
@@ -179,14 +184,20 @@ define(
             /**
              * Submit credit card request
              */
-            afterPlaceOrder: function () {
+            seamlessFormSubmit: function() {
                 WPP.seamlessSubmit({
                     wrappingDivId: this.getCode() + "_seamless_form",
                     onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
                     onError: this.seamlessFormSubmitErrorHandler.bind(this)
                 });
             },
+            placeSeamlessOrder: function (data, event) {
+                if (event) {
+                    event.preventDefault();
+                }
 
+                this.seamlessFormSubmit();
+            },
             /**
              * @returns {String}
              */
@@ -195,7 +206,7 @@ define(
             },
 
             /**
-             * @returns {Bool}
+             * @returns {bool}
              */
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
