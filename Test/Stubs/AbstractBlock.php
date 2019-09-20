@@ -11,7 +11,40 @@ namespace Magento\Framework\View\Element;
 
 abstract class AbstractBlock
 {
-    public function __construct($context, $data)
+    protected $_layout;
+
+    protected $_eventManager;
+
+    protected $_logger;
+
+    public function __construct(Context $context, array $data = [])
     {
+        $this->_layout       = $context->getLayout();
+        $this->_logger       = $context->getLogger();
+        $this->_eventManager = $context->getEventManager();
+    }
+
+    public function getUrl()
+    {
+    }
+
+    public function getLayout()
+    {
+        return $this->_layout;
+    }
+
+    public function getModuleName()
+    {
+        return '';
+    }
+
+    public function _getData()
+    {
+        return [];
+    }
+
+    public function getNameInLayout()
+    {
+        return '';
     }
 }

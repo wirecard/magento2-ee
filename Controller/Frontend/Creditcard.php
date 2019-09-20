@@ -268,8 +268,6 @@ class Creditcard extends Action
             $wdBaseUrl . 'frontend/cancel' . $methodAppend,
             $wdBaseUrl . 'frontend/redirect' . $methodAppend
         ));
-        $notificationUrl = $wdBaseUrl . 'frontend/notify?orderId=' . $orderDto->orderId;
-        $orderDto->transaction->setNotificationUrl($notificationUrl);
 
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);

@@ -29,7 +29,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
     const GET_VALUE = 'getValue';
     const BASE_URL = 'http://base.url';
     const WIRECARD_EE_MODULE_NAME = 'Wirecard_ElasticEngine';
-    const WIRECARD_EE_VERSION = '2.0.0';
+    const WIRECARD_EE_VERSION = '2.2.0';
     const MAGENTO_VERSION = '2.1.0';
 
     /**
@@ -207,9 +207,9 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($configFromFactory->getShopHeader(), ['headers' => [
             'shop-system-name' => 'Magento+Community Edition',
-            'shop-system-version' => '2.1.0',
+            'shop-system-version' => self::MAGENTO_VERSION,
             'plugin-name' => 'magento2-ee+Wirecard',
-            'plugin-version' => '2.0.0'
+            'plugin-version' => self::WIRECARD_EE_VERSION
         ]]);
     }
 }

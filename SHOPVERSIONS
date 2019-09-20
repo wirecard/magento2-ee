@@ -1,5 +1,17 @@
 [
   {
+    "release": "2.2.0",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.2",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Implement transaction polling",
+      "Fixed missing transaction record #269",
+      "Improve Credit Card checkout",
+      "Ensure compatibility with Magento CE 2.3.2"
+    ]
+  },
+  {
     "release": "2.1.0",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.1",

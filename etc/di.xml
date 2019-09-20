@@ -1029,13 +1029,6 @@
         </arguments>
     </virtualType>
 
-    <type name="Wirecard\ElasticEngine\Controller\Frontend\Notify">
-        <arguments>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Model\CreditCardTokenFactory</argument>
-        </arguments>
-    </type>
-
     <type name="Wirecard\ElasticEngine\Controller\Frontend\Redirect">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
@@ -1059,6 +1052,19 @@
             <argument name="paymentHelper" xsi:type="object">Magento\Payment\Helper\Data</argument>
             <argument name="methodConfig" xsi:type="object">WirecardCreditCardConfig</argument>
             <argument name="threeDsHelper" xsi:type="object">ThreeDsHelper</argument>
+        </arguments>
+    </type>
+
+    <type name="Wirecard\ElasticEngine\Gateway\Model\Notify">
+        <arguments>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
+            <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Model\CreditCardTokenFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Wirecard\ElasticEngine\Gateway\Model\TransactionUpdater">
+        <arguments>
+            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
         </arguments>
     </type>
 

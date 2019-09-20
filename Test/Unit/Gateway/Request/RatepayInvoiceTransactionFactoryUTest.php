@@ -257,7 +257,6 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new RatepayInvoiceTransaction();
 
         $expected->setAmount(new Amount(1.0, 'EUR'));
-        $expected->setNotificationUrl('http://magen.to/frontend/notify?orderId=' . self::ORDER_ID);
         $expected->setRedirect(new Redirect(
             'http://magen.to/frontend/redirect?method=ratepayinvoice',
             'http://magen.to/frontend/cancel?method=ratepayinvoice',
@@ -282,7 +281,6 @@ class RatepayInvoiceTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     private function minimumExpectedCaptureTransaction()
     {
         $expected = new RatepayInvoiceTransaction();
-        $expected->setNotificationUrl('http://magen.to/frontend/notify');
         $expected->setRedirect(new Redirect(
             self::REDIRECT_URL,
             'http://magen.to/frontend/cancel',

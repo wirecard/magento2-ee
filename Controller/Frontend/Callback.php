@@ -15,11 +15,15 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
@@ -57,17 +61,25 @@ class Callback extends Action
     private $urlBuilder;
 
     /**
+     * @var Helper\Payment
+     */
+    private $paymentHelper;
+
+    /**
      * Callback constructor.
+     *
      * @param Context $context
      * @param Session $session
      * @param LoggerInterface $logger
      * @param TransactionServiceFactory $transactionServiceFactory
+     * @param Helper\Payment $paymentHelper
      */
     public function __construct(
         Context $context,
         Session $session,
         LoggerInterface $logger,
-        TransactionServiceFactory $transactionServiceFactory
+        TransactionServiceFactory $transactionServiceFactory,
+        Helper\Payment $paymentHelper
     ) {
         parent::__construct($context);
         $this->session = $session;
@@ -75,6 +87,7 @@ class Callback extends Action
         $this->logger = $logger;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->urlBuilder = $context->getUrl();
+        $this->paymentHelper = $paymentHelper;
     }
 
     /**
@@ -124,7 +137,9 @@ class Callback extends Action
      * Handle callback with acs url - jsresponse
      *
      * @param $response
+     *
      * @return mixed
+     * @throws LocalizedException
      */
     private function handleThreeDTransactions($response)
     {
@@ -145,6 +160,10 @@ class Callback extends Action
         /** @var Response $response */
         $response = $transactionService->processJsResponse($response['jsresponse'], $url);
         $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
+
+        /** @var SuccessResponse|InteractionResponse|FormInteractionResponse $response */
+        $order = $this->session->getLastRealOrder();
+        $this->paymentHelper->addTransaction($order->getPayment(), $response, true);
 
         if ($response instanceof FormInteractionResponse) {
             unset($data[self::REDIRECT_URL]);
