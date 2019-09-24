@@ -27,6 +27,7 @@ docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata.sh
 
 # install wirecard magento2 plugin
 docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:${EXTENSION_VERSION}
+docker exec -it ${MAGENTO_CONTAINER_NAME} cp /var/www/html/vendor/wirecard/magento2-ee/tests/_data/crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
 #this gives the shop time to init
@@ -43,6 +44,9 @@ docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
             --env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
             --env GATEWAY=${GATEWAY} \
             ${MAGENTO_CONTAINER_NAME} bash -c "cd /magento2-plugin/tests/_data/ && php configure_payment_method_db.php creditcard authorize"
+
+# start polling
+docker exec -it ${MAGENTO_CONTAINER_NAME}  service cron start
 
 # clean cache to activate payment method
 docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean

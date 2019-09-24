@@ -26,6 +26,12 @@ class Base
 
     /**
      * @var string
+     * @since 2.2.0
+     */
+    public $pageSpecific = '';
+
+    /**
+     * @var string
      * @since 1.4.1
      */
     protected $tester;
@@ -73,7 +79,7 @@ class Base
      */
     public function getPageSpecific()
     {
-        return $this->URL;
+        return $this->pageSpecific;
     }
 
     /**

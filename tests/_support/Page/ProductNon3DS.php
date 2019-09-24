@@ -17,6 +17,13 @@ class ProductNon3DS extends Product3DS
      * @since 1.5.3
      */
     public $URL = '/index.php/savvy-shoulder-tote.html';
+
+    /**
+     * @var string
+     * @since 2.2.0
+     */
+    public $pageSpecific = 'tote';
+
     /**
      * Method prepareCheckout
      *

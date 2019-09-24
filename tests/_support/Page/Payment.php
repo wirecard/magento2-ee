@@ -20,6 +20,12 @@ class Payment extends Base
     public $URL = 'payment';
 
     /**
+     * @var string
+     * @since 2.2.0
+     */
+    public $pageSpecific = 'payment';
+
+    /**
      * @var array
      * @since 1.4.1
      */
@@ -41,9 +47,9 @@ class Payment extends Base
     public function fillCreditCardDetails()
     {
         $I = $this->tester;
-        $I->wait(20);
         $data_field_values = $I->getDataFromDataFile('tests/_data/CardData.json');
-        $I->selectOption($this->getElement('Wirecard Credit Card'), 'Wirecard Credit Card');
+        $I->wait(5);
+        $I->preparedSelectOption($this->getElement('Wirecard Credit Card'), 'Wirecard Credit Card');
         $I->wait(15);
         try {
             $this->switchFrame();
@@ -52,13 +58,12 @@ class Payment extends Base
             $I->wait(15);
             $this->switchFrame();
         }
-        $I->waitForElementVisible($this->getElement('Credit Card Last Name'));
-        $I->fillField($this->getElement('Credit Card Last Name'), $data_field_values->last_name);
-        $I->fillField($this->getElement('Credit Card Card number'), $data_field_values->card_number);
-        $I->fillField($this->getElement('Credit Card CVV'), $data_field_values->cvv);
-        $I->fillField($this->getElement('Credit Card Valid until month / year'), $data_field_values->expiration_date);
+        $I->preparedFillField($this->getElement('Credit Card Last Name'), $data_field_values->last_name);
+        $I->preparedFillField($this->getElement('Credit Card Card number'), $data_field_values->card_number);
+        $I->preparedFillField($this->getElement('Credit Card CVV'), $data_field_values->cvv);
+        $I->preparedFillField($this->getElement('Credit Card Valid until month / year'), $data_field_values->expiration_date);
         $I->switchToIFrame();
-        $I->click($this->getElement('Place Order'));
+        $I->preparedClick($this->getElement('Place Order'));
     }
 
     /**
