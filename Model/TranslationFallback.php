@@ -20,7 +20,7 @@ class TranslationFallback extends \Magento\Framework\Phrase\Renderer\Translate
      * @var array
      */
     private $fallbackTranslations = null;
-    
+
     /**
      * @var bool
      */
