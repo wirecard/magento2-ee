@@ -68,6 +68,8 @@ class PayPalTransactionFactory extends TransactionFactory
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @since 2.2.1 Remove Hardcoded shipping setter
+     *              Add send_additional check
      */
     public function create($commandSubject)
     {
