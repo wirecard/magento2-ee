@@ -372,7 +372,7 @@ class TransactionFactory
     {
         $method      = urlencode($method);
         $redirectUrl = sprintf(
-            '%sfrontend/%s?method%s',
+            '%sfrontend/%s?method=%s',
             $this->urlBuilder->getRouteUrl('wirecard_elasticengine'),
             $type,
             $method
