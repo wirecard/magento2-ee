@@ -161,7 +161,6 @@ class PayPalTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new PayPalTransaction();
         $expected->setAccountHolder(new AccountHolder());
-        $expected->setShipping(new AccountHolder());
         $expected->setOrderNumber(self::ORDER_ID);
         $expected->setOrderDetail('test@example.com Joe Doe');
 
