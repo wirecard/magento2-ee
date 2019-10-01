@@ -25,7 +25,6 @@ use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
