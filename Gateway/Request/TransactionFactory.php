@@ -155,31 +155,15 @@ class TransactionFactory
         }
 
         /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-
+        $payment       = $commandSubject[self::PAYMENT];
         /** @var OrderAdapterInterface $order */
-        $order = $payment->getOrder();
-
+        $order         = $payment->getOrder();
+        $cfgkey        = $this->transaction->getConfigKey();
         $this->orderId = $order->getOrderIncrementId();
+
         $this->addOrderIdToTransaction($this->orderId);
-
         $this->addBasicValuesToTransaction($order->getGrandTotalAmount(), $order->getCurrencyCode());
-
-        $cfgkey = $this->transaction->getConfigKey();
-
-        // Special handling for the non-standard mapping
-        if ($this->transaction instanceof RatepayInvoiceTransaction) {
-            $cfgkey = RatepayInvoiceTransaction::NAME;
-        }
-
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $methodAppend = '?method=' . urlencode($cfgkey);
-
-        $this->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend,
-            $wdBaseUrl . 'frontend/cancel' . $methodAppend,
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend
-        ));
+        $this->addRedirectUrlsToTransaction($cfgkey);
 
         if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_ADDITIONAL)) {
             $this->setAdditionalInformation($order);
@@ -355,5 +339,45 @@ class TransactionFactory
         $this->transaction->setAmount($amount);
         $this->transaction->setEntryMode('ecommerce');
         $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+    }
+
+    /**
+     * Add redirect urls to transaction
+     * @param $method
+     *
+     * @since 2.2.1
+     */
+    protected function addRedirectUrlsToTransaction($method)
+    {
+        $redirectUrl = $this->formatRedirectUrls($method, 'redirect');
+        $cancelUrl   = $this->formatRedirectUrls($method, 'cancel');
+
+        $this->transaction->setRedirect(new Redirect(
+            $redirectUrl,
+            $cancelUrl,
+            $redirectUrl
+        ));
+    }
+
+    /**
+     * Format redirect urls
+     *
+     * @param $method
+     * @param $type
+     * @return string
+     *
+     * @since 2.2.1
+     */
+    protected function formatRedirectUrls($method, $type)
+    {
+        $method      = urlencode($method);
+        $redirectUrl = sprintf(
+            '%sfrontend/%s?method%s',
+            $this->urlBuilder->getRouteUrl('wirecard_elasticengine'),
+            $type,
+            $method
+        );
+
+        return $redirectUrl;
     }
 }
