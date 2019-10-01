@@ -79,7 +79,6 @@ class PayPalTransactionFactory extends TransactionFactory
         $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
         $this->transaction->setOrderNumber($this->orderId);
         $this->transaction->setOrderDetail(sprintf(
             '%s %s %s',
@@ -90,6 +89,10 @@ class PayPalTransactionFactory extends TransactionFactory
 
         if ($this->methodConfig->getValue('send_shopping_basket')) {
             $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        }
+
+        if ($this->methodConfig->getValue('send_additional')) {
+            $this->setAdditionalInformation($order);
         }
 
         return $this->transaction;
