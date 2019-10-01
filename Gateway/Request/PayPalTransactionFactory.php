@@ -89,11 +89,11 @@ class PayPalTransactionFactory extends TransactionFactory
             $billingAddress->getLastname()
         ));
 
-        if ($this->methodConfig->getValue('send_shopping_basket')) {
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_BASKET)) {
             $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
         }
 
-        if ($this->methodConfig->getValue('send_additional')) {
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_ADDITIONAL)) {
             $this->setAdditionalInformation($order);
         }
 

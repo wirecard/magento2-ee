@@ -37,6 +37,9 @@ class TransactionFactory
     const PAYMENT = 'payment';
     const AMOUNT = 'amount';
     const REFUND_OPERATION = Operation::CREDIT;
+    const CONFIG_KEY_SEND_ADDITIONAL = 'send_additional';
+    const CONFIG_KEY_SEND_BASKET = 'send_shopping_basket';
+    const FIELD_KEY_ORDER_ID = 'order_id';
 
     /**
      * @var UrlInterface
@@ -157,14 +160,10 @@ class TransactionFactory
         /** @var OrderAdapterInterface $order */
         $order = $payment->getOrder();
 
-        $amount = new Amount((float)$order->getGrandTotalAmount(), $order->getCurrencyCode());
-        $this->transaction->setAmount($amount);
-
         $this->orderId = $order->getOrderIncrementId();
         $this->addOrderIdToTransaction($this->orderId);
 
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+        $this->addBasicValuesToTransaction($order->getGrandTotalAmount(), $order->getCurrencyCode());
 
         $cfgkey = $this->transaction->getConfigKey();
 
@@ -182,7 +181,7 @@ class TransactionFactory
             $wdBaseUrl . 'frontend/redirect' . $methodAppend
         ));
 
-        if ($this->methodConfig->getValue('send_additional')) {
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_ADDITIONAL)) {
             $this->setAdditionalInformation($order);
         }
 
@@ -211,13 +210,10 @@ class TransactionFactory
         $payment = $paymentDo->getPayment();
 
         $this->orderId = $order->getId();
-        $captureAmount = $commandSubject[self::AMOUNT];
-        $amount = new Amount((float)$captureAmount, $order->getCurrencyCode());
         $this->transaction->setParentTransactionId($payment->getParentTransactionId());
-        $this->transaction->setAmount($amount);
 
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+        $captureAmount = $commandSubject[self::AMOUNT];
+        $this->addBasicValuesToTransaction($captureAmount, $order->getCurrencyCode());
 
         return $this->transaction;
     }
@@ -245,9 +241,7 @@ class TransactionFactory
 
         $this->orderId = $order->getId();
         $this->transactionId = $payment->getParentTransactionId();
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount((float)$commandSubject[self::AMOUNT], $order->getCurrencyCode()));
+        $this->addBasicValuesToTransaction($commandSubject[self::AMOUNT], $order->getCurrencyCode());
 
         return $this->transaction;
     }
@@ -271,9 +265,7 @@ class TransactionFactory
 
         $this->orderId = $order->getId();
         $this->transactionId = $payment->getParentTransactionId();
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount((float)$order->getGrandTotalAmount(), $order->getCurrencyCode()));
+        $this->addBasicValuesToTransaction($order->getGrandTotalAmount(), $order->getCurrencyCode());
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;
@@ -299,7 +291,10 @@ class TransactionFactory
         if (null != $order->getShippingAddress()) {
             $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
         }
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_BASKET)) {
+            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        }
         $this->transaction->setIpAddress($order->getRemoteIp());
         $this->transaction->setConsumerId($order->getCustomerId());
 
@@ -323,7 +318,7 @@ class TransactionFactory
             ->setValue($payment->getId())
             ->create();
 
-        $filters[] = $this->filterBuilder->setField('order_id')
+        $filters[] = $this->filterBuilder->setField(TransactionFactory::FIELD_KEY_ORDER_ID)
             ->setValue($order->getId())
             ->create();
 
@@ -345,5 +340,20 @@ class TransactionFactory
         $customFields->add(new CustomField('orderId', $orderId));
         $this->transaction->setCustomFields($customFields);
         $this->transaction->setOrderNumber($orderId);
+    }
+
+    /**
+     * Add default values to transaction
+     * @param float $amount
+     * @param string $currencyCode
+     *
+     * @since 2.2.1
+     */
+    protected function addBasicValuesToTransaction($amount, $currencyCode)
+    {
+        $amount = new Amount((float)$amount, $currencyCode);
+        $this->transaction->setAmount($amount);
+        $this->transaction->setEntryMode('ecommerce');
+        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
     }
 }
