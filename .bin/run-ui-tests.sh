@@ -54,8 +54,8 @@ echo "Current shop-extension release version: ${GIT_BRANCH}"
 bash .bin/start-shopsystem.sh ${GIT_BRANCH}
 
 # find out test group to be run
-if [[ $GIT_BRANCH =~ "${BATCH_RELEASE}" ]]; then
-   TEST_GROUP="${BATCH_RELEASE}"
+if [[ $GIT_BRANCH =~ "${PATCH_RELEASE}" ]]; then
+   TEST_GROUP="${PATCH_RELEASE}"
 elif [[ $GIT_BRANCH =~ "${MINOR_RELEASE}" ]]; then
    TEST_GROUP="${MINOR_RELEASE}"
 # run all tests in nothing else specified

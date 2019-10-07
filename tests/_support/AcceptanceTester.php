@@ -23,15 +23,15 @@
  * @SuppressWarnings(PHPMD)
  */
 
-use Page\Base;
 use Page\Checkout as CheckoutPage;
 use Page\OrderReceived as OrderReceivedPage;
 use Page\Payment as PaymentPage;
 use Page\Product3DS as Product3DSPage;
 use Page\ProductNon3DS as ProductNon3DSPage;
 use Page\Verified as VerifiedPage;
+use Wirecard\ElasticEngine\tests\_support\ActorExtendedWithWrappers as ActorExtendedWithWrappers;
 
-class AcceptanceTester extends \Codeception\Actor
+class AcceptanceTester extends ActorExtendedWithWrappers
 {
     use _generated\AcceptanceTesterActions;
 
@@ -69,7 +69,6 @@ class AcceptanceTester extends \Codeception\Actor
     {
         switch ($name) {
             case 'Checkout':
-                $this->wait(10);
                 $page = new CheckoutPage($this);
                 break;
             case 'Product3DS':
@@ -79,15 +78,12 @@ class AcceptanceTester extends \Codeception\Actor
                 $page = new ProductNon3DSPage($this);
                 break;
             case 'Verified':
-                $this->wait(45);
                 $page = new VerifiedPage($this);
                 break;
             case 'Order Received':
-                $this->wait(45);
                 $page = new OrderReceivedPage($this);
                 break;
             case 'Payment':
-                $this->wait(45);
                 $page = new PaymentPage($this);
                 break;
             default:
@@ -111,6 +107,62 @@ class AcceptanceTester extends \Codeception\Actor
     }
 
     /**
+     * Method waitUntilLoaded
+     * @param integer $maxTimeout
+     * @param array $function
+     * @param array $functionArgs
+     * @since   2.2.0
+     */
+    protected function waitUntil($maxTimeout=80, array $function = null, array $functionArgs = null)
+    {
+        $counter = 0;
+        while ($counter <= $maxTimeout) {
+            $this->wait(1);
+            $counter++;
+            if ($function != null) {
+                if (call_user_func($function, $functionArgs)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Method checkPaymentActionInTransactionTable
+     *
+     * @param string $paymentAction
+     * @return boolean
+     * @since   2.2.0
+     */
+    protected function checkPaymentActionInTransactionTable($paymentAction)
+    {
+        $transactionTypes = $this->getColumnFromDatabaseNoCriteria('sales_payment_transaction', 'txn_type');
+        $tempTxType = $this->mappedPaymentActions['tx_table'][$paymentAction[0]];
+        if (end($transactionTypes) == $tempTxType) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Method waitUntilPageLoaded
+     * @since   2.2.0
+     * @return boolean
+     */
+    public function waitUntilPageLoaded()
+    {
+        $currentUrl = $this->grabFromCurrentUrl();
+        if ($currentUrl != '' && $this->currentPage->getPageSpecific() != '') {
+            return false;
+        }
+        if (strpos($currentUrl, $this->currentPage->getPageSpecific()) != false) {
+            $this->wait(3);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @Given I am on :page page
      * @param string $page
      * @since 1.4.1
@@ -120,6 +172,7 @@ class AcceptanceTester extends \Codeception\Actor
         // Open the page and initialize required pageObject
         $this->currentPage = $this->selectPage($page);
         $this->amOnPage($this->currentPage->getURL());
+        $this->waitUntil(80, [$this, 'waitUntilPageLoaded']);
     }
 
     /**
@@ -129,9 +182,7 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iClick($object)
     {
-        $this->waitForElementVisible($this->getPageElement($object));
-        $this->waitForElementClickable($this->getPageElement($object));
-        $this->click($this->getPageElement($object));
+        $this->preparedClick($this->getPageElement($object));
     }
 
     /**
@@ -143,6 +194,7 @@ class AcceptanceTester extends \Codeception\Actor
     {
         // Initialize required pageObject WITHOUT checking URL
         $this->currentPage = $this->selectPage($page);
+        $this->waitUntil(80, [$this, 'waitUntilPageLoaded']);
         // Check only specific keyword that page URL should contain
         $this->seeInCurrentUrl($this->currentPage->getPageSpecific());
     }
@@ -165,8 +217,7 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iEnterInField($fieldValue, $fieldID)
     {
-        $this->waitForElementVisible($this->getPageElement($fieldID));
-        $this->fillField($this->getPageElement($fieldID), $fieldValue);
+        $this->preparedFillField($this->getPageElement($fieldID), $fieldValue);
     }
 
     /**
@@ -228,16 +279,7 @@ class AcceptanceTester extends \Codeception\Actor
      */
     public function iSeeInTransactionTable($paymentAction)
     {
-        $this->seeInDatabase(
-            'sales_payment_transaction',
-            ['txn_type like' => $this->mappedPaymentActions['tx_table'][$paymentAction]]
-        );
-        //check that last transaction in the table is the one under test
-        $transactionTypes = $this->getColumnFromDatabaseNoCriteria('sales_payment_transaction', 'txn_type');
-        $tempTxType = $this->mappedPaymentActions['tx_table'][$paymentAction];
-        if ($tempTxType) {
-            $tempTxType = 'order';
-        }
-        $this->assertEquals(end($transactionTypes), $tempTxType);
+        $this->waitUntil(60, [$this, 'checkPaymentActionInTransactionTable'], [$paymentAction]);
+        $this->assertEquals($this->checkPaymentActionInTransactionTable([$paymentAction]), true);
     }
 }
