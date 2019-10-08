@@ -82,6 +82,8 @@ class Creditcard extends Action
     /** @var ThreeDsHelper */
     protected $threeDsHelper;
 
+    protected $quoteRepository;
+
     /**
      * Creditcard constructor.
      *
@@ -142,6 +144,8 @@ class Creditcard extends Action
      *
      * @return Json
      * @throws LocalizedException
+     *
+     * @since 2.2.1 Remove deprecated method usage for quote
      */
     public function execute()
     {
@@ -157,8 +161,8 @@ class Creditcard extends Action
         }
 
         $orderDto = new OrderDto();
-        $quote->reserveOrderId()->save();
-        $orderDto->quote = $quote;
+        $orderDto->quote = $quote->reserveOrderId();
+        $this->quoteRepository->save($quote);
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
