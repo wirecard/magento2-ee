@@ -13,6 +13,19 @@ env:
   - MAJOR_RELEASE="major"
 
 matrix:
+  # these stages are allowed to fail
+  allow_failures:
+  - stage: acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO2_RELEASE_VERSION=1
+    - ALLOW_FAIL=1
+  - stage: acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - MAGENTO2_RELEASE_VERSION=1
+    - LATEST_EXTENSION_RELEASE=1
+    - ALLOW_FAIL=1
   include:
   - php: 7.1
     if: env(PHRASEAPP_PULL) != '1' AND type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
@@ -84,18 +97,6 @@ matrix:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=1
   # if this stage fails, it will not fail the whole build
-    - ALLOW_FAIL=1
-  allow_failures:
-  - stage: acceptance-test
-    env:
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=1
-    - ALLOW_FAIL=1
-  - stage: acceptance-test
-    env:
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=1
-    - LATEST_EXTENSION_RELEASE=1
     - ALLOW_FAIL=1
     
   - stage: phraseapp-pull
