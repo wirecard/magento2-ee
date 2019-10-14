@@ -4,13 +4,13 @@ language: php
 
 env:
   global:
-  - COMPOSER_ARGS="--no-interaction"
-  - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/shop-releases.txt
-  - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
-  - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
-  - PATCH_RELEASE="patch"
-  - MINOR_RELEASE="minor"
-  - MAJOR_RELEASE="major"
+    - COMPOSER_ARGS="--no-interaction"
+    - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/shop-releases.txt
+    - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
+    - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
+    - PATCH_RELEASE="patch"
+    - MINOR_RELEASE="minor"
+    - MAJOR_RELEASE="major"
 
 matrix:
   # these stages are allowed to fail
@@ -158,17 +158,17 @@ matrix:
     - bin/rake trigger_build
 
 install:
-- travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
-- travis_retry composer install $COMPOSER_ARGS
-- composer show
+  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
+  - travis_retry composer install $COMPOSER_ARGS
+  - composer show
 
 script:
-- composer test-coverage
-- composer cs-check
+  - composer test-coverage
+  - composer cs-check
 
 after_script:
-- composer upload-coverage
-- bash .bin/generate-tag.sh
+  - composer upload-coverage
+  - bash .bin/generate-tag.sh
 
 notifications:
   email: false
