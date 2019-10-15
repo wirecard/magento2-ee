@@ -28,6 +28,7 @@ RUN requirements="libpng-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 
 
 RUN apt-get -qq update \
     && apt-get -qq install -y libmcrypt-dev \
+    && docker-php-ext-configure mcrypt  \
     && docker-php-ext-install  mcrypt
 
 RUN chsh -s /bin/bash www-data
@@ -38,7 +39,7 @@ RUN cd /tmp && \
   mv magento2-$MAGENTO_VERSION/* magento2-$MAGENTO_VERSION/.htaccess $INSTALL_DIR
 
 RUN chown -R www-data:www-data /var/www
-RUN su www-data -c "cd $INSTALL_DIR && composer install -q"
+RUN su www-data -c "cd $INSTALL_DIR && composer update -q && composer install -q "
 RUN su www-data -c "cd $INSTALL_DIR && composer config repositories.magento composer https://repo.magento.com/"
 
 RUN cd $INSTALL_DIR \
