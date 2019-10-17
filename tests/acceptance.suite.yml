@@ -12,6 +12,8 @@ modules:
         port: 80
         url: '%NGROK_URL%'
         browser: chrome # 'chrome' or 'firefox'
+        wait: 60
+        request_timeout: 60
         capabilities:
           'build': '%LATEST_RELEASED_SHOP_EXTENSION_VERSION%'
           'project': 'magento2-ee-%GATEWAY%-%MAGENTO2_RELEASE_VERSION%'

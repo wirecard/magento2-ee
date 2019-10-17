@@ -18,4 +18,10 @@ class OrderReceived extends Base
      * @since 1.4.1
      */
     public $URL = 'success';
+
+    /**
+     * @var string
+     * @since 2.2.0
+     */
+    public $pageSpecific = 'success';
 }

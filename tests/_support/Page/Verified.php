@@ -20,6 +20,12 @@ class Verified extends Base
     public $URL = '/bank';
 
     /**
+     * @var string
+     * @since 2.2.0
+     */
+    public $pageSpecific = 'bank';
+
+    /**
      * @var array
      * @since 1.4.1
      */

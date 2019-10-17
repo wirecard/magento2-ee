@@ -20,6 +20,12 @@ class Product3DS extends Base
     public $URL = '/index.php/fusion-backpack.html';
 
     /**
+     * @var string
+     * @since 2.2.0
+     */
+    public $pageSpecific = 'backpack';
+
+    /**
      * @var array
      * @since 1.5.1
      */
@@ -36,14 +42,9 @@ class Product3DS extends Base
     public function prepareCheckout()
     {
         $I = $this->tester;
-        $I->wait(30);
-        $I->waitForElementClickable($this->getElement('Add to Cart'));
-        $I->click($this->getElement('Add to Cart'));
+        $I->preparedClick($this->getElement('Add to Cart'));
         $I->wait(10);
-        $I->waitForElementClickable($this->getElement('Basket'));
-        $I->click(parent::getElement('Basket'));
-        $I->wait(10);
-        $I->waitForElementClickable($this->getElement('Proceed to Checkout'));
-        $I->click(parent::getElement('Proceed to Checkout'));
+        $I->preparedClick(parent::getElement('Basket'));
+        $I->preparedClick(parent::getElement('Proceed to Checkout'));
     }
 }
