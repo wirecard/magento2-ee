@@ -15,6 +15,7 @@ env:
 matrix:
   # these stages are allowed to fail
   allow_failures:
+  - stage: phraseapp-check-if-in-sync
   - stage: acceptance-test
     env:
     - GATEWAY=API-TEST
@@ -112,7 +113,7 @@ matrix:
     after_script: skip
   
   - stage: phraseapp-check-if-in-sync
-    if: type != cron AND type != pull_request AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
+    if: type != cron AND type != pull_request
     language: ruby
     ruby: 2.5.3
     before_install: skip
