@@ -25,7 +25,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 class Cancel extends Action implements CsrfAwareActionInterface
 {
     use NoCsrfTrait;
-    
+
     /**
      * @var Session
      */
