@@ -25,24 +25,48 @@ class AddressFactory
      */
     public function create($magentoAddressObj)
     {
+        $address = null;
         if (!$magentoAddressObj instanceof AddressAdapterInterface) {
             throw new \InvalidArgumentException('Address data object should be provided.');
         }
 
-        $address = new Address(
-            $magentoAddressObj->getCountryId(),
-            $magentoAddressObj->getCity(),
-            $magentoAddressObj->getStreetLine1()
-        );
-        $address->setPostalCode($magentoAddressObj->getPostcode());
+        if (self::isValidAddress($magentoAddressObj)) {
+            $address = new Address(
+                $magentoAddressObj->getCountryId(),
+                $magentoAddressObj->getCity(),
+                $magentoAddressObj->getStreetLine1()
+            );
+            $address->setPostalCode($magentoAddressObj->getPostcode());
 
-        if (strlen($magentoAddressObj->getRegionCode())) {
-            $address->setState($magentoAddressObj->getRegionCode());
+            if (strlen($magentoAddressObj->getRegionCode())) {
+                $address->setState($magentoAddressObj->getRegionCode());
+            }
+
+            if (strlen($magentoAddressObj->getStreetLine2())) {
+                $address->setStreet2($magentoAddressObj->getStreetLine2());
+            }
         }
 
-        if (strlen($magentoAddressObj->getStreetLine2())) {
-            $address->setStreet2($magentoAddressObj->getStreetLine2());
-        }
         return $address;
+    }
+
+    /**
+     * Validation of mandatory address fields
+     *
+     * @param AddressAdapterInterface | \Magento\Quote\Api\Data\AddressInterface $magentoAddressObj
+     * @return bool
+     * @since 2.2.1
+     */
+    public static function isValidAddress($magentoAddressObj)
+    {
+        $valid = true;
+        if (empty($magentoAddressObj->getCountryId())
+            || empty($magentoAddressObj->getCity())
+            || empty($magentoAddressObj->getStreetLine1())
+        ) {
+            $valid = false;
+        }
+
+        return $valid;
     }
 }

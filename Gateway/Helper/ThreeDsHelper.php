@@ -13,6 +13,7 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
+use Wirecard\ElasticEngine\Gateway\Request\AddressFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -141,12 +142,14 @@ class ThreeDsHelper
         $accountHolder->setEmail($address->getEmail());
         $accountHolder->setPhone($address->getTelephone());
 
-        $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
-        if (!empty($address->getStreetLine(2))) {
-            $sdkAddress->setStreet2($address->getStreetLine(2));
+        if (AddressFactory::isValidAddress($address)) {
+            $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
+            if (!empty($address->getStreetLine(2))) {
+                $sdkAddress->setStreet2($address->getStreetLine(2));
+            }
+            $sdkAddress->setPostalCode($address->getPostcode());
+            $accountHolder->setAddress($sdkAddress);
         }
-        $sdkAddress->setPostalCode($address->getPostcode());
-        $accountHolder->setAddress($sdkAddress);
 
         return $accountHolder;
     }

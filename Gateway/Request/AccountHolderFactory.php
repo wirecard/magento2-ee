@@ -47,7 +47,10 @@ class AccountHolderFactory
         }
 
         $accountHolder = new AccountHolder();
-        $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
+        $address = $this->addressFactory->create($magentoAddressObj);
+        if ($address !== null) {
+            $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
+        }
         $accountHolder->setEmail($magentoAddressObj->getEmail());
 
         // This is a special case for credit card
