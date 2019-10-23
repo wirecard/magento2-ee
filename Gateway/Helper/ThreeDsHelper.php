@@ -13,7 +13,7 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
-use Wirecard\ElasticEngine\Gateway\Request\AddressFactory;
+use Wirecard\ElasticEngine\Gateway\Validator\AddressValidator;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -41,17 +41,23 @@ class ThreeDsHelper
     /** @var string */
     private $token;
 
+    /** @var AddressValidator */
+    private $addressValidator;
+
     /**
      * ThreeDsHelper constructor.
      * @param AccountInfoFactory $accountInfoFactory
      * @param AccountHolderFactory $accountHolderFactory
+     * @param AddressValidator $addressValidator
      */
     public function __construct(
         AccountInfoFactory $accountInfoFactory,
-        AccountHolderFactory $accountHolderFactory
+        AccountHolderFactory $accountHolderFactory,
+        AddressValidator $addressValidator
     ) {
         $this->accountInfoFactory = $accountInfoFactory;
         $this->accountHolderFactory = $accountHolderFactory;
+        $this->addressValidator = $addressValidator;
         $this->token = null;
     }
 
@@ -142,7 +148,9 @@ class ThreeDsHelper
         $accountHolder->setEmail($address->getEmail());
         $accountHolder->setPhone($address->getTelephone());
 
-        if (AddressFactory::isValidAddress($address)) {
+        $validationSubject = [];
+        $validationSubject['addressObject'] = $address;
+        if ($this->addressValidator->validate($validationSubject)) {
             $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
             if (!empty($address->getStreetLine(2))) {
                 $sdkAddress->setStreet2($address->getStreetLine(2));
