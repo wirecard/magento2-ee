@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AddressFactory;
+use Wirecard\ElasticEngine\Gateway\Validator\AddressInterfaceValidator;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Address;
 
@@ -21,6 +22,8 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
     private $address;
 
     private $addressFactory;
+
+    private $addressInterfaceValidator;
 
     public function setUp()
     {
@@ -32,11 +35,14 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
 
         $this->addressFactory = $this->getMockBuilder(AddressFactory::class)->getMock();
         $this->addressFactory->method('create')->willReturn(new Address('', '', ''));
+
+        $this->addressInterfaceValidator = $this->getMockBuilder(AddressInterfaceValidator::class)->disableOriginalConstructor()->getMock();
+        $this->addressInterfaceValidator->method('validate')->willReturn(true);
     }
 
     public function testCreate()
     {
-        $accountHolderFactory = new AccountHolderFactory($this->addressFactory);
+        $accountHolderFactory = new AccountHolderFactory($this->addressFactory, $this->addressInterfaceValidator);
 
         $expected = new AccountHolder();
         $expected->setAddress(new Address('', '', ''));
@@ -50,7 +56,7 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateWithDob()
     {
-        $accountHolderFactory = new AccountHolderFactory($this->addressFactory);
+        $accountHolderFactory = new AccountHolderFactory($this->addressFactory, $this->addressInterfaceValidator);
 
         $expected = new AccountHolder();
         $expected->setAddress(new Address('', '', ''));
@@ -68,7 +74,7 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateThrowsException()
     {
-        $accountHolderFactory = new AccountHolderFactory($this->addressFactory);
+        $accountHolderFactory = new AccountHolderFactory($this->addressFactory, $this->addressInterfaceValidator);
         $accountHolderFactory->create(null);
     }
 }
