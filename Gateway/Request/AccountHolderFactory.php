@@ -10,7 +10,7 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
-use Wirecard\ElasticEngine\Gateway\Validator\AddressInterfaceValidator;
+use Wirecard\ElasticEngine\Gateway\Validator\AddressAdapterInterfaceValidator;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
@@ -25,16 +25,16 @@ class AccountHolderFactory
     private $addressFactory;
 
     /**
-     * @var AddressInterfaceValidator
+     * @var AddressAdapterInterfaceValidator
      */
     private $addressInterfaceValidator;
 
     /**
      * AccountHolderFactory constructor.
      * @param AddressFactory $addressFactory
-     * @param AddressInterfaceValidator $addressInterfaceValidator
+     * @param AddressAdapterInterfaceValidator $addressInterfaceValidator
      */
-    public function __construct(AddressFactory $addressFactory, AddressInterfaceValidator $addressInterfaceValidator)
+    public function __construct(AddressFactory $addressFactory, AddressAdapterInterfaceValidator $addressInterfaceValidator)
     {
         $this->addressFactory = $addressFactory;
         $this->addressInterfaceValidator = $addressInterfaceValidator;
@@ -50,14 +50,12 @@ class AccountHolderFactory
      */
     public function create($magentoAddressObj, $customerBirthdate = null, $firstName = null, $lastName = null)
     {
-        $validationSubject = [];
-        $validationSubject['addressObject'] = $magentoAddressObj;
         if (!$magentoAddressObj instanceof AddressAdapterInterface) {
             throw new \InvalidArgumentException('Address data object should be provided.');
         }
 
         $accountHolder = new AccountHolder();
-        if ($this->addressInterfaceValidator->validate($validationSubject)) {
+        if ($this->addressInterfaceValidator->validate(['addressObject' => $magentoAddressObj])) {
             $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         }
         $accountHolder->setEmail($magentoAddressObj->getEmail());

@@ -9,6 +9,10 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Validator;
 
+/**
+ * Interface ValidatorInterface
+ * @package Wirecard\ElasticEngine\Gateway\Validator
+ */
 interface ValidatorInterface
 {
     /**

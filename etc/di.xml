@@ -963,7 +963,7 @@
     <virtualType name="AccountHolderFactory" type="Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory">
         <arguments>
             <argument name="addressFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AddressFactory</argument>
-            <argument name="addressInterfaceValidator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\AddressInterfaceValidator</argument>
+            <argument name="addressInterfaceValidator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\AddressAdapterInterfaceValidator</argument>
         </arguments>
     </virtualType>
 
@@ -971,7 +971,7 @@
         <arguments>
             <argument name="accountInfoFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
-            <argument name="addressValidator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\AddressValidator</argument>
+            <argument name="addressValidator" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\QuoteAddressValidator</argument>
         </arguments>
     </virtualType>
 

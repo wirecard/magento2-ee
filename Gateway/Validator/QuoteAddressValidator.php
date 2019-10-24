@@ -1,10 +1,21 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+ */
 
 namespace Wirecard\ElasticEngine\Gateway\Validator;
 
-use Magento\Payment\Gateway\Data\AddressAdapterInterface;
+use Magento\Quote\Model\Quote\Address;
 
-class AddressInterfaceValidator extends AbstractValidator
+/**
+ * Class QuoteAddressValidator
+ * @package Wirecard\ElasticEngine\Gateway\Validator
+ */
+class QuoteAddressValidator extends AbstractValidator
 {
     /**
      * Validation for business related object
@@ -17,11 +28,11 @@ class AddressInterfaceValidator extends AbstractValidator
     {
         $isValid = true;
 
-        /** @var AddressAdapterInterface $addressObj */
+        /** @var Address $addressObj */
         $addressObj = $validationSubject['addressObject'];
         if (empty($addressObj->getCountryId())
             || empty($addressObj->getCity())
-            || empty($addressObj->getStreetLine1())
+            || empty($addressObj->getStreetLine(1))
         ) {
             $isValid = false;
         }

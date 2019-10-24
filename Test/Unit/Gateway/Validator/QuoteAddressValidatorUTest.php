@@ -10,9 +10,9 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Validator;
 
 use Magento\Quote\Model\Quote\Address;
-use Wirecard\ElasticEngine\Gateway\Validator\AddressValidator;
+use Wirecard\ElasticEngine\Gateway\Validator\QuoteAddressValidator;
 
-class AddressValidatorUTest extends \PHPUnit_Framework_TestCase
+class QuoteAddressValidatorUTest extends \PHPUnit_Framework_TestCase
 {
     private $magentoQuoteAddress;
 
@@ -21,7 +21,7 @@ class AddressValidatorUTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->magentoQuoteAddress = $this->getMockBuilder(Address::class)->disableOriginalConstructor()->getMock();
-        $this->validator = new AddressValidator();
+        $this->validator = new QuoteAddressValidator();
     }
 
     public function testValidAddressObject()

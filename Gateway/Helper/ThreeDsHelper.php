@@ -13,7 +13,7 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
-use Wirecard\ElasticEngine\Gateway\Validator\AddressValidator;
+use Wirecard\ElasticEngine\Gateway\Validator\QuoteAddressValidator;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -41,19 +41,21 @@ class ThreeDsHelper
     /** @var string */
     private $token;
 
-    /** @var AddressValidator */
+    /** @var QuoteAddressValidator */
     private $addressValidator;
 
     /**
      * ThreeDsHelper constructor.
      * @param AccountInfoFactory $accountInfoFactory
      * @param AccountHolderFactory $accountHolderFactory
-     * @param AddressValidator $addressValidator
+     * @param QuoteAddressValidator $addressValidator
+     *
+     * @since 2.2.1 added QuoteAddressValidator
      */
     public function __construct(
         AccountInfoFactory $accountInfoFactory,
         AccountHolderFactory $accountHolderFactory,
-        AddressValidator $addressValidator
+        QuoteAddressValidator $addressValidator
     ) {
         $this->accountInfoFactory = $accountInfoFactory;
         $this->accountHolderFactory = $accountHolderFactory;
@@ -106,9 +108,8 @@ class ThreeDsHelper
         $billingAddress = $orderDto->quote->getBillingAddress();
         $this->accountHolder = $this->fetchAccountHolder($billingAddress);
         $this->accountHolder->setCrmId($orderDto->quote->getCustomerId());
-
-        $shippingAddress = $orderDto->quote->getShippingAddress();
-        if (isset($shippingAddress) && !$orderDto->quote->getIsVirtual()) {
+        $shippingAddress = $orderDto->quote->isVirtual() ? null : $orderDto->quote->getShippingAddress();
+        if (isset($shippingAddress)) {
             $this->shipping = $this->fetchAccountHolder($shippingAddress);
         }
     }
@@ -148,9 +149,7 @@ class ThreeDsHelper
         $accountHolder->setEmail($address->getEmail());
         $accountHolder->setPhone($address->getTelephone());
 
-        $validationSubject = [];
-        $validationSubject['addressObject'] = $address;
-        if ($this->addressValidator->validate($validationSubject)) {
+        if ($this->addressValidator->validate(['addressObject' => $address])) {
             $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
             if (!empty($address->getStreetLine(2))) {
                 $sdkAddress->setStreet2($address->getStreetLine(2));

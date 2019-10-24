@@ -10,9 +10,9 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Validator;
 
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
-use Wirecard\ElasticEngine\Gateway\Validator\AddressInterfaceValidator;
+use Wirecard\ElasticEngine\Gateway\Validator\AddressAdapterInterfaceValidator;
 
-class AddressInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
+class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
 {
     private $magentoAddressInterface;
 
@@ -21,7 +21,7 @@ class AddressInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->magentoAddressInterface = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $this->validator = new AddressInterfaceValidator();
+        $this->validator = new AddressAdapterInterfaceValidator();
     }
 
     public function testValidAddressObject()
