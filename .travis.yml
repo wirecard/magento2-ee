@@ -5,12 +5,13 @@ language: php
 env:
   global:
     - COMPOSER_ARGS="--no-interaction"
-    - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/shop-releases.txt
+    - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/compatible-shop-releases.txt
     - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
     - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
     - PATCH_RELEASE="patch"
     - MINOR_RELEASE="minor"
     - MAJOR_RELEASE="major"
+    - MAGENTO2_COMPATIBILITY_FILE=${TRAVIS_BUILD_DIR}/.bin/new-shop-releases.txt
 
 matrix:
   # these stages are allowed to fail
@@ -30,15 +31,15 @@ matrix:
   include:
   - php: 7.1
     if: env(PHRASEAPP_PULL) != '1' AND type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
-  - stage: get-magento2-versions
+  - stage: get-latest-shop-release-versions
     if: type = cron
     php: 7.1
     install: skip
     before_script: skip
-    script: bash .bin/get-magento2-versions.sh
+    script: bash .bin/get-latest-shop-release-versions.sh
     after_script: skip
     after_failure: skip
-  
+
   - &acceptance-test
     stage: acceptance-test
     #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
@@ -51,9 +52,13 @@ matrix:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=1
     install:
-    - export MAGENTO2_VERSION=$(awk "NR==$MAGENTO2_RELEASE_VERSION {print; exit}" ${MAGENTO2_RELEASES_FILE})
+    #   check if files are same or not
+    - cmp --silent ${MAGENTO2_RELEASES_FILE} ${MAGENTO2_COMPATIBILITY_FILE} && export COMPATIBILITY_CHECK=0 || export COMPATIBILITY_CHECK=1
+    #   check from which file to take versions
+    - if [[ ${COMPATIBILITY_CHECK}  == "0" ]]; then export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_RELEASES_FILE}); else export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_COMPATIBILITY_FILE}); fi
     #   get latest release shop extension version from SHOPVERSIONS file
     - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
+    - echo "Testing with Magento2 ${MAGENTO2_VERSION} version."
     - bash .bin/remove-composer-lock-file.sh
     - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
     - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
@@ -62,6 +67,7 @@ matrix:
     after_script: skip
     after_success:
     - bash .bin/upload-logs-and-notify.sh
+    - bash .bin/update-shop-release-versions.sh
     after_failure:
     - bash .bin/upload-logs-and-notify.sh fail
   #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
@@ -99,7 +105,7 @@ matrix:
     - MAGENTO2_RELEASE_VERSION=1
   # if this stage fails, it will not fail the whole build
     - ALLOW_FAIL=1
-    
+
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
     language: ruby
@@ -111,7 +117,7 @@ matrix:
     script:
     - .bin/rake phraseapp:ci_update
     after_script: skip
-  
+
   - stage: phraseapp-check-if-in-sync
     if: type != cron AND type = pull_request
     language: ruby
@@ -123,7 +129,7 @@ matrix:
     script:
     - .bin/rake phraseapp:ci_check_if_in_sync
     after_script: skip
-  
+
   - stage: deploy
     if: tag IS present AND type = push
     language: php
