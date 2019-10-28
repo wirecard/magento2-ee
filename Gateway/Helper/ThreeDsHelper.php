@@ -14,6 +14,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
 use Wirecard\ElasticEngine\Gateway\Validator\QuoteAddressValidator;
+use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -41,25 +42,25 @@ class ThreeDsHelper
     /** @var string */
     private $token;
 
-    /** @var QuoteAddressValidator */
-    private $addressValidator;
+    /** @var ValidatorFactory */
+    private $validatorFactory;
 
     /**
      * ThreeDsHelper constructor.
      * @param AccountInfoFactory $accountInfoFactory
      * @param AccountHolderFactory $accountHolderFactory
-     * @param QuoteAddressValidator $addressValidator
+     * @param ValidatorFactory $validatorFactory
      *
      * @since 2.2.1 added QuoteAddressValidator
      */
     public function __construct(
         AccountInfoFactory $accountInfoFactory,
         AccountHolderFactory $accountHolderFactory,
-        QuoteAddressValidator $addressValidator
+        ValidatorFactory $validatorFactory
     ) {
         $this->accountInfoFactory = $accountInfoFactory;
         $this->accountHolderFactory = $accountHolderFactory;
-        $this->addressValidator = $addressValidator;
+        $this->validatorFactory = $validatorFactory;
         $this->token = null;
     }
 
@@ -149,7 +150,9 @@ class ThreeDsHelper
         $accountHolder->setEmail($address->getEmail());
         $accountHolder->setPhone($address->getTelephone());
 
-        if ($this->addressValidator->validate(['addressObject' => $address])) {
+        /** @var QuoteAddressValidator $quoteAddressValidator */
+        $quoteAddressValidator = $this->validatorFactory->create('QuoteAddressValidator', $address);
+        if ($quoteAddressValidator->validate([])) {
             $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
             if (!empty($address->getStreetLine(2))) {
                 $sdkAddress->setStreet2($address->getStreetLine(2));

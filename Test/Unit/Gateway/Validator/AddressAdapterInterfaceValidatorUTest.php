@@ -16,12 +16,9 @@ class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
 {
     private $magentoAddressInterface;
 
-    private $validator;
-
     public function setUp()
     {
         $this->magentoAddressInterface = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $this->validator = new AddressAdapterInterfaceValidator();
     }
 
     public function testValidAddressObject()
@@ -30,7 +27,8 @@ class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoAddressInterface->method('getCity')->willReturn('Testcity');
         $this->magentoAddressInterface->method('getStreetLine1')->willReturn('Teststreet 1');
 
-        $this->assertTrue($this->validator->validate(['addressObject' => $this->magentoAddressInterface]));
+        $actual = new AddressAdapterInterfaceValidator($this->magentoAddressInterface);
+        $this->assertTrue($actual->validate([]));
     }
 
     public function testEmptyAddressObject()
@@ -39,7 +37,8 @@ class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoAddressInterface->method('getCity')->willReturn('');
         $this->magentoAddressInterface->method('getStreetLine1')->willReturn('');
 
-        $this->assertFalse($this->validator->validate(['addressObject' => $this->magentoAddressInterface]));
+        $actual = new AddressAdapterInterfaceValidator($this->magentoAddressInterface);
+        $this->assertFalse($actual->validate([]));
     }
 
     public function testInvalidAddressObject()
@@ -48,6 +47,7 @@ class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoAddressInterface->method('getCity')->willReturn(null);
         $this->magentoAddressInterface->method('getStreetLine1')->willReturn(null);
 
-        $this->assertFalse($this->validator->validate(['addressObject' => $this->magentoAddressInterface]));
+        $actual = new AddressAdapterInterfaceValidator($this->magentoAddressInterface);
+        $this->assertFalse($actual->validate([]));
     }
 }

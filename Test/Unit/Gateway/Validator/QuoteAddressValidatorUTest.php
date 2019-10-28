@@ -16,12 +16,9 @@ class QuoteAddressValidatorUTest extends \PHPUnit_Framework_TestCase
 {
     private $magentoQuoteAddress;
 
-    private $validator;
-
     public function setUp()
     {
         $this->magentoQuoteAddress = $this->getMockBuilder(Address::class)->disableOriginalConstructor()->getMock();
-        $this->validator = new QuoteAddressValidator();
     }
 
     public function testValidAddressObject()
@@ -30,7 +27,8 @@ class QuoteAddressValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoQuoteAddress->method('getCity')->willReturn('Testcity');
         $this->magentoQuoteAddress->method('getStreetLine')->willReturn('Teststreet 1');
 
-        $this->assertTrue($this->validator->validate(['addressObject' => $this->magentoQuoteAddress]));
+        $actual = new QuoteAddressValidator($this->magentoQuoteAddress);
+        $this->assertTrue($actual->validate([]));
     }
 
     public function testEmptyAddressObject()
@@ -39,7 +37,8 @@ class QuoteAddressValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoQuoteAddress->method('getCity')->willReturn('');
         $this->magentoQuoteAddress->method('getStreetLine')->willReturn('');
 
-        $this->assertFalse($this->validator->validate(['addressObject' => $this->magentoQuoteAddress]));
+        $actual = new QuoteAddressValidator($this->magentoQuoteAddress);
+        $this->assertFalse($actual->validate([]));
     }
 
     public function testInvalidAddressObject()
@@ -48,6 +47,7 @@ class QuoteAddressValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoQuoteAddress->method('getCity')->willReturn(null);
         $this->magentoQuoteAddress->method('getStreetLine')->willReturn(null);
 
-        $this->assertFalse($this->validator->validate(['addressObject' => $this->magentoQuoteAddress]));
+        $actual = new QuoteAddressValidator($this->magentoQuoteAddress);
+        $this->assertFalse($actual->validate([]));
     }
 }

@@ -12,6 +12,7 @@ namespace Wirecard\ElasticEngine\Gateway\Validator;
 /**
  * Abstract Class AbstractValidator
  * @package Wirecard\ElasticEngine\Gateway\Validator
+ * @since 2.2.1
  */
 abstract class AbstractValidator implements ValidatorInterface
 {

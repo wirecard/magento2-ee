@@ -14,9 +14,25 @@ use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 /**
  * Class AddressInterfaceValidator
  * @package Wirecard\ElasticEngine\Gateway\Validator
+ * @since 2.2.1
  */
 class AddressAdapterInterfaceValidator extends AbstractValidator
 {
+    /**
+     * @var AddressAdapterInterface
+     */
+    private $addressAdapter;
+
+    /**
+     * AddressAdapterInterfaceValidator constructor.
+     * @param AddressAdapterInterface $addressAdapter
+     * @since 2.2.1
+     */
+    public function __construct(AddressAdapterInterface $addressAdapter)
+    {
+        $this->addressAdapter = $addressAdapter;
+    }
+
     /**
      * Validation for business related object
      *
@@ -27,12 +43,9 @@ class AddressAdapterInterfaceValidator extends AbstractValidator
     public function validate(array $validationSubject)
     {
         $isValid = true;
-
-        /** @var AddressAdapterInterface $addressObj */
-        $addressObj = $validationSubject['addressObject'];
-        if (empty($addressObj->getCountryId())
-            || empty($addressObj->getCity())
-            || empty($addressObj->getStreetLine1())
+        if (empty($this->addressAdapter->getCountryId())
+            || empty($this->addressAdapter->getCity())
+            || empty($this->addressAdapter->getStreetLine1())
         ) {
             $isValid = false;
         }

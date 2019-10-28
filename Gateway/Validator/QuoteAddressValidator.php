@@ -14,9 +14,25 @@ use Magento\Quote\Model\Quote\Address;
 /**
  * Class QuoteAddressValidator
  * @package Wirecard\ElasticEngine\Gateway\Validator
+ * @since 2.2.1
  */
 class QuoteAddressValidator extends AbstractValidator
 {
+    /**
+     * @var Address
+     */
+    private $address;
+
+    /**
+     * QuoteAddressValidator constructor.
+     * @param Address $address
+     * @since 2.2.1
+     */
+    public function __construct(Address $address)
+    {
+        $this->address = $address;
+    }
+
     /**
      * Validation for business related object
      *
@@ -27,12 +43,9 @@ class QuoteAddressValidator extends AbstractValidator
     public function validate(array $validationSubject)
     {
         $isValid = true;
-
-        /** @var Address $addressObj */
-        $addressObj = $validationSubject['addressObject'];
-        if (empty($addressObj->getCountryId())
-            || empty($addressObj->getCity())
-            || empty($addressObj->getStreetLine(1))
+        if (empty($this->address->getCountryId())
+            || empty($this->address->getCity())
+            || empty($this->address->getStreetLine(1))
         ) {
             $isValid = false;
         }
