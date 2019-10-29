@@ -5,6 +5,9 @@
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
+set -e
+set -x
+
 curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/magento/magento2/releases | jq -r '.[] | .tag_name' | egrep -v [a-zA-Z] | head -n3 > tmp.txt
 # sort versions in descending order
 sort -nr tmp.txt > ${MAGENTO2_COMPATIBILITY_FILE}

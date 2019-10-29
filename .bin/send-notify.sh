@@ -5,6 +5,9 @@
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
+set -e
+set -x
+
 PREVIEW_LINK='https://raw.githack.com/wirecard/reports'
 REPORT_FILE='report.html'
 #choose slack channel depending on the gateway

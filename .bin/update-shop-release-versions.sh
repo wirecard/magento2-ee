@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+set -x
+
 # update compatible-shop-releases.txt if there was a release and we are compatible
 if [[ ${COMPATIBILITY_CHECK}  == "1" ]]; then
     cp ${MAGENTO2_COMPATIBILITY_FILE} ${MAGENTO2_RELEASES_FILE}
