@@ -18,5 +18,5 @@ if [[ $(git diff HEAD ${MAGENTO2_COMPATIBILITY_FILE}) != '' ]]; then
 
     git add  ${MAGENTO2_COMPATIBILITY_FILE}
     git commit -m "${SHOP_SYSTEM_UPDATE_COMMIT}"
-    git push --quiet https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} HEAD:TPWDCEE-5369
+    git push --quiet https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} HEAD:master
 fi

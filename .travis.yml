@@ -46,7 +46,7 @@ matrix:
     #   or when build triggered ad-hoc with special commit message
     #   tests will use extension version = branch which originated pull request
     #   or branch which was defined in ad-hoc trigger in Travis UI
-    if: type != cron
+    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
     php: 7.1
     env:
     - GATEWAY=API-TEST
