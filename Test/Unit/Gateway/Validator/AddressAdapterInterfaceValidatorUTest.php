@@ -28,7 +28,7 @@ class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoAddressInterface->method('getStreetLine1')->willReturn('Teststreet 1');
 
         $actual = new AddressAdapterInterfaceValidator($this->magentoAddressInterface);
-        $this->assertTrue($actual->validate([]));
+        $this->assertTrue($actual->validate());
     }
 
     public function testEmptyAddressObject()
@@ -38,7 +38,7 @@ class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoAddressInterface->method('getStreetLine1')->willReturn('');
 
         $actual = new AddressAdapterInterfaceValidator($this->magentoAddressInterface);
-        $this->assertFalse($actual->validate([]));
+        $this->assertFalse($actual->validate());
     }
 
     public function testInvalidAddressObject()
@@ -48,6 +48,6 @@ class AddressAdapterInterfaceValidatorUTest extends \PHPUnit_Framework_TestCase
         $this->magentoAddressInterface->method('getStreetLine1')->willReturn(null);
 
         $actual = new AddressAdapterInterfaceValidator($this->magentoAddressInterface);
-        $this->assertFalse($actual->validate([]));
+        $this->assertFalse($actual->validate());
     }
 }
