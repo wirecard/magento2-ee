@@ -38,6 +38,7 @@ class QuoteAddressValidator extends AbstractValidator
      *
      * @param array $validationParams
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @since 2.2.1
      */
     public function validate(array $validationParams = [])

@@ -56,7 +56,10 @@ class AccountHolderFactory
         }
 
         $accountHolder = new AccountHolder();
-        $addressInterfaceValidator = $this->validatorFactory->create(Validator::ADDRESS_ADAPTER_INTERFACE, $magentoAddressObj);
+        $addressInterfaceValidator = $this->validatorFactory->create(
+            Validator::ADDRESS_ADAPTER_INTERFACE,
+            $magentoAddressObj
+        );
         if ($addressInterfaceValidator->validate()) {
             $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         }
