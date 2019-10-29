@@ -13,6 +13,7 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
+use Wirecard\ElasticEngine\Gateway\Validator;
 use Wirecard\ElasticEngine\Gateway\Validator\QuoteAddressValidator;
 use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
@@ -151,8 +152,8 @@ class ThreeDsHelper
         $accountHolder->setPhone($address->getTelephone());
 
         /** @var QuoteAddressValidator $quoteAddressValidator */
-        $quoteAddressValidator = $this->validatorFactory->create('QuoteAddressValidator', $address);
-        if ($quoteAddressValidator->validate([])) {
+        $quoteAddressValidator = $this->validatorFactory->create(Validator::QUOTE_ADDRESS, $address);
+        if ($quoteAddressValidator->validate()) {
             $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
             if (!empty($address->getStreetLine(2))) {
                 $sdkAddress->setStreet2($address->getStreetLine(2));

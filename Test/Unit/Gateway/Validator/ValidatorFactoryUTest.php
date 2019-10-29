@@ -10,6 +10,7 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
+use Wirecard\ElasticEngine\Gateway\Validator;
 use Wirecard\ElasticEngine\Gateway\Validator\AddressAdapterInterfaceValidator;
 use Wirecard\ElasticEngine\Gateway\Validator\QuoteAddressValidator;
 use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
@@ -32,7 +33,7 @@ class ValidatorFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new QuoteAddressValidator($magentoQuoteAddress);
 
         $factory = new ValidatorFactory();
-        $actual = $factory->create('QuoteAddressValidator', $magentoQuoteAddress);
+        $actual = $factory->create(Validator::QUOTE_ADDRESS, $magentoQuoteAddress);
 
         $this->assertEquals($expected, $actual);
     }
@@ -43,7 +44,7 @@ class ValidatorFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected = new AddressAdapterInterfaceValidator($magentoAddressAdapterInterface);
 
         $factory = new ValidatorFactory();
-        $actual = $factory->create('AddressAdapterInterfaceValidator', $magentoAddressAdapterInterface);
+        $actual = $factory->create(Validator::ADDRESS_ADAPTER_INTERFACE, $magentoAddressAdapterInterface);
 
         $this->assertEquals($expected, $actual);
     }
@@ -57,6 +58,6 @@ class ValidatorFactoryUTest extends \PHPUnit_Framework_TestCase
         $magentoQuoteAddress = $this->getMockBuilder(\Magento\Quote\Model\Quote\Address::class)->disableOriginalConstructor()->getMock();
 
         $factory = new ValidatorFactory();
-        $actual = $factory->create('InvalidValidator', $magentoQuoteAddress);
+        $actual = $factory->create('Invalid', $magentoQuoteAddress);
     }
 }

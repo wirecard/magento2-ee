@@ -36,11 +36,11 @@ class AddressAdapterInterfaceValidator extends AbstractValidator
     /**
      * Validation for business related object
      *
-     * @param array $validationSubject
+     * @param array $validationParams
      * @return bool
      * @since 2.2.1
      */
-    public function validate(array $validationSubject)
+    public function validate(array $validationParams = [])
     {
         $isValid = true;
         if (empty($this->addressAdapter->getCountryId())

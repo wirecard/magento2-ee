@@ -7,21 +7,17 @@
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\ElasticEngine\Gateway\Validator;
+namespace Wirecard\ElasticEngine\Gateway;
 
 /**
- * Interface ValidatorInterface
+ * Class Validator
  * @package Wirecard\ElasticEngine\Gateway\Validator
  * @since 2.2.1
  */
-interface ValidatorInterface
+class Validator
 {
-    /**
-     * Validation for business related object
-     *
-     * @param array $validationParams
-     * @return bool
-     * @since 2.2.1
-     */
-    public function validate(array $validationParams);
+    const NAMESPACE_SEPARATOR = '\\';
+    const VALIDATOR = 'Validator';
+    const QUOTE_ADDRESS = 'QuoteAddress';
+    const ADDRESS_ADAPTER_INTERFACE = 'AddressAdapterInterface';
 }

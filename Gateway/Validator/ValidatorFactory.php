@@ -9,6 +9,8 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Validator;
 
+use Wirecard\ElasticEngine\Gateway\Validator;
+
 /**
  * Class ValidatorFactory
  * @package Wirecard\ElasticEngine\Gateway\Validator
@@ -16,20 +18,18 @@ namespace Wirecard\ElasticEngine\Gateway\Validator;
  */
 class ValidatorFactory
 {
-    const VALIDATOR_NAMESPACE = "\\Wirecard\\ElasticEngine\\Gateway\\Validator\\";
-
     /**
-     * Create validator with specific type
+     * Create validator with specific type within validator namespace
      *
      * @param string $type
      * @param mixed $object
      * @return AbstractValidator
      * @throws \InvalidArgumentException
+     * @since 2.2.1
      */
     public function create($type, $object)
     {
-        $class = self::VALIDATOR_NAMESPACE . $type;
-
+        $class = __NAMESPACE__ . Validator::NAMESPACE_SEPARATOR . $type . Validator::VALIDATOR;
         if (class_exists($class)) {
             return new $class($object);
         }
