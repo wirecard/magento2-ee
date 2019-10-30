@@ -2,7 +2,7 @@
   {
     "release": "2.2.1",
     "shopsystem": "Magento Community Edition",
-    "tested": "2.3.2",
+    "tested": "2.3.3",
     "compatibility": "2.1.4",
     "changelog": [
       "Prevent infinite recursion for fallback translations #225",
