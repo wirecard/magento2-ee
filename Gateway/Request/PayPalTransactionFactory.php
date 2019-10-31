@@ -68,6 +68,8 @@ class PayPalTransactionFactory extends TransactionFactory
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @since 2.2.1 Remove Hardcoded shipping setter
+     *              Add send_additional check
      */
     public function create($commandSubject)
     {
@@ -79,7 +81,6 @@ class PayPalTransactionFactory extends TransactionFactory
         $billingAddress = $order->getBillingAddress();
 
         $this->transaction->setAccountHolder($this->accountHolderFactory->create($billingAddress));
-        $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
         $this->transaction->setOrderNumber($this->orderId);
         $this->transaction->setOrderDetail(sprintf(
             '%s %s %s',
@@ -88,8 +89,12 @@ class PayPalTransactionFactory extends TransactionFactory
             $billingAddress->getLastname()
         ));
 
-        if ($this->methodConfig->getValue('send_shopping_basket')) {
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_BASKET)) {
             $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        }
+
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_ADDITIONAL)) {
+            $this->setAdditionalInformation($order);
         }
 
         return $this->transaction;

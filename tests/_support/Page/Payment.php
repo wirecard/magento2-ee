@@ -50,12 +50,12 @@ class Payment extends Base
         $data_field_values = $I->getDataFromDataFile('tests/_data/CardData.json');
         $I->wait(5);
         $I->preparedSelectOption($this->getElement('Wirecard Credit Card'), 'Wirecard Credit Card');
-        $I->wait(15);
+        $I->wait(20);
         try {
             $this->switchFrame();
         } catch (UnknownServerException $e) {
             $I->reloadPage();
-            $I->wait(15);
+            $I->wait(20);
             $this->switchFrame();
         }
         $I->preparedFillField($this->getElement('Credit Card Last Name'), $data_field_values->last_name);

@@ -25,6 +25,7 @@ class AddressFactory
      */
     public function create($magentoAddressObj)
     {
+        $address = null;
         if (!$magentoAddressObj instanceof AddressAdapterInterface) {
             throw new \InvalidArgumentException('Address data object should be provided.');
         }
@@ -43,6 +44,7 @@ class AddressFactory
         if (strlen($magentoAddressObj->getStreetLine2())) {
             $address->setStreet2($magentoAddressObj->getStreetLine2());
         }
+
         return $address;
     }
 }

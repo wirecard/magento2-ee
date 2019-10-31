@@ -73,14 +73,14 @@ matrix:
   #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
   #   tests will use extension version = branch which originated pull request
   - <<: *acceptance-test
-    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
+    if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=2
   #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
   #   tests will use extension version = branch which originated pull request
   - <<: *acceptance-test
-    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
+    if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
     env:
     - GATEWAY=API-TEST
     - MAGENTO2_RELEASE_VERSION=3

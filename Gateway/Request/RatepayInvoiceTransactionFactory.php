@@ -78,10 +78,15 @@ class RatepayInvoiceTransactionFactory extends TransactionFactory
      * @return Transaction
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
+     *
+     * @since 2.2.1 Overwrite redirect urls for Ratepay mapping
      */
     public function create($commandSubject)
     {
         parent::create($commandSubject);
+
+        // Special handling for ratepay name mapping
+        $this->addRedirectUrlsToTransaction(RatepayInvoiceTransaction::NAME);
 
         /** @var PaymentDataObjectInterface $payment */
         $payment = $commandSubject[self::PAYMENT];

@@ -279,7 +279,7 @@ class AcceptanceTester extends ActorExtendedWithWrappers
      */
     public function iSeeInTransactionTable($paymentAction)
     {
-        $this->waitUntil(60, [$this, 'checkPaymentActionInTransactionTable'], [$paymentAction]);
+        $this->waitUntil(80, [$this, 'checkPaymentActionInTransactionTable'], [$paymentAction]);
         $this->assertEquals($this->checkPaymentActionInTransactionTable([$paymentAction]), true);
     }
 }

@@ -12,6 +12,7 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
@@ -21,8 +22,9 @@ use Magento\Sales\Api\OrderRepositoryInterface;
  * Class Cancel
  * @package Wirecard\ElasticEngine\Controller\Frontend
  */
-class Cancel extends Action
+class Cancel extends Action implements CsrfAwareActionInterface
 {
+    use NoCsrfTrait;
 
     /**
      * @var Session
