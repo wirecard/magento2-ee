@@ -39,6 +39,8 @@ class Redirect extends Action implements CsrfAwareActionInterface
 
     const REDIRECT_URL = 'redirect-url';
 
+    const CHECKOUT_ONEPAGE_SUCCESS = 'checkout/onepage/success';
+
     /**
      * @var Session
      */
@@ -172,7 +174,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
         $response = $this->transactionService->handleResponse($responseParams);
 
         if ($response instanceof SuccessResponse) {
-            $this->setRedirectPath($resultRedirect, 'checkout/onepage/success');
+            $this->setRedirectPath($resultRedirect, self::CHECKOUT_ONEPAGE_SUCCESS);
             return $resultRedirect;
         }
         $this->handleFailedResponse();
@@ -203,7 +205,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
         $this->paymentHelper->addTransaction($order->getPayment(), $response, true, Helper\Payment::POSTFIX_ORDER);
 
         if ($response instanceof SuccessResponse) {
-            return $this->getRedirectData($result, 'onepage/success');
+            return $this->getRedirectData($result, self::CHECKOUT_ONEPAGE_SUCCESS);
         }
         $this->handleFailedResponse();
 
