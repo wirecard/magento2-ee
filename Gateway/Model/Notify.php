@@ -309,6 +309,8 @@ class Notify
 
             case SdkTransaction::TYPE_REFUND_DEBIT:
             case SdkTransaction::TYPE_REFUND_CAPTURE:
+            case SdkTransaction::TYPE_REFUND_PURCHASE:
+            case SdkTransaction::TYPE_CREDIT:
                 $transactionType = TransactionInterface::TYPE_REFUND;
                 break;
 
@@ -317,10 +319,15 @@ class Notify
                 break;
 
             case SdkTransaction::TYPE_VOID_AUTHORIZATION:
+            case SdkTransaction::TYPE_VOID_PURCHASE:
+            case SdkTransaction::TYPE_VOID_DEBIT:
                 $transactionType = TransactionInterface::TYPE_VOID;
                 break;
 
             case SdkTransaction::TYPE_CAPTURE_AUTHORIZATION:
+            case SdkTransaction::TYPE_DEBIT:
+            case SdkTransaction::TYPE_PURCHASE:
+            case SdkTransaction::TYPE_DEPOSIT:
                 $transactionType = TransactionInterface::TYPE_CAPTURE;
                 break;
         }
