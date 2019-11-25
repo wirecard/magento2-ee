@@ -88,9 +88,10 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         $this->transaction->setCustomFields($customFields);
         $customFields->add(new CustomField('orderId', $this->orderId));
 
+        $merchantRtnStrng = $this->createMerchantRtnStrng($this->methodConfig->getValue('zapp_merchant_return_string'));
         $customFields->add($this->makeCustomField(
             'MerchantRtnStrng',
-            $this->methodConfig->getValue('zapp_merchant_return_string')
+            $merchantRtnStrng
         ));
         $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
         $customFields->add($this->makeCustomField('DeliveryType', 'DELTAD'));
@@ -154,5 +155,22 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         $customField->setPrefix('zapp.in.');
 
         return $customField;
+    }
+
+    /**
+     * Create default MerchantRtnStrng for empty setting
+     *
+     * @param $value
+     * @return string
+     * @since 3.0.0
+     */
+    private function createMerchantRtnStrng($value)
+    {
+        $customMerchantRtnStrng = $value;
+        if (empty($value)) {
+            $customMerchantRtnStrng = $this->formatRedirectUrls($this->transaction->getConfigKey(), 'redirect');
+        }
+
+        return $customMerchantRtnStrng;
     }
 }
