@@ -243,10 +243,11 @@ class Redirect extends Action implements CsrfAwareActionInterface
      */
     private function getRedirectData(Json $resultJson, $path)
     {
+        $routeUrl = $this->context->getUrl()->getRouteUrl();
         $data = [
             self::REDIRECT_URL => null
         ];
-        $data[self::REDIRECT_URL] = $this->context->getUrl()->getRedirectUrl($path);
+        $data[self::REDIRECT_URL] = $routeUrl . $this->context->getUrl()->getRedirectUrl($path);
         $resultJson->setData($data);
         return $resultJson;
     }
