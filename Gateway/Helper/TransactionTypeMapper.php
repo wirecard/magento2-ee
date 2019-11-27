@@ -9,8 +9,11 @@
 
 namespace Wirecard\ElasticEngine\Gateway\Helper;
 
-use Magento\Sales\Api\Data\TransactionInterface;
-use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
+use Magento\Sales\Api\Data\TransactionInterface as MagentoTransactionInterface;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Authorization;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Purchase;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Void;
 
 /**
  * Class TransactionTypeMapper
@@ -20,91 +23,57 @@ use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
  */
 class TransactionTypeMapper
 {
-    private $type;
+    /** @var string */
+    private $transactionType;
 
+    /**
+     * TransactionTypeMapper constructor.
+     * @param string $transactionType
+     * @since 3.0.0
+     */
     public function __construct($transactionType)
     {
-        $this->type = $transactionType;
+        $this->transactionType = $transactionType;
     }
 
     /**
-     * @param $transactionType
+     * Map TransactionTypeInterface to MagentoTransactionInterface type
+     * @return string
      * @throws \Exception
+     * @since 3.0.0
      */
     public function getMappedTransactionType()
     {
-        return $this->getMagentoTransactionType();
+        if ($this->isTransactionType(Authorization::getTransactionTypes())) {
+            return MagentoTransactionInterface::TYPE_AUTH;
+        }
+
+        if ($this->isTransactionType(Purchase::getTransactionTypes())) {
+            return MagentoTransactionInterface::TYPE_CAPTURE;
+        }
+
+        if ($this->isTransactionType(Refund::getTransactionTypes())) {
+            return MagentoTransactionInterface::TYPE_REFUND;
+        }
+
+        if ($this->isTransactionType(Void::getTransactionTypes())) {
+            return MagentoTransactionInterface::TYPE_VOID;
+        }
+
+        if ($this->transactionType === 'check-payer-response') {
+            return MagentoTransactionInterface::TYPE_PAYMENT;
+        }
+
+        throw new \Exception("Unmappable transaction type: " . $this->transactionType);
     }
 
     /**
-     * @return string
-     * @throws \Exception
+     * @param array $mappableTransactionTypes
+     * @return bool
+     * @since 3.0.0
      */
-    private function getMagentoTransactionType()
+    private function isTransactionType($mappableTransactionTypes)
     {
-        if ($this->isAuthorization()) {
-            return TransactionInterface::TYPE_AUTH;
-        }
-
-        if ($this->isCapture()) {
-            return TransactionInterface::TYPE_CAPTURE;
-        }
-
-        if ($this->isRefund()) {
-            return TransactionInterface::TYPE_REFUND;
-        }
-
-        if ($this->isVoid()) {
-            return TransactionInterface::TYPE_VOID;
-        }
-
-        if ($this->type === 'check-payer-response') {
-            return TransactionInterface::TYPE_PAYMENT;
-        }
-
-        throw new \Exception("Unsupported Transaction Type!");
-    }
-
-    private function isAuthorization()
-    {
-        return in_array($this->type, [SdkTransaction::TYPE_AUTHORIZATION]);
-    }
-
-    private function isCapture()
-    {
-        return in_array(
-            $this->type,
-            [
-                SdkTransaction::TYPE_DEPOSIT,
-                SdkTransaction::TYPE_PURCHASE,
-                SdkTransaction::TYPE_DEBIT,
-                SdkTransaction::TYPE_CAPTURE_AUTHORIZATION
-            ]
-        );
-    }
-
-    private function isRefund()
-    {
-        return in_array(
-            $this->type,
-            [
-                SdkTransaction::TYPE_REFUND_PURCHASE,
-                SdkTransaction::TYPE_REFUND_DEBIT,
-                SdkTransaction::TYPE_REFUND_CAPTURE,
-                SdkTransaction::TYPE_CREDIT
-            ]
-        );
-    }
-
-    private function isVoid()
-    {
-        return in_array(
-            $this->type,
-            [
-                SdkTransaction::TYPE_VOID_DEBIT,
-                SdkTransaction::TYPE_VOID_PURCHASE,
-                SdkTransaction::TYPE_VOID_AUTHORIZATION
-            ]
-        );
+        return in_array($this->transactionType, $mappableTransactionTypes);
     }
 }

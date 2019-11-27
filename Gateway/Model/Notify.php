@@ -271,6 +271,7 @@ class Notify
     /**
      * @param Order\Payment $payment
      * @param SuccessResponse $response
+     * @throws \Exception
      *
      * @return Order\Payment
      */
