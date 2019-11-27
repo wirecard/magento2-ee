@@ -12,12 +12,12 @@ namespace Wirecard\ElasticEngine\Gateway\Helper\TransactionType;
 use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
 
 /**
- * Class Void
+ * Class Cancel
  *
  * @since 3.0.0
  * @package Wirecard\ElasticEngine\Gateway\Helper\TransactionType
  */
-class Void implements TransactionTypeInterface
+class Cancel implements TransactionTypeInterface
 {
     /**
      * @return array

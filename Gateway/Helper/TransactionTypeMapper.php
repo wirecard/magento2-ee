@@ -13,7 +13,7 @@ use Magento\Sales\Api\Data\TransactionInterface as MagentoTransactionInterface;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Authorization;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Purchase;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund;
-use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Void;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Cancel;
 
 /**
  * Class TransactionTypeMapper
@@ -56,7 +56,7 @@ class TransactionTypeMapper
             return MagentoTransactionInterface::TYPE_REFUND;
         }
 
-        if ($this->isTransactionType(Void::getTransactionTypes())) {
+        if ($this->isTransactionType(Cancel::getTransactionTypes())) {
             return MagentoTransactionInterface::TYPE_VOID;
         }
 
