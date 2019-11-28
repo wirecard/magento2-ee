@@ -251,7 +251,7 @@ class Creditcard extends Action
         $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
-        $currency         = $orderDto->quote->getBaseCurrencyCode();
+        $currency = $orderDto->quote->getQuoteCurrencyCode();
         $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
         $this->addOrderIdToTransaction($orderDto);
@@ -318,7 +318,7 @@ class Creditcard extends Action
     private function addOrderItemsToBasket(OrderDto $orderDto)
     {
         $items    = $orderDto->quote->getAllVisibleItems();
-        $currency = $orderDto->quote->getBaseCurrencyCode();
+        $currency = $orderDto->quote->getQuoteCurrencyCode();
         foreach ($items as $orderItem) {
             $amount    = new Amount((float)$orderItem->getPriceInclTax(), $currency);
             $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
