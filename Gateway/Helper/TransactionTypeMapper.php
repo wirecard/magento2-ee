@@ -11,9 +11,9 @@ namespace Wirecard\ElasticEngine\Gateway\Helper;
 
 use Magento\Sales\Api\Data\TransactionInterface as MagentoTransactionInterface;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Authorization;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Cancel;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Purchase;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund;
-use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Cancel;
 
 /**
  * Class TransactionTypeMapper
