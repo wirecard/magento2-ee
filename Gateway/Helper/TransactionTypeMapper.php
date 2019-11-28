@@ -39,7 +39,6 @@ class TransactionTypeMapper
     /**
      * Map TransactionTypeInterface to MagentoTransactionInterface type
      * @return string
-     * @throws \Exception
      * @since 3.0.0
      */
     public function getMappedTransactionType()
@@ -64,7 +63,7 @@ class TransactionTypeMapper
             return MagentoTransactionInterface::TYPE_PAYMENT;
         }
 
-        throw new \Exception("Unmappable transaction type: " . $this->transactionType);
+        return $this->transactionType;
     }
 
     /**

@@ -271,7 +271,6 @@ class Notify
     /**
      * @param Order\Payment $payment
      * @param SuccessResponse $response
-     * @throws \Exception
      *
      * @return Order\Payment
      */
@@ -299,7 +298,10 @@ class Notify
             $transactionType = TransactionInterface::TYPE_CAPTURE;
         }
 
-        $transactionType = $this->getMappedTransactionType($transactionType);
+        // map ee type to magento types, unknown types are leading to an error:
+        // "We found an unsupported transaction type..."
+        $transactionType = $this->mapTransactionType($transactionType);
+
         // Payment for this transaction type must be set explicit to NOT closed
         // @TODO: Find root cause for this special case
         if ($transactionType === TransactionInterface::TYPE_AUTH) {
@@ -313,9 +315,8 @@ class Notify
     /**
      * @param $transactionType
      * @return string
-     * @throws \Exception
      */
-    private function getMappedTransactionType($transactionType)
+    private function mapTransactionType($transactionType)
     {
         $transactionMapper = new Helper\TransactionTypeMapper($transactionType);
 
