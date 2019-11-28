@@ -68,26 +68,23 @@ class TransactionTypeMapper
      */
     public function getMappedTransactionType($transactionType)
     {
+        $mappedTransactionType = $transactionType;
         if (in_array($transactionType, $this->authorization->getTransactionTypes())) {
-            return MagentoTransactionInterface::TYPE_AUTH;
+            $mappedTransactionType = MagentoTransactionInterface::TYPE_AUTH;
         }
-
         if (in_array($transactionType, $this->purchase->getTransactionTypes())) {
-            return MagentoTransactionInterface::TYPE_CAPTURE;
+            $mappedTransactionType = MagentoTransactionInterface::TYPE_CAPTURE;
         }
-
         if (in_array($transactionType, $this->refund->getTransactionTypes())) {
-            return MagentoTransactionInterface::TYPE_REFUND;
+            $mappedTransactionType = MagentoTransactionInterface::TYPE_REFUND;
         }
-
         if (in_array($transactionType, $this->cancel->getTransactionTypes())) {
-            return MagentoTransactionInterface::TYPE_VOID;
+            $mappedTransactionType = MagentoTransactionInterface::TYPE_VOID;
         }
-
         if ($transactionType === 'check-payer-response') {
-            return MagentoTransactionInterface::TYPE_PAYMENT;
+            $mappedTransactionType = MagentoTransactionInterface::TYPE_PAYMENT;
         }
 
-        return $transactionType;
+        return $mappedTransactionType;
     }
 }
