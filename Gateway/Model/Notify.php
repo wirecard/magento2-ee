@@ -301,10 +301,6 @@ class Notify
         }
 
         $transactionType = $response->getTransactionType();
-        if ($this->canCaptureInvoice) {
-            $transactionType = TransactionInterface::TYPE_CAPTURE;
-        }
-
         // map ee type to magento types, unknown types are leading to an error:
         // "We found an unsupported transaction type..."
         $transactionType = $this->mapTransactionType($transactionType);
@@ -357,10 +353,10 @@ class Notify
      */
     private function setCanCaptureInvoice($transactionType)
     {
+        $this->canCaptureInvoice = false;
+
         if ($transactionType === 'debit' || $transactionType === 'purchase') {
             $this->canCaptureInvoice = true;
-        } else {
-            $this->canCaptureInvoice = false;
         }
     }
 
