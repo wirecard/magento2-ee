@@ -12,7 +12,7 @@ namespace Wirecard\ElasticEngine\Gateway\Helper\TransactionType;
 /**
  * Interface TransactionTypeInterface
  *
- * @since 3.0.0
+ * @since 2.2.2
  * @package Wirecard\ElasticEngine\Gateway\Helper\TransactionType
  */
 interface TransactionTypeInterface

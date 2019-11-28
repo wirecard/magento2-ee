@@ -18,7 +18,7 @@ use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund;
 /**
  * Class TransactionTypeMapper
  *
- * @since 3.0.0
+ * @since 2.2.2
  * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class TransactionTypeMapper
@@ -46,7 +46,7 @@ class TransactionTypeMapper
      * @param Purchase $purchase
      * @param Refund $refund
      * @param Cancel $cancel
-     * @since 3.0.0
+     * @since 2.2.2
      */
     public function __construct(
         Authorization $authorization,
@@ -64,7 +64,7 @@ class TransactionTypeMapper
      * Map TransactionTypeInterface to MagentoTransactionInterface type
      * @param string $transactionType
      * @return string
-     * @since 3.0.0
+     * @since 2.2.2
      */
     public function getMappedTransactionType($transactionType)
     {

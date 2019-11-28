@@ -14,14 +14,14 @@ use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
 /**
  * Class Refund
  *
- * @since 3.0.0
+ * @since 2.2.2
  * @package Wirecard\ElasticEngine\Gateway\Helper\TransactionType
  */
 class Refund implements TransactionTypeInterface
 {
     /**
      * @return array
-     * @since 3.0.0
+     * @since 2.2.2
      */
     public function getTransactionTypes()
     {

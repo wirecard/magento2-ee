@@ -108,8 +108,10 @@ class Notify
      * @var EncryptorInterface
      */
     private $encryptor;
+
     /**
      * @var Helper\TransactionTypeMapper
+     * @since 2.2.2
      */
     private $transactionTypeMapper;
 
@@ -130,6 +132,7 @@ class Notify
      * @param Helper\TransactionTypeMapper $transactionTypeMapper
      *
      * @since 2.0.1 Add PaymentTokenResourceModel
+     * @since 2.2.2 Add TransactionTypeMapper
      */
     public function __construct(
         TransactionServiceFactory $transactionServiceFactory,
@@ -303,7 +306,7 @@ class Notify
         $transactionType = $response->getTransactionType();
         // map ee type to magento types, unknown types are leading to an error:
         // "We found an unsupported transaction type..."
-        $transactionType = $this->mapTransactionType($transactionType);
+        $transactionType = $this->transactionTypeMapper->getMappedTransactionType($transactionType);
 
         // Payment for this transaction type must be set explicit to NOT closed
         // @TODO: Find root cause for this special case
@@ -313,16 +316,6 @@ class Notify
         $payment->addTransaction($transactionType);
 
         return $payment;
-    }
-
-    /**
-     * @param $transactionType
-     * @return string
-     * @since 3.0.0
-     */
-    private function mapTransactionType($transactionType)
-    {
-        return $this->transactionTypeMapper->getMappedTransactionType($transactionType);
     }
 
     /**
