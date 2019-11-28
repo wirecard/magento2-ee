@@ -23,17 +23,38 @@ use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund;
  */
 class TransactionTypeMapper
 {
-    /** @var string */
-    private $transactionType;
+    /**
+     * @var Authorization
+     */
+    private $authorization;
+    /**
+     * @var Purchase
+     */
+    private $purchase;
+    /**
+     * @var Refund
+     */
+    private $refund;
+    /**
+     * @var Cancel
+     */
+    private $cancel;
 
     /**
      * TransactionTypeMapper constructor.
-     * @param string $transactionType
      * @since 3.0.0
      */
-    public function __construct($transactionType)
+    public function __construct(
+        Authorization $authorization,
+        Purchase $purchase,
+        Refund $refund,
+        Cancel $cancel
+    )
     {
-        $this->transactionType = $transactionType;
+        $this->authorization = $authorization;
+        $this->purchase = $purchase;
+        $this->refund = $refund;
+        $this->cancel = $cancel;
     }
 
     /**
@@ -41,29 +62,29 @@ class TransactionTypeMapper
      * @return string
      * @since 3.0.0
      */
-    public function getMappedTransactionType()
+    public function getMappedTransactionType($transactionType)
     {
-        if ($this->isTransactionType(Authorization::getTransactionTypes())) {
+        if ($this->isTransactionType($this->authorization->getTransactionTypes(), $transactionType)) {
             return MagentoTransactionInterface::TYPE_AUTH;
         }
 
-        if ($this->isTransactionType(Purchase::getTransactionTypes())) {
+        if ($this->isTransactionType($this->purchase->getTransactionTypes(), $transactionType)) {
             return MagentoTransactionInterface::TYPE_CAPTURE;
         }
 
-        if ($this->isTransactionType(Refund::getTransactionTypes())) {
+        if ($this->isTransactionType($this->refund->getTransactionTypes(), $transactionType)) {
             return MagentoTransactionInterface::TYPE_REFUND;
         }
 
-        if ($this->isTransactionType(Cancel::getTransactionTypes())) {
+        if ($this->isTransactionType($this->cancel->getTransactionTypes(), $transactionType)) {
             return MagentoTransactionInterface::TYPE_VOID;
         }
 
-        if ($this->transactionType === 'check-payer-response') {
+        if ($transactionType === 'check-payer-response') {
             return MagentoTransactionInterface::TYPE_PAYMENT;
         }
 
-        return $this->transactionType;
+        return $transactionType;
     }
 
     /**
@@ -71,8 +92,8 @@ class TransactionTypeMapper
      * @return bool
      * @since 3.0.0
      */
-    private function isTransactionType($mappableTransactionTypes)
+    private function isTransactionType($mappableTransactionTypes, $transactionType)
     {
-        return in_array($this->transactionType, $mappableTransactionTypes);
+        return in_array($transactionType, $mappableTransactionTypes);
     }
 }

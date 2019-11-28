@@ -20,5 +20,5 @@ interface TransactionTypeInterface
     /**
      * @return array
      */
-    public static function getTransactionTypes();
+    public function getTransactionTypes();
 }

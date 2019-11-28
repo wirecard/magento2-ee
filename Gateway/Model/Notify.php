@@ -108,6 +108,10 @@ class Notify
      * @var EncryptorInterface
      */
     private $encryptor;
+    /**
+     * @var Helper\TransactionTypeMapper
+     */
+    private $transactionTypeMapper;
 
     /**
      * Notify constructor.
@@ -123,6 +127,7 @@ class Notify
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
+     * @param Helper\TransactionTypeMapper $transactionTypeMapper
      *
      * @since 2.0.1 Add PaymentTokenResourceModel
      */
@@ -137,7 +142,8 @@ class Notify
         PaymentTokenInterfaceFactory $paymentTokenFactory,
         PaymentTokenManagementInterface $paymentTokenManagement,
         PaymentTokenResourceModel $paymentTokenResourceModel,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        Helper\TransactionTypeMapper $transactionTypeMapper
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
@@ -151,6 +157,7 @@ class Notify
         $this->paymentTokenManagement = $paymentTokenManagement;
         $this->paymentTokenResourceModel = $paymentTokenResourceModel;
         $this->encryptor = $encryptor;
+        $this->transactionTypeMapper = $transactionTypeMapper;
     }
 
     /**
@@ -318,9 +325,7 @@ class Notify
      */
     private function mapTransactionType($transactionType)
     {
-        $transactionMapper = new Helper\TransactionTypeMapper($transactionType);
-
-        return $transactionMapper->getMappedTransactionType();
+        return $this->transactionTypeMapper->getMappedTransactionType($transactionType);
     }
 
     /**

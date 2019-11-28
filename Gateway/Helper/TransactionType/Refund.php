@@ -23,7 +23,7 @@ class Refund implements TransactionTypeInterface
      * @return array
      * @since 3.0.0
      */
-    public static function getTransactionTypes()
+    public function getTransactionTypes()
     {
         return [
             SdkTransaction::TYPE_REFUND_PURCHASE,
