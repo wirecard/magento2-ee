@@ -322,6 +322,7 @@ class Notify
     /**
      * @param $transactionType
      * @return string
+     * @since 3.0.0
      */
     private function mapTransactionType($transactionType)
     {

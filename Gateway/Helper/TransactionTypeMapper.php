@@ -42,6 +42,10 @@ class TransactionTypeMapper
 
     /**
      * TransactionTypeMapper constructor.
+     * @param Authorization $authorization
+     * @param Purchase $purchase
+     * @param Refund $refund
+     * @param Cancel $cancel
      * @since 3.0.0
      */
     public function __construct(
@@ -49,8 +53,7 @@ class TransactionTypeMapper
         Purchase $purchase,
         Refund $refund,
         Cancel $cancel
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->purchase = $purchase;
         $this->refund = $refund;
@@ -59,6 +62,7 @@ class TransactionTypeMapper
 
     /**
      * Map TransactionTypeInterface to MagentoTransactionInterface type
+     * @param string $transactionType
      * @return string
      * @since 3.0.0
      */
@@ -89,6 +93,7 @@ class TransactionTypeMapper
 
     /**
      * @param array $mappableTransactionTypes
+     * @param string $transactionType
      * @return bool
      * @since 3.0.0
      */
