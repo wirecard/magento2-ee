@@ -30,6 +30,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 class PayByBankAppTransactionFactory extends TransactionFactory
 {
     const REFUND_OPERATION = Operation::CANCEL;
+    const CONFIG_MERCHANT_RETURN_STRING = 'zapp_merchant_return_string';
     const PBBA_DEVICE_DEFAULT = 'other';
     const PBBA_MERCHANT_RETURN_STRING = 'MerchantRtnStrng';
     const PBBA_TRANSACTION_TYPE = 'TxType';
@@ -155,10 +156,9 @@ class PayByBankAppTransactionFactory extends TransactionFactory
      */
     private function addMandatoryPaymentCustomFields($customFields)
     {
-        $merchantRtnStrng = $this->createMerchantRtnStrng($this->methodConfig->getValue('zapp_merchant_return_string'));
         $customFields->add($this->makeCustomField(
             self::PBBA_MERCHANT_RETURN_STRING,
-            $merchantRtnStrng
+            $this->fetchMerchantReturnString()
         ));
         $customFields->add($this->makeCustomField(self::PBBA_TRANSACTION_TYPE, self::PBBA_TRANSACTION_TYPE_PAYMENT));
         $customFields->add($this->makeCustomField(self::PBBA_DELIVERY_TYPE, self::PBBA_DELIVERY_TYPE_DEFAULT));
@@ -169,6 +169,7 @@ class PayByBankAppTransactionFactory extends TransactionFactory
     /**
      * @param string $userAgent
      * @return Device
+     * @since 2.2.2
      */
     private function createDevice($userAgent)
     {
@@ -185,19 +186,16 @@ class PayByBankAppTransactionFactory extends TransactionFactory
     }
 
     /**
-     * Create default MerchantRtnStrng for empty setting
-     *
-     * @param $value
      * @return string
-     * @since 3.0.0
+     * @since 2.2.2
      */
-    private function createMerchantRtnStrng($value)
+    private function fetchMerchantReturnString()
     {
-        $customMerchantRtnStrng = $value;
-        if (empty($value)) {
-            $customMerchantRtnStrng = $this->formatRedirectUrls($this->transaction->getConfigKey(), 'redirect');
+        $customMerchantReturnString = $this->methodConfig->getValue(self::CONFIG_MERCHANT_RETURN_STRING);
+        if (empty($customMerchantReturnString)) {
+            $customMerchantReturnString = $this->formatRedirectUrls($this->transaction->getConfigKey(), 'redirect');
         }
 
-        return $customMerchantRtnStrng;
+        return $customMerchantReturnString;
     }
 }
