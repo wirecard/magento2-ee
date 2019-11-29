@@ -237,18 +237,19 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * Create redirect data for json ResultFactory with given path
      *
      * @param Json $resultJson
-     * @param $path
+     * @param string $path
      * @return Json
      * @since 1.5.2
+     * @since 2.2.2 add routeUrl for fully qualified RedirectUrl
      */
     private function getRedirectData(Json $resultJson, $path)
     {
         $routeUrl = $this->context->getUrl()->getRouteUrl();
         $data = [
-            self::REDIRECT_URL => null
+            self::REDIRECT_URL => $routeUrl . $this->context->getUrl()->getRedirectUrl($path)
         ];
-        $data[self::REDIRECT_URL] = $routeUrl . $this->context->getUrl()->getRedirectUrl($path);
         $resultJson->setData($data);
+
         return $resultJson;
     }
 }
