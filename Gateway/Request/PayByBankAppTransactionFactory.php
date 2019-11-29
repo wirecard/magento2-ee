@@ -92,7 +92,7 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         parent::create($commandSubject);
 
         $userAgent = $this->request->getServer('HTTP_USER_AGENT');
-        $customFields = new CustomFieldCollection();
+        $customFields = $this->transaction->getCustomFields();
         $customFields->add(new CustomField('orderId', $this->orderId));
 
         $this->transaction->setCustomFields($this->addMandatoryPaymentCustomFields($customFields));
