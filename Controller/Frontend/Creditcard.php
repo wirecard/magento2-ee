@@ -35,6 +35,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 class Creditcard extends Action
 {
@@ -162,21 +163,16 @@ class Creditcard extends Action
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
-        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-
-        $language = $this->getSupportedWppLangCode();
-
-        $paymentAction = $method->getConfigData('payment_action');
-        if ($paymentAction === PaymentAction::AUTHORIZE_CAPTURE) {
-            $paymentAction = "purchase";
-        } else {
-            $paymentAction = "authorization";
-        }
-
         $orderDto->config = $transactionService->getConfig()->get($txName);
+        $paymentAction = $this->methodConfig->getValue('payment_action');
+
         $this->processCreditCard($orderDto, $txType);
         try {
-            $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, $paymentAction, $language);
+            $data = $transactionService->getCreditCardUiWithData(
+                $orderDto->transaction,
+                $this->getMappedPaymentAction($paymentAction),
+                $this->getSupportedWppLangCode()
+            );
             if (empty($data)) {
                 throw new \Exception("Cannot create UI");
             }
@@ -184,6 +180,19 @@ class Creditcard extends Action
         } catch (\Exception $e) {
             return $this->buildErrorResponse('cannot create UI', ['exception' => get_class($e)]);
         }
+    }
+
+    /**
+     * @param mixed $paymentAction
+     * @return string
+     * @since 2.2.2
+     */
+    private function getMappedPaymentAction($paymentAction)
+    {
+        if ($paymentAction === PaymentAction::AUTHORIZE) {
+            return CreditCardTransaction::TYPE_AUTHORIZATION;
+        }
+        return CreditCardTransaction::TYPE_PURCHASE;
     }
 
     /**
@@ -260,25 +269,32 @@ class Creditcard extends Action
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
         $cfgkey       = $orderDto->transaction->getConfigKey();
-        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $methodAppend = '?method=' . urlencode($cfgkey);
-
-        $orderDto->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend,
-            $wdBaseUrl . 'frontend/cancel' . $methodAppend,
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend
-        ));
+        $orderDto->transaction->setRedirect($this->createRedirect($methodAppend));
 
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
-
-        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-        $challengeIndicator = $method->getConfigData('challenge_ind');
+        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
         $orderDto->transaction = $this->threeDsHelper->getThreeDsTransaction(
             $challengeIndicator,
             $orderDto->transaction,
             $orderDto
+        );
+    }
+
+    /**
+     * @param string $paymentMethod
+     * @return Redirect
+     * @since 2.2.2
+     */
+    private function createRedirect($paymentMethod)
+    {
+        $routeUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        return new Redirect(
+            $routeUrl . 'frontend/redirect' . $paymentMethod,
+            $routeUrl . 'frontend/cancel' . $paymentMethod,
+            $routeUrl . 'frontend/redirect' . $paymentMethod
         );
     }
 
