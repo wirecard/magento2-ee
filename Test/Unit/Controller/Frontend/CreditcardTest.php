@@ -92,8 +92,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
-                'getQuoteCurrencyCode',
-                'getGrandTotal',
+                'getBaseCurrencyCode',
+                'getBaseGrandTotal',
                 'reserveOrderId',
                 'getReservedOrderId',
                 'save'
@@ -102,8 +102,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
         $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
-        $quote->expects($this->once())->method('getQuoteCurrencyCode')->willReturn(self::CURRENCY_CODE);
-        $quote->expects($this->once())->method('getGrandTotal')->willReturn(self::TOTAL_AMOUNT);
+        $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
+        $quote->expects($this->once())->method('getBaseGrandTotal')->willReturn(self::TOTAL_AMOUNT);
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
@@ -136,7 +136,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
                 'getBaseCurrencyCode',
-                'getGrandTotal',
+                'getBaseGrandTotal',
                 'reserveOrderId',
                 'getReservedOrderId',
                 'save'
@@ -145,8 +145,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
         $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
-        $quote->expects($this->once())->method('getQuoteCurrencyCode')->willReturn(self::CURRENCY_CODE);
-        $quote->expects($this->once())->method('getGrandTotal')->willReturn(self::TOTAL_AMOUNT);
+        $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
+        $quote->expects($this->once())->method('getBaseGrandTotal')->willReturn(self::TOTAL_AMOUNT);
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
