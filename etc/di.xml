@@ -1033,10 +1033,7 @@
 
     <virtualType name="TransactionTypeMapper" type="Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper">
         <arguments>
-            <argument name="authorization" xsi:type="object">Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Authorization</argument>
-            <argument name="purchase" xsi:type="object">Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Purchase</argument>
-            <argument name="refund" xsi:type="object">Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund</argument>
-            <argument name="cancel" xsi:type="object">Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Cancel</argument>
+            <argument name="gatewayTransactionTypeCollection" xsi:type="object">Wirecard\ElasticEngine\Gateway\Helper\GatewayTransactionTypeCollection</argument>
         </arguments>
     </virtualType>
 

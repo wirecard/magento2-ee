@@ -10,10 +10,6 @@
 namespace Wirecard\ElasticEngine\Gateway\Helper;
 
 use Magento\Sales\Api\Data\TransactionInterface as MagentoTransactionInterface;
-use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Authorization;
-use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Cancel;
-use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Purchase;
-use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund;
 
 /**
  * Class TransactionTypeMapper
@@ -24,40 +20,18 @@ use Wirecard\ElasticEngine\Gateway\Helper\TransactionType\Refund;
 class TransactionTypeMapper
 {
     /**
-     * @var Authorization
+     * @var GatewayTransactionTypeCollection
      */
-    private $authorization;
-    /**
-     * @var Purchase
-     */
-    private $purchase;
-    /**
-     * @var Refund
-     */
-    private $refund;
-    /**
-     * @var Cancel
-     */
-    private $cancel;
+    private $transactionTypeCollection;
 
     /**
      * TransactionTypeMapper constructor.
-     * @param Authorization $authorization
-     * @param Purchase $purchase
-     * @param Refund $refund
-     * @param Cancel $cancel
+     * @param GatewayTransactionTypeCollection $transactionTypeCollection
      * @since 2.2.2
      */
-    public function __construct(
-        Authorization $authorization,
-        Purchase $purchase,
-        Refund $refund,
-        Cancel $cancel
-    ) {
-        $this->authorization = $authorization;
-        $this->purchase = $purchase;
-        $this->refund = $refund;
-        $this->cancel = $cancel;
+    public function __construct(GatewayTransactionTypeCollection $transactionTypeCollection)
+    {
+        $this->transactionTypeCollection= $transactionTypeCollection;
     }
 
     /**
@@ -69,16 +43,16 @@ class TransactionTypeMapper
     public function getMappedTransactionType($transactionType)
     {
         $mappedTransactionType = $transactionType;
-        if (in_array($transactionType, $this->authorization->getTransactionTypes())) {
+        if (in_array($transactionType, $this->transactionTypeCollection->getAuthorizationTransactionTypes())) {
             $mappedTransactionType = MagentoTransactionInterface::TYPE_AUTH;
         }
-        if (in_array($transactionType, $this->purchase->getTransactionTypes())) {
+        if (in_array($transactionType, $this->transactionTypeCollection->getPurchaseTransactionTypes())) {
             $mappedTransactionType = MagentoTransactionInterface::TYPE_CAPTURE;
         }
-        if (in_array($transactionType, $this->refund->getTransactionTypes())) {
+        if (in_array($transactionType, $this->transactionTypeCollection->getRefundTransactionTypes())) {
             $mappedTransactionType = MagentoTransactionInterface::TYPE_REFUND;
         }
-        if (in_array($transactionType, $this->cancel->getTransactionTypes())) {
+        if (in_array($transactionType, $this->transactionTypeCollection->getCancelTransactionTypes())) {
             $mappedTransactionType = MagentoTransactionInterface::TYPE_VOID;
         }
         if ($transactionType === 'check-payer-response') {
