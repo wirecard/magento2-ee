@@ -20,16 +20,16 @@ use Magento\Sales\Api\Data\TransactionInterface as MagentoTransactionInterface;
 class TransactionTypeMapper
 {
     /**
-     * @var GatewayTransactionTypeCollection
+     * @var SdkTransactionTypeCollection
      */
     private $transactionTypeCollection;
 
     /**
      * TransactionTypeMapper constructor.
-     * @param GatewayTransactionTypeCollection $transactionTypeCollection
+     * @param SdkTransactionTypeCollection $transactionTypeCollection
      * @since 2.2.2
      */
-    public function __construct(GatewayTransactionTypeCollection $transactionTypeCollection)
+    public function __construct(SdkTransactionTypeCollection $transactionTypeCollection)
     {
         $this->transactionTypeCollection= $transactionTypeCollection;
     }

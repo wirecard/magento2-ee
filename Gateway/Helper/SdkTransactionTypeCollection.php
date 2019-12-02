@@ -12,12 +12,12 @@ namespace Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
 
 /**
- * Class GatewayTransactionTypeCollection
+ * Class SdkTransactionTypeCollection
  *
  * @since 2.2.2
  * @package Wirecard\ElasticEngine\Gateway\Helper
  */
-class GatewayTransactionTypeCollection
+class SdkTransactionTypeCollection
 {
     /**
      * @return array
