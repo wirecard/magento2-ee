@@ -28,6 +28,7 @@ use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Entity\Status;
@@ -110,7 +111,7 @@ class Notify
     private $encryptor;
 
     /**
-     * @var Helper\TransactionTypeMapper
+     * @var TransactionTypeMapper
      * @since 2.2.2
      */
     private $transactionTypeMapper;
@@ -129,7 +130,7 @@ class Notify
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
-     * @param Helper\TransactionTypeMapper $transactionTypeMapper
+     * @param TransactionTypeMapper $transactionTypeMapper
      *
      * @since 2.0.1 Add PaymentTokenResourceModel
      * @since 2.2.2 Add TransactionTypeMapper
@@ -146,7 +147,7 @@ class Notify
         PaymentTokenManagementInterface $paymentTokenManagement,
         PaymentTokenResourceModel $paymentTokenResourceModel,
         EncryptorInterface $encryptor,
-        Helper\TransactionTypeMapper $transactionTypeMapper
+        TransactionTypeMapper $transactionTypeMapper
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
