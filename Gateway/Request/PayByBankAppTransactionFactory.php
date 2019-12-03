@@ -30,6 +30,13 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 class PayByBankAppTransactionFactory extends TransactionFactory
 {
     const REFUND_OPERATION = Operation::CANCEL;
+    const CONFIG_MERCHANT_RETURN_STRING = 'zapp_merchant_return_string';
+    const PBBA_DEVICE_DEFAULT = 'other';
+    const PBBA_MERCHANT_RETURN_STRING = 'MerchantRtnStrng';
+    const PBBA_TRANSACTION_TYPE = 'TxType';
+    const PBBA_TRANSACTION_TYPE_PAYMENT = 'PAYMT';
+    const PBBA_DELIVERY_TYPE = 'DeliveryType';
+    const PBBA_DELIVERY_TYPE_DEFAULT = 'DELTAD';
 
     /**
      * @var Http
@@ -84,29 +91,12 @@ class PayByBankAppTransactionFactory extends TransactionFactory
     {
         parent::create($commandSubject);
 
+        $userAgent = $this->request->getServer('HTTP_USER_AGENT');
         $customFields = new CustomFieldCollection();
-        $this->transaction->setCustomFields($customFields);
         $customFields->add(new CustomField('orderId', $this->orderId));
 
-        $customFields->add($this->makeCustomField(
-            'MerchantRtnStrng',
-            $this->methodConfig->getValue('zapp_merchant_return_string')
-        ));
-        $customFields->add($this->makeCustomField('TxType', 'PAYMT'));
-        $customFields->add($this->makeCustomField('DeliveryType', 'DELTAD'));
-
-        $device = new Device($this->request->getServer('HTTP_USER_AGENT'));
-
-        // fallback to a generic value if detection failed
-        if ($device->getType() === null) {
-            $device->setType('other');
-        }
-
-        if ($device->getOperatingSystem() === null) {
-            $device->setOperatingSystem('other');
-        }
-
-        $this->transaction->setDevice($device);
+        $this->transaction->setCustomFields($this->addMandatoryPaymentCustomFields($customFields));
+        $this->transaction->setDevice($this->createDevice($userAgent));
 
         return $this->transaction;
     }
@@ -154,5 +144,55 @@ class PayByBankAppTransactionFactory extends TransactionFactory
         $customField->setPrefix('zapp.in.');
 
         return $customField;
+    }
+
+    /**
+     * @param CustomFieldCollection $customFields
+     * @return CustomFieldCollection
+     * @since 2.2.2
+     */
+    private function addMandatoryPaymentCustomFields($customFields)
+    {
+        $customFields->add($this->makeCustomField(
+            self::PBBA_MERCHANT_RETURN_STRING,
+            $this->fetchMerchantReturnString()
+        ));
+        $customFields->add($this->makeCustomField(self::PBBA_TRANSACTION_TYPE, self::PBBA_TRANSACTION_TYPE_PAYMENT));
+        $customFields->add($this->makeCustomField(self::PBBA_DELIVERY_TYPE, self::PBBA_DELIVERY_TYPE_DEFAULT));
+
+        return $customFields;
+    }
+
+    /**
+     * @param string $userAgent
+     * @return Device
+     * @since 2.2.2
+     */
+    private function createDevice($userAgent)
+    {
+        $device = new Device($userAgent);
+
+        if ($device->getType() === null) {
+            $device->setType(self::PBBA_DEVICE_DEFAULT);
+        }
+
+        if ($device->getOperatingSystem() === null) {
+            $device->setOperatingSystem(self::PBBA_DEVICE_DEFAULT);
+        }
+        return $device;
+    }
+
+    /**
+     * @return string
+     * @since 2.2.2
+     */
+    private function fetchMerchantReturnString()
+    {
+        $customMerchantReturnString = $this->methodConfig->getValue(self::CONFIG_MERCHANT_RETURN_STRING);
+        if (empty($customMerchantReturnString)) {
+            $customMerchantReturnString = $this->formatRedirectUrls($this->transaction->getConfigKey(), 'redirect');
+        }
+
+        return $customMerchantReturnString;
     }
 }
