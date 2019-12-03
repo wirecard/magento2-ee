@@ -36,6 +36,7 @@ use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper;
 use Wirecard\ElasticEngine\Gateway\Model\Notify;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
@@ -151,6 +152,11 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
      */
     private $orderHelper;
 
+    /**
+     * @var TransactionTypeMapper
+     */
+    private $transactionTypeMapper;
+
     public function setUp()
     {
         /**
@@ -237,6 +243,9 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->orderHelper = $this->getMockWithoutInvokingTheOriginalConstructor(\Wirecard\ElasticEngine\Gateway\Helper\Order::class);
         $this->orderHelper->method('getOrderByIncrementId')->willReturn($this->order);
 
+        $this->transactionTypeMapper = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionTypeMapper::class);
+        $this->transactionTypeMapper->method('getMappedTransactionType')->willReturn(null);
+
         $this->notify = new \Wirecard\ElasticEngine\Test\Unit\Gateway\Model\MyNotify(
             $transactionServiceFactory,
             $this->orderRepository,
@@ -248,7 +257,8 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
             $this->paymentTokenFactory,
             $this->paymentTokenManagement,
             $this->paymentTokenResourceModel,
-            $this->encryptor
+            $this->encryptor,
+            $this->transactionTypeMapper
         );
     }
 
