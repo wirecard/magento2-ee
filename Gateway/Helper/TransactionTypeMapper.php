@@ -31,7 +31,7 @@ class TransactionTypeMapper
      */
     public function __construct(SdkTransactionTypeCollection $transactionTypeCollection)
     {
-        $this->transactionTypeCollection= $transactionTypeCollection;
+        $this->transactionTypeCollection = $transactionTypeCollection;
     }
 
     /**
