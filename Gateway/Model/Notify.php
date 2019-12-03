@@ -28,6 +28,7 @@ use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper;
+use Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Entity\Status;
@@ -36,7 +37,6 @@ use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
 
 /**
  * @since 2.1.0
@@ -111,6 +111,12 @@ class Notify
     private $encryptor;
 
     /**
+     * @var TransactionTypeMapper
+     * @since 2.2.2
+     */
+    private $transactionTypeMapper;
+
+    /**
      * Notify constructor.
      *
      * @param TransactionServiceFactory $transactionServiceFactory
@@ -124,8 +130,10 @@ class Notify
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
+     * @param TransactionTypeMapper $transactionTypeMapper
      *
      * @since 2.0.1 Add PaymentTokenResourceModel
+     * @since 2.2.2 Add TransactionTypeMapper
      */
     public function __construct(
         TransactionServiceFactory $transactionServiceFactory,
@@ -138,20 +146,22 @@ class Notify
         PaymentTokenInterfaceFactory $paymentTokenFactory,
         PaymentTokenManagementInterface $paymentTokenManagement,
         PaymentTokenResourceModel $paymentTokenResourceModel,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        TransactionTypeMapper $transactionTypeMapper
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
-        $this->orderRepository           = $orderRepository;
-        $this->logger                    = $logger;
-        $this->orderHelper               = $orderHelper;
-        $this->invoiceService            = $invoiceService;
-        $this->transaction               = $transaction;
-        $this->canCaptureInvoice         = false;
-        $this->paymentTokenFactory       = $paymentTokenFactory;
-        $this->paymentExtensionFactory   = $paymentExtensionFactory;
-        $this->paymentTokenManagement    = $paymentTokenManagement;
+        $this->orderRepository = $orderRepository;
+        $this->logger = $logger;
+        $this->orderHelper = $orderHelper;
+        $this->invoiceService = $invoiceService;
+        $this->transaction = $transaction;
+        $this->canCaptureInvoice = false;
+        $this->paymentTokenFactory = $paymentTokenFactory;
+        $this->paymentExtensionFactory = $paymentExtensionFactory;
+        $this->paymentTokenManagement = $paymentTokenManagement;
         $this->paymentTokenResourceModel = $paymentTokenResourceModel;
-        $this->encryptor                 = $encryptor;
+        $this->encryptor = $encryptor;
+        $this->transactionTypeMapper = $transactionTypeMapper;
     }
 
     /**
@@ -295,43 +305,15 @@ class Notify
         }
 
         $transactionType = $response->getTransactionType();
-        if ($this->canCaptureInvoice) {
-            $transactionType = TransactionInterface::TYPE_CAPTURE;
-        }
-
         // map ee type to magento types, unknown types are leading to an error:
         // "We found an unsupported transaction type..."
-        switch ($transactionType) {
+        $transactionType = $this->transactionTypeMapper->getMappedTransactionType($transactionType);
 
-            case SdkTransaction::TYPE_AUTHORIZATION:
+        // Payment for this transaction type must be set explicit to NOT closed
+        // @TODO: Find root cause for this special case
+        if ($transactionType === TransactionInterface::TYPE_AUTH) {
             $payment->setIsTransactionClosed(false);
-                break;
-
-            case SdkTransaction::TYPE_REFUND_DEBIT:
-            case SdkTransaction::TYPE_REFUND_CAPTURE:
-            case SdkTransaction::TYPE_REFUND_PURCHASE:
-            case SdkTransaction::TYPE_CREDIT:
-                $transactionType = TransactionInterface::TYPE_REFUND;
-                break;
-
-            case 'check-payer-response':
-                $transactionType = TransactionInterface::TYPE_PAYMENT;
-                break;
-
-            case SdkTransaction::TYPE_VOID_AUTHORIZATION:
-            case SdkTransaction::TYPE_VOID_PURCHASE:
-            case SdkTransaction::TYPE_VOID_DEBIT:
-                $transactionType = TransactionInterface::TYPE_VOID;
-                break;
-
-            case SdkTransaction::TYPE_CAPTURE_AUTHORIZATION:
-            case SdkTransaction::TYPE_DEBIT:
-            case SdkTransaction::TYPE_PURCHASE:
-            case SdkTransaction::TYPE_DEPOSIT:
-                $transactionType = TransactionInterface::TYPE_CAPTURE;
-                break;
         }
-
         $payment->addTransaction($transactionType);
 
         return $payment;
@@ -365,10 +347,10 @@ class Notify
      */
     private function setCanCaptureInvoice($transactionType)
     {
+        $this->canCaptureInvoice = false;
+
         if ($transactionType === 'debit' || $transactionType === 'purchase') {
             $this->canCaptureInvoice = true;
-        } else {
-            $this->canCaptureInvoice = false;
         }
     }
 
@@ -393,8 +375,8 @@ class Notify
         $paymentToken->setCustomerId($customerId);
         $paymentToken->setPaymentMethodCode($payment->getMethod());
         $paymentToken->setTokenDetails(json_encode([
-            'type'           => '',
-            'maskedCC'       => substr($response->getMaskedAccountNumber(), -4),
+            'type' => '',
+            'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
             'expirationDate' => 'xx-xxxx'
         ]));
         $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
@@ -498,7 +480,7 @@ class Notify
     protected function removeTokenByGatewayToken($customerId, $gatewayToken)
     {
         $this->paymentTokenResourceModel->getConnection()->delete($this->paymentTokenResourceModel->getMainTable(), [
-            'customer_id = ?'   => $customerId,
+            'customer_id = ?' => $customerId,
             'gateway_token = ?' => $gatewayToken
         ]);
     }
