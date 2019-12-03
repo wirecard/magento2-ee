@@ -268,7 +268,7 @@ class Creditcard extends Action
         $orderDto->transaction->setEntryMode('ecommerce');
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
-        $cfgkey       = $orderDto->transaction->getConfigKey();
+        $cfgkey = $orderDto->transaction->getConfigKey();
         $methodAppend = '?method=' . urlencode($cfgkey);
         $orderDto->transaction->setRedirect($this->createRedirect($methodAppend));
 
@@ -290,7 +290,7 @@ class Creditcard extends Action
      */
     private function createRedirect($paymentMethod)
     {
-        $routeUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $routeUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         return new Redirect(
             $routeUrl . 'frontend/redirect' . $paymentMethod,
             $routeUrl . 'frontend/cancel' . $paymentMethod,
@@ -333,17 +333,18 @@ class Creditcard extends Action
      */
     private function addOrderItemsToBasket(OrderDto $orderDto)
     {
-        $items    = $orderDto->quote->getAllVisibleItems();
+        $items = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount    = new Amount((float)$orderItem->getBasePriceInclTax(), $currency);
-            $taxAmount = new Amount((float)$orderItem->getBaseTaxAmount(), $currency);
-            $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
-            $item->setTaxAmount($taxAmount);
-            $item->setTaxRate($this->calculateTax(
-                $orderItem->getBaseTaxAmount(),
-                $orderItem->getBasePriceInclTax()
-            ));
+            $totalAmount = $orderItem->getBasePriceInclTax();
+            $taxAmount = $orderItem->getBaseTaxAmount();
+            $item = new Item(
+                $orderItem->getName(),
+                new Amount((float)$totalAmount, $currency),
+                $orderItem->getQty()
+            );
+            $item->setTaxAmount(new Amount((float)$taxAmount, $currency));
+            $item->setTaxRate($this->calculateTax($taxAmount, $totalAmount));
             $orderDto->basket->add($item);
         }
     }
@@ -387,11 +388,11 @@ class Creditcard extends Action
     private function getSupportedWppLangCode()
     {
         //Set default for exception case
-        $language  = 'en';
-        $locale    = $this->resolver->getLocale();
+        $language = 'en';
+        $locale = $this->resolver->getLocale();
 
         //Shorten to ISO-639-1 because of magento2 special cases e.g. zh_Hans_CN
-        $locale    = mb_substr($locale, 0, 2);
+        $locale = mb_substr($locale, 0, 2);
         $converter = new WppVTwoConverter();
 
         try {
