@@ -40,9 +40,9 @@ class ItemFactory
         }
 
         $qty         = $magentoItemObj->getQtyOrdered();
-        $qtyAmount   = $magentoItemObj->getPrice();
-        $qtyTax      = $this->divide($magentoItemObj->getTaxAmount(), $qty);
-        $qtyDiscount = $this->divide($magentoItemObj->getDiscountAmount(), $qty);
+        $qtyAmount   = $magentoItemObj->getBasePrice();
+        $qtyTax      = $this->divide($magentoItemObj->getBaseTaxAmount(), $qty);
+        $qtyDiscount = $this->divide($magentoItemObj->getBaseDiscountAmount(), $qty);
 
         $amount = $qtyAmount + $qtyTax - $qtyDiscount;
         $name = $magentoItemObj->getName();

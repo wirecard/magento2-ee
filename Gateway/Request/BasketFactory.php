@@ -92,17 +92,17 @@ class BasketFactory
 
         $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
 
-        if ($orderObject->getShippingInclTax() > 0) {
+        if ($orderObject->getBaseShippingInclTax() > 0) {
             $shippingItem = new Item(
                 'Shipping',
-                new Amount((float)$orderObject->getShippingInclTax(), $order->getCurrencyCode()),
+                new Amount((float)$orderObject->getBaseShippingInclTax(), $order->getCurrencyCode()),
                 1
             );
             $shippingItem->setDescription($orderObject->getShippingDescription());
             $shippingItem->setArticleNumber($orderObject->getShippingMethod());
             $shippingItem->setTaxRate($this->calculateTax(
-                $orderObject->getShippingTaxAmount(),
-                $orderObject->getShippingInclTax()
+                $orderObject->getBaseShippingTaxAmount(),
+                $orderObject->getBaseShippingInclTax()
             ));
             $basket->add($shippingItem);
         }
