@@ -68,6 +68,7 @@ class BasketFactory
      * @throws \InvalidArgumentException
      * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
+     * @throws \Magento\Framework\Exception\LocalizedException
      *
      * @since 1.5.3 Use divide method to prevent division by zero
      */
@@ -80,6 +81,7 @@ class BasketFactory
         $basket = new Basket();
         $basket->setVersion($transaction);
         $items = $order->getItems();
+        $currencyCode = $order->getCurrencyCode();
 
         /** @var OrderItemInterface $item */
         foreach ($items as $item) {
@@ -87,25 +89,11 @@ class BasketFactory
                 continue;
             }
 
-            $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
+            $basket->add($this->itemFactory->create($item, $currencyCode));
         }
-
         $orderObject = $this->checkoutSession->getQuote()->getShippingAddress();
+        $basket = $this->addShippingItem($basket, $orderObject, $currencyCode);
 
-        if ($orderObject->getShippingInclTax() > 0) {
-            $shippingItem = new Item(
-                'Shipping',
-                new Amount((float)$orderObject->getShippingInclTax(), $order->getCurrencyCode()),
-                1
-            );
-            $shippingItem->setDescription($orderObject->getShippingDescription());
-            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate($this->calculateTax(
-                $orderObject->getShippingTaxAmount(),
-                $orderObject->getShippingInclTax()
-            ));
-            $basket->add($shippingItem);
-        }
         return $basket;
     }
 
@@ -238,6 +226,7 @@ class BasketFactory
      * @throws \InvalidArgumentException
      * @throws NoSuchEntityException
      * @throws MandatoryFieldMissingException
+     * @throws \Magento\Framework\Exception\LocalizedException
      *
      * @since 1.5.3 Use divide method to prevent division by zero
      */
@@ -262,30 +251,17 @@ class BasketFactory
         $basket = new Basket();
         $basket->setVersion($transaction);
         $items = $order->getItems();
+        $currencyCode = $order->getCurrencyCode();
 
         /** @var OrderItemInterface $item */
         foreach ($items as $item) {
             if ($item->getPriceInclTax() == 0) {
                 continue;
             }
-            $basket->add($this->itemFactory->create($item, $order->getCurrencyCode()));
+            $basket->add($this->itemFactory->create($item, $currencyCode));
         }
+        $basket = $this->addShippingItem($basket, $orderObject, $currencyCode);
 
-        if ($orderObject->getShippingInclTax() > 0) {
-            $shippingItem = new Item(
-                'Shipping',
-                new Amount((float)$orderObject->getShippingInclTax(), $order->getCurrencyCode()),
-                1
-            );
-
-            $shippingItem->setDescription($orderObject->getShippingDescription());
-            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
-            $shippingItem->setTaxRate($this->calculateTax(
-                $orderObject->getShippingTaxAmount(),
-                $orderObject->getShippingInclTax()
-            ));
-            $basket->add($shippingItem);
-        }
         return $basket;
     }
 
@@ -337,5 +313,34 @@ class BasketFactory
         }
 
         return true;
+    }
+
+    /**
+     * @param Basket $basket
+     * @param \Magento\Quote\Model\Quote\Address|Order $orderObject
+     * @param string $currencyCode
+     * @return Basket
+     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @since 2.2.2
+     */
+    private function addShippingItem($basket, $orderObject, $currencyCode)
+    {
+        $shippingTotalAmount = $orderObject->getBaseShippingInclTax();
+        if ($shippingTotalAmount > 0) {
+            $shippingItem = new Item(
+                'Shipping',
+                new Amount((float)$shippingTotalAmount, $currencyCode),
+                1
+            );
+            $shippingItem->setDescription($orderObject->getShippingDescription());
+            $shippingItem->setArticleNumber($orderObject->getShippingMethod());
+            $shippingItem->setTaxRate($this->calculateTax(
+                $orderObject->getBaseShippingTaxAmount(),
+                $shippingTotalAmount
+            ));
+            $basket->add($shippingItem);
+        }
+        return $basket;
     }
 }

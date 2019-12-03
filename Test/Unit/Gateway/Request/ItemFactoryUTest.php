@@ -34,11 +34,14 @@ class ItemFactoryUTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $this->orderItem->method('getName')->willReturn('One Plus 5');
         $this->orderItem->method('getPrice')->willReturn(100.0);
+        $this->orderItem->method('getBasePrice')->willReturn(100.0);
         $this->orderItem->method('getQtyOrdered')->willReturn(1);
         $this->orderItem->method('getDescription')->willReturn(self::DESCRIPTION);
         $this->orderItem->method('getSku')->willReturn(self::SKU);
         $this->orderItem->method('getTaxAmount')->willReturn(20.00);
+        $this->orderItem->method('getBaseTaxAmount')->willReturn(20.00);
         $this->orderItem->method('getDiscountAmount')->willReturn(0.00);
+        $this->orderItem->method('getBaseDiscountAmount')->willReturn(0.00);
 
         $this->item = $this->getMockBuilder(\Magento\Sales\Model\Order\Item::class)
             ->disableOriginalConstructor()
