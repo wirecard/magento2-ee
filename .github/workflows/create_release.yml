@@ -1,0 +1,26 @@
+name: Create Release
+
+on:
+  pull_request:
+    types: closed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged && startsWith(github.head_ref, 'RC-')
+    steps:
+      - uses: actions/checkout@master
+      - name: Tag and perpare release
+        id: tag_and_prepare_release
+        uses: wirecard/semver-release-action@master
+        with:
+          release_branch: master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload release notes
+        if: steps.tag_and_prepare_release.outputs.tag
+        uses: serucee/github-create-release-action@master #Fork Roang-zero1/github-create-release-action once PR is merged
+        with:
+          CREATED_TAG: ${{ steps.tag_and_prepare_release.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
