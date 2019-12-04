@@ -7,7 +7,7 @@
     "changelog": [
       "Fix supported transaction types for TransactionUpdater #311",
       "Fix currency and amount value based on base currency #319",
-      "Use fully qualified checkout redirect urls #278"
+      "Update to fully qualified checkout redirect urls #278"
     ]
   },
   {
