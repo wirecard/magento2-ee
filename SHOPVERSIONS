@@ -1,5 +1,16 @@
 [
   {
+    "release": "2.2.2",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.3",
+    "compatibility": "2.1.4",
+    "changelog": [
+      "Fix supported transaction types for TransactionUpdater #311",
+      "Fix currency and amount value based on base currency #319",
+      "Use fully qualified checkout redirect urls #278"
+    ]
+  },
+  {
     "release": "2.2.1",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.3",
