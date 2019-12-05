@@ -1031,6 +1031,12 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="TransactionTypeMapper" type="Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper">
+        <arguments>
+            <argument name="gatewayTransactionTypeCollection" xsi:type="object">Wirecard\ElasticEngine\Gateway\Helper\GatewayTransactionTypeCollection</argument>
+        </arguments>
+    </virtualType>
+
     <type name="Wirecard\ElasticEngine\Controller\Frontend\Redirect">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
@@ -1061,6 +1067,7 @@
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
             <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Model\CreditCardTokenFactory</argument>
+            <argument name="transactionTypeMapper" xsi:type="object">TransactionTypeMapper</argument>
         </arguments>
     </type>
 

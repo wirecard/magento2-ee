@@ -35,6 +35,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 class Creditcard extends Action
 {
@@ -162,21 +163,16 @@ class Creditcard extends Action
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
-        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-
-        $language = $this->getSupportedWppLangCode();
-
-        $paymentAction = $method->getConfigData('payment_action');
-        if ($paymentAction === PaymentAction::AUTHORIZE_CAPTURE) {
-            $paymentAction = "purchase";
-        } else {
-            $paymentAction = "authorization";
-        }
-
         $orderDto->config = $transactionService->getConfig()->get($txName);
+        $paymentAction = $this->methodConfig->getValue('payment_action');
+
         $this->processCreditCard($orderDto, $txType);
         try {
-            $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, $paymentAction, $language);
+            $data = $transactionService->getCreditCardUiWithData(
+                $orderDto->transaction,
+                $this->getMappedPaymentAction($paymentAction),
+                $this->getSupportedWppLangCode()
+            );
             if (empty($data)) {
                 throw new \Exception("Cannot create UI");
             }
@@ -184,6 +180,19 @@ class Creditcard extends Action
         } catch (\Exception $e) {
             return $this->buildErrorResponse('cannot create UI', ['exception' => get_class($e)]);
         }
+    }
+
+    /**
+     * @param mixed $paymentAction
+     * @return string
+     * @since 2.2.2
+     */
+    private function getMappedPaymentAction($paymentAction)
+    {
+        if ($paymentAction === PaymentAction::AUTHORIZE) {
+            return CreditCardTransaction::TYPE_AUTHORIZATION;
+        }
+        return CreditCardTransaction::TYPE_PURCHASE;
     }
 
     /**
@@ -251,34 +260,41 @@ class Creditcard extends Action
         $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
-        $currency         = $orderDto->quote->getBaseCurrencyCode();
-        $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
+        $currency = $orderDto->quote->getBaseCurrencyCode();
+        $orderDto->amount = new Amount((float)$orderDto->quote->getBaseGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
         $this->addOrderIdToTransaction($orderDto);
 
         $orderDto->transaction->setEntryMode('ecommerce');
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
-        $cfgkey       = $orderDto->transaction->getConfigKey();
-        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $cfgkey = $orderDto->transaction->getConfigKey();
         $methodAppend = '?method=' . urlencode($cfgkey);
-
-        $orderDto->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend,
-            $wdBaseUrl . 'frontend/cancel' . $methodAppend,
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend
-        ));
+        $orderDto->transaction->setRedirect($this->createRedirect($methodAppend));
 
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
-
-        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-        $challengeIndicator = $method->getConfigData('challenge_ind');
+        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
         $orderDto->transaction = $this->threeDsHelper->getThreeDsTransaction(
             $challengeIndicator,
             $orderDto->transaction,
             $orderDto
+        );
+    }
+
+    /**
+     * @param string $paymentMethod
+     * @return Redirect
+     * @since 2.2.2
+     */
+    private function createRedirect($paymentMethod)
+    {
+        $routeUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        return new Redirect(
+            $routeUrl . 'frontend/redirect' . $paymentMethod,
+            $routeUrl . 'frontend/cancel' . $paymentMethod,
+            $routeUrl . 'frontend/redirect' . $paymentMethod
         );
     }
 
@@ -317,17 +333,18 @@ class Creditcard extends Action
      */
     private function addOrderItemsToBasket(OrderDto $orderDto)
     {
-        $items    = $orderDto->quote->getAllVisibleItems();
+        $items = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount    = new Amount((float)$orderItem->getPriceInclTax(), $currency);
-            $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
-            $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
-            $item->setTaxAmount($taxAmount);
-            $item->setTaxRate($this->calculateTax(
-                $orderItem->getTaxAmount(),
-                $orderItem->getPriceInclTax()
-            ));
+            $totalAmount = $orderItem->getBasePriceInclTax();
+            $taxAmount = $orderItem->getBaseTaxAmount();
+            $item = new Item(
+                $orderItem->getName(),
+                new Amount((float)$totalAmount, $currency),
+                $orderItem->getQty()
+            );
+            $item->setTaxAmount(new Amount((float)$taxAmount, $currency));
+            $item->setTaxRate($this->calculateTax($taxAmount, $totalAmount));
             $orderDto->basket->add($item);
         }
     }
@@ -371,11 +388,11 @@ class Creditcard extends Action
     private function getSupportedWppLangCode()
     {
         //Set default for exception case
-        $language  = 'en';
-        $locale    = $this->resolver->getLocale();
+        $language = 'en';
+        $locale = $this->resolver->getLocale();
 
         //Shorten to ISO-639-1 because of magento2 special cases e.g. zh_Hans_CN
-        $locale    = mb_substr($locale, 0, 2);
+        $locale = mb_substr($locale, 0, 2);
         $converter = new WppVTwoConverter();
 
         try {
