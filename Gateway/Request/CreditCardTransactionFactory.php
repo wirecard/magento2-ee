@@ -13,6 +13,7 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
@@ -88,29 +89,24 @@ class CreditCardTransactionFactory extends TransactionFactory
         parent::create($commandSubject);
 
         /** @var PaymentDataObjectInterface $paymentDO */
-        $paymentDO = $commandSubject[self::PAYMENT];
-        $this->transaction->setTokenId($paymentDO->getPayment()->getAdditionalInformation(
+        $paymentDO          = $commandSubject[self::PAYMENT];
+        $paymentInformation = $paymentDO->getPayment();
+        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
+
+        $this->transaction->setTokenId($paymentInformation->getAdditionalInformation(
             CreditCardDataAssignObserver::TOKEN_ID
         ));
 
-        $customFields = new CustomFieldCollection();
-        $customFields->add(new CustomField('orderId', $this->orderId));
-
-        if ($paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING)) {
-            $this->transaction->setThreeD(false);
-        }
-
-        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
         $this->transaction = $this->threeDsHelper->getThreeDsTransaction(
             $challengeIndicator,
             $this->transaction,
             $paymentDO
         );
 
-        $this->transaction->setCustomFields($customFields);
+        if ($this->isRecurring($paymentInformation)) {
+            $this->addRecurringParametersToTransaction();
+        }
 
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $this->transaction->setTermUrl($wdBaseUrl . 'frontend/redirect?method=' . $this->transaction->getConfigKey());
         return $this->transaction;
     }
 
@@ -155,5 +151,46 @@ class CreditCardTransactionFactory extends TransactionFactory
     public function getRefundOperation()
     {
         return self::REFUND_OPERATION;
+    }
+
+    /**
+     * Check if transaction is a recurring transaction
+     *
+     * @param InfoInterface $paymentInformation
+     * @return mixed
+     */
+    private function isRecurring(InfoInterface $paymentInformation)
+    {
+        return $paymentInformation->getAdditionalInformation(CreditCardDataAssignObserver::RECURRING);
+    }
+
+    /**
+     * Add parameters required for oneclick checkout
+     */
+    private function addRecurringParametersToTransaction()
+    {
+        $termUrl = $this->buildRedirectUrl(
+            $this->urlBuilder->getRouteUrl('wirecard_elasticengine'),
+            $this->transaction->getConfigKey()
+        );
+
+        $this->transaction->setThreeD(false);
+        $this->transaction->setTermUrl($termUrl);
+    }
+
+    //TODO: Move to helper class/trait since it is reused in other classes
+    /**
+     * @param $baseUrl
+     * @param $suffix
+     * @return string
+     */
+    public function buildRedirectUrl($baseUrl, $suffix)
+    {
+        $format = '%sfrontend/redirect?method=%s';
+        return sprintf(
+            $format,
+            $baseUrl,
+            urlencode($suffix)
+        );
     }
 }
