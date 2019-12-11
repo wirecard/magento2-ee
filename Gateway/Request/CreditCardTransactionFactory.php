@@ -17,8 +17,6 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
-use Wirecard\PaymentSdk\Entity\CustomField;
-use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -174,6 +172,7 @@ class CreditCardTransactionFactory extends TransactionFactory
             $this->transaction->getConfigKey()
         );
 
+        //TODO: clarify why threeD is set to false on one click
         $this->transaction->setThreeD(false);
         $this->transaction->setTermUrl($termUrl);
     }
