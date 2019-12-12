@@ -187,9 +187,6 @@ class Notify
         }
 
         if ($response instanceof SuccessResponse) {
-            if ($response->getPaymentMethod() === 'masterpass') {
-                return;
-            }
             $this->handleSuccess($order, $response);
         } elseif ($response instanceof FailureResponse) {
             foreach ($response->getStatusCollection() as $status) {
