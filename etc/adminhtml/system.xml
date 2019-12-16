@@ -72,17 +72,17 @@
             </group>
         </section>
         <section id="payment">
-            <include path="WirecardElasticEngine::system/paypal.xml" />
-            <include path="WirecardElasticEngine::system/creditcard.xml" />
-            <include path="WirecardElasticEngine::system/cc_vault.xml" />
-            <include path="WirecardElasticEngine::system/sepadirectdebit.xml" />
-            <include path="WirecardElasticEngine::system/sepacredit.xml" />
-            <include path="WirecardElasticEngine::system/sofortbanking.xml" />
-            <include path="WirecardElasticEngine::system/ideal.xml" />
-            <include path="WirecardElasticEngine::system/ratepayinvoice.xml" />
-            <include path="WirecardElasticEngine::system/alipayxborder.xml" />
-            <include path="WirecardElasticEngine::system/poi_pia.xml" />
-            <include path="WirecardElasticEngine::system/paybybankapp.xml" />
+            <include path="Wirecard_ElasticEngine::system/paypal.xml" />
+            <include path="Wirecard_ElasticEngine::system/creditcard.xml" />
+            <include path="Wirecard_ElasticEngine::system/cc_vault.xml" />
+            <include path="Wirecard_ElasticEngine::system/sepadirectdebit.xml" />
+            <include path="Wirecard_ElasticEngine::system/sepacredit.xml" />
+            <include path="Wirecard_ElasticEngine::system/sofortbanking.xml" />
+            <include path="Wirecard_ElasticEngine::system/ideal.xml" />
+            <include path="Wirecard_ElasticEngine::system/ratepayinvoice.xml" />
+            <include path="Wirecard_ElasticEngine::system/alipayxborder.xml" />
+            <include path="Wirecard_ElasticEngine::system/poi_pia.xml" />
+            <include path="Wirecard_ElasticEngine::system/paybybankapp.xml" />
         </section>
     </system>
 </config>
