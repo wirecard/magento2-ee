@@ -40,71 +40,71 @@ matrix:
     after_script: skip
     after_failure: skip
 
-  - &acceptance-test
-    stage: acceptance-test
-    #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
-    #   or when build triggered ad-hoc with special commit message
-    #   tests will use extension version = branch which originated pull request
-    #   or branch which was defined in ad-hoc trigger in Travis UI
-    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
-    php: 7.1
-    env:
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=1
-    install:
-      #   check if files are same or not
-      - cmp --silent ${MAGENTO2_RELEASES_FILE} ${MAGENTO2_COMPATIBILITY_FILE} && export COMPATIBILITY_CHECK=0 || export COMPATIBILITY_CHECK=1
-      #   check from which file to take versions
-      - if [[ ${COMPATIBILITY_CHECK}  == "0" ]]; then export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_RELEASES_FILE}); else export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_COMPATIBILITY_FILE}); fi
-      #   get latest release shop extension version from SHOPVERSIONS file
-      - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
-      - echo "Testing with Magento2 ${MAGENTO2_VERSION} version."
-      - bash .bin/remove-composer-lock-file.sh
-      - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
-      - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
-      - travis_retry composer install $COMPOSER_ARGS
-    script: bash .bin/run-ui-tests.sh
-    after_script: skip
-    after_success:
-    - bash .bin/upload-logs-and-notify.sh
-    - bash .bin/update-shop-release-versions.sh
-    after_failure:
-    - bash .bin/upload-logs-and-notify.sh fail
-  #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
-  #   tests will use extension version = branch which originated pull request
-  - <<: *acceptance-test
-    if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
-    env:
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=2
-  #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
-  #   tests will use extension version = branch which originated pull request
-  - <<: *acceptance-test
-    if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
-    env:
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=3
-  #   run this stage when shop system updated with latest shop extension release version
-  #   tests will use latest released extension version
-  - <<: *acceptance-test
-  # when commit message contains string "Update latest shop releases"
-    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
-    env:
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=1
-  # will check latest released extension version with latest shop version
-    - LATEST_EXTENSION_RELEASE=1
-  # if this stage fails, it will not fail the whole build
-    - ALLOW_FAIL=1
-  - <<: *acceptance-test
-  # when commit message contains string "Update latest shop releases"
-    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
-    env:
-  # will check master branch with latest shop version
-    - GATEWAY=API-TEST
-    - MAGENTO2_RELEASE_VERSION=1
-  # if this stage fails, it will not fail the whole build
-    - ALLOW_FAIL=1
+#  - &acceptance-test
+#    stage: acceptance-test
+#    #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
+#    #   or when build triggered ad-hoc with special commit message
+#    #   tests will use extension version = branch which originated pull request
+#    #   or branch which was defined in ad-hoc trigger in Travis UI
+#    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
+#    php: 7.1
+#    env:
+#    - GATEWAY=API-TEST
+#    - MAGENTO2_RELEASE_VERSION=1
+#    install:
+#      #   check if files are same or not
+#      - cmp --silent ${MAGENTO2_RELEASES_FILE} ${MAGENTO2_COMPATIBILITY_FILE} && export COMPATIBILITY_CHECK=0 || export COMPATIBILITY_CHECK=1
+#      #   check from which file to take versions
+#      - if [[ ${COMPATIBILITY_CHECK}  == "0" ]]; then export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_RELEASES_FILE}); else export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_COMPATIBILITY_FILE}); fi
+#      #   get latest release shop extension version from SHOPVERSIONS file
+#      - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
+#      - echo "Testing with Magento2 ${MAGENTO2_VERSION} version."
+#      - bash .bin/remove-composer-lock-file.sh
+#      - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
+#      - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
+#      - travis_retry composer install $COMPOSER_ARGS
+#    script: bash .bin/run-ui-tests.sh
+#    after_script: skip
+#    after_success:
+#    - bash .bin/upload-logs-and-notify.sh
+#    - bash .bin/update-shop-release-versions.sh
+#    after_failure:
+#    - bash .bin/upload-logs-and-notify.sh fail
+#  #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
+#  #   tests will use extension version = branch which originated pull request
+#  - <<: *acceptance-test
+#    if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
+#    env:
+#    - GATEWAY=API-TEST
+#    - MAGENTO2_RELEASE_VERSION=2
+#  #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
+#  #   tests will use extension version = branch which originated pull request
+#  - <<: *acceptance-test
+#    if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
+#    env:
+#    - GATEWAY=API-TEST
+#    - MAGENTO2_RELEASE_VERSION=3
+#  #   run this stage when shop system updated with latest shop extension release version
+#  #   tests will use latest released extension version
+#  - <<: *acceptance-test
+#  # when commit message contains string "Update latest shop releases"
+#    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+#    env:
+#    - GATEWAY=API-TEST
+#    - MAGENTO2_RELEASE_VERSION=1
+#  # will check latest released extension version with latest shop version
+#    - LATEST_EXTENSION_RELEASE=1
+#  # if this stage fails, it will not fail the whole build
+#    - ALLOW_FAIL=1
+#  - <<: *acceptance-test
+#  # when commit message contains string "Update latest shop releases"
+#    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+#    env:
+#  # will check master branch with latest shop version
+#    - GATEWAY=API-TEST
+#    - MAGENTO2_RELEASE_VERSION=1
+#  # if this stage fails, it will not fail the whole build
+#    - ALLOW_FAIL=1
 
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
@@ -143,21 +143,21 @@ matrix:
     before_script: skip
     script: skip
     after_script: skip
-    before_deploy:
-    - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
-    - export RELEASE_NOTES=$(composer make-release-notes)
-    - bash .bin/generate-wiki-notes.sh
-    - bash .bin/generate-readme-badge.sh
-    deploy:
-      provider: releases
-      github_token: ${GITHUB_TOKEN}
-      api_key: ${GITHUB_TOKEN}
-      name: "${REPO_NAME} ${TRAVIS_TAG}"
-      body: "${RELEASE_NOTES}"
-      skip_cleanup: true
-      on:
-        repo: ${TRAVIS_REPO_SLUG}
-        tags: true
+    before_deploy: skip
+#    - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
+#    - export RELEASE_NOTES=$(composer make-release-notes)
+#    - bash .bin/generate-wiki-notes.sh
+#    - bash .bin/generate-readme-badge.sh
+    deploy: skip
+#      provider: releases
+#      github_token: ${GITHUB_TOKEN}
+#      api_key: ${GITHUB_TOKEN}
+#      name: "${REPO_NAME} ${TRAVIS_TAG}"
+#      body: "${RELEASE_NOTES}"
+#      skip_cleanup: true
+#      on:
+#        repo: ${TRAVIS_REPO_SLUG}
+#        tags: true
     after_deploy:
     - export TMPDIR=/tmp/wirecard
     - git clone -b master --depth 1 https://$WIRECARD_CEE_GITHUB_TOKEN@github.com/$DEPLOYMENT_PROJECT $TMPDIR
@@ -179,12 +179,12 @@ after_script:
 
 notifications:
   email: false
-  slack:
-    rooms:
-      secure: YI7sUrfMyKyJD60kElGkO7yBDkGEh+069yS8bFAIDUST7s48J+dDP/r2G9dN9oQwhs9hvNjpNytpZDPys838T+Z0mNtFZ9Wu022hV3MpbKUuMl7L9P0MQQmxjg4bKyKK3Hl9tPrZ3UsKRlwIUmRGGYQ7cjs4zumorqs19YsB3X+WnnxAmmYB3kHQYfNKgVnmcG2QHJyx5KaLZ0EsWynSHXkYb8bVCtdlbQFNnpChvGHPprZrHAszLCYnlU7AEZGdbuk17oIfXO9Wjuu1GV8iJ2VgKkTCzW4FBC5eHJyZezojPFUm1I5tvdihRZuyBekVGOF23J6pvHLqPx77clT+/Vn6T+UMDuh1INZ0LKt4UOU42oEDKGblWZx2VYWcHwfEK+ckJWZkT9EBfg/CMenJly2tbtBj6++XNvxgGEDn6XqKIEatcb7X/aiy4f8BPXa3/pzgZAlvzZbGGqHFNZPAlgcXBBXgbaC7VvMhvi6Z5AG5ylKzPS5GCD95ozPC+cGv0234TBJus5oZck4qNiT53IUQ7Ta+OGVB0Mea105VAoQI0I7YcgaqW6c4h2YTmnuuQsIzAwPOrJ5TAinj8Z8mZ9C11tEcNF3Pgy1tOoG/YLurhOJm7v1ebotRb/DIeSHU8RfNatnDSSky4YS6Y8k2pQthdC9m7m2f2mJYuGdLjlM=
-    template:
-    - "%{repository}#%{build_number} (%{branch} : %{author}): %{message}"
-    - "Change view : %{compare_url}"
-    - "Build details : %{build_url}"
-    on_success: change
-    on_failure: change
+#  slack:
+#    rooms:
+#      secure: YI7sUrfMyKyJD60kElGkO7yBDkGEh+069yS8bFAIDUST7s48J+dDP/r2G9dN9oQwhs9hvNjpNytpZDPys838T+Z0mNtFZ9Wu022hV3MpbKUuMl7L9P0MQQmxjg4bKyKK3Hl9tPrZ3UsKRlwIUmRGGYQ7cjs4zumorqs19YsB3X+WnnxAmmYB3kHQYfNKgVnmcG2QHJyx5KaLZ0EsWynSHXkYb8bVCtdlbQFNnpChvGHPprZrHAszLCYnlU7AEZGdbuk17oIfXO9Wjuu1GV8iJ2VgKkTCzW4FBC5eHJyZezojPFUm1I5tvdihRZuyBekVGOF23J6pvHLqPx77clT+/Vn6T+UMDuh1INZ0LKt4UOU42oEDKGblWZx2VYWcHwfEK+ckJWZkT9EBfg/CMenJly2tbtBj6++XNvxgGEDn6XqKIEatcb7X/aiy4f8BPXa3/pzgZAlvzZbGGqHFNZPAlgcXBBXgbaC7VvMhvi6Z5AG5ylKzPS5GCD95ozPC+cGv0234TBJus5oZck4qNiT53IUQ7Ta+OGVB0Mea105VAoQI0I7YcgaqW6c4h2YTmnuuQsIzAwPOrJ5TAinj8Z8mZ9C11tEcNF3Pgy1tOoG/YLurhOJm7v1ebotRb/DIeSHU8RfNatnDSSky4YS6Y8k2pQthdC9m7m2f2mJYuGdLjlM=
+#    template:
+#    - "%{repository}#%{build_number} (%{branch} : %{author}): %{message}"
+#    - "Change view : %{compare_url}"
+#    - "Build details : %{build_url}"
+#    on_success: change
+#    on_failure: change
