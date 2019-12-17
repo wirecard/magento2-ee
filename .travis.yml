@@ -130,39 +130,23 @@ matrix:
     - .bin/rake phraseapp:ci_check_if_in_sync
     after_script: skip
 
-  - stage: deploy
+  - stage: trigger-white-labelling
     if: tag IS present AND type = push
     language: php
     php: 7.1
     before_install: skip
     install:
-    - travis_retry composer install $COMPOSER_ARGS
-    - rvm install 2.5.3
-    - travis_retry gem install bundler -v 2.0.1
+      - rvm install 2.5.3
+      - travis_retry gem install bundler -v 2.0.1
     after_install: skip
-    before_script: skip
-    script: skip
+    before_script:
+      - bash .bin/check-release-notes-exist.sh
+    script:
+      - export TMPDIR=/tmp/wirecard
+      - git clone -b master --depth 1 https://$WIRECARD_CEE_GITHUB_TOKEN@github.com/$DEPLOYMENT_PROJECT $TMPDIR
+      - cd $TMPDIR && travis_retry bundle install
+      - bin/rake trigger_build
     after_script: skip
-    before_deploy:
-    - export REPO_NAME=`echo $TRAVIS_REPO_SLUG | awk -F'/' '{print $2}'`
-    - export RELEASE_NOTES=$(composer make-release-notes)
-    - bash .bin/generate-wiki-notes.sh
-    - bash .bin/generate-readme-badge.sh
-    deploy:
-      provider: releases
-      github_token: ${GITHUB_TOKEN}
-      api_key: ${GITHUB_TOKEN}
-      name: "${REPO_NAME} ${TRAVIS_TAG}"
-      body: "${RELEASE_NOTES}"
-      skip_cleanup: true
-      on:
-        repo: ${TRAVIS_REPO_SLUG}
-        tags: true
-    after_deploy:
-    - export TMPDIR=/tmp/wirecard
-    - git clone -b master --depth 1 https://$WIRECARD_CEE_GITHUB_TOKEN@github.com/$DEPLOYMENT_PROJECT $TMPDIR
-    - cd $TMPDIR && travis_retry bundle install
-    - bin/rake trigger_build
 
 install:
   - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0

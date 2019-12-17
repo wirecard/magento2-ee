@@ -9,29 +9,26 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged && startsWith(github.head_ref, 'RC-')
     steps:
-      - uses: actions/checkout@master
-      - name: Tag and perpare release
+      - uses: actions/checkout@v2-beta
+        with:
+          ref: 'master'
+      - name: Set global git conf
+        run: git config --global user.email "" && git config --global user.name "github-actions"
+      - name: Tag and prepare release
         id: tag_and_prepare_release
         uses: wirecard/semver-release-action@master
         with:
           release_branch: master
+          release_strategy: none
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload release notes
+      - name: Push tag to GitHub
+        run: git tag -a ${{ steps.tag_and_prepare_release.outputs.tag }} -m "Pre release" && git push origin ${{ steps.tag_and_prepare_release.outputs.tag }}
+      - name: Create release on tag with release notes
         if: steps.tag_and_prepare_release.outputs.tag
-        uses: wirecard/github-create-release-action@master #Fork Roang-zero1/github-create-release-action once PR is merged
+        uses: wirecard/github-create-release-action@master
         with:
-          CREATED_TAG: ${{ steps.tag_and_prepare_release.outputs.tag }}
+          created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
+          release_title: magento2-ee ${{steps.tag_and_prepare_release.outputs.tag}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create release package
-        uses: wirecard/php-artifact-action@master
-      - name: Upload release package
-        id: upload_release_assets
-        uses: wirecard/upload-release-action@1.0.1
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: artifact.zip
-          asset_name: magento2-ee-${{ steps.tag_and_prepare_release.outputs.tag }}.zip
-          tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
-          overwrite: true
