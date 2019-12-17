@@ -28,9 +28,6 @@
   },
   "type": "magento2-module",
   "scripts": {
-    "make-readme-badge": "@php .bin/version-helper.php -r",
-    "make-wiki-notes": "@php .bin/version-helper.php -w",
-    "make-release-notes": "@php .bin/version-helper.php",
     "upload-coverage": "codacycoverage clover build/coverage/xml",
     "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
     "cs-fix": "php-cs-fixer fix .",
