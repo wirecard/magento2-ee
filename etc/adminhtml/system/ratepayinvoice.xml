@@ -20,22 +20,22 @@
             <label>config_title</label>
         </field>
         <include path="Wirecard_ElasticEngine::system/credentials.xml" />
-        <field id="min_order_total" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="min_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>config_basket_min</label>
         </field>
-        <field id="max_order_total" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="max_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>config_basket_max</label>
         </field>
-        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>payment_from_applicable_countries</label>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
         </field>
-        <field id="specificcountry" translate="label" type="multiselect" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>payment_from_specific_countries</label>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <can_be_empty>1</can_be_empty>
         </field>
-        <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>config_billing_shipping</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
@@ -44,7 +44,7 @@
             <label>config_sort_order</label>
             <frontend_class>validate-number</frontend_class>
         </field>
-        <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+        <field id="send_additional" translate="label" type="select" sortOrder="110" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>config_additional_info</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

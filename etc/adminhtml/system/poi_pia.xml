@@ -22,7 +22,7 @@
             <label>config_title</label>
         </field>
         <include path="Wirecard_ElasticEngine::system/credentials.xml" />
-        <field id="poipia_action" translate="label" type="select" sortOrder="90" showInDefault="1"
+        <field id="poipia_action" translate="label" type="select" sortOrder="60" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>config_payment_action</label>
             <source_model>Wirecard\ElasticEngine\Model\Adminhtml\Source\PoiPiaAction</source_model>
@@ -32,7 +32,7 @@
             <label>config_sort_order</label>
             <frontend_class>validate-number</frontend_class>
         </field>
-        <field id="send_additional" translate="label" type="select" sortOrder="60" showInDefault="1"
+        <field id="send_additional" translate="label" type="select" sortOrder="70" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>config_additional_info</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

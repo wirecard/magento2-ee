@@ -20,20 +20,20 @@
             <label>config_title</label>
         </field>
         <include path="Wirecard_ElasticEngine::system/credentials.xml" />
-        <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
+        <field id="zapp_merchant_return_string" translate="label" type="text" sortOrder="60" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>config_zapp_merchant_return_string</label>
+            <comment>config_zapp_merchant_return_string_desc</comment>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
                showInStore="0">
             <label>config_sort_order</label>
             <frontend_class>validate-number</frontend_class>
         </field>
-        <field id="send_additional" translate="label" type="select" sortOrder="90" showInDefault="1"
+        <field id="send_additional" translate="label" type="select" sortOrder="70" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>config_additional_info</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-        </field>
-        <field id="zapp_merchant_return_string" translate="label" type="text" sortOrder="100" showInDefault="1"
-               showInWebsite="1" showInStore="1">
-            <label>config_zapp_merchant_return_string</label>
-            <comment>config_zapp_merchant_return_string_desc</comment>
         </field>
     </group>
 </include>

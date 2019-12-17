@@ -25,10 +25,10 @@
             <backend_model>Wirecard\ElasticEngine\Model\Config\Backend\CreditCardConfig</backend_model>
         </field>
         <include path="Wirecard_ElasticEngine::system/credentials.xml" />
-        <field id="three_d_merchant_account_id" translate="label" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="three_d_merchant_account_id" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>config_three_d_merchant_account_id</label>
         </field>
-        <field id="three_d_secret" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="three_d_secret" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>config_three_d_merchant_secret</label>
         </field>
         <field id="ssl_max_limit" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">

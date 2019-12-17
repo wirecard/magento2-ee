@@ -44,21 +44,8 @@
                 </comment>
                 <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"/>
             </group>
-            <group id="credentials" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>test_credentials</label>
-                <field id="base_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>config_base_url</label>
-                    <comment>config_base_url_desc</comment>
-                </field>
-                <field id="http_user" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>config_http_user</label>
-                </field>
-                <field id="http_pass" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>config_http_password</label>
-                </field>
-                <field id="button_test_credentials" translate="label" type="button" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Wirecard\ElasticEngine\Block\Widget\TestCredentialsButton</frontend_model>
-                </field>
+            <group id="support_request" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>support_request</label>
                 <field id="button_contact_support" translate="label" type="button" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Wirecard\ElasticEngine\Block\Widget\SupportRequestButton</frontend_model>
                 </field>
