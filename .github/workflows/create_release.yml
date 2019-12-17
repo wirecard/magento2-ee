@@ -29,6 +29,6 @@ jobs:
         uses: wirecard/github-create-release-action@master
         with:
           created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
-          release_title: magento2-ee ${{steps.tag_and_prepare_release.outputs.tag}}
+          release_title: ${{steps.tag_and_prepare_release.outputs.tag}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
