@@ -49,7 +49,6 @@ class Credentials extends Action
     public function execute()
     {
         $data = $this->getRequest()->getParams();
-        $this->logger->debug('this is baseUrl: ' . $data['baseUrl']);
 
         $config = new Config($data['baseUrl'], $data['httpUser'], $data['httpPass']);
         $transactionService = new TransactionService($config, $this->logger);

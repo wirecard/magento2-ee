@@ -6,18 +6,26 @@
 
 namespace Wirecard\ElasticEngine\Block\Adminhtml\System\Config;
 
+/**
+ * Class TestCredentials
+ * @package Wirecard\ElasticEngine\Block\Adminhtml\System\Config
+ * @since 3.0.0
+ */
 class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field
 {
-    const CREDENTIAL_TEST_TEMPLATE = 'Wirecard_ElasticEngine::system/config/test_credentials.phtml';
+    const TEST_CREDENTIALS_TEMPLATE = 'Wirecard_ElasticEngine::system/config/test_credentials.phtml';
 
     const TEST_CREDENTIALS_CONTROLLER_PATH = 'wirecard_elasticengine/test/credentials';
 
-    private $sectionPath;
+    /** @var string */
+    private $sectionName;
 
+    /** @var string */
     private $buttonLabel;
 
     /**
      * @return string
+     * @since 3.0.0
      */
     public function getAjaxUrl()
     {
@@ -26,6 +34,7 @@ class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field
 
     /**
      * @return string
+     * @since 3.0.0
      */
     public function getButtonLabel()
     {
@@ -34,26 +43,28 @@ class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field
 
     /**
      * @return string
+     * @since 3.0.0
      */
-    public function getSectionPath()
+    public function getSectionName()
     {
-        return $this->sectionPath;
+        return $this->sectionName;
     }
 
     /**
+     * phpcs:ignore NeutronStandard.MagicMethods.RiskyMagicMethod.RiskyMagicMethod
+     *
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
      * @return string
+     * @since 3.0.0
      */
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         $originalData = $element->getOriginalData();
-        $path = $originalData['path'];
-        $this->initSectionPath($path);
-        $this->buttonLabel = __($originalData['button_label']);
+        $this->init($originalData);
         $this->addData(
             [
                 'html_id' => $element->getHtmlId(),
-                'section_path' => $this->getSectionPath()
+                'section_name' => $this->getSectionName()
             ]
         );
 
@@ -61,23 +72,30 @@ class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field
     }
 
     /**
+     * phpcs:ignore NeutronStandard.MagicMethods.RiskyMagicMethod.RiskyMagicMethod
+     *
      * @return $this|\Magento\Config\Block\System\Config\Form\Field
+     * @since 3.0.0
      */
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
         if (!$this->getTemplate()) {
-            $this->setTemplate(self::CREDENTIAL_TEST_TEMPLATE);
+            $this->setTemplate(self::TEST_CREDENTIALS_TEMPLATE);
         }
         return $this;
     }
 
     /**
-     * @param $path
+     * @param array $elementData
+     * @since 3.0.0
      */
-    private function initSectionPath($path)
+    private function init($elementData)
     {
-        $sectionPath = str_replace(DIRECTORY_SEPARATOR, '_', $path);
-        $this->sectionPath = $sectionPath;
+        $sectionPath = $elementData['path'];
+        $sectionName = str_replace(DIRECTORY_SEPARATOR, '_', $sectionPath);
+
+        $this->sectionName = $sectionName;
+        $this->buttonLabel = __($elementData['button_label']);
     }
 }
