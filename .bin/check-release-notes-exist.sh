@@ -12,6 +12,6 @@ set -x
 RELEASE_NOTES=$(curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/${TRAVIS_REPO_SLUG}/releases/tags/${TRAVIS_TAG} | jq -r ' .body')
 while [ -z  "${RELEASE_NOTES}" ] || [ "${RELEASE_NOTES}" == 'null' ]; do
     echo "Waiting for release notes to apear"
-    ((c++)) && ((c==50)) && break
+    ((c++)) && ((c==50)) && echo "No release notes available" && exit 1
     sleep 1
 done
