@@ -1,0 +1,38 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+ */
+
+/**
+ * @var $block \Wirecard\ElasticEngine\Block\Adminhtml\System\Config\SupportRequest
+ */
+?>
+<script type="application/javascript">
+    require(['jquery', 'Magento_Ui/js/modal/alert'], function ($, alert) {
+        function sendSupportRequest(sectionPath) {
+            console.log('sent request successfully');
+            alertResult('Sent support request');
+        }
+
+        function alertResult(message) {
+            alert({
+                title: $.mage.__('Info'),
+                content: $.mage.__(message),
+                actions: {
+                    always: function () {
+                    }
+                }
+            });
+        }
+
+        window.sendSupportRequest = sendSupportRequest;
+    });
+</script>
+<button onclick="javascript:sendSupportRequest('<?= $block->getDataByKey('section_path') ?>'); return false;"
+        class="submit btn" type="button" id="<?= $block->escapeHtmlAttr($block->getHtmlId()) ?>">
+    <span><?= $block->getButtonLabel() ?></span>
+</button>

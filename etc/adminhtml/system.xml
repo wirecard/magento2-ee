@@ -45,9 +45,16 @@
                 <field id="dummy" type="hidden" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1"/>
             </group>
             <group id="support_request" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>support_request</label>
-                <field id="button_contact_support" translate="label" type="button" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Wirecard\ElasticEngine\Block\Widget\SupportRequestButton</frontend_model>
+                <label>text_support</label>
+                <field id="merchant_mail_address" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>config_email</label>
+                </field>
+                <field id="merchant_message" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>config_message</label>
+                </field>
+                <field id="button_contact_support" translate="button_label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <button_label>send_email</button_label>
+                    <frontend_model>Wirecard\ElasticEngine\Block\Adminhtml\System\Config\SupportRequest</frontend_model>
                 </field>
             </group>
             <group id="settings" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
