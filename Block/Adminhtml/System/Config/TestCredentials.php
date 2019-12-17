@@ -54,8 +54,6 @@ class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field
     }
 
     /**
-     * phpcs:ignore NeutronStandard.MagicMethods.RiskyMagicMethod.RiskyMagicMethod
-     *
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
      * @return string
      * @since 3.0.0
@@ -75,8 +73,6 @@ class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field
     }
 
     /**
-     * phpcs:ignore NeutronStandard.MagicMethods.RiskyMagicMethod.RiskyMagicMethod
-     *
      * @return $this|\Magento\Config\Block\System\Config\Form\Field
      * @since 3.0.0
      */
