@@ -117,8 +117,7 @@ class Creditcard extends Action
         ConfigInterface $methodConfig,
         LoggerInterface $logger,
         ThreeDsHelper $threeDsHelper
-    )
-    {
+    ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->quoteRepository = $quoteRepository;
@@ -169,7 +168,8 @@ class Creditcard extends Action
         $orderDto->orderId = $quote->getReservedOrderId();
 
         $orderDto->config = $transactionService->getConfig()->get($txName);
-        $this->processCreditCard($orderDto, $txType);
+        $this->addCreditCardFields($orderDto, $txType);
+        $this->addCreditCardThreeDsFields($orderDto);
         try {
             $data = $transactionService->getCreditCardUiWithData(
                 $orderDto->transaction,
@@ -259,7 +259,7 @@ class Creditcard extends Action
      * @since 2.0.1 set order-number
      * @since 2.1.0 add 3D Secure parameters via ThreeDsHelper
      */
-    private function processCreditCard(OrderDTO $orderDto, string $txType)
+    private function addCreditCardFields(OrderDTO $orderDto, string $txType)
     {
         $className = $this->findTransactionClassByFrontendType($txType);
         $orderDto->transaction = new $className();
@@ -280,6 +280,14 @@ class Creditcard extends Action
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
+    }
+
+    /**
+     * @param $orderDto
+     * @since 3.0.0
+     */
+    private function addCreditCardThreeDsFields($orderDto)
+    {
         $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
         $orderDto->transaction = $this->threeDsHelper->getThreeDsTransaction(
             $challengeIndicator,
