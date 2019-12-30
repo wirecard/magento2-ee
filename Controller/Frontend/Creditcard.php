@@ -35,6 +35,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 class Creditcard extends Action
 {
@@ -46,34 +47,34 @@ class Creditcard extends Action
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
 
-    /** @var JsonFactory Magento2 JsonFactory injected by DI */
+    /** @var JsonFactory */
     protected $resultJsonFactory;
 
-    /** @var CartRepositoryInterface Magento2 cart repository injected by DI */
+    /** @var CartRepositoryInterface */
     protected $cartRepository;
 
-    /** @var Session Magento2 checkout session injected by DI */
+    /** @var Session */
     protected $checkoutSession;
 
-    /** @var TransactionServiceFactory paymentSDK TransactionService injected by DI */
+    /** @var TransactionServiceFactory */
     protected $transactionServiceFactory;
 
-    /** @var Calculation Magneto2 tax calculator injected by DI */
+    /** @var Calculation */
     protected $taxCalculation;
 
-    /** @var ResolverInterface Magento2 Resolver injected by DI */
+    /** @var ResolverInterface */
     protected $resolver;
 
-    /** @var StoreManagerInterface Magento2 StoreManager injected by DI */
+    /** @var StoreManagerInterface */
     protected $storeManager;
 
-    /** @var UrlInterface Magento2 UrlInterface injected by DI */
+    /** @var UrlInterface */
     protected $urlBuilder;
 
-    /** @var Data Magento2 PaymentHelper injected by DI */
+    /** @var Data */
     protected $paymentHelper;
 
-    /** @var ConfigInterface Magento2 payment method config injected by DI */
+    /** @var ConfigInterface */
     protected $methodConfig;
 
     /** @var LoggerInterface */
@@ -82,6 +83,7 @@ class Creditcard extends Action
     /** @var ThreeDsHelper */
     protected $threeDsHelper;
 
+    /** @var CartRepositoryInterface */
     protected $quoteRepository;
 
     /**
@@ -115,7 +117,8 @@ class Creditcard extends Action
         ConfigInterface $methodConfig,
         LoggerInterface $logger,
         ThreeDsHelper $threeDsHelper
-    ) {
+    )
+    {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->quoteRepository = $quoteRepository;
@@ -144,8 +147,6 @@ class Creditcard extends Action
      *
      * @return Json
      * @throws LocalizedException
-     *
-     * @since 2.2.1 Remove deprecated method usage for quote
      */
     public function execute()
     {
@@ -166,21 +167,16 @@ class Creditcard extends Action
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
-        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-
         $language = $this->getSupportedWppLangCode();
-
-        $paymentAction = $method->getConfigData('payment_action');
-        if ($paymentAction === PaymentAction::AUTHORIZE_CAPTURE) {
-            $paymentAction = "purchase";
-        } else {
-            $paymentAction = "authorization";
-        }
 
         $orderDto->config = $transactionService->getConfig()->get($txName);
         $this->processCreditCard($orderDto, $txType);
         try {
-            $data = $transactionService->getCreditCardUiWithData($orderDto->transaction, $paymentAction, $language);
+            $data = $transactionService->getCreditCardUiWithData(
+                $orderDto->transaction,
+                $this->getTransactionTypeForPaymentAction(),
+                $language
+            );
             if (empty($data)) {
                 throw new \Exception("Cannot create UI");
             }
@@ -188,6 +184,21 @@ class Creditcard extends Action
         } catch (\Exception $e) {
             return $this->buildErrorResponse('cannot create UI', ['exception' => get_class($e)]);
         }
+    }
+
+    /**
+     * @return string
+     * @throws LocalizedException
+     * @since 3.0.0
+     */
+    private function getTransactionTypeForPaymentAction()
+    {
+        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
+        $paymentAction = $method->getConfigData('payment_action');
+        if ($paymentAction === PaymentAction::AUTHORIZE) {
+            return Transaction::TYPE_AUTHORIZATION;
+        }
+        return Transaction::TYPE_PURCHASE;
     }
 
     /**
@@ -255,7 +266,7 @@ class Creditcard extends Action
         $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
-        $currency         = $orderDto->quote->getBaseCurrencyCode();
+        $currency = $orderDto->quote->getBaseCurrencyCode();
         $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
         $this->addOrderIdToTransaction($orderDto);
@@ -263,8 +274,8 @@ class Creditcard extends Action
         $orderDto->transaction->setEntryMode('ecommerce');
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
-        $cfgkey       = $orderDto->transaction->getConfigKey();
-        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        $cfgkey = $orderDto->transaction->getConfigKey();
+        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $methodAppend = '?method=' . urlencode($cfgkey);
 
         $orderDto->transaction->setRedirect(new Redirect(
@@ -321,12 +332,12 @@ class Creditcard extends Action
      */
     private function addOrderItemsToBasket(OrderDto $orderDto)
     {
-        $items    = $orderDto->quote->getAllVisibleItems();
+        $items = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount    = new Amount((float)$orderItem->getPriceInclTax(), $currency);
+            $amount = new Amount((float)$orderItem->getPriceInclTax(), $currency);
             $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
-            $item      = new Item($orderItem->getName(), $amount, $orderItem->getQty());
+            $item = new Item($orderItem->getName(), $amount, $orderItem->getQty());
             $item->setTaxAmount($taxAmount);
             $item->setTaxRate($this->calculateTax(
                 $orderItem->getTaxAmount(),
@@ -375,11 +386,11 @@ class Creditcard extends Action
     private function getSupportedWppLangCode()
     {
         //Set default for exception case
-        $language  = 'en';
-        $locale    = $this->resolver->getLocale();
+        $language = 'en';
+        $locale = $this->resolver->getLocale();
 
         //Shorten to ISO-639-1 because of magento2 special cases e.g. zh_Hans_CN
-        $locale    = mb_substr($locale, 0, 2);
+        $locale = mb_substr($locale, 0, 2);
         $converter = new WppVTwoConverter();
 
         try {
