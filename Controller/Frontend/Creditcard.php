@@ -267,7 +267,7 @@ class Creditcard extends Action
         $orderDto->transaction->setConfig($orderDto->config);
 
         $currency = $orderDto->quote->getBaseCurrencyCode();
-        $orderDto->amount = new Amount((float)$orderDto->quote->getGrandTotal(), $currency);
+        $orderDto->amount = new Amount((float)$orderDto->quote->getBaseGrandTotal(), $currency);
         $orderDto->transaction->setAmount($orderDto->amount);
         $this->addOrderIdToTransaction($orderDto);
 
@@ -275,25 +275,32 @@ class Creditcard extends Action
         $orderDto->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
 
         $cfgkey = $orderDto->transaction->getConfigKey();
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
         $methodAppend = '?method=' . urlencode($cfgkey);
-
-        $orderDto->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend,
-            $wdBaseUrl . 'frontend/cancel' . $methodAppend,
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend
-        ));
+        $orderDto->transaction->setRedirect($this->createRedirect($methodAppend));
 
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
-
-        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
-        $challengeIndicator = $method->getConfigData('challenge_ind');
+        $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
         $orderDto->transaction = $this->threeDsHelper->getThreeDsTransaction(
             $challengeIndicator,
             $orderDto->transaction,
             $orderDto
+        );
+    }
+
+    /**
+     * @param string $paymentMethod
+     * @return Redirect
+     * @since 2.2.2
+     */
+    private function createRedirect($paymentMethod)
+    {
+        $routeUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
+        return new Redirect(
+            $routeUrl . 'frontend/redirect' . $paymentMethod,
+            $routeUrl . 'frontend/cancel' . $paymentMethod,
+            $routeUrl . 'frontend/redirect' . $paymentMethod
         );
     }
 
@@ -335,14 +342,15 @@ class Creditcard extends Action
         $items = $orderDto->quote->getAllVisibleItems();
         $currency = $orderDto->quote->getBaseCurrencyCode();
         foreach ($items as $orderItem) {
-            $amount = new Amount((float)$orderItem->getPriceInclTax(), $currency);
-            $taxAmount = new Amount((float)$orderItem->getTaxAmount(), $currency);
-            $item = new Item($orderItem->getName(), $amount, $orderItem->getQty());
-            $item->setTaxAmount($taxAmount);
-            $item->setTaxRate($this->calculateTax(
-                $orderItem->getTaxAmount(),
-                $orderItem->getPriceInclTax()
-            ));
+            $totalAmount = $orderItem->getBasePriceInclTax();
+            $taxAmount = $orderItem->getBaseTaxAmount();
+            $item = new Item(
+                $orderItem->getName(),
+                new Amount((float)$totalAmount, $currency),
+                $orderItem->getQty()
+            );
+            $item->setTaxAmount(new Amount((float)$taxAmount, $currency));
+            $item->setTaxRate($this->calculateTax($taxAmount, $totalAmount));
             $orderDto->basket->add($item);
         }
     }

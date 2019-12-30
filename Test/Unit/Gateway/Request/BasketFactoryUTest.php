@@ -122,10 +122,13 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods([
                 'getShippingInclTax',
+                'getBaseShippingInclTax',
                 'getShippingDescription',
                 'getShippingMethod',
                 'getShippingTaxAmount',
-                'getDiscountAmount'
+                'getBaseShippingTaxAmount',
+                'getDiscountAmount',
+                'getBaseDiscountAmount'
             ])
             ->getMock();
 
@@ -156,6 +159,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['getOrigData', 'getQtyInvoiced', 'getProduct', 'getName'])
             ->getMockForAbstractClass();
         $item->method('getPriceInclTax')->willReturn($priceInc);
+        $item->method('getBasePriceInclTax')->willReturn($priceInc);
         $item->method('getOrigData')->willReturn($origData);
         $item->method('getQtyInvoiced')->willReturn($qtyInvoice);
         $item->method('getDiscountInvoiced')->willReturn($discountInvoices);
@@ -170,11 +174,11 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUpWithQuoteData()
     {
-        $this->shippingAddress->method('getShippingInclTax')->willReturn(5.0);
+        $this->shippingAddress->method('getBaseShippingInclTax')->willReturn(5.0);
         $this->shippingAddress->method('getShippingDescription')->willReturn('Fixed Flat Rate');
         $this->shippingAddress->method('getShippingMethod')->willReturn('flatrate_flatrate');
-        $this->shippingAddress->method('getShippingTaxAmount')->willReturn(0.0);
-        $this->shippingAddress->method('getDiscountAmount')->willReturn(-1.0);
+        $this->shippingAddress->method('getBaseShippingTaxAmount')->willReturn(0.0);
+        $this->shippingAddress->method('getBaseDiscountAmount')->willReturn(-1.0);
 
         $this->quote->method('getShippingAddress')->willReturn($this->shippingAddress);
         $this->checkoutSession->method('getQuote')->willReturn($this->quote);

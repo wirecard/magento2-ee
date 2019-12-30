@@ -25,7 +25,6 @@ use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 use Wirecard\PaymentSdk\Transaction\Operation;
-use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -37,6 +36,9 @@ class TransactionFactory
     const PAYMENT = 'payment';
     const AMOUNT = 'amount';
     const REFUND_OPERATION = Operation::CREDIT;
+    const CONFIG_KEY_SEND_ADDITIONAL = 'send_additional';
+    const CONFIG_KEY_SEND_BASKET = 'send_shopping_basket';
+    const FIELD_KEY_ORDER_ID = 'order_id';
 
     /**
      * @var UrlInterface
@@ -152,37 +154,17 @@ class TransactionFactory
         }
 
         /** @var PaymentDataObjectInterface $payment */
-        $payment = $commandSubject[self::PAYMENT];
-
+        $payment       = $commandSubject[self::PAYMENT];
         /** @var OrderAdapterInterface $order */
-        $order = $payment->getOrder();
-
-        $amount = new Amount((float)$order->getGrandTotalAmount(), $order->getCurrencyCode());
-        $this->transaction->setAmount($amount);
-
+        $order         = $payment->getOrder();
+        $cfgkey        = $this->transaction->getConfigKey();
         $this->orderId = $order->getOrderIncrementId();
+
         $this->addOrderIdToTransaction($this->orderId);
+        $this->addBasicValuesToTransaction($order->getGrandTotalAmount(), $order->getCurrencyCode());
+        $this->addRedirectUrlsToTransaction($cfgkey);
 
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-
-        $cfgkey = $this->transaction->getConfigKey();
-
-        // Special handling for the non-standard mapping
-        if ($this->transaction instanceof RatepayInvoiceTransaction) {
-            $cfgkey = RatepayInvoiceTransaction::NAME;
-        }
-
-        $wdBaseUrl = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $methodAppend = '?method=' . urlencode($cfgkey);
-
-        $this->transaction->setRedirect(new Redirect(
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend,
-            $wdBaseUrl . 'frontend/cancel' . $methodAppend,
-            $wdBaseUrl . 'frontend/redirect' . $methodAppend
-        ));
-
-        if ($this->methodConfig->getValue('send_additional')) {
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_ADDITIONAL)) {
             $this->setAdditionalInformation($order);
         }
 
@@ -211,13 +193,10 @@ class TransactionFactory
         $payment = $paymentDo->getPayment();
 
         $this->orderId = $order->getId();
-        $captureAmount = $commandSubject[self::AMOUNT];
-        $amount = new Amount((float)$captureAmount, $order->getCurrencyCode());
         $this->transaction->setParentTransactionId($payment->getParentTransactionId());
-        $this->transaction->setAmount($amount);
 
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+        $captureAmount = $commandSubject[self::AMOUNT];
+        $this->addBasicValuesToTransaction($captureAmount, $order->getCurrencyCode());
 
         return $this->transaction;
     }
@@ -245,9 +224,7 @@ class TransactionFactory
 
         $this->orderId = $order->getId();
         $this->transactionId = $payment->getParentTransactionId();
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount((float)$commandSubject[self::AMOUNT], $order->getCurrencyCode()));
+        $this->addBasicValuesToTransaction($commandSubject[self::AMOUNT], $order->getCurrencyCode());
 
         return $this->transaction;
     }
@@ -271,9 +248,7 @@ class TransactionFactory
 
         $this->orderId = $order->getId();
         $this->transactionId = $payment->getParentTransactionId();
-        $this->transaction->setEntryMode('ecommerce');
-        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
-        $this->transaction->setAmount(new Amount((float)$order->getGrandTotalAmount(), $order->getCurrencyCode()));
+        $this->addBasicValuesToTransaction($order->getGrandTotalAmount(), $order->getCurrencyCode());
         $this->transaction->setParentTransactionId($this->transactionId);
 
         return $this->transaction;
@@ -299,7 +274,10 @@ class TransactionFactory
         if (null != $order->getShippingAddress()) {
             $this->transaction->setShipping($this->accountHolderFactory->create($order->getShippingAddress()));
         }
-        $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+
+        if ($this->methodConfig->getValue(TransactionFactory::CONFIG_KEY_SEND_BASKET)) {
+            $this->transaction->setBasket($this->basketFactory->create($order, $this->transaction));
+        }
         $this->transaction->setIpAddress($order->getRemoteIp());
         $this->transaction->setConsumerId($order->getCustomerId());
 
@@ -323,7 +301,7 @@ class TransactionFactory
             ->setValue($payment->getId())
             ->create();
 
-        $filters[] = $this->filterBuilder->setField('order_id')
+        $filters[] = $this->filterBuilder->setField(TransactionFactory::FIELD_KEY_ORDER_ID)
             ->setValue($order->getId())
             ->create();
 
@@ -345,5 +323,60 @@ class TransactionFactory
         $customFields->add(new CustomField('orderId', $orderId));
         $this->transaction->setCustomFields($customFields);
         $this->transaction->setOrderNumber($orderId);
+    }
+
+    /**
+     * Add default values to transaction
+     * @param float $amount
+     * @param string $currencyCode
+     *
+     * @since 2.2.1
+     */
+    protected function addBasicValuesToTransaction($amount, $currencyCode)
+    {
+        $amount = new Amount((float)$amount, $currencyCode);
+        $this->transaction->setAmount($amount);
+        $this->transaction->setEntryMode('ecommerce');
+        $this->transaction->setLocale(substr($this->resolver->getLocale(), 0, 2));
+    }
+
+    /**
+     * Add redirect urls to transaction
+     * @param $method
+     *
+     * @since 2.2.1
+     */
+    protected function addRedirectUrlsToTransaction($method)
+    {
+        $redirectUrl = $this->formatRedirectUrls($method, 'redirect');
+        $cancelUrl   = $this->formatRedirectUrls($method, 'cancel');
+
+        $this->transaction->setRedirect(new Redirect(
+            $redirectUrl,
+            $cancelUrl,
+            $redirectUrl
+        ));
+    }
+
+    /**
+     * Format redirect urls
+     *
+     * @param $method
+     * @param $type
+     * @return string
+     *
+     * @since 2.2.1
+     */
+    protected function formatRedirectUrls($method, $type)
+    {
+        $method      = urlencode($method);
+        $redirectUrl = sprintf(
+            '%sfrontend/%s?method=%s',
+            $this->urlBuilder->getRouteUrl('wirecard_elasticengine'),
+            $type,
+            $method
+        );
+
+        return $redirectUrl;
     }
 }

@@ -22,6 +22,11 @@ class TranslationFallback extends \Magento\Framework\Phrase\Renderer\Translate
     private $fallbackTranslations = null;
 
     /**
+     * @var bool
+     */
+    private $fallbackTranslationsLoading;
+
+    /**
      * Wrapper function to intercept translation from Core Magento2 functionality.
      * This method gets a translation and if there is no entry in the set locale, it gets the translation from the
      * defined fallback locale.
@@ -35,19 +40,25 @@ class TranslationFallback extends \Magento\Framework\Phrase\Renderer\Translate
      */
     public function aroundRender(\Magento\Framework\Phrase\Renderer\Translate $subject, callable $proceed, array $source, array $arguments)
     {
-        if (!$this->fallbackTranslations) {
-            $originalLocale = $subject->translator->getLocale();
-            $subject->translator->setLocale($this->fallbackLocale);
-            $subject->translator->loadData(null, true);
+        if (!$this->fallbackTranslations && !$this->fallbackTranslationsLoading) {
+            $this->fallbackTranslationsLoading = true;
 
             try {
-                $this->fallbackTranslations = $subject->translator->getData();
-            } catch (\Exception $e) {
-                $subject->logger->critical($e->getMessage());
-                throw $e;
+                $originalLocale = $subject->translator->getLocale();
+                $subject->translator->setLocale($this->fallbackLocale);
+                $subject->translator->loadData(null, true);
+
+                try {
+                    $this->fallbackTranslations = $subject->translator->getData();
+                } catch (\Exception $e) {
+                    $subject->logger->critical($e->getMessage());
+                    throw $e;
+                }
+                $subject->translator->setLocale($originalLocale);
+                $subject->translator->loadData(null, true);
+            } finally {
+                $this->fallbackTranslationsLoading = false;
             }
-            $subject->translator->setLocale($originalLocale);
-            $subject->translator->loadData(null, true);
         }
 
         $translationKey = end($source);

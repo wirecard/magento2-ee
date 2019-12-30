@@ -10,6 +10,8 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
+use Wirecard\ElasticEngine\Gateway\Validator;
+use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
@@ -24,12 +26,19 @@ class AccountHolderFactory
     private $addressFactory;
 
     /**
+     * @var ValidatorFactory
+     */
+    private $validatorFactory;
+
+    /**
      * AccountHolderFactory constructor.
      * @param AddressFactory $addressFactory
+     * @param ValidatorFactory $validatorFactory
      */
-    public function __construct(AddressFactory $addressFactory)
+    public function __construct(AddressFactory $addressFactory, ValidatorFactory $validatorFactory)
     {
         $this->addressFactory = $addressFactory;
+        $this->validatorFactory = $validatorFactory;
     }
 
     /**
@@ -47,7 +56,13 @@ class AccountHolderFactory
         }
 
         $accountHolder = new AccountHolder();
-        $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
+        $addressInterfaceValidator = $this->validatorFactory->create(
+            Validator::ADDRESS_ADAPTER_INTERFACE,
+            $magentoAddressObj
+        );
+        if ($addressInterfaceValidator->validate()) {
+            $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
+        }
         $accountHolder->setEmail($magentoAddressObj->getEmail());
 
         // This is a special case for credit card
