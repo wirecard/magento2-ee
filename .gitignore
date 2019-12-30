@@ -10,4 +10,4 @@ clover.xml
 i18n/*.new
 
 reports/
-/composer.lock
+composer.lock

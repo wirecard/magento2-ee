@@ -167,7 +167,6 @@ class Creditcard extends Action
 
         $transactionService = $this->transactionServiceFactory->create($txName);
         $orderDto->orderId = $quote->getReservedOrderId();
-        $language = $this->getSupportedWppLangCode();
 
         $orderDto->config = $transactionService->getConfig()->get($txName);
         $this->processCreditCard($orderDto, $txType);
@@ -175,7 +174,7 @@ class Creditcard extends Action
             $data = $transactionService->getCreditCardUiWithData(
                 $orderDto->transaction,
                 $this->getTransactionTypeForPaymentAction(),
-                $language
+                $this->getSupportedWppLangCode()
             );
             if (empty($data)) {
                 throw new \Exception("Cannot create UI");
