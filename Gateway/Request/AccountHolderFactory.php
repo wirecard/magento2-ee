@@ -57,30 +57,38 @@ class AccountHolderFactory
         }
 
         $accountHolder = new AccountHolder();
+        $accountHolder = $this->getAccountHolderWithNames($firstName, $lastName, $magentoAddressObj, $accountHolder);
         if ($this->isValidAddress($magentoAddressObj)) {
             $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         }
         $accountHolder->setEmail($magentoAddressObj->getEmail());
-
-        // This is a special case for credit card
-        // If we get a last name (and maybe first name) from the seamless form, that is our actual account holder.
-        if ($lastName !== null) {
-            $accountHolder->setLastName($lastName);
-
-            if ($firstName !== null) {
-                $accountHolder->setFirstName($firstName);
-            }
-        } else {
-            $accountHolder->setFirstName($magentoAddressObj->getFirstname());
-            $accountHolder->setLastName($magentoAddressObj->getLastname());
-        }
-
         $accountHolder->setPhone($magentoAddressObj->getTelephone());
 
         if ($customerBirthdate !== null) {
             $accountHolder->setDateOfBirth(new \DateTime($customerBirthdate));
         }
 
+        return $accountHolder;
+    }
+
+    /**
+     * @param string|null $firstname
+     * @param string|null $lastname
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
+     * @param AccountHolder $accountHolder
+     * @return AccountHolder
+     */
+    private function getAccountHolderWithNames($firstname, $lastname, $magentoAddressObj, $accountHolder)
+    {
+        if (empty($lastname)) {
+            $accountHolder->setFirstname($magentoAddressObj->getFirstame());
+            $accountHolder->setLastname($magentoAddressObj->getLastname());
+            return $accountHolder;
+        }
+        $accountHolder->setLastname($lastname);
+        if (!empty($firstname)) {
+            $accountHolder->setFirstname($firstname);
+        }
         return $accountHolder;
     }
 
