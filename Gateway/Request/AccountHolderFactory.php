@@ -10,6 +10,7 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Wirecard\ElasticEngine\Gateway\Validator;
 use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -42,7 +43,7 @@ class AccountHolderFactory
     }
 
     /**
-     * @param AddressAdapterInterface $magentoAddressObj
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
      * @param string|null $customerBirthdate
      * @param string|null $firstName
      * @param string|null $lastName
@@ -51,16 +52,12 @@ class AccountHolderFactory
      */
     public function create($magentoAddressObj, $customerBirthdate = null, $firstName = null, $lastName = null)
     {
-        if (!$magentoAddressObj instanceof AddressAdapterInterface) {
+        if (!$this->isValidAddressObject($magentoAddressObj)) {
             throw new \InvalidArgumentException('Address data object should be provided.');
         }
 
         $accountHolder = new AccountHolder();
-        $addressInterfaceValidator = $this->validatorFactory->create(
-            Validator::ADDRESS_ADAPTER_INTERFACE,
-            $magentoAddressObj
-        );
-        if ($addressInterfaceValidator->validate()) {
+        if ($this->isValidAddress($magentoAddressObj)) {
             $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         }
         $accountHolder->setEmail($magentoAddressObj->getEmail());
@@ -85,5 +82,42 @@ class AccountHolderFactory
         }
 
         return $accountHolder;
+    }
+
+    /**
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
+     * @return bool
+     * @since 3.0.0
+     */
+    private function isValidAddressObject($magentoAddressObj)
+    {
+        if (!$magentoAddressObj instanceof AddressAdapterInterface && !$magentoAddressObj instanceof QuoteAddress) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
+     * @return bool
+     * @since 3.0.0
+     */
+    private function isValidAddress($magentoAddressObj)
+    {
+        $addressValidator = null;
+        if ($magentoAddressObj instanceof AddressAdapterInterface) {
+            $addressValidator = $this->validatorFactory->create(
+                Validator::ADDRESS_ADAPTER_INTERFACE,
+                $magentoAddressObj
+            );
+        }
+
+        if ($magentoAddressObj instanceof QuoteAddress) {
+            $addressValidator = $this->validatorFactory->create(
+                Validator::QUOTE_ADDRESS,
+                $magentoAddressObj
+            );
+        }
+        return $addressValidator->validate();
     }
 }
