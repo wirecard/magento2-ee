@@ -169,7 +169,7 @@ class Creditcard extends Action
 
         $orderDto->config = $transactionService->getConfig()->get(CreditCardTransaction::NAME);
         $orderDto->transaction = new CreditCardTransaction();
-        $this->addCreditCardFields($orderDto, $transactionType);
+        $this->addCreditCardFields($orderDto);
         $this->addCreditCardThreeDsFields($orderDto);
         try {
             $data = $transactionService->getCreditCardUiWithData(
@@ -255,12 +255,11 @@ class Creditcard extends Action
      *       no return here.
      *
      * @param OrderDto $orderDto data transfer object holds all order data
-     * @param string $txType frontend key to specify the transaction type
      *
      * @since 2.0.1 set order-number
      * @since 2.1.0 add 3D Secure parameters via ThreeDsHelper
      */
-    private function addCreditCardFields(OrderDTO $orderDto, string $txType)
+    private function addCreditCardFields(OrderDTO $orderDto)
     {
         $orderDto->transaction->setConfig($orderDto->config);
 
