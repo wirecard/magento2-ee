@@ -35,6 +35,7 @@ use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 class Creditcard extends Action
@@ -154,9 +155,8 @@ class Creditcard extends Action
             return $this->buildErrorResponse('no quote found');
         }
 
-        $txType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
-        $txName = $this->findTransactionNameByFrontendType($txType);
-        if (is_null($txName)) {
+        $transactionType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
+        if (!$this->isCreditCardTransactionType($transactionType)) {
             return $this->buildErrorResponse('Unknown transaction type');
         }
 
@@ -164,11 +164,12 @@ class Creditcard extends Action
         $orderDto->quote = $quote->reserveOrderId();
         $this->quoteRepository->save($quote);
 
-        $transactionService = $this->transactionServiceFactory->create($txName);
+        $transactionService = $this->transactionServiceFactory->create(CreditCardTransaction::NAME);
         $orderDto->orderId = $quote->getReservedOrderId();
 
-        $orderDto->config = $transactionService->getConfig()->get($txName);
-        $this->addCreditCardFields($orderDto, $txType);
+        $orderDto->config = $transactionService->getConfig()->get(CreditCardTransaction::NAME);
+        $orderDto->transaction = new CreditCardTransaction();
+        $this->addCreditCardFields($orderDto, $transactionType);
         $this->addCreditCardThreeDsFields($orderDto);
         try {
             $data = $transactionService->getCreditCardUiWithData(
@@ -261,8 +262,6 @@ class Creditcard extends Action
      */
     private function addCreditCardFields(OrderDTO $orderDto, string $txType)
     {
-        $className = $this->findTransactionClassByFrontendType($txType);
-        $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
         $currency = $orderDto->quote->getBaseCurrencyCode();
@@ -363,33 +362,16 @@ class Creditcard extends Action
     }
 
     /**
-     * Detect the Transaction type based on the key sent by frontend
-     *
      * @param string $txType frontend key to specify the transaction type
-     * @return string|null Transaction type name used in backend, or null
+     * @return bool
+     * @since 3.0.0
      */
-    private function findTransactionNameByFrontendType($txType)
+    private function isCreditCardTransactionType($txType)
     {
-        $className = $this->findTransactionClassByFrontendType($txType);
-        if (empty($className)) {
-            return null;
+        if ($txType != self::FRONTEND_CODE_CREDITCARD) {
+            return false;
         }
-        return constant("$className::NAME");
-    }
-
-    /**
-     * Detect the Transaction class for key sent by frontend
-     *
-     * @param string $txType frontend key to specify the transaction type
-     * @return string|null Transaction class name with full namespace, or null
-     */
-    private function findTransactionClassByFrontendType($txType)
-    {
-        if ($txType == self::FRONTEND_CODE_CREDITCARD) {
-            return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
-        }
-
-        return null;
+        return true;
     }
 
     /**
