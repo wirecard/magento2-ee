@@ -81,7 +81,7 @@ class AccountHolderFactory
     private function getAccountHolderWithNames($firstname, $lastname, $magentoAddressObj, $accountHolder)
     {
         if (empty($lastname)) {
-            $accountHolder->setFirstname($magentoAddressObj->getFirstame());
+            $accountHolder->setFirstname($magentoAddressObj->getFirstname());
             $accountHolder->setLastname($magentoAddressObj->getLastname());
             return $accountHolder;
         }

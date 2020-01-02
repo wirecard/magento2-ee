@@ -114,9 +114,11 @@ class ThreeDsHelper
         $magentoDataObject = $this->getDataObjectForQuoteOrOrder($dataContainer);
 
         $shippingAddress = $magentoDataObject->getShippingAddress();
-        $accountHolder = $this->accountHolderFactory->create($shippingAddress);
+        if (empty($shippingAddress)) {
+            return null;
+        }
 
-        return $accountHolder;
+        return $this->accountHolderFactory->create($shippingAddress);
     }
 
     /**
