@@ -69,8 +69,10 @@ class ThreeDsHelper
             $challengeIndicator,
             $this->getTokenForPaymentObject($dataObject)
         );
-        $accountHolder = $this->createAccountHolder($dataObject);
-        $shipping = $this->createShipping($dataObject);
+        /** @var Quote|OrderAdapterInterface $magentoQuoteOrder */
+        $magentoQuoteOrder = $this->getDataObjectForQuoteOrOrder($dataObject);
+        $accountHolder = $this->createAccountHolder($magentoQuoteOrder);
+        $shipping = $this->createShipping($magentoQuoteOrder);
 
         if (!empty($accountHolder)) {
             $accountHolder->setAccountInfo($accountInfo);
@@ -85,35 +87,29 @@ class ThreeDsHelper
     }
 
     /**
-     * @param OrderDto|PaymentDataObjectInterface $dataContainer
+     * @param Quote|OrderAdapterInterface $magentoQuoteOrder
      * @return AccountHolder
      * @since 3.0.0
      */
-    private function createAccountHolder($dataContainer)
+    private function createAccountHolder($magentoQuoteOrder)
     {
-        /** @var Quote|OrderAdapterInterface $magentoDataObject */
-        $magentoDataObject = $this->getDataObjectForQuoteOrOrder($dataContainer);
-
-        $billingAddress = $magentoDataObject->getBillingAddress();
+        $billingAddress = $magentoQuoteOrder->getBillingAddress();
         $accountHolder = $this->accountHolderFactory->create($billingAddress);
-        if ($magentoDataObject->getCustomerId()) {
-            $accountHolder->setCrmId((string)$magentoDataObject->getCustomerId());
+        if ($magentoQuoteOrder->getCustomerId()) {
+            $accountHolder->setCrmId((string)$magentoQuoteOrder->getCustomerId());
         }
 
         return $accountHolder;
     }
 
     /**
-     * @param OrderDto|PaymentDataObjectInterface $dataContainer
+     * @param Quote|OrderAdapterInterface $magentoQuoteOrder
      * @return AccountHolder
      * @since 3.0.0
      */
-    private function createShipping($dataContainer)
+    private function createShipping($magentoQuoteOrder)
     {
-        /** @var Quote|OrderAdapterInterface $magentoDataObject */
-        $magentoDataObject = $this->getDataObjectForQuoteOrOrder($dataContainer);
-
-        $shippingAddress = $magentoDataObject->getShippingAddress();
+        $shippingAddress = $magentoQuoteOrder->getShippingAddress();
         if (empty($shippingAddress)) {
             return null;
         }

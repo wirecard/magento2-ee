@@ -49,6 +49,7 @@ class AccountHolderFactory
      * @param string|null $lastName
      * @return AccountHolder
      * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function create($magentoAddressObj, $customerBirthdate = null, $firstName = null, $lastName = null)
     {
