@@ -250,6 +250,8 @@ class Creditcard extends Action
      *
      * @param OrderDto $orderDto data transfer object holds all order data
      * @param string $txType frontend key to specify the transaction type
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      *
      * @since 2.0.1 set order-number
      * @since 2.1.0 add 3D Secure parameters via ThreeDsHelper

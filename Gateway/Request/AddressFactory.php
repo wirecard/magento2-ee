@@ -26,11 +26,6 @@ class AddressFactory
      */
     public function create($magentoAddressObj)
     {
-        $address = null;
-        if (!$this->isValidAddressObject($magentoAddressObj)) {
-            throw new \InvalidArgumentException('Address data object should be provided.');
-        }
-
         $address = new Address(
             $magentoAddressObj->getCountryId(),
             $magentoAddressObj->getCity(),
@@ -77,18 +72,5 @@ class AddressFactory
         }
         /** QuoteAddress $magentoObj */
         return $magentoAddressObj->getStreetLine(2);
-    }
-
-    /**
-     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
-     * @return bool
-     * @since 3.0.0
-     */
-    private function isValidAddressObject($magentoAddressObj)
-    {
-        if (!$magentoAddressObj instanceof AddressAdapterInterface && !$magentoAddressObj instanceof QuoteAddress) {
-            return false;
-        }
-        return true;
     }
 }

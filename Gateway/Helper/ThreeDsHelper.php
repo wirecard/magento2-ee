@@ -14,7 +14,6 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Quote\Model\Quote;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
-use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -32,25 +31,19 @@ class ThreeDsHelper
     /** @var AccountHolderFactory */
     private $accountHolderFactory;
 
-    /** @var ValidatorFactory */
-    private $validatorFactory;
-
     /**
      * ThreeDsHelper constructor.
      * @param AccountInfoFactory $accountInfoFactory
      * @param AccountHolderFactory $accountHolderFactory
-     * @param ValidatorFactory $validatorFactory
      *
      * @since 2.2.1 added QuoteAddressValidator
      */
     public function __construct(
         AccountInfoFactory $accountInfoFactory,
-        AccountHolderFactory $accountHolderFactory,
-        ValidatorFactory $validatorFactory
+        AccountHolderFactory $accountHolderFactory
     ) {
         $this->accountInfoFactory = $accountInfoFactory;
         $this->accountHolderFactory = $accountHolderFactory;
-        $this->validatorFactory = $validatorFactory;
     }
 
     /**
@@ -61,6 +54,8 @@ class ThreeDsHelper
      * @param Transaction $transaction
      * @param OrderDto|PaymentDataObjectInterface $dataObject
      * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      * @since 2.1.0
      */
     public function getThreeDsTransaction($challengeIndicator, $transaction, $dataObject)
@@ -89,6 +84,8 @@ class ThreeDsHelper
     /**
      * @param Quote|OrderAdapterInterface $magentoQuoteOrder
      * @return AccountHolder
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      * @since 3.0.0
      */
     private function createAccountHolder($magentoQuoteOrder)
@@ -104,7 +101,9 @@ class ThreeDsHelper
 
     /**
      * @param Quote|OrderAdapterInterface $magentoQuoteOrder
-     * @return AccountHolder
+     * @return AccountHolder|null
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      * @since 3.0.0
      */
     private function createShipping($magentoQuoteOrder)
