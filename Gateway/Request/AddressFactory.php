@@ -22,7 +22,6 @@ class AddressFactory
     /**
      * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
      * @return Address
-     * @throws \InvalidArgumentException
      */
     public function create($magentoAddressObj)
     {
