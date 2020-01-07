@@ -302,6 +302,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $shipping->setArticleNumber('flatrate_flatrate');
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
+        $this->orderRepository->method('get')->willReturn($this->orderObject);
 
         $this->assertEquals($expected, $basketFactory->refund($this->order, $this->transaction));
     }
