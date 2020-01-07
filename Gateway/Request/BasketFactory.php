@@ -61,8 +61,12 @@ class BasketFactory
      * @param OrderFactory $orderFactory
      * @param OrderRepositoryInterface $orderRepository
      */
-    public function __construct(ItemFactory $itemFactory, Session $checkoutSession, OrderFactory $orderFactory, OrderRepositoryInterface $orderRepository)
-    {
+    public function __construct(
+        ItemFactory $itemFactory,
+        Session $checkoutSession,
+        OrderFactory $orderFactory,
+        OrderRepositoryInterface $orderRepository
+    ) {
         $this->itemFactory = $itemFactory;
         $this->checkoutSession = $checkoutSession;
         $this->orderFactory = $orderFactory;
