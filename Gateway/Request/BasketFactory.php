@@ -188,7 +188,7 @@ class BasketFactory
         /** @var Order $orderObject */
         $orderObject = $this->orderFactory->create();
         if (!is_null($orderObject)) {
-            $orderObject->load($orderId);
+            $orderObject = $this->orderRepository->get($orderId);
         }
 
         if (is_null($orderObject)) {
@@ -253,7 +253,7 @@ class BasketFactory
         /** @var Order $orderObject */
         $orderObject = $this->orderFactory->create();
         if (!is_null($orderObject)) {
-            $orderObject->load($orderId);
+            $orderObject = $this->orderRepository->get($orderId);
         }
 
         if (is_null($orderObject)) {
