@@ -15,6 +15,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
@@ -49,16 +50,23 @@ class BasketFactory
     private $orderFactory;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      * BasketFactory constructor.
      * @param ItemFactory $itemFactory
      * @param Session $checkoutSession
      * @param OrderFactory $orderFactory
+     * @param OrderRepositoryInterface $orderRepository
      */
-    public function __construct(ItemFactory $itemFactory, Session $checkoutSession, OrderFactory $orderFactory)
+    public function __construct(ItemFactory $itemFactory, Session $checkoutSession, OrderFactory $orderFactory, OrderRepositoryInterface $orderRepository)
     {
         $this->itemFactory = $itemFactory;
         $this->checkoutSession = $checkoutSession;
         $this->orderFactory = $orderFactory;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -115,7 +123,7 @@ class BasketFactory
         /** @var Order $orderObject */
         $orderObject = $this->orderFactory->create();
         if (!is_null($orderObject)) {
-            $orderObject->load($orderId);
+            $orderObject = $this->orderRepository->get($orderId);
         }
 
         if (is_null($orderObject)) {
