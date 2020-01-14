@@ -40,6 +40,8 @@ class CreditCardConfig extends Value
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
+        // Removal of deprecated class Registry not yet possible - check again with Magento 2.4
+        // and clarify breaking compatibility
         parent::__construct(
             $context,
             $registry,

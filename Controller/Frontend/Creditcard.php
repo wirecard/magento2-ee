@@ -36,6 +36,7 @@ use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Entity\Redirect;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 class Creditcard extends Action
 {
@@ -47,34 +48,34 @@ class Creditcard extends Action
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
 
-    /** @var JsonFactory Magento2 JsonFactory injected by DI */
+    /** @var JsonFactory */
     protected $resultJsonFactory;
 
-    /** @var CartRepositoryInterface Magento2 cart repository injected by DI */
+    /** @var CartRepositoryInterface */
     protected $cartRepository;
 
-    /** @var Session Magento2 checkout session injected by DI */
+    /** @var Session */
     protected $checkoutSession;
 
-    /** @var TransactionServiceFactory paymentSDK TransactionService injected by DI */
+    /** @var TransactionServiceFactory */
     protected $transactionServiceFactory;
 
-    /** @var Calculation Magneto2 tax calculator injected by DI */
+    /** @var Calculation */
     protected $taxCalculation;
 
-    /** @var ResolverInterface Magento2 Resolver injected by DI */
+    /** @var ResolverInterface */
     protected $resolver;
 
-    /** @var StoreManagerInterface Magento2 StoreManager injected by DI */
+    /** @var StoreManagerInterface */
     protected $storeManager;
 
-    /** @var UrlInterface Magento2 UrlInterface injected by DI */
+    /** @var UrlInterface */
     protected $urlBuilder;
 
-    /** @var Data Magento2 PaymentHelper injected by DI */
+    /** @var Data */
     protected $paymentHelper;
 
-    /** @var ConfigInterface Magento2 payment method config injected by DI */
+    /** @var ConfigInterface */
     protected $methodConfig;
 
     /** @var LoggerInterface */
@@ -82,6 +83,9 @@ class Creditcard extends Action
 
     /** @var ThreeDsHelper */
     protected $threeDsHelper;
+
+    /** @var CartRepositoryInterface */
+    protected $quoteRepository;
 
     /**
      * Creditcard constructor.
@@ -151,26 +155,26 @@ class Creditcard extends Action
             return $this->buildErrorResponse('no quote found');
         }
 
-        $txType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
-        $txName = $this->findTransactionNameByFrontendType($txType);
-        if (is_null($txName)) {
+        $transactionType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
+        if (!$this->isCreditCardTransactionType($transactionType)) {
             return $this->buildErrorResponse('Unknown transaction type');
         }
 
         $orderDto = new OrderDto();
-        $quote->reserveOrderId()->save();
-        $orderDto->quote = $quote;
+        $orderDto->quote = $quote->reserveOrderId();
+        $this->quoteRepository->save($quote);
 
-        $transactionService = $this->transactionServiceFactory->create($txName);
+        $transactionService = $this->transactionServiceFactory->create(CreditCardTransaction::NAME);
         $orderDto->orderId = $quote->getReservedOrderId();
-        $orderDto->config = $transactionService->getConfig()->get($txName);
-        $paymentAction = $this->methodConfig->getValue('payment_action');
 
-        $this->processCreditCard($orderDto, $txType);
+        $orderDto->config = $transactionService->getConfig()->get(CreditCardTransaction::NAME);
+        $orderDto->transaction = new CreditCardTransaction();
+        $this->addCreditCardFields($orderDto);
+        $this->addCreditCardThreeDsFields($orderDto);
         try {
             $data = $transactionService->getCreditCardUiWithData(
                 $orderDto->transaction,
-                $this->getMappedPaymentAction($paymentAction),
+                $this->getTransactionTypeForPaymentAction(),
                 $this->getSupportedWppLangCode()
             );
             if (empty($data)) {
@@ -183,16 +187,18 @@ class Creditcard extends Action
     }
 
     /**
-     * @param mixed $paymentAction
      * @return string
-     * @since 2.2.2
+     * @throws LocalizedException
+     * @since 3.0.0
      */
-    private function getMappedPaymentAction($paymentAction)
+    private function getTransactionTypeForPaymentAction()
     {
+        $method = $this->paymentHelper->getMethodInstance(self::FRONTEND_CODE_CREDITCARD);
+        $paymentAction = $method->getConfigData('payment_action');
         if ($paymentAction === PaymentAction::AUTHORIZE) {
-            return CreditCardTransaction::TYPE_AUTHORIZATION;
+            return Transaction::TYPE_AUTHORIZATION;
         }
-        return CreditCardTransaction::TYPE_PURCHASE;
+        return Transaction::TYPE_PURCHASE;
     }
 
     /**
@@ -249,17 +255,12 @@ class Creditcard extends Action
      *       no return here.
      *
      * @param OrderDto $orderDto data transfer object holds all order data
-     * @param string $txType frontend key to specify the transaction type
-     * @throws \InvalidArgumentException
-     * @throws \Exception
      *
      * @since 2.0.1 set order-number
      * @since 2.1.0 add 3D Secure parameters via ThreeDsHelper
      */
-    private function processCreditCard(OrderDTO $orderDto, string $txType)
+    private function addCreditCardFields(OrderDTO $orderDto)
     {
-        $className = $this->findTransactionClassByFrontendType($txType);
-        $orderDto->transaction = new $className();
         $orderDto->transaction->setConfig($orderDto->config);
 
         $currency = $orderDto->quote->getBaseCurrencyCode();
@@ -277,6 +278,14 @@ class Creditcard extends Action
         if ($this->methodConfig->getValue('send_additional')) {
             $this->setAdditionalInformation($orderDto);
         }
+    }
+
+    /**
+     * @param $orderDto
+     * @since 3.0.0
+     */
+    private function addCreditCardThreeDsFields($orderDto)
+    {
         $challengeIndicator = $this->methodConfig->getValue('challenge_ind');
         $orderDto->transaction = $this->threeDsHelper->getThreeDsTransaction(
             $challengeIndicator,
@@ -352,33 +361,16 @@ class Creditcard extends Action
     }
 
     /**
-     * Detect the Transaction type based on the key sent by frontend
-     *
      * @param string $txType frontend key to specify the transaction type
-     * @return string|null Transaction type name used in backend, or null
+     * @return bool
+     * @since 3.0.0
      */
-    private function findTransactionNameByFrontendType($txType)
+    private function isCreditCardTransactionType($txType)
     {
-        $className = $this->findTransactionClassByFrontendType($txType);
-        if (empty($className)) {
-            return null;
+        if ($txType != self::FRONTEND_CODE_CREDITCARD) {
+            return false;
         }
-        return constant("$className::NAME");
-    }
-
-    /**
-     * Detect the Transaction class for key sent by frontend
-     *
-     * @param string $txType frontend key to specify the transaction type
-     * @return string|null Transaction class name with full namespace, or null
-     */
-    private function findTransactionClassByFrontendType($txType)
-    {
-        if ($txType == self::FRONTEND_CODE_CREDITCARD) {
-            return '\Wirecard\PaymentSdk\Transaction\CreditCardTransaction';
-        }
-
-        return null;
+        return true;
     }
 
     /**
