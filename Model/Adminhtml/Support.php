@@ -247,7 +247,6 @@ class Support
             'pluginName' => 'Wirecard_ElasticEngine',
             'pluginVersion' => $this->moduleList->getOne('Wirecard_ElasticEngine')['setup_version']
         ]);
-
         $transport = $this->transportBuilder
             ->setTemplateIdentifier('contact_support_email')
             ->setTemplateOptions(
@@ -264,6 +263,7 @@ class Support
                 'configstr' => $this->getConfigString(),
                 'versioninfo' => $versioninfo
             ])
+            // Exchange of setFrom to setFromByScope results in incompatibility to Magento 2.2
             ->setFrom($sender)
             ->addTo('shop-systems-support@wirecard.com')
             ->getTransport();
