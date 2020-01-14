@@ -1,11 +1,9 @@
 # Wirecard Magento 2 Extension
 [![Build Status](https://travis-ci.org/wirecard/magento2-ee.svg?branch=master)](https://travis-ci.org/wirecard/magento2-ee)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/magento2-ee/master/LICENSE)
-[![PHP v5.6](https://img.shields.io/badge/php-v5.6-yellow.svg)](http://www.php.net)
-[![PHP v7.0](https://img.shields.io/badge/php-v7.0-yellow.svg)](http://www.php.net)
 [![PHP v7.1](https://img.shields.io/badge/php-v7.1-yellow.svg)](http://www.php.net)
 [![PHP v7.2](https://img.shields.io/badge/php-v7.2-yellow.svg)](http://www.php.net)
-[![Magento v2.3.1](https://img.shields.io/badge/magento-v2.3.2-green.svg)](https://magento.com/)
+[![Magento v2.3.3](https://img.shields.io/badge/magento-v2.3.3-green.svg)](https://magento.com/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4cce664edec44c02923a3ac6ab930239)](https://www.codacy.com/app/Wirecard/magento2-ee?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wirecard/magento2-ee&amp;utm_campaign=Badge_Grade)
 
 ***
