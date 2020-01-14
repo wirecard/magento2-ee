@@ -18,6 +18,7 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\BasketFactory;
@@ -43,6 +44,9 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
     /** @var \PHPUnit_Framework_MockObject_MockObject|OrderFactory */
     private $orderFactory;
+
+    /** @var \PHPUnit_Framework_MockObject_MockObject|OrderRepositoryInterface */
+    private $orderRepository;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject|Address */
     private $shippingAddress;
@@ -117,6 +121,9 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['create'])->getMock();
 
         $this->orderObject = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
+
+        $this->orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)->disableOriginalConstructor()
+            ->setMethods(['get', 'getList', 'delete', 'save'])->getMock();
 
         $this->shippingAddress = $this->getMockBuilder(Address::class)
             ->disableOriginalConstructor()
@@ -213,7 +220,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->itemFactory->expects($this->at(2))->method('create')
             ->willReturn(new Item('bundleFixed', new Amount(0.0, 'EUR'), 0));
 
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
@@ -235,7 +242,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateThrowsException()
     {
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
         $basketFactory->create(null, null);
     }
 
@@ -243,7 +250,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUpWithoutQuoteData();
 
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
@@ -255,6 +262,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $shipping->setArticleNumber('flatrate_flatrate');
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
+        $this->orderRepository->method('get')->willReturn($this->orderObject);
 
         $this->assertEquals($expected, $basketFactory->capture($this->order, $this->transaction));
     }
@@ -264,7 +272,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCaptureThrowsException()
     {
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
         $basketFactory->capture(null, null);
     }
 
@@ -274,7 +282,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCaptureThrowsNoOrderException()
     {
         $this->setUpWithQuoteData();
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
         $basketFactory->capture($this->order, $this->transaction);
     }
 
@@ -282,7 +290,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUpWithoutQuoteData();
 
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
@@ -294,6 +302,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $shipping->setArticleNumber('flatrate_flatrate');
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
+        $this->orderRepository->method('get')->willReturn($this->orderObject);
 
         $this->assertEquals($expected, $basketFactory->refund($this->order, $this->transaction));
     }
@@ -303,7 +312,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testRefundThrowsException()
     {
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
         $basketFactory->refund(null, null);
     }
 
@@ -313,7 +322,7 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testRefundThrowsNoOrderException()
     {
         $this->setUpWithQuoteData();
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory);
+        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
         $basketFactory->refund($this->order, $this->transaction);
     }
 }
