@@ -216,7 +216,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             $this->transactionServiceFactory,
             $quoteRepository,
             $this->checkoutSession,
-            $taxCalculation,
             $resolver,
             $storeManager,
             $this->paymentHelper,
