@@ -32,11 +32,11 @@ class AddressFactory
         );
         $address->setPostalCode($magentoAddressObj->getPostcode());
 
-        if (strlen($magentoAddressObj->getRegionCode())) {
+        if (strlen(trim($magentoAddressObj->getRegionCode()))) {
             $address->setState($magentoAddressObj->getRegionCode());
         }
 
-        if (strlen($this->getStreetLine2($magentoAddressObj))) {
+        if (strlen(trim($this->getStreetLine2($magentoAddressObj)))) {
             $address->setStreet2($this->getStreetLine2($magentoAddressObj));
         }
 
