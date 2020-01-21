@@ -82,6 +82,7 @@ class CreditCardTransactionFactory extends TransactionFactory
      * @return Transaction
      * @throws \InvalidArgumentException
      * @throws MandatoryFieldMissingException
+     * @throws \Exception
      */
     public function create($commandSubject)
     {

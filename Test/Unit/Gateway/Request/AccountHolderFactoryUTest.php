@@ -14,7 +14,7 @@ use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AddressFactory;
 use Wirecard\ElasticEngine\Gateway\Validator\AddressAdapterInterfaceValidator;
-use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
+use Wirecard\ElasticEngine\Gateway\Validator\AddressValidatorFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Address;
 
@@ -42,7 +42,7 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->addressInterfaceValidator = $this->getMockBuilder(AddressAdapterInterfaceValidator::class)->disableOriginalConstructor()->getMock();
         $this->addressInterfaceValidator->method('validate')->willReturn(true);
 
-        $this->validatorFactory = $this->getMockBuilder(ValidatorFactory::class)->disableOriginalConstructor()->getMock();
+        $this->validatorFactory = $this->getMockBuilder(AddressValidatorFactory::class)->disableOriginalConstructor()->getMock();
         $this->validatorFactory->method('create')->willReturn($this->addressInterfaceValidator);
     }
 
@@ -80,7 +80,9 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateThrowsException()
     {
-        $accountHolderFactory = new AccountHolderFactory($this->addressFactory, $this->validatorFactory);
+        $validatorFactory = new AddressValidatorFactory();
+        $validator = $validatorFactory->create(null);
+        $accountHolderFactory = new AccountHolderFactory($this->addressFactory, $validator);
         $accountHolderFactory->create(null);
     }
 }

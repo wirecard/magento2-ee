@@ -21,7 +21,6 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Tax\Model\Calculation;
 use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
@@ -60,9 +59,6 @@ class Creditcard extends Action
     /** @var TransactionServiceFactory */
     protected $transactionServiceFactory;
 
-    /** @var Calculation */
-    protected $taxCalculation;
-
     /** @var ResolverInterface */
     protected $resolver;
 
@@ -95,7 +91,6 @@ class Creditcard extends Action
      * @param TransactionServiceFactory $transactionServiceFactory
      * @param CartRepositoryInterface $quoteRepository
      * @param Session $checkoutSession
-     * @param Calculation $taxCalculation
      * @param ResolverInterface $resolver
      * @param StoreManagerInterface $storeManager
      * @param Data $paymentHelper
@@ -111,7 +106,6 @@ class Creditcard extends Action
         TransactionServiceFactory $transactionServiceFactory,
         CartRepositoryInterface $quoteRepository,
         Session $checkoutSession,
-        Calculation $taxCalculation,
         ResolverInterface $resolver,
         StoreManagerInterface $storeManager,
         Data $paymentHelper,
@@ -123,7 +117,6 @@ class Creditcard extends Action
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->quoteRepository = $quoteRepository;
         $this->checkoutSession = $checkoutSession;
-        $this->taxCalculation = $taxCalculation;
         $this->resolver = $resolver;
         $this->storeManager = $storeManager;
         $this->urlBuilder = $context->getUrl();
