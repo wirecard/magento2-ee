@@ -82,25 +82,25 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
-        $transactionService              = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
-        $this->config                    = $this->getMockWithoutInvokingTheOriginalConstructor(Config::class);
+        $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)->disableOriginalConstructor()->getMock();
+        $transactionService              = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
+        $this->config                    = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         $transactionService->method('getConfig')->willReturn($this->config);
         $this->transactionServiceFactory->method('create')->willReturn($transactionService);
 
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-        $this->transactionCollection = $this->getMockWithoutInvokingTheOriginalConstructor(Collection::class);
+        $this->transactionCollection = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
 
-        $this->transactionRepository = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionRepository::class);
-        $this->transaction           = $this->getMockWithoutInvokingTheOriginalConstructor(Transaction::class);
+        $this->transactionRepository = $this->getMockBuilder(TransactionRepository::class)->disableOriginalConstructor()->getMock();
+        $this->transaction           = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $this->transactionRepository->method('get')->willReturn($this->transaction);
 
-        $this->retreiveTransaction = $this->getMockWithoutInvokingTheOriginalConstructor(RetrieveTransaction::class);
+        $this->retreiveTransaction = $this->getMockBuilder(RetrieveTransaction::class)->disableOriginalConstructor()->getMock();
 
-        $this->notify = $this->getMockWithoutInvokingTheOriginalConstructor(Notify::class);
+        $this->notify = $this->getMockBuilder(Notify::class)->disableOriginalConstructor()->getMock();
 
-        $this->nestedObject = $this->getMockWithoutInvokingTheOriginalConstructor(NestedObject::class);
+        $this->nestedObject = $this->getMockBuilder(NestedObject::class)->disableOriginalConstructor()->getMock();
 
         $this->updater = new TransactionUpdater(
             $this->logger,
@@ -318,7 +318,8 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
         $this->retreiveTransaction->method('byTransactionId')
             ->with($this->config, "tid", "ttype", "maid")
             ->willReturn('<xml/>');
-        $this->notify->method('fromXmlResponse')->with('<xml/>');
+        $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
+        $this->notify->method('fromXmlResponse')->with('<xml/>')->willReturn($response);
         $this->updater->fetchNotify($this->transaction);
     }
 
@@ -357,7 +358,8 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
             ->with($this->config, "rid", "maid")
             ->willReturn('<xml/>');
 
-        $this->notify->method('fromXmlResponse')->with('<xml/>');
+        $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
+        $this->notify->method('fromXmlResponse')->with('<xml/>')->willReturn($response);
         $this->updater->fetchNotify($this->transaction);
     }
 
@@ -378,7 +380,8 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
         $this->transactionServiceFactory->method('create')->with(RatepayInvoiceTransaction::NAME);
 
-        $this->notify->method('fromXmlResponse')->with('<xml/>');
+        $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
+        $this->notify->method('fromXmlResponse')->with('<xml/>')->willReturn($response);
         $this->updater->fetchNotify($this->transaction);
     }
 }

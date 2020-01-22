@@ -42,7 +42,7 @@ class CardRendererUTest extends \PHPUnit_Framework_TestCase
         $this->token->method('getPaymentMethodCode')->willReturn('wirecard_elasticengine_creditcard');
         $this->token->method('getTokenDetails')->willReturn(json_encode($tokenDetails));
 
-        $this->cardRenderer = $this->getMock(CardRenderer::class, ['getTokenDetails', 'getIconForType'], [], '', false);
+        $this->cardRenderer = $this->getMockBuilder(CardRenderer::class)->disableOriginalConstructor()->setMethods(['getTokenDetails', 'getIconForType'])->getMockForAbstractClass();
         $this->cardRenderer->method('getTokenDetails')->willReturn($tokenDetails);
         $this->cardRenderer->method('getIconForType')->willReturn($icon);
     }

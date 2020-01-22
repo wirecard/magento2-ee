@@ -54,14 +54,14 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->eeConfig = $this->getMock(ConfigInterface::class);
+        $this->eeConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $this->eeConfig->method(self::GET_VALUE)->withConsecutive(
             ['base_url'],
             ['http_user'],
             ['http_pass']
         )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass');
 
-        $methodConfigPayPal = $this->getMock(ConfigInterface::class);
+        $methodConfigPayPal = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $methodConfigPayPal->method(self::GET_VALUE)->withConsecutive(
             ['base_url'],
             ['http_user'],
@@ -70,7 +70,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             ['secret']
         )->willReturnOnConsecutiveCalls(self::BASE_URL, 'user', 'pass', 'account_id_123', 'secret_key');
 
-        $methodConfigCreditCard = $this->getMock(ConfigInterface::class);
+        $methodConfigCreditCard = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $methodConfigCreditCard->method(self::GET_VALUE)->willReturnCallback(function ($key) {
             $map = [
                 'base_url' => self::BASE_URL,
@@ -88,7 +88,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             return $map[$key];
         });
 
-        $methodConfigSepa = $this->getMock(ConfigInterface::class);
+        $methodConfigSepa = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $methodConfigSepa->method(self::GET_VALUE)->willReturnCallback(function ($key) {
             $map = [
                 'base_url' => self::BASE_URL,
@@ -102,7 +102,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
             return $map[$key];
         });
 
-        $methodConfigIdeal = $this->getMock(ConfigInterface::class);
+        $methodConfigIdeal = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $methodConfigIdeal->method(self::GET_VALUE)->withConsecutive(
             ['base_url'],
             ['http_user'],
@@ -117,7 +117,7 @@ class PaymentSdkConfigFactoryUTest extends \PHPUnit_Framework_TestCase
         $this->productMetadata->method('getEdition')->willReturn('Community');
         $this->productMetadata->method('getVersion')->willReturn(self::MAGENTO_VERSION);
 
-        $this->moduleList = $this->getMock(ModuleListInterface::class);
+        $this->moduleList = $this->getMockBuilder(ModuleListInterface::class)->getMock();
         $this->moduleList->method('getOne')
             ->with(self::WIRECARD_EE_MODULE_NAME)
             ->willReturn(['setup_version' => self::WIRECARD_EE_VERSION]);
