@@ -1,0 +1,34 @@
+name: Create Release
+
+on:
+  pull_request:
+    types: closed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged && startsWith(github.head_ref, 'RC-')
+    steps:
+      - uses: wirecard/checkout@v2.0.0
+        with:
+          ref: 'master'
+      - name: Set global git conf
+        run: git config --global user.email "" && git config --global user.name "github-actions"
+      - name: Tag and prepare release
+        id: tag_and_prepare_release
+        uses: wirecard/semver-release-action@master
+        with:
+          release_branch: master
+          release_strategy: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push tag to GitHub
+        run: git tag -a ${{ steps.tag_and_prepare_release.outputs.tag }} -m "Pre release" && git push origin ${{ steps.tag_and_prepare_release.outputs.tag }}
+      - name: Create release on tag with release notes
+        if: steps.tag_and_prepare_release.outputs.tag
+        uses: wirecard/github-create-release-action@master
+        with:
+          created_tag: ${{ steps.tag_and_prepare_release.outputs.tag }}
+          release_title: ${{steps.tag_and_prepare_release.outputs.tag}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
