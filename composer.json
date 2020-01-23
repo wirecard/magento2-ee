@@ -17,6 +17,7 @@
     "php-http/discovery": "1.4.0",
     "wirecard/magento2-ee-compat": "^1.0.0 || ^2.0.0",
     "wirecard/io-converter": "^1.0",
+    "myclabs/php-enum": "1.6.6",
     "wirecard/payment-sdk-php": "3.8.1"
   },
   "require-dev": {
