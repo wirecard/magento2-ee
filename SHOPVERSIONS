@@ -1,5 +1,17 @@
 [
   {
+    "release": "3.0.0",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.3",
+    "compatibility": "2.2.0",
+    "changelog": [
+      "Remove payment method Masterpass",
+      "Remove compatibility with Magento 2.1",
+      "Update address data creation for Credit Card",
+      "Update deprecated classes and functions"
+    ]
+  },
+  {
     "release": "2.2.2",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.3",
