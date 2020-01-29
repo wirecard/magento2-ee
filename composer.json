@@ -9,7 +9,6 @@
     "ext-filter": "*",
     "ext-json": "*",
     "ext-spl": "*",
-    "ext-standard": "*",
     "ext-pcre": "*",
     "ext-mbstring": "*",
     "ext-date": "*",
