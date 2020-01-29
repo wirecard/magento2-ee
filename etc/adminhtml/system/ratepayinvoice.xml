@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="wirecard_elasticengine_ratepayinvoice" translate="label" type="text" sortOrder="270" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>heading_title_ratepayinvoice</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>text_enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>config_title</label>
+        </field>
+        <include path="Wirecard_ElasticEngine::system/credentials.xml" />
+        <field id="min_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>config_basket_min</label>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>config_basket_max</label>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>payment_from_applicable_countries</label>
+            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>payment_from_specific_countries</label>
+            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+            <can_be_empty>1</can_be_empty>
+        </field>
+        <field id="billing_shipping_address_identical" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>config_billing_shipping</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
+               showInStore="0">
+            <label>config_sort_order</label>
+            <frontend_class>validate-number</frontend_class>
+        </field>
+        <field id="send_additional" translate="label" type="select" sortOrder="110" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>config_additional_info</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+    </group>
+</include>

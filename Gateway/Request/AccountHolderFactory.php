@@ -10,8 +10,8 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
-use Wirecard\ElasticEngine\Gateway\Validator;
-use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
+use Wirecard\ElasticEngine\Gateway\Validator\AddressValidatorFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
@@ -26,64 +26,67 @@ class AccountHolderFactory
     private $addressFactory;
 
     /**
-     * @var ValidatorFactory
+     * @var AddressValidatorFactory
      */
     private $validatorFactory;
 
     /**
      * AccountHolderFactory constructor.
      * @param AddressFactory $addressFactory
-     * @param ValidatorFactory $validatorFactory
+     * @param AddressValidatorFactory $addressValidatorFactory
      */
-    public function __construct(AddressFactory $addressFactory, ValidatorFactory $validatorFactory)
+    public function __construct(AddressFactory $addressFactory, AddressValidatorFactory $addressValidatorFactory)
     {
         $this->addressFactory = $addressFactory;
-        $this->validatorFactory = $validatorFactory;
+        $this->validatorFactory = $addressValidatorFactory;
     }
 
     /**
-     * @param AddressAdapterInterface $magentoAddressObj
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
      * @param string|null $customerBirthdate
      * @param string|null $firstName
      * @param string|null $lastName
      * @return AccountHolder
      * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function create($magentoAddressObj, $customerBirthdate = null, $firstName = null, $lastName = null)
     {
-        if (!$magentoAddressObj instanceof AddressAdapterInterface) {
-            throw new \InvalidArgumentException('Address data object should be provided.');
-        }
-
+        $validator = $this->validatorFactory->create($magentoAddressObj);
         $accountHolder = new AccountHolder();
-        $addressInterfaceValidator = $this->validatorFactory->create(
-            Validator::ADDRESS_ADAPTER_INTERFACE,
-            $magentoAddressObj
-        );
-        if ($addressInterfaceValidator->validate()) {
+        $accountHolder = $this->getAccountHolderWithNames($firstName, $lastName, $magentoAddressObj, $accountHolder);
+        if ($validator->validate()) {
             $accountHolder->setAddress($this->addressFactory->create($magentoAddressObj));
         }
         $accountHolder->setEmail($magentoAddressObj->getEmail());
-
-        // This is a special case for credit card
-        // If we get a last name (and maybe first name) from the seamless form, that is our actual account holder.
-        if ($lastName !== null) {
-            $accountHolder->setLastName($lastName);
-
-            if ($firstName !== null) {
-                $accountHolder->setFirstName($firstName);
-            }
-        } else {
-            $accountHolder->setFirstName($magentoAddressObj->getFirstname());
-            $accountHolder->setLastName($magentoAddressObj->getLastname());
-        }
-
         $accountHolder->setPhone($magentoAddressObj->getTelephone());
 
         if ($customerBirthdate !== null) {
             $accountHolder->setDateOfBirth(new \DateTime($customerBirthdate));
         }
 
+        return $accountHolder;
+    }
+
+    /**
+     * @param string|null $firstname
+     * @param string|null $lastname
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
+     * @param AccountHolder $accountHolder
+     * @return AccountHolder
+     * @since 3.0.0
+     */
+    private function getAccountHolderWithNames($firstname, $lastname, $magentoAddressObj, $accountHolder)
+    {
+        if (empty($lastname)) {
+            $accountHolder->setFirstname($magentoAddressObj->getFirstname());
+            $accountHolder->setLastname($magentoAddressObj->getLastname());
+            return $accountHolder;
+        }
+        $accountHolder->setLastname($lastname);
+        if (!empty($firstname)) {
+            $accountHolder->setFirstname($firstname);
+        }
         return $accountHolder;
     }
 }

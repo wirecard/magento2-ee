@@ -11,15 +11,12 @@ namespace Wirecard\ElasticEngine\Gateway\Helper;
 
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
+use Magento\Quote\Model\Quote;
 use Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory;
 use Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory;
-use Wirecard\ElasticEngine\Gateway\Validator;
-use Wirecard\ElasticEngine\Gateway\Validator\QuoteAddressValidator;
-use Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
 use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
-use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
@@ -28,41 +25,25 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  */
 class ThreeDsHelper
 {
-    /** @var AccountInfoFactory  */
+    /** @var AccountInfoFactory */
     private $accountInfoFactory;
 
-    /** @var AccountHolderFactory  */
+    /** @var AccountHolderFactory */
     private $accountHolderFactory;
-
-    /** @var AccountHolder */
-    private $accountHolder;
-
-    /** @var AccountHolder */
-    private $shipping;
-
-    /** @var string */
-    private $token;
-
-    /** @var ValidatorFactory */
-    private $validatorFactory;
 
     /**
      * ThreeDsHelper constructor.
      * @param AccountInfoFactory $accountInfoFactory
      * @param AccountHolderFactory $accountHolderFactory
-     * @param ValidatorFactory $validatorFactory
      *
      * @since 2.2.1 added QuoteAddressValidator
      */
     public function __construct(
         AccountInfoFactory $accountInfoFactory,
-        AccountHolderFactory $accountHolderFactory,
-        ValidatorFactory $validatorFactory
+        AccountHolderFactory $accountHolderFactory
     ) {
         $this->accountInfoFactory = $accountInfoFactory;
         $this->accountHolderFactory = $accountHolderFactory;
-        $this->validatorFactory = $validatorFactory;
-        $this->token = null;
     }
 
     /**
@@ -73,26 +54,27 @@ class ThreeDsHelper
      * @param Transaction $transaction
      * @param OrderDto|PaymentDataObjectInterface $dataObject
      * @return Transaction
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      * @since 2.1.0
      */
     public function getThreeDsTransaction($challengeIndicator, $transaction, $dataObject)
     {
-        if ($dataObject instanceof OrderDto) {
-            $this->setParametersForQuoteData($dataObject);
-        }
+        $accountInfo = $this->accountInfoFactory->create(
+            $challengeIndicator,
+            $this->getTokenForPaymentObject($dataObject)
+        );
+        /** @var Quote|OrderAdapterInterface $magentoQuoteOrder */
+        $magentoQuoteOrder = $this->getDataObjectForQuoteOrOrder($dataObject);
+        $accountHolder = $this->createAccountHolder($magentoQuoteOrder);
+        $shipping = $this->createShipping($magentoQuoteOrder);
 
-        if ($dataObject instanceof PaymentDataObjectInterface) {
-            $this->setParametersForPaymentData($dataObject);
+        if (!empty($accountHolder)) {
+            $accountHolder->setAccountInfo($accountInfo);
+            $transaction->setAccountHolder($accountHolder);
         }
-
-        $accountInfo = $this->accountInfoFactory->create($challengeIndicator, $this->token);
-        if (!empty($this->accountHolder)) {
-            $this->accountHolder->setAccountInfo($accountInfo);
-            $transaction->setAccountHolder($this->accountHolder);
-        }
-
-        if (!empty($this->shipping)) {
-            $transaction->setShipping($this->shipping);
+        if (!empty($shipping)) {
+            $transaction->setShipping($shipping);
         }
         $transaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);
 
@@ -100,68 +82,63 @@ class ThreeDsHelper
     }
 
     /**
-     * Set accountHolder and shipping parameters based on OrderDto
-     *
-     * @param OrderDto $orderDto
-     * @since 2.1.0
+     * @param Quote|OrderAdapterInterface $magentoQuoteOrder
+     * @return AccountHolder
+     * @throws \InvalidArgumentException
+     * @throws \Exception
+     * @since 3.0.0
      */
-    private function setParametersForQuoteData($orderDto)
+    private function createAccountHolder($magentoQuoteOrder)
     {
-        $billingAddress = $orderDto->quote->getBillingAddress();
-        $this->accountHolder = $this->fetchAccountHolder($billingAddress);
-        $this->accountHolder->setCrmId($orderDto->quote->getCustomerId());
-        $shippingAddress = $orderDto->quote->isVirtual() ? null : $orderDto->quote->getShippingAddress();
-        if (isset($shippingAddress)) {
-            $this->shipping = $this->fetchAccountHolder($shippingAddress);
-        }
-    }
-
-    /**
-     * Set accountHolder and shipping parameters based on PaymentDataObjectInterface
-     *
-     * @param PaymentDataObjectInterface $paymentDO
-     * @since 2.1.0
-     */
-    private function setParametersForPaymentData($paymentDO)
-    {
-        $this->token = $paymentDO->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID);
-        /** @var OrderAdapterInterface $order */
-        $order = $paymentDO->getOrder();
-
-        $billingAddress = $order->getBillingAddress();
-        $this->accountHolder = $this->accountHolderFactory->create($billingAddress);
-        $this->accountHolder->setCrmId($order->getCustomerId());
-
-        $shippingAddress = $order->getShippingAddress();
-        if (isset($shippingAddress)) {
-            $this->shipping = $this->accountHolderFactory->create($shippingAddress);
-        }
-    }
-
-    /**
-     * Helper method to build the AccountHolder structure by an address
-     *
-     * @param \Magento\Quote\Model\Quote\Address $address Magento2 address from session
-     * @return AccountHolder paymentSdk entity AccountHolder
-     * @since 2.1.0 moved from CreditCard Controller
-     */
-    private function fetchAccountHolder($address)
-    {
-        $accountHolder = new AccountHolder();
-        $accountHolder->setEmail($address->getEmail());
-        $accountHolder->setPhone($address->getTelephone());
-
-        /** @var QuoteAddressValidator $quoteAddressValidator */
-        $quoteAddressValidator = $this->validatorFactory->create(Validator::QUOTE_ADDRESS, $address);
-        if ($quoteAddressValidator->validate()) {
-            $sdkAddress = new Address($address->getCountryId(), $address->getCity(), $address->getStreetLine(1));
-            if (!empty($address->getStreetLine(2))) {
-                $sdkAddress->setStreet2($address->getStreetLine(2));
-            }
-            $sdkAddress->setPostalCode($address->getPostcode());
-            $accountHolder->setAddress($sdkAddress);
+        $billingAddress = $magentoQuoteOrder->getBillingAddress();
+        $accountHolder = $this->accountHolderFactory->create($billingAddress);
+        if ($magentoQuoteOrder->getCustomerId()) {
+            $accountHolder->setCrmId((string)$magentoQuoteOrder->getCustomerId());
         }
 
         return $accountHolder;
+    }
+
+    /**
+     * @param Quote|OrderAdapterInterface $magentoQuoteOrder
+     * @return AccountHolder|null
+     * @throws \InvalidArgumentException
+     * @throws \Exception
+     * @since 3.0.0
+     */
+    private function createShipping($magentoQuoteOrder)
+    {
+        $shippingAddress = $magentoQuoteOrder->getShippingAddress();
+        if (empty($shippingAddress)) {
+            return null;
+        }
+
+        return $this->accountHolderFactory->create($shippingAddress);
+    }
+
+    /**
+     * @param OrderDto|PaymentDataObjectInterface $dataContainer
+     * @return mixed
+     * @since 3.0.0
+     */
+    private function getTokenForPaymentObject($dataContainer)
+    {
+        if ($dataContainer instanceof PaymentDataObjectInterface) {
+            return $dataContainer->getPayment()->getAdditionalInformation(CreditCardDataAssignObserver::TOKEN_ID);
+        }
+        return null;
+    }
+
+    /**
+     * @param OrderDto|PaymentDataObjectInterface $dataContainer
+     * @return Quote|OrderAdapterInterface
+     * @since 3.0.0
+     */
+    private function getDataObjectForQuoteOrOrder($dataContainer)
+    {
+        if ($dataContainer instanceof PaymentDataObjectInterface) {
+            return $dataContainer->getOrder();
+        }
+        return $dataContainer->quote;
     }
 }

@@ -92,45 +92,67 @@ class Callback extends Action
 
     /**
      * @return \Magento\Framework\Controller\ResultInterface
+     * @throws LocalizedException
      */
     public function execute()
     {
-        $response = null;
-        $data = null;
-        if ($this->getRequest()->getParam('jsresponse')) {
-            $response = $this->getRequest()->getPost()->toArray();
-            $data = $this->handleThreeDTransactions($response);
-        } else {
-            $data = [
-                self::REDIRECT_URL => null,
-                'form-url' => null,
-                'form-method' => null,
-                'form-fields' => null
-            ];
+        $resultData = $this->createResultDataFromResponse();
 
-            if ($this->session->hasRedirectUrl()) {
-                $data[self::REDIRECT_URL] = $this->session->getRedirectUrl();
-                $this->session->unsRedirectUrl();
-            } elseif ($this->session->hasFormUrl()) {
-                $data['form-url'] = $this->session->getFormUrl();
-                $data['form-method'] = $this->session->getFormMethod();
-                $data['form-fields'] = $this->session->getFormFields();
-
-                $this->session->unsFormUrl();
-                $this->session->unsFormMethod();
-                $this->session->unsFormFields();
-            } else {
-                $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
-            }
-        }
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $result->setData([
             'status' => 'OK',
-            'data' => $data,
+            'data' => $resultData,
         ]);
 
         return $result;
+    }
+
+    /**
+     * @return array|mixed
+     * @throws LocalizedException
+     * @since 3.0.0
+     */
+    private function createResultDataFromResponse()
+    {
+        $data = $this->initResultData();
+        if ($this->getRequest()->getParam('jsresponse')) {
+            $response = null;
+            $response = $this->getRequest()->getPost()->toArray();
+            $data = $this->handleThreeDTransactions($response);
+            return $data;
+        }
+        if ($this->session->hasRedirectUrl()) {
+            $data[self::REDIRECT_URL] = $this->session->getRedirectUrl();
+            $this->session->unsRedirectUrl();
+            return $data;
+        }
+        if ($this->session->hasFormUrl()) {
+            $data['form-url'] = $this->session->getFormUrl();
+            $data['form-method'] = $this->session->getFormMethod();
+            $data['form-fields'] = $this->session->getFormFields();
+
+            $this->session->unsFormUrl();
+            $this->session->unsFormMethod();
+            $this->session->unsFormFields();
+            return $data;
+        }
+        $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
+        return $data;
+    }
+
+    /**
+     * @return array
+     * @since 3.0.0
+     */
+    private function initResultData()
+    {
+        return [
+            self::REDIRECT_URL => null,
+            'form-url' => null,
+            'form-method' => null,
+            'form-fields' => null
+        ];
     }
 
     /**

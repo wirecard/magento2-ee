@@ -10,6 +10,7 @@
 namespace Wirecard\ElasticEngine\Gateway\Request;
 
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
+use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Wirecard\PaymentSdk\Entity\Address;
 
 /**
@@ -19,32 +20,56 @@ use Wirecard\PaymentSdk\Entity\Address;
 class AddressFactory
 {
     /**
-     * @param AddressAdapterInterface $magentoAddressObj
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
      * @return Address
-     * @throws \InvalidArgumentException
      */
     public function create($magentoAddressObj)
     {
-        $address = null;
-        if (!$magentoAddressObj instanceof AddressAdapterInterface) {
-            throw new \InvalidArgumentException('Address data object should be provided.');
-        }
-
         $address = new Address(
             $magentoAddressObj->getCountryId(),
             $magentoAddressObj->getCity(),
-            $magentoAddressObj->getStreetLine1()
+            $this->getStreetLine1($magentoAddressObj)
         );
         $address->setPostalCode($magentoAddressObj->getPostcode());
 
-        if (strlen($magentoAddressObj->getRegionCode())) {
+        if (strlen(trim($magentoAddressObj->getRegionCode()))) {
             $address->setState($magentoAddressObj->getRegionCode());
         }
 
-        if (strlen($magentoAddressObj->getStreetLine2())) {
-            $address->setStreet2($magentoAddressObj->getStreetLine2());
+        if (strlen(trim($this->getStreetLine2($magentoAddressObj)))) {
+            $address->setStreet2($this->getStreetLine2($magentoAddressObj));
         }
 
         return $address;
+    }
+
+    /**
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
+     * @return string
+     * @since 3.0.0
+     */
+    private function getStreetLine1($magentoAddressObj)
+    {
+        if ($magentoAddressObj instanceof AddressAdapterInterface) {
+            /** AddressAdapterInterface $magentoAddressObj */
+            return $magentoAddressObj->getStreetLine1();
+        }
+        /** QuoteAddress $magentoAddressObj */
+        return $magentoAddressObj->getStreetLine(1);
+    }
+
+    /**
+     * @param AddressAdapterInterface|QuoteAddress $magentoAddressObj
+     * @return string
+     * @since 3.0.0
+     */
+    private function getStreetLine2($magentoAddressObj)
+    {
+        if ($magentoAddressObj instanceof AddressAdapterInterface) {
+            /** AddressAdapterInterface $magentoObj */
+            return $magentoAddressObj->getStreetLine2();
+        }
+        /** QuoteAddress $magentoObj */
+        return $magentoAddressObj->getStreetLine(2);
     }
 }

@@ -9,10 +9,10 @@
 
 $mandateId = $this->getMandateId();
 ?>
-<table border="0" cellpadding="0" cellspacing="0" class="stretch">
+<table  class="stretch">
     <tr>
         <td class="text11justify">
-            <table border="0" width="100%">
+            <table>
                 <tr>
                     <td class="text11justify">
                         <i ><?php echo __('creditor') ?></i><br />
@@ -21,14 +21,14 @@ $mandateId = $this->getMandateId();
                         <?php echo __('creditor_mandate_id') ?> <?php echo $mandateId ?><br />
                         <input type="hidden" name="mandateId" value="<?php echo $mandateId ?>">
                     </td>
-                    <td width="10%">&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
         <td>
-            <table border="0" width="100%">
+            <table>
                 <tr>
                     <td class="text11">
                         <i><?php echo __('debtor') ?></i><br />
@@ -39,14 +39,14 @@ $mandateId = $this->getMandateId();
                                 }
                                 ?>
                     </td>
-                    <td width="10%">&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
         <td class="text11justify">
-            <table border="0" width="100%">
+            <table>
                 <tr>
                     <td class="text11justify">
                         <?php echo __('sepa_text_1') . ' ' .
@@ -55,13 +55,13 @@ $mandateId = $this->getMandateId();
                             $this->getCreditorName() .
                             __('sepa_text_2b'); ?>
                     </td>
-                    <td width="10%">&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text11justify">
                         <?php echo __('sepa_text_3') ?>
                     </td>
-                    <td width="10%">&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text11justify">
@@ -69,19 +69,19 @@ $mandateId = $this->getMandateId();
                                     $this->getCreditorName() . ' ' .
                                     __('sepa_text_5'); ?>
                     </td>
-                    <td width="10%">&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
         <td class="text11justify">
-            <table border="0" width="100%">
+            <table>
                 <tr>
                     <td class="text11justify">
                         <?php echo $this->getStoreCity() ?>, <?php echo date("d.m.Y") ?> %firstname% %lastname%
                     </td>
-                    <td width="10%">&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>

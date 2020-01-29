@@ -9,7 +9,6 @@
 
 namespace Wirecard\ElasticEngine\Test\Unit\Gateway\Request;
 
-use InvalidArgumentException;
 use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Wirecard\ElasticEngine\Gateway\Request\AddressFactory;
 use Wirecard\PaymentSdk\Entity\Address;
@@ -39,14 +38,5 @@ class AddressFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->setState('OR');
 
         $this->assertEquals($expected, $addressFactory->create($this->address));
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testCreateThrowsException()
-    {
-        $addressFactory = new AddressFactory();
-        $addressFactory->create(null);
     }
 }

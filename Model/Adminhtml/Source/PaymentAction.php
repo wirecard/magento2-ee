@@ -9,9 +9,9 @@
 
 namespace Wirecard\ElasticEngine\Model\Adminhtml\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class PaymentAction implements ArrayInterface
+class PaymentAction implements OptionSourceInterface
 {
     const AUTHORIZE='authorize';
     const AUTHORIZE_CAPTURE='authorize_capture';

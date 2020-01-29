@@ -113,16 +113,6 @@
             <argument name="commandPool" xsi:type="object">PoiPiaCommandPool</argument>
         </arguments>
     </virtualType>
-    <virtualType name="MasterpassFacade" type="Magento\Payment\Model\Method\Adapter">
-        <arguments>
-            <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MASTERPASS_CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
-            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
-            <argument name="valueHandlerPool" xsi:type="object">MasterpassValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">MasterpassValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">MasterpassCommandPool</argument>
-        </arguments>
-    </virtualType>
     <virtualType name="PayByBankAppFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::PAYBYBANKAPP_CODE</argument>
@@ -270,21 +260,6 @@
             <argument name="configInterface" xsi:type="object">WirecardPoiPiaConfig</argument>
         </arguments>
     </virtualType>
-    <virtualType name="MasterpassValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">MasterpassConfigValueHandler</item>
-                <item name="can_capture" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanCaptureHandler</item>
-                <item name="can_void" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
-                <item name="can_cancel" xsi:type="string">Wirecard\ElasticEngine\Gateway\Config\CanVoidHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MasterpassConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
-        <arguments>
-            <argument name="configInterface" xsi:type="object">WirecardMasterpassConfig</argument>
-        </arguments>
-    </virtualType>
     <virtualType name="PayByBankAppValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -361,11 +336,6 @@
     <virtualType name="WirecardPoiPiaConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::POIPIA_CODE</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="WirecardMasterpassConfig" type="Magento\Payment\Gateway\Config\Config">
-        <arguments>
-            <argument name="methodCode" xsi:type="const">Wirecard\ElasticEngine\Model\Ui\ConfigProvider::MASTERPASS_CODE</argument>
         </arguments>
     </virtualType>
     <virtualType name="WirecardPayByBankAppConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -445,12 +415,6 @@
     </virtualType>
 
     <virtualType name="PoiPiaValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
-        <arguments>
-            <argument name="validators" xsi:type="array">
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MasterpassValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
             </argument>
@@ -753,49 +717,6 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="MasterpassCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
-        <arguments>
-            <argument name="commands" xsi:type="array">
-                <item name="initialize" xsi:type="string">MasterpassInitializeCommand</item>
-                <item name="capture" xsi:type="string">MasterpassCaptureCommand</item>
-                <item name="refund" xsi:type="string">MasterpassRefundCommand</item>
-                <item name="void" xsi:type="string">MasterpassVoidCommand</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MasterpassInitializeCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MasterpassCaptureCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardCaptureCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MasterpassRefundCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardRefundCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="MasterpassVoidCommand" type="Wirecard\ElasticEngine\Gateway\Command\WirecardVoidCommand">
-        <arguments>
-            <argument name="transactionFactory" xsi:type="object">MasterpassTransactionFactory</argument>
-            <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="handler" xsi:type="object">Wirecard\ElasticEngine\Gateway\Response\ResponseHandler</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="PayByBankAppCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -932,18 +853,6 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="MasterpassTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\MasterpassTransactionFactory">
-        <arguments>
-            <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\MasterpassTransaction</argument>
-            <argument name="basketFactory" xsi:type="object">BasketFactory</argument>
-            <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
-            <argument name="methodConfig" xsi:type="object">WirecardMasterpassConfig</argument>
-            <argument name="transactionRepository" xsi:type="object">Magento\Sales\Model\Order\Payment\Transaction\Repository</argument>
-            <argument name="searchCriteriaBuilder" xsi:type="object">Magento\Framework\Api\SearchCriteriaBuilder</argument>
-            <argument name="filterBuilder" xsi:type="object">Magento\Framework\Api\FilterBuilder</argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="PayByBankAppTransactionFactory" type="Wirecard\ElasticEngine\Gateway\Request\PayByBankAppTransactionFactory">
         <arguments>
             <argument name="transaction" xsi:type="object">Wirecard\PaymentSdk\Transaction\PayByBankAppTransaction</argument>
@@ -963,7 +872,7 @@
     <virtualType name="AccountHolderFactory" type="Wirecard\ElasticEngine\Gateway\Request\AccountHolderFactory">
         <arguments>
             <argument name="addressFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AddressFactory</argument>
-            <argument name="validatorFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory</argument>
+            <argument name="addressValidatorFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\AddressValidatorFactory</argument>
         </arguments>
     </virtualType>
 
@@ -971,7 +880,6 @@
         <arguments>
             <argument name="accountInfoFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Request\AccountInfoFactory</argument>
             <argument name="accountHolderFactory" xsi:type="object">AccountHolderFactory</argument>
-            <argument name="validatorFactory" xsi:type="object">Wirecard\ElasticEngine\Gateway\Validator\ValidatorFactory</argument>
         </arguments>
     </virtualType>
 
@@ -995,7 +903,6 @@
                 <item name="ratepayinvoice" xsi:type="object">WirecardRatepayInvoiceConfig</item>
                 <item name="alipay-xborder" xsi:type="object">WirecardAlipayXBorderConfig</item>
                 <item name="wiretransfer" xsi:type="object">WirecardPoiPiaConfig</item>
-                <item name="masterpass" xsi:type="object">WirecardMasterpassConfig</item>
                 <item name="zapp" xsi:type="object">WirecardPayByBankAppConfig</item>
             </argument>
             <argument name="productMetadata" xsi:type="object">Magento\Framework\App\ProductMetadata</argument>
@@ -1053,7 +960,6 @@
         <arguments>
             <argument name="jsonFactory" xsi:type="object">Magento\Framework\Controller\Result\JsonFactory</argument>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="taxCalculation" xsi:type="object">Magento\Tax\Model\Calculation</argument>
             <argument name="resolver" xsi:type="object">Magento\Framework\Locale\ResolverInterface</argument>
             <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface</argument>
             <argument name="urlBuilder" xsi:type="object">Magento\Framework\UrlInterface</argument>

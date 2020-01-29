@@ -74,36 +74,29 @@ jobs:
     - <<: *acceptance-test
       if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
       env:
-        - GATEWAY=API-TEST
-        - MAGENTO2_RELEASE_VERSION=2
-    #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
-    #   tests will use extension version = branch which originated pull request
-    - <<: *acceptance-test
-      if: (type = pull_request AND (head_branch =~ env(MAJOR_RELEASE)))
-      env:
-        - GATEWAY=API-TEST
-        - MAGENTO2_RELEASE_VERSION=3
+      - GATEWAY=API-TEST
+      - MAGENTO2_RELEASE_VERSION=2
     #   run this stage when shop system updated with latest shop extension release version
     #   tests will use latest released extension version
     - <<: *acceptance-test
-      # when commit message contains string "Update latest shop releases"
+    # when commit message contains string "Update latest shop releases"
       if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
       env:
-        - GATEWAY=API-TEST
-        - MAGENTO2_RELEASE_VERSION=1
-        # will check latest released extension version with latest shop version
-        - LATEST_EXTENSION_RELEASE=1
-        # if this stage fails, it will not fail the whole build
-        - ALLOW_FAIL=1
+      - GATEWAY=API-TEST
+      - MAGENTO2_RELEASE_VERSION=1
+    # will check latest released extension version with latest shop version
+      - LATEST_EXTENSION_RELEASE=1
+    # if this stage fails, it will not fail the whole build
+      - ALLOW_FAIL=1
     - <<: *acceptance-test
-      # when commit message contains string "Update latest shop releases"
+    # when commit message contains string "Update latest shop releases"
       if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
       env:
-        # will check master branch with latest shop version
-        - GATEWAY=API-TEST
-        - MAGENTO2_RELEASE_VERSION=1
-        # if this stage fails, it will not fail the whole build
-        - ALLOW_FAIL=1
+    # will check master branch with latest shop version
+      - GATEWAY=API-TEST
+      - MAGENTO2_RELEASE_VERSION=1
+    # if this stage fails, it will not fail the whole build
+      - ALLOW_FAIL=1
 
     - stage: phraseapp-pull
       if: env(PHRASEAPP_PULL) = '1'
