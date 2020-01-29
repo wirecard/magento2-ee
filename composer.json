@@ -12,7 +12,6 @@
     "ext-pcre": "*",
     "ext-mbstring": "*",
     "ext-date": "*",
-    "ext-core": "*",
     "magento/module-payment": ">=100.1.0",
     "magento/module-checkout": ">=100.1.0",
     "magento/module-sales": ">=100.0.0",
