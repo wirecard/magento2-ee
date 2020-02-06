@@ -277,11 +277,13 @@ class Support
             if (preg_match('/^wirecard_elasticengine/i', $paymentCode)) {
                 $unsafeConfig = $this->scopeConfig->getValue('payment/' . $paymentCode, $scope);
                 $safeConfig = [];
-                foreach ($unsafeConfig as $key => $value) {
-                    if (!in_array($key, $this->configWhiteList)) {
-                        continue;
+                if (is_array($unsafeConfig)) {
+                    foreach ($unsafeConfig as $key => $value) {
+                        if (!in_array($key, $this->configWhiteList)) {
+                            continue;
+                        }
+                        $safeConfig[$key] = $value;
                     }
-                    $safeConfig[$key] = $value;
                 }
 
                 $method['config'] = $safeConfig;
