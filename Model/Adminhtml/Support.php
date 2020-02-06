@@ -316,21 +316,21 @@ class Support
     }
 
     /**
-     * @param $unsafeConfig
+     * @param $unfilteredConfig
      * @return array
      */
-    private function whitelistConfig($unsafeConfig)
+    private function whitelistConfig($unfilteredConfig)
     {
-        $safeConfig = [];
-        if (is_array($unsafeConfig)) {
-            foreach ($unsafeConfig as $key => $value) {
+        $filteredConfig = [];
+        if (is_array($unfilteredConfig)) {
+            foreach ($unfilteredConfig as $key => $value) {
                 if (!in_array($key, $this->configWhiteList)) {
                     continue;
                 }
-                $safeConfig[$key] = $value;
+                $filteredConfig[$key] = $value;
             }
         }
-        return $safeConfig;
+        return $filteredConfig;
     }
 
     /**
