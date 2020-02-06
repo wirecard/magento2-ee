@@ -266,7 +266,6 @@ class Support
 
         $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
-        $foreign = [];
         $mine = [];
         foreach ($payments as $paymentCode => $paymentModel) {
             $method = [
@@ -276,20 +275,11 @@ class Support
 
             if (preg_match('/^wirecard_elasticengine/i', $paymentCode)) {
                 $unsafeConfig = $this->scopeConfig->getValue('payment/' . $paymentCode, $scope);
-                $safeConfig = [];
-                if (is_array($unsafeConfig)) {
-                    foreach ($unsafeConfig as $key => $value) {
-                        if (!in_array($key, $this->configWhiteList)) {
-                            continue;
-                        }
-                        $safeConfig[$key] = $value;
-                    }
-                }
+
+                $safeConfig = $this->whitelistConfig($unsafeConfig);
 
                 $method['config'] = $safeConfig;
                 $mine[$paymentCode] = $method;
-            } else {
-                $foreign[$paymentCode] = $method;
             }
         }
 
@@ -311,7 +301,6 @@ class Support
             ->setTemplateVars([
                 'data' => $postObject,
                 'modules' => $modules,
-                'foreign' => $foreign,
                 'mine' => $mine,
                 'configstr' => $this->getConfigString(),
                 'versioninfo' => $versioninfo
@@ -324,6 +313,24 @@ class Support
         $transport->sendMessage();
 
         return true;
+    }
+
+    /**
+     * @param $unsafeConfig
+     * @return array
+     */
+    private function whitelistConfig($unsafeConfig)
+    {
+        $safeConfig = [];
+        if (is_array($unsafeConfig)) {
+            foreach ($unsafeConfig as $key => $value) {
+                if (!in_array($key, $this->configWhiteList)) {
+                    continue;
+                }
+                $safeConfig[$key] = $value;
+            }
+        }
+        return $safeConfig;
     }
 
     /**
