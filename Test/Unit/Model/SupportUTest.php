@@ -95,14 +95,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingTo()
     {
-        $this->support = new Support(
-            $this->scopeConfig,
-            $this->transportBuilder,
-            $this->moduleLoader,
-            $this->config,
-            $this->moduleListInterface,
-            $this->productMetadata
-        );
+        $this->createSupport();
         $this->support->sendrequest($this->postObject);
     }
 
@@ -112,14 +105,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidReplytoEmail()
     {
-        $this->support = new Support(
-            $this->scopeConfig,
-            $this->transportBuilder,
-            $this->moduleLoader,
-            $this->config,
-            $this->moduleListInterface,
-            $this->productMetadata
-        );
+        $this->createSupport();
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'e@a']);
         $this->support->sendrequest($this->postObject);
     }
@@ -130,14 +116,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingShopEmail()
     {
-        $this->support = new Support(
-            $this->scopeConfig,
-            $this->transportBuilder,
-            $this->moduleLoader,
-            $this->config,
-            $this->moduleListInterface,
-            $this->productMetadata
-        );
+        $this->createSupport();
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);
         $this->support->sendrequest($this->postObject);
     }
@@ -146,14 +125,7 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
     {
         $this->scopeConfig->method('getValue')->will($this->returnCallback([$this, 'configValueMap']));
 
-        $this->support = new Support(
-            $this->scopeConfig,
-            $this->transportBuilder,
-            $this->moduleLoader,
-            $this->config,
-            $this->moduleListInterface,
-            $this->productMetadata
-        );
+        $this->createSupport();
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);
 
         $this->assertTrue($this->support->sendrequest($this->postObject));
@@ -172,5 +144,45 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
         ];
 
         return $data[$key];
+    }
+
+    public function testWhitelistingCredentials()
+    {
+        $disallowValues = [
+            'http_user' => 'x',
+            'http_pass'  => 'x',
+            'three_d_secret'  => 'x',
+            'secret'  => 'x',
+            'creditor_id'  => 'x',
+            'creditor_name'  => 'x',
+            'base_url'  => 'x',
+        ];
+        $cleanValues = [
+            'base_url' => 'x',
+        ];
+        $this->createSupport();
+
+        $output = $this->invokeMethod($this->support, 'whitelistConfig', array($disallowValues));
+        $this->assertSame($cleanValues, $output, "Whitelisting values for support does not work");
+    }
+
+    private function invokeMethod($object, $methodName, array $parameters = array())
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+        return $method->invokeArgs($object, $parameters);
+    }
+
+    private function createSupport()
+    {
+        $this->support = new Support(
+            $this->scopeConfig,
+            $this->transportBuilder,
+            $this->moduleLoader,
+            $this->config,
+            $this->moduleListInterface,
+            $this->productMetadata
+        );
     }
 }
