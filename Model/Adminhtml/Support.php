@@ -157,6 +157,48 @@ class Support
         'Magento_Wishlist',
         'Magento_WishlistSampleData'
     ];
+
+    /**
+     * @var array
+     */
+    private $configWhiteList = [
+        'active',
+        'allowspecific',
+        'base_url',
+        'billing_shipping_address_identical',
+        'can_authorize',
+        'can_capture',
+        'can_capture_partial',
+        'can_initialize',
+        'can_invoice',
+        'can_refund',
+        'can_refund_partial_per_invoice',
+        'can_use_checkout',
+        'can_void',
+        'challenge_ind',
+        'creditor_city',
+        'default_currency',
+        'enable_bic',
+        'is_gateway',
+        'max_order_total',
+        'merchant_account_id',
+        'min_order_total',
+        'model',
+        'order_status',
+        'payment_action',
+        'poipia_action',
+        'send_additional',
+        'send_shopping_basket',
+        'sort_order',
+        'specificcountry',
+        'ssl_max_limit',
+        'three_d_merchant_account_id',
+        'three_d_min_limit',
+        'title',
+        'wpp_url',
+        'zapp_merchant_return_string',
+    ];
+
     /**
      * @var ModuleListInterface
      */
@@ -233,7 +275,16 @@ class Support
             ];
 
             if (preg_match('/^wirecard_elasticengine/i', $paymentCode)) {
-                $method['config'] = $this->scopeConfig->getValue('payment/' . $paymentCode, $scope);
+                $unsafeConfig = $this->scopeConfig->getValue('payment/' . $paymentCode, $scope);
+                $safeConfig = [];
+                foreach ($unsafeConfig as $key => $value) {
+                    if (!in_array($key, $this->configWhiteList)) {
+                        continue;
+                    }
+                    $safeConfig[$key] = $value;
+                }
+
+                $method['config'] = $safeConfig;
                 $mine[$paymentCode] = $method;
             } else {
                 $foreign[$paymentCode] = $method;
@@ -286,7 +337,7 @@ class Support
         $config_str = "";
 
         foreach ($config as $key => $value) {
-            if (in_array($key, ['pass'])) {
+            if (!in_array($key, $this->configWhiteList)) {
                 continue;
             }
             $config_str .= "[$key] = $value\n";
