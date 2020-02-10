@@ -13,7 +13,7 @@ env:
     - MAGENTO2_COMPATIBILITY_FILE=${TRAVIS_BUILD_DIR}/.bin/new-shop-releases.txt
 
 jobs:
-  # these stages are allowed to fail
+  #these stages are allowed to fail
   allow_failures:
     - stage: phraseapp-check-if-in-sync
     - stage: acceptance-test
