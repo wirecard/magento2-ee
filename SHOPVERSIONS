@@ -1,5 +1,14 @@
 [
   {
+    "release": "3.0.1",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.3",
+    "compatibility": "2.2.0",
+    "changelog": [
+      ""
+    ]
+  },
+  {
     "release": "3.0.0",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.3",
