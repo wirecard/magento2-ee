@@ -1,0 +1,38 @@
+name: CS, Unit Tests, Coverage
+
+on: [push]
+
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.1']
+    name: PHP ${{ matrix.php-versions }} Test
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: PHP Setup
+      uses: wirecard/setup-php@master
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extension-csv: mbstring, intl, simplexml, dom
+        ini-values-csv: post_max_size=256M, short_open_tag=On
+        coverage: xdebug
+        pecl: false
+
+    - name: Install Composer
+      run: composer require --dev --no-interaction satooshi/php-coveralls:^1.0
+
+    - name: Run Style Check
+      run: composer cs-check
+
+    - name: Run Unit Tests
+      run: composer test-coverage
+
+    - name: Upload coverage
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      run:  composer upload-coverage
