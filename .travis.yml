@@ -3,10 +3,10 @@ language: php
 
 env:
   global:
-    - COMPOSER_ARGS="--no-interaction"
+    - COMPOSER_ARGS=--no-interaction
     - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/compatible-shop-releases.txt
-    - SHOP_SYSTEM_UPDATE_COMMIT="Update latest shop releases"
-    - MANUAL_UITEST_TRIGGER_COMMIT="Test my build"
+    - SHOP_SYSTEM_UPDATE_COMMIT=UpdateLatestShopReleases
+    - MANUAL_UITEST_TRIGGER_COMMIT=TestMyBuild
     - PATCH_RELEASE=patch
     - MINOR_RELEASE=minor
     - MAJOR_RELEASE=major
@@ -28,8 +28,6 @@ jobs:
         - LATEST_EXTENSION_RELEASE=1
         - ALLOW_FAIL=1
   include:
-    - php: 7.1
-      if: env(PHRASEAPP_PULL) != '1' AND type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
     - stage: get-latest-shop-release-versions
       if: type = cron
       php: 7.1
@@ -143,13 +141,6 @@ install:
   - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
   - travis_retry composer install $COMPOSER_ARGS
   - composer show
-
-script:
-  - composer test-coverage
-  - composer cs-check
-
-after_script:
-  - composer upload-coverage
 
 notifications:
   email: false
