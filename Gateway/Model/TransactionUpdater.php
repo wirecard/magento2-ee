@@ -207,6 +207,7 @@ class TransactionUpdater
         $response = $this->notify->fromXmlResponse($result);
 
         $this->logger->debug($logStr . 'Notification response is instance of: ' . get_class($response));
+        $this->logger->debug($logStr . 'Notification: ' . json_encode($response->getData()));
 
         return $response;
     }

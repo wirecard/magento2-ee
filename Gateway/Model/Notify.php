@@ -362,19 +362,27 @@ class Notify
     protected function saveCreditCardToken($response, $customerId, $payment)
     {
         $this->migrateToken($response, $customerId, $payment);
+        $expirationDate = $this->createExpirationDate($response);
 
         /** @var PaymentTokenInterface $paymentToken */
         $paymentToken = $this->paymentTokenFactory->create();
         $paymentToken->setGatewayToken($response->getCardTokenId());
         $paymentToken->setIsActive(true);
-        $paymentToken->setExpiresAt(date('d-m-Y', strtotime(date('d-m-Y', time()) . " + 1 year")));
         $paymentToken->setIsVisible(true);
         $paymentToken->setCustomerId($customerId);
         $paymentToken->setPaymentMethodCode($payment->getMethod());
+        $paymentToken->setExpiresAt($expirationDate);
+
+        $responseData = $response->getData();
+        $cardType = $responseData['card.0.card-type'];
+        if (!empty($cardType)) {
+            $paymentToken->setType($cardType);
+        }
+
         $paymentToken->setTokenDetails(json_encode([
-            'type' => '',
+            'type' => $cardType,
             'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
-            'expirationDate' => 'xx-xxxx'
+            'expirationDate' => $expirationDate
         ]));
         $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
 
@@ -388,6 +396,36 @@ class Notify
             $this->paymentTokenManagement->saveTokenWithPaymentLink($paymentToken, $payment);
             $extensionAttributes->setVaultPaymentToken($paymentToken);
         }
+    }
+
+    /**
+     * @param SuccessResponse $response
+     * @throws \Exception
+     * @return string
+     * @since 3.1.0
+     */
+    private function createExpirationDate($response)
+    {
+        $responseData = $response->getData();
+        $expirationYear = $responseData['card.0.expiration-year'];
+        $expirationMonth = $responseData['card.0.expiration-month'];
+        $expirationDate = date('d-m-Y', strtotime(date('d-m-Y', time()) . " + 1 year"));
+        if (!empty($expirationMonth) && !empty($expirationYear)) {
+            $expirationDate = new \DateTime(
+                $expirationYear
+                . '-'
+                . $expirationMonth
+                . '-'
+                . '01'
+                . ' '
+                . '00:00:00',
+                new \DateTimeZone('UTC')
+            );
+            $expirationDate->add(new \DateInterval('P1M'));
+            $expirationDate->format('Y-m-d 00:00:00');
+        }
+
+        return $expirationDate;
     }
 
     /**
