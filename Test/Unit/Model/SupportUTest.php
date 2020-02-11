@@ -162,11 +162,11 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
         ];
         $this->createSupport();
 
-        $output = $this->invokeMethod($this->support, 'whitelistConfig', array($disallowValues));
+        $output = $this->invokeMethod($this->support, 'whitelistConfig', [$disallowValues]);
         $this->assertSame($cleanValues, $output, "Whitelisting values for support does not work");
     }
 
-    private function invokeMethod($object, $methodName, array $parameters = array())
+    private function invokeMethod($object, $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
