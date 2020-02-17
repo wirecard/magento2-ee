@@ -49,6 +49,40 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class Notify
 {
+
+    /**
+     * Mapping of types between EE and M2.
+     * @var array[string]
+     * @since 3.0.2
+     */
+    const CARD_TYPES_MAPPING = [
+        'amex' => 'AE',
+        'arca' => 'OT',
+        'aura' => 'AU',
+        'cartasi' => 'OT',
+        'cartebancaire' => 'OT',
+        'cartebleue' => 'OT',
+        'cup' => 'OT',
+        'dankort' => 'OT',
+        'diners' => 'DN',
+        'discover' => 'DI',
+        'elo' => 'ELO',
+        'hiper' => 'OT',
+        'hipercard' => 'HC',
+        'jcb' => 'JCB',
+        'maestro' => 'OT',
+        'mastercard' => 'MC',
+        'mir' => 'OT',
+        'postepay' => 'OT',
+        'rupay' => 'OT',
+        'uatp' => 'OT',
+        'upi' => 'OT',
+        'upop' => 'OT',
+        'uzcard' => 'OT',
+        'visa' => 'VI',
+        'vpay' => 'OT',
+    ];
+
     /**
      * @var TransactionServiceFactory
      */
@@ -378,6 +412,7 @@ class Notify
         if (!empty($cardType)) {
             $paymentToken->setType($cardType);
         }
+        $cardType = $this->mapCardType($cardType);
 
         $paymentToken->setTokenDetails(json_encode([
             'type' => $cardType,
@@ -533,5 +568,19 @@ class Notify
             'customer_id = ?' => $customerId,
             'gateway_token = ?' => $gatewayToken
         ]);
+    }
+
+    /**
+     * @param string $cardType
+     * @return mixed|string
+     * @since 3.1.0
+     */
+    private function mapCardType(string $cardType)
+    {
+        $mappedType = 'OT';
+        if (isset(self::CARD_TYPES_MAPPING[$cardType])) {
+            $mappedType = self::CARD_TYPES_MAPPING[$cardType];
+        }
+        return $mappedType;
     }
 }
