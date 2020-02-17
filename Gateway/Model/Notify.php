@@ -407,25 +407,40 @@ class Notify
     private function createExpirationDate($response)
     {
         $responseData = $response->getData();
-        $expirationYear = $responseData['card.0.expiration-year'];
-        $expirationMonth = $responseData['card.0.expiration-month'];
-        $expirationDate = date('d-m-Y', strtotime(date('d-m-Y', time()) . " + 1 year"));
+        $expirationYear = strval($responseData['card.0.expiration-year']) ?? '';
+        $expirationMonth = strval($responseData['card.0.expiration-month']) ?? '';
+        $expirationDate = $this->getDefaultExpirationDate();
         if (!empty($expirationMonth) && !empty($expirationYear)) {
             $expirationDate = new \DateTime(
-                $expirationYear
-                . '-'
-                . $expirationMonth
-                . '-'
-                . '01'
-                . ' '
-                . '00:00:00',
+                $this->formatExpirationDate($expirationYear, $expirationMonth),
                 new \DateTimeZone('UTC')
             );
             $expirationDate->add(new \DateInterval('P1M'));
-            $expirationDate->format('Y-m-d 00:00:00');
         }
+        return $expirationDate->format('Y-m-d 00:00:00');
+    }
 
-        return $expirationDate;
+    /**
+     * @param string $expirationYear
+     * @param string $expirationMonth
+     * @return string
+     * @since 3.1.0
+     */
+    private function formatExpirationDate(string $expirationYear, string $expirationMonth)
+    {
+        return $expirationYear . '-' . $expirationMonth . '-' . '01' . ' ' . '00:00:00';
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     * @since 3.1.0
+     */
+    private function getDefaultExpirationDate()
+    {
+        $now = new \DateTime('now', new \DateTimeZone('UTC'));
+        $now->add(new \DateInterval('P1M'));
+        return $now;
     }
 
     /**

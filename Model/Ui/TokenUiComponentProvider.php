@@ -13,6 +13,7 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
 use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
+use Psr\Log\LoggerInterface;
 
 class TokenUiComponentProvider implements TokenUiComponentProviderInterface
 {
@@ -22,12 +23,22 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
     private $componentFactory;
 
     /**
+     * @var LoggerInterface
+     * @since 3.1.0
+     */
+    private $logger;
+
+    /**
      * @param TokenUiComponentInterfaceFactory $componentFactory
+     * @param LoggerInterface $logger
+     * @since 3.1.0 Added logger
      */
     public function __construct(
-        TokenUiComponentInterfaceFactory $componentFactory
+        TokenUiComponentInterfaceFactory $componentFactory,
+        LoggerInterface $logger
     ) {
         $this->componentFactory = $componentFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -38,6 +49,9 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
     public function getComponentForToken(PaymentTokenInterface $paymentToken)
     {
         $jsonDetails = json_decode($paymentToken->getTokenDetails() ?: '{}', true);
+        if (isset($jsonDetails['expirationDate'])) {
+            $jsonDetails['expirationDate'] = $this->formatExpirationDate($jsonDetails);
+        }
         $component = $this->componentFactory->create([
             'config' => [
                 'code' => ConfigProvider::CREDITCARD_VAULT_CODE,
@@ -48,5 +62,22 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
         ]);
 
         return $component;
+    }
+
+    /**
+     * @param $jsonDetails
+     * @return string
+     * @since 3.1.0
+     */
+    private function formatExpirationDate($jsonDetails)
+    {
+        try {
+            $expirationDate = new \DateTime($jsonDetails['expirationDate']);
+            return $expirationDate->format('m/Y');
+        } catch (\Exception $exception) {
+            $message = $exception->getMessage();
+            $this->logger->error('Could not format expiration date', compact('message', 'exception'));
+        }
+        return $jsonDetails['expirationDate'];
     }
 }
