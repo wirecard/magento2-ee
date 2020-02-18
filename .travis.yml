@@ -28,14 +28,8 @@ jobs:
         - LATEST_EXTENSION_RELEASE=1
         - ALLOW_FAIL=1
   include:
-    - stage: get-latest-shop-release-versions
-      if: type = cron
-      php: 7.1
-      install: skip
-      before_script: skip
-      script: bash .bin/get-latest-shop-release-versions.sh
-      after_script: skip
-      after_failure: skip
+    - php: 7.1
+      if: env(PHRASEAPP_PULL) != '1' AND type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
 
     - &acceptance-test
       stage: acceptance-test
