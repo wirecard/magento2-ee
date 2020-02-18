@@ -22,7 +22,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
+use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
@@ -114,7 +114,7 @@ class Notify
     private $canCaptureInvoice;
 
     /**
-     * @var PaymentTokenInterfaceFactory
+     * @var PaymentTokenFactoryInterface
      */
     protected $paymentTokenFactory;
 
@@ -160,7 +160,7 @@ class Notify
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
      * @param OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
-     * @param PaymentTokenInterfaceFactory $paymentTokenFactory
+     * @param PaymentTokenFactoryInterface $paymentTokenFactory
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
@@ -177,7 +177,7 @@ class Notify
         InvoiceService $invoiceService,
         Transaction $transaction,
         OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
-        PaymentTokenInterfaceFactory $paymentTokenFactory,
+        PaymentTokenFactoryInterface $paymentTokenFactory,
         PaymentTokenManagementInterface $paymentTokenManagement,
         PaymentTokenResourceModel $paymentTokenResourceModel,
         EncryptorInterface $encryptor,
@@ -398,8 +398,8 @@ class Notify
         $this->migrateToken($response, $customerId, $payment);
         $expirationDate = $this->createExpirationDate($response);
 
-        /** @var PaymentTokenInterface $paymentToken */
-        $paymentToken = $this->paymentTokenFactory->create();
+        /** @var PaymentTokenFactoryInterface $paymentToken */
+        $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
         $paymentToken->setGatewayToken($response->getCardTokenId());
         $paymentToken->setIsActive(true);
         $paymentToken->setIsVisible(true);
