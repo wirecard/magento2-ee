@@ -21,8 +21,8 @@ use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
@@ -57,31 +57,17 @@ class Notify
      */
     const CARD_TYPES_MAPPING = [
         'amex' => 'AE',
-        'arca' => 'OT',
         'aura' => 'AU',
-        'cartasi' => 'OT',
-        'cartebancaire' => 'OT',
-        'cartebleue' => 'OT',
-        'cup' => 'OT',
-        'dankort' => 'OT',
         'diners' => 'DN',
         'discover' => 'DI',
         'elo' => 'ELO',
-        'hiper' => 'OT',
         'hipercard' => 'HC',
         'jcb' => 'JCB',
-        'maestro' => 'OT',
         'mastercard' => 'MC',
-        'mir' => 'OT',
-        'postepay' => 'OT',
-        'rupay' => 'OT',
-        'uatp' => 'OT',
-        'upi' => 'OT',
-        'upop' => 'OT',
-        'uzcard' => 'OT',
         'visa' => 'VI',
-        'vpay' => 'OT',
     ];
+
+    const DEFAULT_TOKEN_TYPE = 'OT';
 
     /**
      * @var TransactionServiceFactory
@@ -114,7 +100,7 @@ class Notify
     private $canCaptureInvoice;
 
     /**
-     * @var PaymentTokenInterfaceFactory
+     * @var PaymentTokenFactoryInterface
      */
     protected $paymentTokenFactory;
 
@@ -160,7 +146,7 @@ class Notify
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
      * @param OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
-     * @param PaymentTokenInterfaceFactory $paymentTokenFactory
+     * @param PaymentTokenFactoryInterface $paymentTokenFactory
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
@@ -177,7 +163,7 @@ class Notify
         InvoiceService $invoiceService,
         Transaction $transaction,
         OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
-        PaymentTokenInterfaceFactory $paymentTokenFactory,
+        PaymentTokenFactoryInterface $paymentTokenFactory,
         PaymentTokenManagementInterface $paymentTokenManagement,
         PaymentTokenResourceModel $paymentTokenResourceModel,
         EncryptorInterface $encryptor,
@@ -398,8 +384,8 @@ class Notify
         $this->migrateToken($response, $customerId, $payment);
         $expirationDate = $this->createExpirationDate($response);
 
-        /** @var PaymentTokenInterface $paymentToken */
-        $paymentToken = $this->paymentTokenFactory->create();
+        /** @var PaymentTokenFactoryInterface $paymentToken */
+        $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
         $paymentToken->setGatewayToken($response->getCardTokenId());
         $paymentToken->setIsActive(true);
         $paymentToken->setIsVisible(true);
@@ -594,7 +580,7 @@ class Notify
      */
     private function mapCardType(string $cardType)
     {
-        $mappedType = 'OT';
+        $mappedType = self::DEFAULT_TOKEN_TYPE;
         if (isset(self::CARD_TYPES_MAPPING[$cardType])) {
             $mappedType = self::CARD_TYPES_MAPPING[$cardType];
         }
