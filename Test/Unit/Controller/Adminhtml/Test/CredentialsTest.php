@@ -51,20 +51,20 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $context = $this->getMock(Context::class, [], [], '', false);
+        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
 
-        $authorization = $this->getMock(Authorization::class, ['isAllowed'], [], '', false);
+        $authorization = $this->getMockBuilder(Authorization::class)->disableOriginalConstructor()->setMethods(['isAllowed'])->getMock();
         $authorization->method('isAllowed')->willReturn(true);
         $context->method('getAuthorization')->willReturn($authorization);
 
-        $this->request = $this->getMock(Request::class, ['getParams'], [], '', false);
+        $this->request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->setMethods(['getParams'])->getMock();
         $context->method('getRequest')->willReturn($this->request);
 
-        $this->json = $this->getMock(Json::class, ['setData'], [], '', false);
-        $this->resultJsonFactory = $this->getMock(JsonFactory::class, ['create'], [], '', false);
+        $this->json = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->setMethods(['setData'])->getMock();
+        $this->resultJsonFactory = $this->getMockBuilder(JsonFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
         $this->resultJsonFactory->method('create')->willReturn($this->json);
 
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
         /** @var Context $context */
         $this->instance = new Credentials($context, $this->resultJsonFactory, $this->logger);

@@ -59,14 +59,14 @@ class CancelTest extends \PHPUnit_Framework_TestCase
         $resultFactory->method('create')->willReturn($this->redirectResult);
         $context->method('getResultFactory')->willReturn($resultFactory);
 
-        $this->messageManager = $this->getMock(ManagerInterface::class);
+        $this->messageManager = $this->getMockBuilder(ManagerInterface::class)->getMock();
         $context->method('getMessageManager')->willReturn($this->messageManager);
 
         /**
          * @var $orderRepository OrderRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
          */
-        $orderRepository = $this->getMock(OrderRepositoryInterface::class);
-        $this->order = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
+        $orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)->getMock();
+        $this->order = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
         $orderRepository->method('get')->willReturn($this->order);
 
         /**

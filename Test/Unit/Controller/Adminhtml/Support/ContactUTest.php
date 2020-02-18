@@ -41,18 +41,18 @@ class ContactUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->context = $this->getMock(Context::class, [], [], '', false);
+        $this->context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
 
-        $title = $this->getMock(Title::class, [], [], '', false);
+        $title = $this->getMockBuilder(Title::class)->disableOriginalConstructor()->getMock();
 
-        $resultPageConfig = $this->getMock(Config::class, [], [], '', false);
+        $resultPageConfig = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         $resultPageConfig->method('getTitle')->willReturn($title);
 
-        $this->page = $this->getMock(Page::class, [], [], '', false);
+        $this->page = $this->getMockBuilder(Page::class)->disableOriginalConstructor()->getMock();
         $this->page->method('setActiveMenu')->willReturn($this->page);
         $this->page->method('getConfig')->willReturn($resultPageConfig);
 
-        $this->resultPageFactory = $this->getMock(PageFactory::class, ['create'], [], '', false);
+        $this->resultPageFactory = $this->getMockBuilder(PageFactory::class)->disableOriginalConstructor()->getMock();
         $this->resultPageFactory->method('create')->willReturn($this->page);
 
         $this->contact = new Contact($this->context, $this->resultPageFactory);
@@ -65,7 +65,7 @@ class ContactUTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAllowed()
     {
-        $authorization = $this->getMock(AuthorizationInterface::class, [], [], '', false);
+        $authorization = $this->getMockBuilder(AuthorizationInterface::class)->disableOriginalConstructor()->getMock();
 
         $testContact = new TestContact($this->context, $this->resultPageFactory);
         $this->assertNull($testContact->test_isAllowed($authorization));
