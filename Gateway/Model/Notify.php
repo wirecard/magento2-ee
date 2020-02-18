@@ -437,14 +437,15 @@ class Notify
      * @param array $responseData
      * @return array
      */
-    private function extractCreditCardExpirationInformation(array $responseData) {
+    private function extractCreditCardExpirationInformation(array $responseData)
+    {
         $expirationYear = '';
         $expirationMonth = '';
         if (isset($responseData['card.0.expiration-year']) && isset($responseData['card.0.expiration-month'])) {
             $expirationYear = $responseData['card.0.expiration-year'];
             $expirationMonth = $responseData['card.0.expiration-month'];
         }
-        return array($expirationYear, $expirationMonth);
+        return [$expirationYear, $expirationMonth];
     }
 
     /**
