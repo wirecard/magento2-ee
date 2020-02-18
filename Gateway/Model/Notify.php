@@ -434,6 +434,20 @@ class Notify
     }
 
     /**
+     * @param array $responseData
+     * @return array
+     */
+    private function extractCreditCardExpirationInformation(array $responseData) {
+        $expirationYear = '';
+        $expirationMonth = '';
+        if (isset($responseData['card.0.expiration-year']) && isset($responseData['card.0.expiration-month'])) {
+            $expirationYear = $responseData['card.0.expiration-year'];
+            $expirationMonth = $responseData['card.0.expiration-month'];
+        }
+        return [$expirationYear, $expirationMonth];
+    }
+
+    /**
      * @param SuccessResponse $response
      * @throws \Exception
      * @return string
@@ -442,8 +456,9 @@ class Notify
     private function createExpirationDate($response)
     {
         $responseData = $response->getData();
-        $expirationYear = strval($responseData['card.0.expiration-year']) ?? '';
-        $expirationMonth = strval($responseData['card.0.expiration-month']) ?? '';
+
+        list($expirationYear, $expirationMonth) = $this->extractCreditCardExpirationInformation($responseData);
+
         $expirationDate = $this->getDefaultExpirationDate();
         if (!empty($expirationMonth) && !empty($expirationYear)) {
             $expirationDate = new \DateTime(
