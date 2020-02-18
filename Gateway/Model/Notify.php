@@ -444,7 +444,7 @@ class Notify
             $expirationYear = $responseData['card.0.expiration-year'];
             $expirationMonth = $responseData['card.0.expiration-month'];
         }
-        return [$expirationYear, $expirationMonth];
+        return array($expirationYear, $expirationMonth);
     }
 
     /**
