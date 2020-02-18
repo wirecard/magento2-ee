@@ -408,6 +408,7 @@ class Notify
         $paymentToken->setExpiresAt($expirationDate);
 
         $responseData = $response->getData();
+        $responseData += ['card.0.card-type' => ''];
         $cardType = $responseData['card.0.card-type'];
         if (!empty($cardType)) {
             $paymentToken->setType($cardType);
