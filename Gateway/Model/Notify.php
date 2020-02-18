@@ -57,31 +57,17 @@ class Notify
      */
     const CARD_TYPES_MAPPING = [
         'amex' => 'AE',
-        'arca' => 'OT',
         'aura' => 'AU',
-        'cartasi' => 'OT',
-        'cartebancaire' => 'OT',
-        'cartebleue' => 'OT',
-        'cup' => 'OT',
-        'dankort' => 'OT',
         'diners' => 'DN',
         'discover' => 'DI',
         'elo' => 'ELO',
-        'hiper' => 'OT',
         'hipercard' => 'HC',
         'jcb' => 'JCB',
-        'maestro' => 'OT',
         'mastercard' => 'MC',
-        'mir' => 'OT',
-        'postepay' => 'OT',
-        'rupay' => 'OT',
-        'uatp' => 'OT',
-        'upi' => 'OT',
-        'upop' => 'OT',
-        'uzcard' => 'OT',
         'visa' => 'VI',
-        'vpay' => 'OT',
     ];
+
+    const DEFAULT_TOKEN_TYPE = 'OT';
 
     /**
      * @var TransactionServiceFactory
@@ -594,7 +580,7 @@ class Notify
      */
     private function mapCardType(string $cardType)
     {
-        $mappedType = 'OT';
+        $mappedType = self::DEFAULT_TOKEN_TYPE;
         if (isset(self::CARD_TYPES_MAPPING[$cardType])) {
             $mappedType = self::CARD_TYPES_MAPPING[$cardType];
         }
