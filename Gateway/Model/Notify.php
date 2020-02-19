@@ -383,15 +383,7 @@ class Notify
     {
         $this->migrateToken($response, $customerId, $payment);
         $expirationDate = $this->createExpirationDate($response);
-
-        /** @var PaymentTokenFactoryInterface $paymentToken */
-        $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
-        $paymentToken->setGatewayToken($response->getCardTokenId());
-        $paymentToken->setIsActive(true);
-        $paymentToken->setIsVisible(true);
-        $paymentToken->setCustomerId($customerId);
-        $paymentToken->setPaymentMethodCode($payment->getMethod());
-        $paymentToken->setExpiresAt($expirationDate);
+        $paymentToken = $this->createPaymentToken($response, $customerId, $payment, $expirationDate);
 
         $responseData = $response->getData();
         $responseData += ['card.0.card-type' => ''];
@@ -399,10 +391,9 @@ class Notify
         if (!empty($cardType)) {
             $paymentToken->setType($cardType);
         }
-        $cardType = $this->mapCardType($cardType);
 
         $paymentToken->setTokenDetails(json_encode([
-            'type' => $cardType,
+            'type' => $this->mapCardType($cardType),
             'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
             'expirationDate' => $expirationDate
         ]));
@@ -585,5 +576,25 @@ class Notify
             $mappedType = self::CARD_TYPES_MAPPING[$cardType];
         }
         return $mappedType;
+    }
+
+    /**
+     * @param $response
+     * @param $customerId
+     * @param $payment
+     * @param string $expirationDate
+     * @return PaymentTokenFactoryInterface
+     */
+    private function createPaymentToken($response, $customerId, $payment, string $expirationDate): PaymentTokenFactoryInterface
+    {
+        /** @var PaymentTokenFactoryInterface $paymentToken */
+        $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
+        $paymentToken->setGatewayToken($response->getCardTokenId());
+        $paymentToken->setIsActive(true);
+        $paymentToken->setIsVisible(true);
+        $paymentToken->setCustomerId($customerId);
+        $paymentToken->setPaymentMethodCode($payment->getMethod());
+        $paymentToken->setExpiresAt($expirationDate);
+        return $paymentToken;
     }
 }
