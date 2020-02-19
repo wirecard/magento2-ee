@@ -29,8 +29,8 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
@@ -113,7 +113,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
     private $paymentData;
 
     /**
-     * @var PaymentTokenInterfaceFactory
+     * @var PaymentTokenFactoryInterface
      */
     private $paymentTokenFactory;
 
@@ -229,7 +229,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->setMethods(['create'])->getMock();
         $this->paymentExtensionFactory->method('create')->willReturn($extensionAttributesMock);
 
-        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMockForAbstractClass();
+        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenFactoryInterface::class)->disableOriginalConstructor()->setMethods(['create'])->getMockForAbstractClass();
         $this->paymentTokenFactory->method('create')->willReturn($this->paymentToken);
 
         $this->paymentTokenManagement = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenManagementInterface::class);
