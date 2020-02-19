@@ -4,7 +4,7 @@ bic,BIC:,": classes/includes/class-wc-gateway-wirecard-eps.php:183, : classes/in
 birthdate_input,생년월일,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:424
 canceled_payment_process,결제 프로세스를 취소하셨습니다.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
 capture_invoice_comment,Captured amount of %1 online. Transaction ID: %2.
-config_additional_info,추가 정보 전송
+config_additional_info,추가 정보 전송,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:163, : classes/includes/class-wc-gateway-wirecard-creditcard.php:281, : classes/includes/class-wc-gateway-wirecard-eps.php:161, : classes/includes/class-wc-gateway-wirecard-giropay.php:162, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:215, : classes/includes/class-wc-gateway-wirecard-ideal.php:167, : classes/includes/class-wc-gateway-wirecard-paypal.php:183, : classes/includes/class-wc-gateway-wirecard-poipia.php:172, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:206, : classes/includes/class-wc-gateway-wirecard-sofort.php:159"
 config_base_url,베이스 URL,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:124, : classes/includes/class-wc-gateway-wirecard-creditcard.php:157, : classes/includes/class-wc-gateway-wirecard-eps.php:128, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:133, : classes/includes/class-wc-gateway-wirecard-ideal.php:128, : classes/includes/class-wc-gateway-wirecard-paypal.php:126, : classes/includes/class-wc-gateway-wirecard-poipia.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:127, : classes/includes/class-wc-gateway-wirecard-sofort.php:126, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
 config_base_url_desc,Wirecard 베이스 URL. (예: https://api.wirecard.com),": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:126, : classes/includes/class-wc-gateway-wirecard-creditcard.php:159, : classes/includes/class-wc-gateway-wirecard-eps.php:130, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:135, : classes/includes/class-wc-gateway-wirecard-ideal.php:130, : classes/includes/class-wc-gateway-wirecard-paypal.php:128, : classes/includes/class-wc-gateway-wirecard-poipia.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:129, : classes/includes/class-wc-gateway-wirecard-sofort.php:128, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
 config_basket_max,최대 금액,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
@@ -21,22 +21,22 @@ config_creditor_name,채권자 이름,: classes/includes/class-wc-gateway-wireca
 config_creditor_name_desc,SEPA는 SEPA 자동 이체 위임 페이지에 표시할 채권자 이름을 요구합니다.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:164
 config_email,사용자 이메일 주소,: classes/admin/class-wirecard-settings.php:226
 config_enable_bic,BIC 사용 설정됨,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:213
-config_http_password,HTTP 비밀번호
-config_http_user,HTTP 사용자
+config_http_password,HTTP 비밀번호,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:136, : classes/includes/class-wc-gateway-wirecard-creditcard.php:234, : classes/includes/class-wc-gateway-wirecard-eps.php:134, : classes/includes/class-wc-gateway-wirecard-giropay.php:135, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:144, : classes/includes/class-wc-gateway-wirecard-ideal.php:140, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:136, : classes/includes/class-wc-gateway-wirecard-paypal.php:138, : classes/includes/class-wc-gateway-wirecard-poipia.php:134, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:135, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:139, : classes/includes/class-wc-gateway-wirecard-sofort.php:138"
+config_http_user,HTTP 사용자,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:130, : classes/includes/class-wc-gateway-wirecard-creditcard.php:228, : classes/includes/class-wc-gateway-wirecard-eps.php:128, : classes/includes/class-wc-gateway-wirecard-giropay.php:129, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:138, : classes/includes/class-wc-gateway-wirecard-ideal.php:134, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:130, : classes/includes/class-wc-gateway-wirecard-paypal.php:132, : classes/includes/class-wc-gateway-wirecard-poipia.php:128, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:129, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:133, : classes/includes/class-wc-gateway-wirecard-sofort.php:132"
 config_limit_desc,기본 매장 통화로 표시된 금액,": classes/includes/class-wc-gateway-wirecard-creditcard.php:142, : classes/includes/class-wc-gateway-wirecard-creditcard.php:148"
-config_merchant_account_id,상인 계정 ID
+config_merchant_account_id,상인 계정 ID,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:107, : classes/includes/class-wc-gateway-wirecard-creditcard.php:175, : classes/includes/class-wc-gateway-wirecard-eps.php:105, : classes/includes/class-wc-gateway-wirecard-giropay.php:106, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:115, : classes/includes/class-wc-gateway-wirecard-ideal.php:111, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:107, : classes/includes/class-wc-gateway-wirecard-paypal.php:109, : classes/includes/class-wc-gateway-wirecard-poipia.php:105, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:106, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:110, : classes/includes/class-wc-gateway-wirecard-sofort.php:109"
 config_merchant_public,공개 키
-config_merchant_secret,비밀 키
+config_merchant_secret,비밀 키,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:113, : classes/includes/class-wc-gateway-wirecard-creditcard.php:181, : classes/includes/class-wc-gateway-wirecard-eps.php:111, : classes/includes/class-wc-gateway-wirecard-giropay.php:112, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:121, : classes/includes/class-wc-gateway-wirecard-ideal.php:117, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:113, : classes/includes/class-wc-gateway-wirecard-paypal.php:115, : classes/includes/class-wc-gateway-wirecard-poipia.php:111, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:112, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:116, : classes/includes/class-wc-gateway-wirecard-sofort.php:115"
 config_message,사용자 메시지,: classes/admin/class-wirecard-settings.php:234
-config_payment_action,결제 동작
+config_payment_action,결제 동작,": classes/includes/class-wc-gateway-wirecard-creditcard.php:251, : classes/includes/class-wc-gateway-wirecard-creditcard.php:255, : classes/includes/class-wc-gateway-wirecard-paypal.php:155, : classes/includes/class-wc-gateway-wirecard-paypal.php:159, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:185, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:189"
 config_shopping_basket,쇼핑 장바구니,: classes/includes/class-wc-gateway-wirecard-paypal.php:169
 config_sort_order,정렬 순서
 config_ssl_max_limit,비 3-D 보안 최대. 한계,: classes/includes/class-wc-gateway-wirecard-creditcard.php:140
 config_three_d_merchant_account_id,3-D 보안 상인 계정 ID,: classes/includes/class-wc-gateway-wirecard-creditcard.php:128
 config_three_d_merchant_secret,3-D 보안 비밀 키,: classes/includes/class-wc-gateway-wirecard-creditcard.php:134
 config_three_d_min_limit,3-D 보안 최소. 한계,: classes/includes/class-wc-gateway-wirecard-creditcard.php:146
-config_title,제목
-config_vault,원클릭 체크아웃
+config_title,제목,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:101, : classes/includes/class-wc-gateway-wirecard-creditcard.php:169, : classes/includes/class-wc-gateway-wirecard-eps.php:99, : classes/includes/class-wc-gateway-wirecard-giropay.php:100, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:109, : classes/includes/class-wc-gateway-wirecard-ideal.php:105, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:101, : classes/includes/class-wc-gateway-wirecard-paypal.php:103, : classes/includes/class-wc-gateway-wirecard-poipia.php:99, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:104, : classes/includes/class-wc-gateway-wirecard-sofort.php:103"
+config_vault_with_title,Wirecard One-Click Checkout,Vault configuration name with company prefix
 config_wpp_url,Wirecard Payment Page v2 주소(URL WPP v2),": classes/includes/class-wc-gateway-wirecard-creditcard.php:219, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
 config_wpp_url_desc,Wirecard Payment Page v2 주소(URL WPP v2) (예: https://wpp.wirecard.com).,": classes/includes/class-wc-gateway-wirecard-creditcard.php:221, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
 config_zapp_merchant_return_string,머천트 복귀 URL,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:155
@@ -63,7 +63,7 @@ heading_title_ratepayinvoice,Wirecard Guaranteed Invoice,": classes/includes/cla
 heading_title_sepact,Wirecard SEPA Credit Transfer,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
 heading_title_sepadd,Wirecard SEPA Direct Debit,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
 heading_title_sofortbanking,Wirecard Sofort.,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
-heading_title_support,지원
+heading_title_support,지원,": woocommerce-wirecard-payment-gateway.php:316, : woocommerce-wirecard-payment-gateway.php:317, : woocommerce-wirecard-payment-gateway.php:324, : woocommerce-wirecard-payment-gateway.php:325"
 iban,IBAN:,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
 ideal_legend,은행을 선택하세요
 last_name_input,성
@@ -88,12 +88,12 @@ success_credentials,상인 구성이 성공적으로 테스트되었습니다.,:
 success_email,이메일이 성공적으로 전송됨,: classes/admin/class-wirecard-settings.php:299
 support_email_title,지원 요청 전송
 terms_of_use,이용 약관
-test_credentials,테스트
+test_credentials,테스트,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:145, : classes/includes/class-wc-gateway-wirecard-creditcard.php:243, : classes/includes/class-wc-gateway-wirecard-eps.php:143, : classes/includes/class-wc-gateway-wirecard-giropay.php:144, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:153, : classes/includes/class-wc-gateway-wirecard-ideal.php:149, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:145, : classes/includes/class-wc-gateway-wirecard-paypal.php:152, : classes/includes/class-wc-gateway-wirecard-poipia.php:143, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:144, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:148, : classes/includes/class-wc-gateway-wirecard-sofort.php:147, : woocommerce-wirecard-payment-gateway.php:355"
 text_enabled,활성화됨
 text_min_age_notice,이 결제 방식을 이용하려면 연령이 18세 이상이어야 합니다.
 text_need_same_address_notice,쇼핑 및 청구지 주소가 일치해야 합니다.
-text_payment_action_pay,Purchase
-text_payment_action_reserve,Authorization
+text_payment_action_pay,Purchase,": classes/includes/class-wc-gateway-wirecard-creditcard.php:258, : classes/includes/class-wc-gateway-wirecard-paypal.php:162, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:192"
+text_payment_action_reserve,Authorization,": classes/includes/class-wc-gateway-wirecard-creditcard.php:257, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191"
 text_payment_type_pia,Payment in Advance,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
 text_payment_type_poi,Payment on Invoice,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
 text_settings,설정

@@ -28,8 +28,8 @@ class SepaMandateBlockUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $context = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
-        $this->sepaConfig = $this->getMockWithoutInvokingTheOriginalConstructor(ConfigInterface::class);
+        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+        $this->sepaConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
 
         $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
 

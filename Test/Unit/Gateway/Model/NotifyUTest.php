@@ -29,8 +29,8 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
@@ -113,7 +113,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
     private $paymentData;
 
     /**
-     * @var PaymentTokenInterfaceFactory
+     * @var PaymentTokenFactoryInterface
      */
     private $paymentTokenFactory;
 
@@ -162,7 +162,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         /**
          * @var $context Context|PHPUnit_Framework_MockObject_MockObject
          */
-        $context           = $this->getMockWithoutInvokingTheOriginalConstructor(Context::class);
+        $context           = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
         $this->paymentData = [
             'providerTransactionId'          => 1234,
             'providerTransactionReferenceId' => 1234567,
@@ -176,74 +176,74 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         /**
          * @var $httpRequest Http|PHPUnit_Framework_MockObject_MockObject
          */
-        $httpRequest = $this->getMockWithoutInvokingTheOriginalConstructor(Http::class);
+        $httpRequest = $this->getMockBuilder(Http::class)->disableOriginalConstructor()->getMock();
         $httpRequest->method('getContent')->willReturn('PayLoad');
         $context->method('getRequest')->willReturn($httpRequest);
 
         /**
          * @var $transactionServiceFactory TransactionServiceFactory|PHPUnit_Framework_MockObject_MockObject
          */
-        $transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
-        $this->transactionService = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
-        $this->transaction = $this->getMockWithoutInvokingTheOriginalConstructor(Transaction::class);
+        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)->disableOriginalConstructor()->getMock();
+        $this->transactionService = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
+        $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
-        $orderStatusHistoryInterface = $this->getMockWithoutInvokingTheOriginalConstructor(OrderStatusHistoryInterface::class);
+        $orderStatusHistoryInterface = $this->getMockBuilder(OrderStatusHistoryInterface::class)->disableOriginalConstructor()->getMock();
         $orderStatusHistoryInterface->method('setIsCustomerNotified')->willReturn($orderStatusHistoryInterface);
 
-        $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
+        $this->orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)->getMock();
 
-        $this->order   = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
-        $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
+        $this->order   = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $this->order->method('getPayment')->willReturn($this->payment);
         $this->order->method('addStatusHistoryComment')->willReturn($orderStatusHistoryInterface);
 
         $invoice = $this->getMockBuilder(Invoice::class)->disableOriginalConstructor()->getMock();
         $invoice->method('getOrder')->willReturn($this->order);
         $this->orderRepository->method('get')->willReturn($this->order);
-        $this->invoiceService = $this->getMockWithoutInvokingTheOriginalConstructor(InvoiceService::class);
+        $this->invoiceService = $this->getMockBuilder(InvoiceService::class)->disableOriginalConstructor()->getMock();
         $this->invoiceService->method('prepareInvoice')->willReturn($invoice);
 
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-        $this->customFields = $this->getMock(CustomFieldCollection::class);
+        $this->customFields = $this->getMockBuilder(CustomFieldCollection::class)->getMock();
         $this->customFields->method('get')->withConsecutive(['orderId'], ['vaultEnabler'])->willReturnOnConsecutiveCalls(42, "true");
 
         $this->orderSearchResult = $this->getMockForAbstractClass(OrderSearchResultInterface::class);
 
-        $searchCriteria = $this->getMockWithoutInvokingTheOriginalConstructor(SearchCriteria::class);
+        $searchCriteria = $this->getMockBuilder(SearchCriteria::class)->disableOriginalConstructor()->getMock();
 
-        $searchCriteriaBuilder = $this->getMockWithoutInvokingTheOriginalConstructor(SearchCriteriaBuilder::class);
+        $searchCriteriaBuilder = $this->getMockBuilder(SearchCriteriaBuilder::class)->disableOriginalConstructor()->getMock();
         $searchCriteriaBuilder->method('addFilter')->willReturn($searchCriteriaBuilder);
         $searchCriteriaBuilder->method('create')->willReturn($searchCriteria);
 
         $transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
         $transaction->method('addObject')->withAnyParameters()->willReturn($transaction);
 
-        $this->paymentToken = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentToken::class);
+        $this->paymentToken = $this->getMockBuilder(PaymentToken::class)->disableOriginalConstructor()->getMock();
         $this->paymentToken->method('getCustomerId')->willReturn(1);
 
-        $extensionAttributesMock = $this->getMock(OrderPaymentExtensionInterface::class, ['setVaultPaymentToken']);
+        $extensionAttributesMock = $this->getMockBuilder(OrderPaymentExtensionInterface::class)->setMethods(['setVaultPaymentToken'])->getMock();
         $extensionAttributesMock->method('setVaultPaymentToken')->willReturn($this->paymentToken);
         $this->paymentExtensionFactory = $this->getMockBuilder(OrderPaymentExtensionInterfaceFactory::class)
             ->disableOriginalConstructor()->setMethods(['create'])->getMock();
         $this->paymentExtensionFactory->method('create')->willReturn($extensionAttributesMock);
 
-        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMockForAbstractClass();
+        $this->paymentTokenFactory = $this->getMockBuilder(PaymentTokenFactoryInterface::class)->disableOriginalConstructor()->setMethods(['create'])->getMockForAbstractClass();
         $this->paymentTokenFactory->method('create')->willReturn($this->paymentToken);
 
-        $this->paymentTokenManagement = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenManagementInterface::class);
+        $this->paymentTokenManagement = $this->getMockBuilder(PaymentTokenManagementInterface::class)->disableOriginalConstructor()->getMock();
 
-        $this->paymentTokenResourceModel          = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentTokenResourceModel::class);
-        $this->paymentTokenResourceModelDbAdapter = $this->getMockWithoutInvokingTheOriginalConstructor(AdapterInterface::class);
+        $this->paymentTokenResourceModel          = $this->getMockBuilder(PaymentTokenResourceModel::class)->disableOriginalConstructor()->getMock();
+        $this->paymentTokenResourceModelDbAdapter = $this->getMockBuilder(AdapterInterface::class)->disableOriginalConstructor()->getMock();
         $this->paymentTokenResourceModel->method('getConnection')->willReturn($this->paymentTokenResourceModelDbAdapter);
 
-        $this->encryptor = $this->getMockWithoutInvokingTheOriginalConstructor(EncryptorInterface::class);
+        $this->encryptor = $this->getMockBuilder(EncryptorInterface::class)->disableOriginalConstructor()->getMock();
 
-        $this->orderHelper = $this->getMockWithoutInvokingTheOriginalConstructor(\Wirecard\ElasticEngine\Gateway\Helper\Order::class);
+        $this->orderHelper = $this->getMockBuilder(\Wirecard\ElasticEngine\Gateway\Helper\Order::class)->disableOriginalConstructor()->getMock();
         $this->orderHelper->method('getOrderByIncrementId')->willReturn($this->order);
 
-        $this->transactionTypeMapper = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionTypeMapper::class);
+        $this->transactionTypeMapper = $this->getMockBuilder(TransactionTypeMapper::class)->disableOriginalConstructor()->getMock();
         $this->transactionTypeMapper->method('getMappedTransactionType')->willReturn(null);
 
         $this->notify = new \Wirecard\ElasticEngine\Test\Unit\Gateway\Model\MyNotify(
@@ -267,7 +267,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
@@ -282,7 +282,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
@@ -299,7 +299,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
@@ -315,7 +315,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
@@ -350,7 +350,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithInvalidOrderNumber()
     {
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
 
         $this->orderHelper->method('getOrderByIncrementId')->willThrowException(new NoSuchEntityException());
@@ -364,10 +364,10 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var FailureResponse|PHPUnit_Framework_MockObject_MockObject $failureResponse */
-        $failureResponse = $this->getMockWithoutInvokingTheOriginalConstructor(FailureResponse::class);
+        $failureResponse = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
         $failureResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
-        $statusCollection = $this->getMock(StatusCollection::class);
-        $status           = $this->getMockWithoutInvokingTheOriginalConstructor(Status::class);
+        $statusCollection = $this->getMockBuilder(StatusCollection::class)->getMock();
+        $status           = $this->getMockBuilder(Status::class)->disableOriginalConstructor()->getMock();
         $iterator         = new \ArrayIterator([$status, $status]);
         $statusCollection->method('getIterator')->willReturn($iterator);
         $failureResponse->expects($this->once())->method('getStatusCollection')->willReturn($statusCollection);
@@ -412,7 +412,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
 
         //this Response will never happen on notificy call
         /** @var Response|PHPUnit_Framework_MockObject_MockObject $unexpectedResponse */
-        $unexpectedResponse = $this->getMockWithoutInvokingTheOriginalConstructor(InteractionResponse::class);
+        $unexpectedResponse = $this->getMockBuilder(InteractionResponse::class)->disableOriginalConstructor()->getMock();
         $unexpectedResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
 
         $this->notify->process($unexpectedResponse);
@@ -423,7 +423,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('getParentTransactionId')->willReturn(999);
@@ -450,7 +450,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
@@ -472,7 +472,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->setDefaultOrder();
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
-        $successResponse = $this->getMockWithoutInvokingTheOriginalConstructor(SuccessResponse::class);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);

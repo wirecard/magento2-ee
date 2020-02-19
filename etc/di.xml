@@ -972,7 +972,7 @@
     <type name="Wirecard\ElasticEngine\Gateway\Model\Notify">
         <arguments>
             <argument name="transactionServiceFactory" xsi:type="object">TransactionServiceFactory</argument>
-            <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Model\CreditCardTokenFactory</argument>
+            <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Api\Data\PaymentTokenFactoryInterface</argument>
             <argument name="transactionTypeMapper" xsi:type="object">TransactionTypeMapper</argument>
         </arguments>
     </type>

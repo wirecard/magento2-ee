@@ -49,14 +49,14 @@ class SepamandateUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->page = $this->getMockWithoutInvokingTheOriginalConstructor(Page::class);
-        $this->layout = $this->getMockWithoutInvokingTheOriginalConstructor(Layout::class);
-        $this->block = $this->getMockWithoutInvokingTheOriginalConstructor(AbstractBlock::class);
+        $this->page = $this->getMockBuilder(Page::class)->disableOriginalConstructor()->getMock();
+        $this->layout = $this->getMockBuilder(Layout::class)->disableOriginalConstructor()->getMock();
+        $this->block = $this->getMockBuilder(AbstractBlock::class)->disableOriginalConstructor()->getMock();
 
         $this->layout->method('getBlock')->with('frontend.sepamandate')->willReturn($this->block);
         $this->page->method('getLayout')->willReturn($this->layout);
 
-        $this->resultFactory = $this->getMockWithoutInvokingTheOriginalConstructor(PageFactory::class);
+        $this->resultFactory = $this->getMockBuilder(PageFactory::class)->disableOriginalConstructor()->getMock();
         $this->resultFactory->method('create')->willReturn($this->page);
     }
 

@@ -158,7 +158,7 @@ class WdPhraseApp
       @log.info(upload.summary)
     else
       @log.error('An error occurred while uploading to PhraseApp.'.red.bright)
-      @log.debug(err)
+      @log.error(err)
       exit(1)
     end
   end

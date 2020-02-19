@@ -19,8 +19,8 @@ class TransactionServiceFactoryUTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $logger = $this->getMock(LoggerInterface::class);
-        $paymentSdkConfigFactory = $this->getMock(ConfigFactoryInterface::class);
+        $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
+        $paymentSdkConfigFactory = $this->getMockBuilder(ConfigFactoryInterface::class)->getMock();
         $config = new Config('a', 'b', 'c');
 
         $paymentSdkConfigFactory->method('create')->willReturn($config);

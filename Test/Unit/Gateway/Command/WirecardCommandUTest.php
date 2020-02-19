@@ -91,7 +91,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         $this->transactionFactory = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
         $this->transactionFactory->method(self::METHOD_CREATE)
-            ->willReturn($this->getMock(PayPalTransaction::class));
+            ->willReturn($this->getMockBuilder(PayPalTransaction::class)->getMock());
 
         // TransactionService mocks
         $this->transactionService = $this->getMockBuilder(TransactionService::class)
@@ -102,14 +102,14 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->transactionServiceFactory->method(self::METHOD_CREATE)->willReturn($this->transactionService);
 
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-        $this->handler = $this->getMock(HandlerInterface::class);
+        $this->handler = $this->getMockBuilder(HandlerInterface::class)->getMock();
 
-        $this->methodConfig = $this->getMock(ConfigInterface::class);
+        $this->methodConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $this->methodConfig->method('getValue')->willReturn('authorize');
 
-        $stateObject = $this->getMock(DataObject::class);
+        $stateObject = $this->getMockBuilder(DataObject::class)->getMock();
 
         $payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $payment->method('getAdditionalInformation')->willReturn(true);
@@ -157,7 +157,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteCallsHandler()
     {
-        $handlerMock = $this->getMock(HandlerInterface::class);
+        $handlerMock = $this->getMockBuilder(HandlerInterface::class)->getMock();
 
         $handlerMock->expects($this->Once())->method('handle')
             ->with($this->equalTo($this->commandSubject), $this->equalTo(['paymentSDK-php' => $this->response]));
@@ -204,7 +204,7 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->methodConfig
         );
 
-        $stateObject = $this->getMock(DataObject::class);
+        $stateObject = $this->getMockBuilder(DataObject::class)->getMock();
 
         $commandSubject = [
             'stateObject' => $stateObject,
