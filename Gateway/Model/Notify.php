@@ -585,7 +585,7 @@ class Notify
      * @param string $expirationDate
      * @return PaymentTokenFactoryInterface
      */
-    private function createPaymentToken($response, $customerId, $payment, string $expirationDate): PaymentTokenFactoryInterface
+    private function createPaymentToken($response, $customerId, $payment, string $expirationDate)
     {
         /** @var PaymentTokenFactoryInterface $paymentToken */
         $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
