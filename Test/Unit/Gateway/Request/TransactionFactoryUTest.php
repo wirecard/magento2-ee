@@ -138,7 +138,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateSetsAmountValues()
     {
-        $transactionMock = $this->getMock(Transaction::class);
+        $transactionMock = $this->getMockBuilder(Transaction::class)->getMock();
         $transactionMock->expects($this->Once())->method('setAmount')->with($this->equalTo(new Amount(1.0, 'EUR')));
 
         $transactionFactory = new TransactionFactory(
@@ -155,7 +155,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateSetsRedirect()
     {
-        $transactionMock = $this->getMock(Transaction::class);
+        $transactionMock = $this->getMockBuilder(Transaction::class)->getMock();
         $transactionMock->method('getConfigKey')->willReturn('paypal');
         $redirect = new Redirect(
             'http://magen.to/frontend/redirect?method=paypal',
@@ -180,7 +180,7 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
 
-        $transactionMock = $this->getMock(Transaction::class);
+        $transactionMock = $this->getMockBuilder(Transaction::class)->getMock();
         $transactionMock->method('setDescriptor')->willReturn('Testshop');
         $transactionMock->method('setAccountHolder')->willReturn(new AccountHolder());
         $transactionMock->method('setShipping')->willReturn(new AccountHolder());

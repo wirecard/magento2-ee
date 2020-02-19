@@ -36,10 +36,10 @@ class IdealDataAssignObserverUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->observer = $this->getMockWithoutInvokingTheOriginalConstructor(Observer::class);
-        $event = $this->getMockWithoutInvokingTheOriginalConstructor(Event::class);
+        $this->observer = $this->getMockBuilder(Observer::class)->disableOriginalConstructor()->getMock();
+        $event = $this->getMockBuilder(Event::class)->disableOriginalConstructor()->getMock();
 
-        $this->dataObject = $this->getMockWithoutInvokingTheOriginalConstructor(DataObject::class);
+        $this->dataObject = $this->getMockBuilder(DataObject::class)->disableOriginalConstructor()->getMock();
         $this->infoObject = $this->getMockForAbstractClass(InfoInterface::class);
 
         $event->method('getDataByKey')->withConsecutive(

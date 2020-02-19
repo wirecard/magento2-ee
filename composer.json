@@ -21,7 +21,7 @@
     "wirecard/payment-sdk-php": "4.0.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "5.3.5",
+    "phpunit/phpunit": "^5.7",
     "magento/community-edition": ">=2.1.0",
     "friendsofphp/php-cs-fixer": "^2.2",
     "codacy/coverage": "1.4.2",
