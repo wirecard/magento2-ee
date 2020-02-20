@@ -25,6 +25,23 @@ define(
                 redirectAfterPlaceOrder: false
             },
 
+            /**
+             * @returns {exports.initialize}
+             */
+            initialize: function () {
+                console.log('cc.js:32');
+                this._super();
+                return this;
+            },
+
+            /**
+             * Init config
+             */
+            initClientConfig: function () {
+                console.log('cc.js:41');
+                this._super();
+            },
+
             getPaymentPageScript: function () {
                 return window.checkoutConfig.payment[this.getCode()].wpp_url;
             },
@@ -179,6 +196,13 @@ define(
                 this._super();
 
                 return true;
+            },
+            /**
+             * Returns state of place order button
+             * @returns {Boolean}
+             */
+            isButtonActive: function () {
+                console.log('creditcard.js:188');
             },
 
             /**

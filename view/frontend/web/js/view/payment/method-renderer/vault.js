@@ -19,6 +19,54 @@ define([
         },
 
         /**
+         * @returns {exports.initialize}
+         */
+        initialize: function () {
+            console.log('vault.js:25');
+            this._super();
+            return this;
+        },
+
+        selectPaymentMethod: function () {
+            this._super();
+            console.log('vault.js:32');
+            console.log(this.getId());
+            return true;
+        },
+
+        /**
+         * Returns state of place order button
+         * @returns {Boolean}
+         */
+        isButtonActive: function () {
+            console.log('vault.js:35');
+            },
+
+        initObservable: function () {
+            var self = this;
+            console.log('vault.js:40');
+
+
+            //self.$selector = $('#' + self.selector);
+            this._super();
+            console.log(this.getId());
+
+            this.initEventHandlers();
+
+            return this;
+        },
+
+        initEventHandlers: function () {
+            console.log(this);
+            $('#' + this.getId())
+                .on('click', this.setPaymentDetails.bind(this));
+        },
+
+        setPaymentDetails: function() {
+          console.log(this.getId());
+        },
+
+        /**
          * Get last 4 digits of card
          * @returns {String}
          */
