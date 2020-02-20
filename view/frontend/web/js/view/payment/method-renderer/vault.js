@@ -15,7 +15,7 @@ define([
 
     return VaultComponent.extend({
         defaults: {
-            template: "Magento_Vault/payment/form"
+            template: "Wirecard_ElasticEngine/payment/method-vault",
         },
 
         /**
