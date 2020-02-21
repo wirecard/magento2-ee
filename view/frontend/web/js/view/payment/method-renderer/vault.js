@@ -24,14 +24,99 @@ define([
         initialize: function () {
             console.log('vault.js:25');
             this._super();
+            window.vault_1 = this;
             return this;
+        },
+
+        getPaymentPageScript: function () {
+            //TODO: load dynamically
+            return window.checkoutConfig.payment["wirecard_elasticengine_creditcard"].wpp_url;
+        },
+
+        seamlessFormInit: function() {
+            console.log("form init");
         },
 
         selectPaymentMethod: function () {
             this._super();
+
             console.log('vault.js:32');
             console.log(this.getId());
+            console.log(this.getToken());
+            console.log(this.getCardType());
+            console.log(this);
+            console.log($('#' + this.getId()));
+
+            let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
+
+            let code = this.getId() + '_seamless_form';
+
+            console.log("code: " + code);
+
+            $.getScript(this.getPaymentPageScript(), function () {
+                // Build seamless renderform with full transaction data
+                let uiInitData = {"txtype": "wirecard_elasticengine_creditcard"};
+                $.ajax({
+                    url: url.build("wirecard_elasticengine/frontend/creditcard"),
+                    type: "post",
+                    data: uiInitData,
+                    success: function (result) {
+                        if ("OK" === result.status) {
+                            let uiInitData = JSON.parse(result.uiData);
+                            console.log("uiInitData");
+                            console.log(uiInitData);
+                            WPP.seamlessRender({
+                                requestData: uiInitData,
+                                wrappingDivId: code,
+                                onSuccess: formSizeHandler,
+                                onError: function(response) {
+                                    console.log("onError");
+                                    console.log(response);
+                                }
+                            });
+                        } else {
+                            console.log(result);
+                            //hideSpinner();
+                            //messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        }
+                    },
+                    error: function (err) {
+                        //hideSpinner();
+                        //messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        console.error("Error : " + JSON.stringify(err));
+                    }
+                });
+            });
             return true;
+        },
+
+        seamlessFormSizeHandler: function () {
+            console.log("seamlessFormSizeHandler");
+            console.log(this);
+            let seamlessForm = document.getElementById(this.getId() + '_seamless_form');
+            window.addEventListener("resize", this.resizeIFrame.bind(seamlessForm));
+            if (seamlessForm !== null && typeof seamlessForm !== "undefined") {
+                this.resizeIFrame(seamlessForm);
+            }
+        },
+
+        resizeIFrame: function (seamlessForm) {
+            console.log("resizeIFrame");
+            console.log(this);
+            console.log("seamlessForm:");
+            console.log(seamlessForm);
+            let iframe = seamlessForm.firstElementChild;
+            console.log("iframe:");
+            console.log(iframe);
+            if (iframe) {
+                if (iframe.clientWidth > 768) {
+                    iframe.style.height = "267px";
+                } else if (iframe.clientWidth > 460) {
+                    iframe.style.height = "341px";
+                } else {
+                    iframe.style.height = "415px";
+                }
+            }
         },
 
         /**
