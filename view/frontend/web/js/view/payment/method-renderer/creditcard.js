@@ -38,7 +38,6 @@ define(
              * Init config
              */
             initClientConfig: function () {
-                console.log('cc.js:41');
                 this._super();
             },
 
@@ -49,12 +48,10 @@ define(
             seamlessFormInitVaultEnabler: function () {
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
-                console.log("cc.js:52");
             },
 
             seamlessFormInit: function () {
                 let uiInitData = {"txtype": this.getCode()};
-                console.log(uiInitData);
                 let wrappingDivId = this.getCode() + "_seamless_form";
                 let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);

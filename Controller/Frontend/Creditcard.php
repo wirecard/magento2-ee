@@ -10,6 +10,7 @@
 namespace Wirecard\ElasticEngine\Controller\Frontend;
 
 use Magento\Checkout\Model\Session;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
@@ -21,6 +22,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
@@ -84,6 +86,15 @@ class Creditcard extends Action
     protected $quoteRepository;
 
     /**
+     * @var PaymentTokenManagementInterface
+     */
+    private $paymentTokenManagement;
+    /**
+     * @var CustomerSession
+     */
+    private $customerSession;
+
+    /**
      * Creditcard constructor.
      *
      * @param Context $context
@@ -96,6 +107,8 @@ class Creditcard extends Action
      * @param Data $paymentHelper
      * @param ConfigInterface $methodConfig
      * @param LoggerInterface $logger
+     * @param PaymentTokenManagementInterface $paymentTokenManagement
+     * @param CustomerSession $customerSession
      * @param ThreeDsHelper $threeDsHelper
      *
      * @since 2.1.0 added ThreeDsHelper
@@ -111,6 +124,8 @@ class Creditcard extends Action
         Data $paymentHelper,
         ConfigInterface $methodConfig,
         LoggerInterface $logger,
+        PaymentTokenManagementInterface $paymentTokenManagement,
+        CustomerSession $customerSession,
         ThreeDsHelper $threeDsHelper
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
@@ -124,6 +139,8 @@ class Creditcard extends Action
         $this->methodConfig = $methodConfig;
         $this->logger = $logger;
         $this->threeDsHelper = $threeDsHelper;
+        $this->paymentTokenManagement = $paymentTokenManagement;
+        $this->customerSession = $customerSession;
         parent::__construct($context);
     }
 
@@ -149,6 +166,7 @@ class Creditcard extends Action
         }
 
         $transactionType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
+
         if (!$this->isCreditCardTransactionType($transactionType)) {
             return $this->buildErrorResponse('Unknown transaction type');
         }
@@ -164,6 +182,8 @@ class Creditcard extends Action
         $orderDto->transaction = new CreditCardTransaction();
         $this->addCreditCardFields($orderDto);
         $this->addCreditCardThreeDsFields($orderDto);
+        $this->addCreditCardToken($orderDto);
+
         try {
             $data = $transactionService->getCreditCardUiWithData(
                 $orderDto->transaction,
@@ -287,6 +307,14 @@ class Creditcard extends Action
         );
     }
 
+    private function addCreditCardToken(OrderDto $orderDto)
+    {
+        if ($this->isTokenizedTransactionType($this->getRequest()->getParams())) {
+            $token = $this->paymentTokenManagement->getByPublicHash($this->getRequest()->getParam('token'), $this->customerSession->getCustomerId());
+            $orderDto->transaction->setTokenId($token->getGatewayToken());
+        }
+    }
+
     /**
      * @param string $paymentMethod
      * @return Redirect
@@ -364,6 +392,18 @@ class Creditcard extends Action
             return false;
         }
         return true;
+    }
+
+
+    private function isTokenizedTransactionType(array $getParams)
+    {
+        if (!$this->customerSession->isLoggedIn()) {
+            return false;
+        }
+        if (isset($getParams['token']) && trim($getParams['token'])) {
+            return true;
+        }
+        return false;
     }
 
     /**

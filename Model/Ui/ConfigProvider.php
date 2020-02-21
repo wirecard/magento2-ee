@@ -261,6 +261,11 @@ class ConfigProvider implements ConfigProviderInterface
         return $method->getConfigData('wpp_url') . self::PAYMENTPAGE_LOADER;
     }
 
+    public function getCCWppUrl()
+    {
+        return $this->getWppUrl(self::CREDITCARD_CODE);
+    }
+
     /**
      * Return if the billing and shipping address needs to be same
      *

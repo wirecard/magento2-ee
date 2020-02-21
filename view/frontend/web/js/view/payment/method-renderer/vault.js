@@ -13,6 +13,10 @@ define([
 ], function ($, VaultComponent, url) {
     "use strict";
 
+    let Constant = {
+
+    };
+
     return VaultComponent.extend({
         defaults: {
             template: "Wirecard_ElasticEngine/payment/method-vault",
@@ -22,40 +26,31 @@ define([
          * @returns {exports.initialize}
          */
         initialize: function () {
-            console.log('vault.js:25');
             this._super();
-            window.vault_1 = this;
+            window.vault_1 = this;//TODO: remove
             return this;
         },
 
         getPaymentPageScript: function () {
-            //TODO: load dynamically
-            return window.checkoutConfig.payment["wirecard_elasticengine_creditcard"].wpp_url;
-        },
-
-        seamlessFormInit: function() {
-            console.log("form init");
+            return this.wppUrl;
         },
 
         selectPaymentMethod: function () {
             this._super();
 
-            console.log('vault.js:32');
-            console.log(this.getId());
-            console.log(this.getToken());
-            console.log(this.getCardType());
-            console.log(this);
-            console.log($('#' + this.getId()));
-
             let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
 
-            let code = this.getId() + '_seamless_form';
+            let code = this.getId() + '_seamless_token_form';
 
-            console.log("code: " + code);
+
+            let uiInitData = {
+                txtype: this.wpp_txtype,
+                token: this.getToken(),
+            };
 
             $.getScript(this.getPaymentPageScript(), function () {
                 // Build seamless renderform with full transaction data
-                let uiInitData = {"txtype": "wirecard_elasticengine_creditcard"};
+
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/creditcard"),
                     type: "post",
@@ -93,7 +88,7 @@ define([
         seamlessFormSizeHandler: function () {
             console.log("seamlessFormSizeHandler");
             console.log(this);
-            let seamlessForm = document.getElementById(this.getId() + '_seamless_form');
+            let seamlessForm = document.getElementById(this.getId() + '_seamless_token_form');
             window.addEventListener("resize", this.resizeIFrame.bind(seamlessForm));
             if (seamlessForm !== null && typeof seamlessForm !== "undefined") {
                 this.resizeIFrame(seamlessForm);
