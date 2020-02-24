@@ -31,6 +31,7 @@ use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
+use Wirecard\PaymentSdk\Entity\Card;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -381,13 +382,12 @@ class Notify
      */
     protected function saveCreditCardToken($response, $customerId, $payment)
     {
+        $card = $response->getCard();
         $this->migrateToken($response, $customerId, $payment);
-        $expirationDate = $this->createExpirationDate($response);
+        $expirationDate = $this->createExpirationDate($card);
         $paymentToken = $this->createPaymentToken($response, $customerId, $payment, $expirationDate);
 
-        $responseData = $response->getData();
-        $responseData += ['card.0.card-type' => ''];
-        $cardType = $responseData['card.0.card-type'];
+        $cardType = $card->getCardType();
         if (!empty($cardType)) {
             $paymentToken->setType($cardType);
         }
@@ -412,31 +412,15 @@ class Notify
     }
 
     /**
-     * @param array $responseData
-     * @return array
-     */
-    private function extractCreditCardExpirationInformation(array $responseData)
-    {
-        $expirationYear = '';
-        $expirationMonth = '';
-        if (isset($responseData['card.0.expiration-year']) && isset($responseData['card.0.expiration-month'])) {
-            $expirationYear = $responseData['card.0.expiration-year'];
-            $expirationMonth = $responseData['card.0.expiration-month'];
-        }
-        return [$expirationYear, $expirationMonth];
-    }
-
-    /**
      * @param SuccessResponse $response
      * @throws \Exception
      * @return string
      * @since 3.1.0
      */
-    private function createExpirationDate($response)
+    private function createExpirationDate(Card $card)
     {
-        $responseData = $response->getData();
-
-        list($expirationYear, $expirationMonth) = $this->extractCreditCardExpirationInformation($responseData);
+        $expirationYear = $card->getExpirationYear();
+        $expirationMonth = $card->getExpirationMonth();
 
         $expirationDate = $this->getDefaultExpirationDate();
         if (!empty($expirationMonth) && !empty($expirationYear)) {
