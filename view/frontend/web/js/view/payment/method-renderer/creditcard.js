@@ -197,14 +197,6 @@ define(
                 return true;
             },
             /**
-             * Returns state of place order button
-             * @returns {Boolean}
-             */
-            isButtonActive: function () {
-                console.log('creditcard.js:188');
-            },
-
-            /**
              * Submit credit card request
              */
             seamlessFormSubmit: function() {

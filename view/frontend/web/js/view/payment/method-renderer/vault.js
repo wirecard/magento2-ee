@@ -9,26 +9,33 @@
 define([
     "jquery",
     "Magento_Vault/js/view/payment/method-renderer/vault",
+    "mage/translate",
     "mage/url"
-], function ($, VaultComponent, url) {
+], function ($, VaultComponent, $t, url) {
     "use strict";
-
-    let Constant = {
-
-    };
 
     return VaultComponent.extend({
         defaults: {
             template: "Wirecard_ElasticEngine/payment/method-vault",
         },
 
-        /**
-         * @returns {exports.initialize}
-         */
-        initialize: function () {
-            this._super();
-            window.vault_1 = this;//TODO: remove
-            return this;
+        settings : {
+            formIdSuffix: '_seamless_token_form',
+            STATE_SUCCESS_INIT_PAYMENT_AJAX: "OK",
+            WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
+            CREDIT_CARD_LOADING_ERROR_TRANSLATION_KEY: "credit_card_form_loading_error"
+         },
+
+        showSpinner: function () {
+            $("body").trigger("processStart");
+        },
+
+        hideSpinner: function () {
+            $("body").trigger("processStop");
+        },
+
+        getFormId: function() {
+            return this.getId() + this.settings.formIdSuffix
         },
 
         getPaymentPageScript: function () {
@@ -38,71 +45,111 @@ define([
         selectPaymentMethod: function () {
             this._super();
 
-            let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
+            if($("#" + this.getId()).is(':checked') && $("#" + this.getFormId()).is(":empty")) {
 
-            let code = this.getId() + '_seamless_token_form';
+                let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
+                let seamlessFormInitErrorHandler = this.seamlessFormInitErrorHandler.bind(this);
+                let hideSpinner = this.hideSpinner.bind(this);
 
+                let formId = this.getFormId();
 
-            let uiInitData = {
-                txtype: this.wpp_txtype,
-                token: this.getToken(),
-            };
+                let uiInitData = {
+                    txtype: this.wpp_txtype,
+                    token: this.getToken(),
+                };
 
-            $.getScript(this.getPaymentPageScript(), function () {
-                // Build seamless renderform with full transaction data
+                this.showSpinner();
 
-                $.ajax({
-                    url: url.build("wirecard_elasticengine/frontend/creditcard"),
-                    type: "post",
-                    data: uiInitData,
-                    success: function (result) {
-                        if ("OK" === result.status) {
-                            let uiInitData = JSON.parse(result.uiData);
-                            console.log("uiInitData");
-                            console.log(uiInitData);
-                            WPP.seamlessRender({
-                                requestData: uiInitData,
-                                wrappingDivId: code,
-                                onSuccess: formSizeHandler,
-                                onError: function(response) {
-                                    console.log("onError");
-                                    console.log(response);
-                                }
-                            });
-                        } else {
-                            console.log(result);
-                            //hideSpinner();
-                            //messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                $.getScript(this.getPaymentPageScript(), function () {
+                    // Build seamless renderform with full transaction data
+                    $.ajax({
+                        url: url.build("wirecard_elasticengine/frontend/creditcard"),
+                        type: "post",
+                        data: uiInitData,
+                        success: function (result) {
+                            if ("OK" === result.status) {
+                                let uiInitData = JSON.parse(result.uiData);
+                                WPP.seamlessRender({
+                                    requestData: uiInitData,
+                                    wrappingDivId: formId,
+                                    onSuccess: formSizeHandler,
+                                    onError: seamlessFormInitErrorHandler,
+                                });
+                            } else {
+                                hideSpinner();
+                                seamlessFormInitErrorHandler();
+                            }
+                        },
+                        error: function (err) {
+                            console.error(err);
+                            hideSpinner();
+                            seamlessFormInitErrorHandler();
                         }
-                    },
-                    error: function (err) {
-                        //hideSpinner();
-                        //messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                        console.error("Error : " + JSON.stringify(err));
-                    }
+                    });
                 });
-            });
+            }
+
             return true;
         },
 
-        seamlessFormSizeHandler: function () {
-            console.log("seamlessFormSizeHandler");
-            console.log(this);
-            let seamlessForm = document.getElementById(this.getId() + '_seamless_token_form');
-            window.addEventListener("resize", this.resizeIFrame.bind(seamlessForm));
-            if (seamlessForm !== null && typeof seamlessForm !== "undefined") {
-                this.resizeIFrame(seamlessForm);
+        addErrorMessageAndRedirect: function(errors) {
+            if (errors.length > 0) {
+                this.messageContainer.addErrorMessage({message: errors});
+            }
+            setTimeout(function () {
+                location.reload();
+            }, 3000);
+        },
+
+        seamlessFormInitErrorHandler: function (response) {
+            console.log(response);
+            this.hideSpinner();
+            this.addErrorMessageAndRedirect([$t(this.settings.CREDIT_CARD_LOADING_ERROR_TRANSLATION_KEY)]);
+        },
+
+        seamlessFormSubmitErrorHandler: function (response) {
+            let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
+
+            let isClientValidation = false;
+            let errorList = [];
+            response.errors.forEach(
+                function ( item ) {
+                    if (validErrorCodes.includes(item.error.code)) {
+                        isClientValidation = true;
+                    } else {
+                        errorList.push(item.error.description);
+                    }
+                }
+            );
+            if (!isClientValidation) {
+                this.addErrorMessageAndRedirect(errorList);
             }
         },
 
-        resizeIFrame: function (seamlessForm) {
-            console.log("resizeIFrame");
-            console.log(this);
-            console.log("seamlessForm:");
-            console.log(seamlessForm);
+        /**
+         * Submit credit card request
+         */
+        seamlessFormSubmit: function() {
+            WPP.seamlessSubmit({
+                wrappingDivId: this.getFormId(),
+                onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
+                onError: this.seamlessFormSubmitErrorHandler.bind(this)
+            });
+        },
+        seamlessFormSubmitSuccessHandler: function (response) {
+            this.seamlessResponse = response;
+            this.placeOrder();
+        },
+        seamlessFormSizeHandler: function () {
+            this.hideSpinner();
+            let seamlessForm = document.getElementById(this.getFormId());
+            window.addEventListener("resize", this.resizeIframe.bind(seamlessForm));
+            if (seamlessForm !== null && typeof seamlessForm !== "undefined") {
+                this.resizeIframe(seamlessForm);
+            }
+        },
+        resizeIframe: function (seamlessForm) {
             let iframe = seamlessForm.firstElementChild;
-            console.log("iframe:");
-            console.log(iframe);
             if (iframe) {
                 if (iframe.clientWidth > 768) {
                     iframe.style.height = "267px";
@@ -113,39 +160,12 @@ define([
                 }
             }
         },
-
-        /**
-         * Returns state of place order button
-         * @returns {Boolean}
-         */
-        isButtonActive: function () {
-            console.log('vault.js:35');
-            },
-
-        initObservable: function () {
-            var self = this;
-            console.log('vault.js:40');
-
-
-            //self.$selector = $('#' + self.selector);
-            this._super();
-            console.log(this.getId());
-
-            this.initEventHandlers();
-
-            return this;
+        placeTokenSeamlessOrder: function (data, event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.seamlessFormSubmit();
         },
-
-        initEventHandlers: function () {
-            console.log(this);
-            $('#' + this.getId())
-                .on('click', this.setPaymentDetails.bind(this));
-        },
-
-        setPaymentDetails: function() {
-          console.log(this.getId());
-        },
-
         /**
          * Get last 4 digits of card
          * @returns {String}
@@ -198,9 +218,5 @@ define([
                 }
             };
         },
-
-        placeOrder: function () {
-            return this._super();
-        }
     });
 });
