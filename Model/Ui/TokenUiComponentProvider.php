@@ -47,7 +47,7 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
     ) {
         $this->componentFactory = $componentFactory;
         $this->logger = $logger;
-        $this->wppUrl = $configProvider->getCCWppUrl();
+        $this->wppUrl = $configProvider->getWppUrl(ConfigProvider::CREDITCARD_CODE);
     }
 
     /**

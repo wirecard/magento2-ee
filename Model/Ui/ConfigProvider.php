@@ -255,15 +255,10 @@ class ConfigProvider implements ConfigProviderInterface
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function getWppUrl($paymentCode)
+    public function getWppUrl($paymentCode)
     {
         $method = $this->paymentHelper->getMethodInstance($paymentCode);
         return $method->getConfigData('wpp_url') . self::PAYMENTPAGE_LOADER;
-    }
-
-    public function getCCWppUrl()
-    {
-        return $this->getWppUrl(self::CREDITCARD_CODE);
     }
 
     /**
