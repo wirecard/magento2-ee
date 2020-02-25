@@ -157,6 +157,7 @@ class Creditcard extends Action
      *
      * @return Json
      * @throws LocalizedException
+     * @throws \Exception
      */
     public function execute()
     {
@@ -295,6 +296,7 @@ class Creditcard extends Action
 
     /**
      * @param $orderDto
+     * @throws \Exception
      * @since 3.0.0
      */
     private function addCreditCardThreeDsFields($orderDto)
@@ -307,6 +309,9 @@ class Creditcard extends Action
         );
     }
 
+    /**
+     * @param OrderDto $orderDto
+     */
     private function addCreditCardToken(OrderDto $orderDto)
     {
         if ($this->isTokenizedTransactionType($this->getRequest()->getParams())) {
@@ -396,7 +401,10 @@ class Creditcard extends Action
         return true;
     }
 
-
+    /**
+     * @param array $getParams
+     * @return bool
+     */
     private function isTokenizedTransactionType(array $getParams)
     {
         if (!$this->customerSession->isLoggedIn()) {
