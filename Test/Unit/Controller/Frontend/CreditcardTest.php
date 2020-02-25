@@ -180,7 +180,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         if (!empty($mockedParameterValue)) {
             $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
             $requestMock->expects($this->once())->method('getParam')->willReturn($mockedParameterValue);
-            if($requestParams !== null) {
+            if ($requestParams !== null) {
                 $requestMock->expects($this->once())->method('getParams')->willReturn($requestParams);
             }
 
