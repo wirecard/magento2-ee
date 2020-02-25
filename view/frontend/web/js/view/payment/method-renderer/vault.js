@@ -6,6 +6,7 @@
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 
+/*global WPP*/
 define([
     "jquery",
     "Magento_Vault/js/view/payment/method-renderer/vault",
