@@ -311,6 +311,7 @@ class Creditcard extends Action
 
     /**
      * @param OrderDto $orderDto
+     * @since 3.1.0
      */
     private function addCreditCardToken(OrderDto $orderDto)
     {
@@ -404,6 +405,7 @@ class Creditcard extends Action
     /**
      * @param array $getParams
      * @return bool
+     * @since 3.1.0
      */
     private function isTokenizedTransactionType(array $getParams)
     {
