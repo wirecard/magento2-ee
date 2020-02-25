@@ -458,10 +458,10 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
         $card = $this->getMockBuilder(Card::class)->disableOriginalConstructor()
-            ->setMethods(['getExpirationMonth', 'getExpirationYear', 'getType'])->getMock();
+            ->setMethods(['getExpirationMonth', 'getExpirationYear', 'getCartType'])->getMock();
         $card->method('getExpirationMonth')->willReturn('01');
         $card->method('getExpirationYear')->willReturn('2023');
-        $card->method('getType')->willReturn('visa');
+        $card->method('getCartType')->willReturn('visa');
 
         $successResponse
             ->method('getCard')
@@ -491,10 +491,10 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
         $successResponse->method('isValidSignature')->willReturn(true);
         $card = $this->getMockBuilder(Card::class)->disableOriginalConstructor()
-            ->setMethods(['getExpirationMonth', 'getExpirationYear', 'getType'])->getMock();
+            ->setMethods(['getExpirationMonth', 'getExpirationYear', 'getCartType'])->getMock();
         $card->method('getExpirationMonth')->willReturn('01');
         $card->method('getExpirationYear')->willReturn('2023');
-        $card->method('getType')->willReturn('visa');
+        $card->method('getCartType')->willReturn('visa');
         $successResponse->method('getCard')->willReturn($card);
 
         $this->payment->method('getAdditionalInformation')
@@ -516,17 +516,17 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
         $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()
-            ->setMethods(['getCard', self::GET_CUSTOM_FIELDS, self::GET_DATA, 'isValidSignature'])
+            ->setMethods(['getCard', self::GET_CUSTOM_FIELDS, self::GET_DATA])
             ->getMock();
         $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
         $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
 
         $successResponse->method('isValidSignature')->willReturn(true);
         $card = $this->getMockBuilder(Card::class)->disableOriginalConstructor()
-            ->setMethods(['getExpirationMonth', 'getExpirationYear', 'getType'])->getMock();
+            ->setMethods(['getExpirationMonth', 'getExpirationYear', 'getCartType'])->getMock();
         $card->method('getExpirationMonth')->willReturn(null);
         $card->method('getExpirationYear')->willReturn(null);
-        $card->method('getType')->willReturn(null);
+        $card->method('getCartType')->willReturn(null);
         $successResponse->method('getCard')->willReturn($card);
 
         $this->payment->method('getAdditionalInformation')
@@ -538,8 +538,7 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
 
         $this->paymentTokenResourceModel->expects($this->once())->method('delete');
         $this->paymentTokenResourceModelDbAdapter->expects($this->once())->method('delete');
-        //TODO: finish this line:
-        //$this->paymentTokenManagement->method('saveTokenWithPaymentLink')->
+        $this->paymentTokenManagement->method('saveTokenWithPaymentLink')->willReturn(true);
 
         $this->notify->myHandleSuccess($this->order, $successResponse);
     }
