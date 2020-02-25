@@ -29,7 +29,6 @@ define(
              * @returns {exports.initialize}
              */
             initialize: function () {
-                console.log('cc.js:32');
                 this._super();
                 return this;
             },
