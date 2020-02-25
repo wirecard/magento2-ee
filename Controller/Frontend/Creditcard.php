@@ -310,7 +310,9 @@ class Creditcard extends Action
     private function addCreditCardToken(OrderDto $orderDto)
     {
         if ($this->isTokenizedTransactionType($this->getRequest()->getParams())) {
-            $token = $this->paymentTokenManagement->getByPublicHash($this->getRequest()->getParam('token'), $this->customerSession->getCustomerId());
+            $tokenFromBrowser = $this->getRequest()->getParam('token');
+            $customerId = $this->customerSession->getCustomerId();
+            $token = $this->paymentTokenManagement->getByPublicHash($tokenFromBrowser, $customerId);
             $orderDto->transaction->setTokenId($token->getGatewayToken());
         }
     }

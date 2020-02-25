@@ -20,7 +20,7 @@ define([
         },
 
         settings : {
-            formIdSuffix: '_seamless_token_form',
+            formIdSuffix: "_seamless_token_form",
             STATE_SUCCESS_INIT_PAYMENT_AJAX: "OK",
             WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
             CREDIT_CARD_LOADING_ERROR_TRANSLATION_KEY: "credit_card_form_loading_error"
@@ -35,7 +35,7 @@ define([
         },
 
         getFormId: function() {
-            return this.getId() + this.settings.formIdSuffix
+            return this.getId() + this.settings.formIdSuffix;
         },
 
         getPaymentPageScript: function () {
@@ -45,7 +45,7 @@ define([
         selectPaymentMethod: function () {
             this._super();
 
-            if($("#" + this.getId()).is(':checked') && $("#" + this.getFormId()).is(":empty")) {
+            if($("#" + this.getId()).is(":checked") && $("#" + this.getFormId()).is(":empty")) {
 
                 let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 let seamlessFormInitErrorHandler = this.seamlessFormInitErrorHandler.bind(this);
@@ -81,7 +81,6 @@ define([
                             }
                         },
                         error: function (err) {
-                            console.error(err);
                             hideSpinner();
                             seamlessFormInitErrorHandler();
                         }
@@ -102,7 +101,6 @@ define([
         },
 
         seamlessFormInitErrorHandler: function (response) {
-            console.log(response);
             this.hideSpinner();
             this.addErrorMessageAndRedirect([$t(this.settings.CREDIT_CARD_LOADING_ERROR_TRANSLATION_KEY)]);
         },
