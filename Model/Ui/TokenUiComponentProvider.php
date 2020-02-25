@@ -27,10 +27,12 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
      * @since 3.1.0
      */
     private $logger;
+
     /**
-     * @var ConfigProvider
+     * @var string
+     * @since 3.1.0
      */
-    private $configProvider;
+    private $wppUrl;
 
     /**
      * @param TokenUiComponentInterfaceFactory $componentFactory
@@ -45,7 +47,7 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
     ) {
         $this->componentFactory = $componentFactory;
         $this->logger = $logger;
-        $this->configProvider = $configProvider;
+        $this->wppUrl = $configProvider->getCCWppUrl();
     }
 
     /**
@@ -64,7 +66,7 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
                 'code' => ConfigProvider::CREDITCARD_VAULT_CODE,
                 TokenUiComponentProviderInterface::COMPONENT_DETAILS => $jsonDetails,
                 TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => $paymentToken->getPublicHash(),
-                'wppUrl' => $this->configProvider->getCCWppUrl(),
+                'wppUrl' => $this->wppUrl,
                 'wpp_txtype' => \Wirecard\ElasticEngine\Controller\Frontend\Creditcard::FRONTEND_CODE_CREDITCARD,
             ],
             'name' => 'Wirecard_ElasticEngine/js/view/payment/method-renderer/vault'
