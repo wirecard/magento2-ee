@@ -510,6 +510,40 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->notify->myHandleSuccess($this->order, $successResponse);
     }
 
+    public function testMissingCCData()
+    {
+        $this->setDefaultOrder();
+
+        /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $successResponse */
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()
+            ->setMethods(['getCard', self::GET_CUSTOM_FIELDS, self::GET_DATA, 'isValidSignature'])
+            ->getMock();
+        $successResponse->method(self::GET_CUSTOM_FIELDS)->willReturn($this->customFields);
+        $successResponse->method(self::GET_DATA)->willReturn($this->paymentData);
+
+        $successResponse->method('isValidSignature')->willReturn(true);
+        $card = $this->getMockBuilder(Card::class)->disableOriginalConstructor()
+            ->setMethods(['getExpirationMonth', 'getExpirationYear', 'getType'])->getMock();
+        $card->method('getExpirationMonth')->willReturn(null);
+        $card->method('getExpirationYear')->willReturn(null);
+        $card->method('getType')->willReturn(null);
+        $successResponse->method('getCard')->willReturn($card);
+
+        $this->payment->method('getAdditionalInformation')
+            ->with(CreditCardDataAssignObserver::VAULT_ENABLER)->willReturn(true);
+
+        $this->paymentTokenManagement
+            ->method('getByPublicHash')
+            ->willReturn($this->paymentToken);
+
+        $this->paymentTokenResourceModel->expects($this->once())->method('delete');
+        $this->paymentTokenResourceModelDbAdapter->expects($this->once())->method('delete');
+        //TODO: finish this line:
+        //$this->paymentTokenManagement->method('saveTokenWithPaymentLink')->
+
+        $this->notify->myHandleSuccess($this->order, $successResponse);
+    }
+
     public function testGeneratePublicHash()
     {
         $this->paymentToken->method('getGatewayToken')->willReturn('4304509873471003');
