@@ -63,7 +63,9 @@ class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
     public function testGetComponentForToken()
     {
         $logger = $this->getMock(LoggerInterface::class);
-        $conf = new TokenUiComponentProvider($this->componentFactory, $logger);
+        $config = $this->getMockBuilder(ConfigProvider::class)->disableOriginalConstructor()->getMock();
+        $config->method('getWppUrl')->willReturn('https://wpp-test.wirecard.com');
+        $conf = new TokenUiComponentProvider($this->componentFactory, $config, $logger);
 
         $this->assertEquals($this->component, $conf->getComponentForToken($this->paymentToken));
     }

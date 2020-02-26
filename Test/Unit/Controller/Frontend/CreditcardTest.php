@@ -10,6 +10,7 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
 use Magento\Checkout\Model\Session;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Json;
@@ -23,6 +24,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Calculation;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Frontend\Creditcard;
 use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
@@ -88,7 +90,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteWithFailedCreditCardUiFromBackend()
     {
-        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
+        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD, []);
 
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
@@ -131,7 +133,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     {
         $mockedUiJson = '{"foo":"bar"}';
 
-        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD);
+        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD, []);
 
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
@@ -169,7 +171,7 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->controller->execute();
     }
 
-    private function initWithMockInput($mockedParameterValue = null)
+    private function initWithMockInput($mockedParameterValue = null, $requestParams = null)
     {
         $this->resultJson = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->getMock();
 
@@ -178,6 +180,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         if (!empty($mockedParameterValue)) {
             $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
             $requestMock->expects($this->once())->method('getParam')->willReturn($mockedParameterValue);
+            if ($requestParams !== null) {
+                $requestMock->expects($this->once())->method('getParams')->willReturn($requestParams);
+            }
 
             $urlBuilderMock = $this->getMockForAbstractClass(UrlInterface::class);
 
@@ -207,6 +212,10 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
+        $tokenManagement = $this->getMockForAbstractClass(PaymentTokenManagementInterface::class);
+        $customerSession = $this->getMockBuilder(CustomerSession::class)->disableOriginalConstructor()->getMock();
+        $customerSession->method('isLoggedIn')->willReturn(false);
+
         $this->threeDsHelper = $this->getMockBuilder(ThreeDsHelper::class)->disableOriginalConstructor()->getMock();
         $this->threeDsHelper->method('getThreeDsTransaction')->willReturn(new CreditCardTransaction());
 
@@ -221,6 +230,8 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             $this->paymentHelper,
             $methodConfig,
             $logger,
+            $tokenManagement,
+            $customerSession,
             $this->threeDsHelper
         );
     }

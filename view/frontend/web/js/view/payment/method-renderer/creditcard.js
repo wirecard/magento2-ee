@@ -25,6 +25,21 @@ define(
                 redirectAfterPlaceOrder: false
             },
 
+            /**
+             * @returns {exports.initialize}
+             */
+            initialize: function () {
+                this._super();
+                return this;
+            },
+
+            /**
+             * Init config
+             */
+            initClientConfig: function () {
+                this._super();
+            },
+
             getPaymentPageScript: function () {
                 return window.checkoutConfig.payment[this.getCode()].wpp_url;
             },
@@ -180,7 +195,6 @@ define(
 
                 return true;
             },
-
             /**
              * Submit credit card request
              */
