@@ -31,6 +31,7 @@ use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
+use Wirecard\PaymentSdk\Entity\Card;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -68,6 +69,9 @@ class Notify
     ];
 
     const DEFAULT_TOKEN_TYPE = 'OT';
+    const TOKEN_DETAILS_TYPE = 'type';
+    const TOKEN_DETAILS_MASKED_CC = 'maskedCC';
+    const TOKEN_DETAILS_EXPIRATION_DATE = 'expirationDate';
 
     /**
      * @var TransactionServiceFactory
@@ -381,21 +385,15 @@ class Notify
      */
     protected function saveCreditCardToken($response, $customerId, $payment)
     {
-        $this->migrateToken($response, $customerId, $payment);
-        $expirationDate = $this->createExpirationDate($response);
+        $card = $response->getCard();
+        $expirationDate = $this->createExpirationDate($card);
         $paymentToken = $this->createPaymentToken($response, $customerId, $payment, $expirationDate);
-
-        $responseData = $response->getData();
-        $responseData += ['card.0.card-type' => ''];
-        $cardType = $responseData['card.0.card-type'];
-        if (!empty($cardType)) {
-            $paymentToken->setType($cardType);
-        }
+        $cardType = $card->getCardType();
 
         $paymentToken->setTokenDetails(json_encode([
-            'type' => $this->mapCardType($cardType),
-            'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
-            'expirationDate' => $expirationDate
+            self::TOKEN_DETAILS_TYPE => $this->mapCardType($cardType),
+            self::TOKEN_DETAILS_MASKED_CC => substr($response->getMaskedAccountNumber(), -4),
+            self::TOKEN_DETAILS_EXPIRATION_DATE => $expirationDate
         ]));
         $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
 
@@ -412,31 +410,15 @@ class Notify
     }
 
     /**
-     * @param array $responseData
-     * @return array
-     */
-    private function extractCreditCardExpirationInformation(array $responseData)
-    {
-        $expirationYear = '';
-        $expirationMonth = '';
-        if (isset($responseData['card.0.expiration-year']) && isset($responseData['card.0.expiration-month'])) {
-            $expirationYear = $responseData['card.0.expiration-year'];
-            $expirationMonth = $responseData['card.0.expiration-month'];
-        }
-        return [$expirationYear, $expirationMonth];
-    }
-
-    /**
      * @param SuccessResponse $response
      * @throws \Exception
      * @return string
      * @since 3.1.0
      */
-    private function createExpirationDate($response)
+    private function createExpirationDate(Card $card)
     {
-        $responseData = $response->getData();
-
-        list($expirationYear, $expirationMonth) = $this->extractCreditCardExpirationInformation($responseData);
+        $expirationYear = $card->getExpirationYear();
+        $expirationMonth = $card->getExpirationMonth();
 
         $expirationDate = $this->getDefaultExpirationDate();
         if (!empty($expirationMonth) && !empty($expirationYear)) {
@@ -506,6 +488,7 @@ class Notify
      * @param Order\Payment $payment
      *
      * @throws \Exception
+     * @deprecated since 3.1.0 - do not use migrateToken before new token creation
      * @since 2.0.1
      */
     protected function migrateToken($response, $customerId, $payment)
@@ -565,11 +548,11 @@ class Notify
     }
 
     /**
-     * @param string $cardType
+     * @param string|null $cardType
      * @return mixed|string
      * @since 3.1.0
      */
-    private function mapCardType(string $cardType)
+    private function mapCardType($cardType)
     {
         $mappedType = self::DEFAULT_TOKEN_TYPE;
         if (isset(self::CARD_TYPES_MAPPING[$cardType])) {
