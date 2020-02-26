@@ -386,7 +386,6 @@ class Notify
     protected function saveCreditCardToken($response, $customerId, $payment)
     {
         $card = $response->getCard();
-        $this->migrateToken($response, $customerId, $payment);
         $expirationDate = $this->createExpirationDate($card);
         $paymentToken = $this->createPaymentToken($response, $customerId, $payment, $expirationDate);
         $cardType = $card->getCardType();
@@ -489,6 +488,7 @@ class Notify
      * @param Order\Payment $payment
      *
      * @throws \Exception
+     * @deprecated since 3.1.0 - do not use migrateToken before new token creation
      * @since 2.0.1
      */
     protected function migrateToken($response, $customerId, $payment)
