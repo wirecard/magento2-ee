@@ -548,11 +548,11 @@ class Notify
     }
 
     /**
-     * @param string $cardType
+     * @param string|null $cardType
      * @return mixed|string
      * @since 3.1.0
      */
-    private function mapCardType(string $cardType)
+    private function mapCardType($cardType)
     {
         $mappedType = self::DEFAULT_TOKEN_TYPE;
         if (isset(self::CARD_TYPES_MAPPING[$cardType])) {
