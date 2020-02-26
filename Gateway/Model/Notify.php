@@ -69,6 +69,9 @@ class Notify
     ];
 
     const DEFAULT_TOKEN_TYPE = 'OT';
+    const TOKEN_DETAILS_TYPE = 'type';
+    const TOKEN_DETAILS_MASKED_CC = 'maskedCC';
+    const TOKEN_DETAILS_EXPIRATION_DATE = 'expirationDate';
 
     /**
      * @var TransactionServiceFactory
@@ -386,16 +389,12 @@ class Notify
         $this->migrateToken($response, $customerId, $payment);
         $expirationDate = $this->createExpirationDate($card);
         $paymentToken = $this->createPaymentToken($response, $customerId, $payment, $expirationDate);
-
         $cardType = $card->getCardType();
-        if (!empty($cardType)) {
-            $paymentToken->setType($cardType);
-        }
 
         $paymentToken->setTokenDetails(json_encode([
-            'type' => $this->mapCardType($cardType),
-            'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
-            'expirationDate' => $expirationDate
+            self::TOKEN_DETAILS_TYPE => $this->mapCardType($cardType),
+            self::TOKEN_DETAILS_MASKED_CC => substr($response->getMaskedAccountNumber(), -4),
+            self::TOKEN_DETAILS_EXPIRATION_DATE => $expirationDate
         ]));
         $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
 
