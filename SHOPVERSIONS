@@ -1,5 +1,16 @@
 [
   {
+    "release": "3.1.0",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.3",
+    "compatibility": "2.2.0",
+    "changelog": [
+      "Implement new and improved credit card workflow for one-click checkout",
+      "Update paymentSDK to version 4.0.2",
+      "Remove php-enum dependency"
+    ]
+  },
+  {
     "release": "3.0.1",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.3",
