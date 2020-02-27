@@ -21,8 +21,8 @@ use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Magento\Vault\Api\Data\PaymentTokenInterfaceFactory;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
@@ -31,6 +31,7 @@ use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\ElasticEngine\Observer\CreditCardDataAssignObserver;
+use Wirecard\PaymentSdk\Entity\Card;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -49,6 +50,29 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class Notify
 {
+
+    /**
+     * Mapping of types between EE and M2.
+     * @var array[string]
+     * @since 3.0.2
+     */
+    const CARD_TYPES_MAPPING = [
+        'amex' => 'AE',
+        'aura' => 'AU',
+        'diners' => 'DN',
+        'discover' => 'DI',
+        'elo' => 'ELO',
+        'hipercard' => 'HC',
+        'jcb' => 'JCB',
+        'mastercard' => 'MC',
+        'visa' => 'VI',
+    ];
+
+    const DEFAULT_TOKEN_TYPE = 'OT';
+    const TOKEN_DETAILS_TYPE = 'type';
+    const TOKEN_DETAILS_MASKED_CC = 'maskedCC';
+    const TOKEN_DETAILS_EXPIRATION_DATE = 'expirationDate';
+
     /**
      * @var TransactionServiceFactory
      */
@@ -80,7 +104,7 @@ class Notify
     private $canCaptureInvoice;
 
     /**
-     * @var PaymentTokenInterfaceFactory
+     * @var PaymentTokenFactoryInterface
      */
     protected $paymentTokenFactory;
 
@@ -126,7 +150,7 @@ class Notify
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
      * @param OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
-     * @param PaymentTokenInterfaceFactory $paymentTokenFactory
+     * @param PaymentTokenFactoryInterface $paymentTokenFactory
      * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
@@ -143,7 +167,7 @@ class Notify
         InvoiceService $invoiceService,
         Transaction $transaction,
         OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
-        PaymentTokenInterfaceFactory $paymentTokenFactory,
+        PaymentTokenFactoryInterface $paymentTokenFactory,
         PaymentTokenManagementInterface $paymentTokenManagement,
         PaymentTokenResourceModel $paymentTokenResourceModel,
         EncryptorInterface $encryptor,
@@ -361,20 +385,15 @@ class Notify
      */
     protected function saveCreditCardToken($response, $customerId, $payment)
     {
-        $this->migrateToken($response, $customerId, $payment);
+        $card = $response->getCard();
+        $expirationDate = $this->createExpirationDate($card);
+        $paymentToken = $this->createPaymentToken($response, $customerId, $payment, $expirationDate);
+        $cardType = $card->getCardType();
 
-        /** @var PaymentTokenInterface $paymentToken */
-        $paymentToken = $this->paymentTokenFactory->create();
-        $paymentToken->setGatewayToken($response->getCardTokenId());
-        $paymentToken->setIsActive(true);
-        $paymentToken->setExpiresAt(date('d-m-Y', strtotime(date('d-m-Y', time()) . " + 1 year")));
-        $paymentToken->setIsVisible(true);
-        $paymentToken->setCustomerId($customerId);
-        $paymentToken->setPaymentMethodCode($payment->getMethod());
         $paymentToken->setTokenDetails(json_encode([
-            'type' => '',
-            'maskedCC' => substr($response->getMaskedAccountNumber(), -4),
-            'expirationDate' => 'xx-xxxx'
+            self::TOKEN_DETAILS_TYPE => $this->mapCardType($cardType),
+            self::TOKEN_DETAILS_MASKED_CC => substr($response->getMaskedAccountNumber(), -4),
+            self::TOKEN_DETAILS_EXPIRATION_DATE => $expirationDate
         ]));
         $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
 
@@ -388,6 +407,51 @@ class Notify
             $this->paymentTokenManagement->saveTokenWithPaymentLink($paymentToken, $payment);
             $extensionAttributes->setVaultPaymentToken($paymentToken);
         }
+    }
+
+    /**
+     * @param SuccessResponse $response
+     * @throws \Exception
+     * @return string
+     * @since 3.1.0
+     */
+    private function createExpirationDate(Card $card)
+    {
+        $expirationYear = $card->getExpirationYear();
+        $expirationMonth = $card->getExpirationMonth();
+
+        $expirationDate = $this->getDefaultExpirationDate();
+        if (!empty($expirationMonth) && !empty($expirationYear)) {
+            $expirationDate = new \DateTime(
+                $this->formatExpirationDate($expirationYear, $expirationMonth),
+                new \DateTimeZone('UTC')
+            );
+            $expirationDate->add(new \DateInterval('P1M'));
+        }
+        return $expirationDate->format('Y-m-d 00:00:00');
+    }
+
+    /**
+     * @param string $expirationYear
+     * @param string $expirationMonth
+     * @return string
+     * @since 3.1.0
+     */
+    private function formatExpirationDate(string $expirationYear, string $expirationMonth)
+    {
+        return $expirationYear . '-' . $expirationMonth . '-' . '01' . ' ' . '00:00:00';
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     * @since 3.1.0
+     */
+    private function getDefaultExpirationDate()
+    {
+        $now = new \DateTime('now', new \DateTimeZone('UTC'));
+        $now->add(new \DateInterval('P1M'));
+        return $now;
     }
 
     /**
@@ -424,6 +488,7 @@ class Notify
      * @param Order\Payment $payment
      *
      * @throws \Exception
+     * @deprecated since 3.1.0 - do not use migrateToken before new token creation
      * @since 2.0.1
      */
     protected function migrateToken($response, $customerId, $payment)
@@ -480,5 +545,39 @@ class Notify
             'customer_id = ?' => $customerId,
             'gateway_token = ?' => $gatewayToken
         ]);
+    }
+
+    /**
+     * @param string|null $cardType
+     * @return mixed|string
+     * @since 3.1.0
+     */
+    private function mapCardType($cardType)
+    {
+        $mappedType = self::DEFAULT_TOKEN_TYPE;
+        if (isset(self::CARD_TYPES_MAPPING[$cardType])) {
+            $mappedType = self::CARD_TYPES_MAPPING[$cardType];
+        }
+        return $mappedType;
+    }
+
+    /**
+     * @param $response
+     * @param $customerId
+     * @param $payment
+     * @param string $expirationDate
+     * @return PaymentTokenFactoryInterface
+     */
+    private function createPaymentToken($response, $customerId, $payment, string $expirationDate)
+    {
+        /** @var PaymentTokenFactoryInterface $paymentToken */
+        $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
+        $paymentToken->setGatewayToken($response->getCardTokenId());
+        $paymentToken->setIsActive(true);
+        $paymentToken->setIsVisible(true);
+        $paymentToken->setCustomerId($customerId);
+        $paymentToken->setPaymentMethodCode($payment->getMethod());
+        $paymentToken->setExpiresAt($expirationDate);
+        return $paymentToken;
     }
 }

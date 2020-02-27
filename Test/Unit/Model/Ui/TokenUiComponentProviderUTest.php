@@ -12,6 +12,7 @@ namespace Wirecard\ElasticEngine\Test\Unit\Model\Ui;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
 use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
+use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Model\Ui\ConfigProvider;
 use Wirecard\ElasticEngine\Model\Ui\TokenUiComponentProvider;
 
@@ -61,7 +62,10 @@ class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
 
     public function testGetComponentForToken()
     {
-        $conf = new TokenUiComponentProvider($this->componentFactory);
+        $logger = $this->getMock(LoggerInterface::class);
+        $config = $this->getMockBuilder(ConfigProvider::class)->disableOriginalConstructor()->getMock();
+        $config->method('getWppUrl')->willReturn('https://wpp-test.wirecard.com');
+        $conf = new TokenUiComponentProvider($this->componentFactory, $config, $logger);
 
         $this->assertEquals($this->component, $conf->getComponentForToken($this->paymentToken));
     }

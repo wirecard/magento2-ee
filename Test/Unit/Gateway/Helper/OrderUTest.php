@@ -49,7 +49,7 @@ class OrderUTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->orderRepository = $this->getMock(OrderRepositoryInterface::class);
+        $this->orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)->getMock();
 
         $searchCriteria = $this->getMockBuilder(SearchCriteria::class)
             ->disableOriginalConstructor()

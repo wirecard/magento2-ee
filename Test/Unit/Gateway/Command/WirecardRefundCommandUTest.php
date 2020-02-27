@@ -79,7 +79,7 @@ class WirecardRefundCommandUTest extends \PHPUnit_Framework_TestCase
         $this->transactionFactory = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
         $this->transactionFactory->method('refund')
-            ->willReturn($this->getMock(PayPalTransaction::class));
+            ->willReturn($this->getMockBuilder(PayPalTransaction::class)->getMock());
 
         // TransactionService mocks
         $this->transactionService = $this->getMockBuilder(TransactionService::class)
@@ -90,14 +90,14 @@ class WirecardRefundCommandUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-        $this->handler = $this->getMock(HandlerInterface::class);
+        $this->handler = $this->getMockBuilder(HandlerInterface::class)->getMock();
 
-        $this->methodConfig = $this->getMock(ConfigInterface::class);
+        $this->methodConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $this->methodConfig->method('getValue')->willReturn('authorize');
 
-        $stateObject = $this->getMock(DataObject::class);
+        $stateObject = $this->getMockBuilder(DataObject::class)->getMock();
         $this->commandSubject = ['stateObject' => $stateObject];
     }
 
@@ -131,7 +131,7 @@ class WirecardRefundCommandUTest extends \PHPUnit_Framework_TestCase
         // Transaction mocks
         $transactionFactoryMock = $this->getMockBuilder(TransactionFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $transactionFactoryMock->method('refund')->willReturn($this->getMock($transactionClass));
+        $transactionFactoryMock->method('refund')->willReturn($this->getMockBuilder($transactionClass)->getMock());
 
         $exception = new \Exception('Testing the exception');
 
@@ -145,7 +145,7 @@ class WirecardRefundCommandUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceFactoryMock->method('create')->willReturn($transactionServiceMock);
 
         // Test if the logger gets the exception message
-        $loggerMock = $this->getMock(LoggerInterface::class);
+        $loggerMock = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $loggerMock->expects($this->once())->method('error')->with($this->equalTo($exception->getMessage()));
 
         /**
@@ -205,7 +205,7 @@ class WirecardRefundCommandUTest extends \PHPUnit_Framework_TestCase
             $this->methodConfig
         );
 
-        $stateObject = $this->getMock(DataObject::class);
+        $stateObject = $this->getMockBuilder(DataObject::class)->getMock();
         $commandSubject = ['stateObject' => $stateObject];
 
         $command->execute($commandSubject);

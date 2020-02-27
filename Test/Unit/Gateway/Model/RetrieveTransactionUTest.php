@@ -42,14 +42,14 @@ class RetrieveTransactionUTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /** @var ClientFactory|PHPUnit_Framework_MockObject_MockObject $clientFactory */
-        $clientFactory = $this->getMockWithoutInvokingTheOriginalConstructor(ClientFactory::class);
+        $clientFactory = $this->getMockBuilder(ClientFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->httpClient = $this->getMockWithoutInvokingTheOriginalConstructor(ClientInterface::class);
+        $this->httpClient = $this->getMockBuilder(ClientInterface::class)->disableOriginalConstructor()->getMock();
         $clientFactory->method('create')->willReturn($this->httpClient);
 
-        $this->config = $this->getMockWithoutInvokingTheOriginalConstructor(Config::class);
+        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
 
-        $this->nestedObject = $this->getMockWithoutInvokingTheOriginalConstructor(NestedObject::class);
+        $this->nestedObject = $this->getMockBuilder(NestedObject::class)->disableOriginalConstructor()->getMock();
 
         $this->transaction = new RetrieveTransaction(
             $clientFactory,

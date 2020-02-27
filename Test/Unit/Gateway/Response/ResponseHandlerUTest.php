@@ -72,7 +72,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $this->session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
             ->setMethods([self::SET_REDIRECT_URL, 'setFormMethod', 'setFormUrl', 'setFormFields',
@@ -100,8 +100,8 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
             'creditCardToken' => '0123456CARDTOKEN'
         ];
 
-        $paymentDO = $this->getMock(PaymentDataObjectInterface::class);
-        $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Payment::class);
+        $paymentDO = $this->getMockBuilder(PaymentDataObjectInterface::class)->getMock();
+        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $paymentDO->method('getPayment')->willReturn($this->payment);
         $this->subject = [
             'payment' => $paymentDO
@@ -110,7 +110,7 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
         $this->urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
 
-        $this->paymentHelper = $this->getMockWithoutInvokingTheOriginalConstructor(PaymentHelper::class);
+        $this->paymentHelper = $this->getMockBuilder(PaymentHelper::class)->disableOriginalConstructor()->getMock();
     }
 
     public function testHandlingReturnsRedirect()
