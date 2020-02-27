@@ -28,9 +28,7 @@ jobs:
         - LATEST_EXTENSION_RELEASE=1
         - ALLOW_FAIL=1
   include:
-    - php: 7.1
-      if: env(PHRASEAPP_PULL) != '1' AND type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
-
+  
     - &acceptance-test
       stage: acceptance-test
       #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
@@ -130,11 +128,6 @@ jobs:
         - cd $TMPDIR && travis_retry bundle install
         - bin/rake trigger_build
       after_script: skip
-
-install:
-  - travis_retry composer require --dev $COMPOSER_ARGS satooshi/php-coveralls:^1.0
-  - travis_retry composer install $COMPOSER_ARGS
-  - composer show
 
 notifications:
   email: false
