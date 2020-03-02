@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/magento2-ee/master/LICENSE)
 [![PHP v7.1](https://img.shields.io/badge/php-v7.1-yellow.svg)](http://www.php.net)
 [![PHP v7.2](https://img.shields.io/badge/php-v7.2-yellow.svg)](http://www.php.net)
-[![Magento v2.3.3](https://img.shields.io/badge/magento-v2.3.3-green.svg)](https://magento.com/)
+[![Magento v2.3.4](https://img.shields.io/badge/magento-v2.3.4-green.svg)](https://magento.com/)
 
 ***
 ## Additional Credit Card Configuration Field
