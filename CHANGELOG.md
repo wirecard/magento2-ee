@@ -8,7 +8,7 @@
 *   Establish compatibility with Magento Community Edition 2.3.4  
 
 |  Overview | Magento version | PHP 7.0 | PHP 7.1 | PHP 7.2 |  
-|---|---|:---:|:---:|:---:|:---:|  
+|---|---|:---:|:---:|:---:|  
 | **Tested version(s)** | Magento Community Edition 2.3.4 | :x: | :x: | &#9989; |  
 | **Compatibility** | Magento Community Edition 2.2.0 - 2.3.4 | &#9989; | &#9989; | &#9989; |    
 
