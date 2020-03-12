@@ -56,7 +56,6 @@ jobs:
       after_script: skip
       after_success:
         - bash .bin/upload-logs-and-notify.sh
-        - bash .bin/update-shop-release-versions.sh
       after_failure:
         - bash .bin/upload-logs-and-notify.sh fail
     #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
