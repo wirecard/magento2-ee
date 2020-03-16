@@ -12,7 +12,6 @@ namespace Wirecard\ElasticEngine\Gateway\Command;
 use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Magento\Payment\Gateway\Data\PaymentDataObject;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\InvalidArgumentException;
