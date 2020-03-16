@@ -149,19 +149,10 @@ define(
             },
             /**
              * Show error message in the frontend checkout page
-             * @param response
-             * @param defaultMessage
+             * @param errorMessage
              */
-            showErrorMessage: function (response, defaultMessage) {
-                if (response.hasOwnProperty("error_1"))
-                {
-                    const error_message = response.error_1;
-                    this.messageContainer.addErrorMessage({message: $t(error_message)});
-                } else {
-                    this.messageContainer.addErrorMessage({message: $t(defaultMessage)});
-                }
-                console.error(response);
-
+            showErrorMessage: function (errorMessage) {
+                this.messageContainer.addErrorMessage({message: $t(errorMessage)});
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
@@ -169,10 +160,26 @@ define(
                 this.hideSpinner();
             },
             seamlessFormInitErrorHandler: function (response) {
+                console.error(response);
+                if (response.hasOwnProperty("error_1")) {
+                    this.showErrorMessage(response.error_1);
+                }
                 this.showErrorMessage(response, "credit_card_form_loading_error");
             },
             seamlessFormSubmitErrorHandler: function (response) {
-                this.showErrorMessage(response, "credit_card_form_submitting_error");
+                console.error(response);
+                let errors = [];
+                if (response.hasOwnProperty("errors")) {
+                    for (let i = 0; i < response.errors.length; i++) {
+                        let error = response.errors[i];
+                        errors.push(error['error']['description']);
+                    }
+                }
+                if(errors.length > 0) {
+                    this.showErrorMessage(errors.toString());
+                } else {
+                    this.showErrorMessage("credit_card_form_submitting_error");
+                }
             },
             seamlessFormSizeHandler: function () {
                 this.hideSpinner();
