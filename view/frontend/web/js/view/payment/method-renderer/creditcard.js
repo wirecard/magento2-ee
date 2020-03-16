@@ -147,19 +147,32 @@ define(
                     }
                 }
             },
-            seamlessFormInitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                console.error(response);
-            },
-            seamlessFormSubmitErrorHandler: function (response) {
-                this.hideSpinner();
-
-                this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
+            /**
+             * Show error message in the frontend checkout page
+             * @param response
+             * @param defaultMessage
+             */
+            showErrorMessage: function (response, defaultMessage) {
+                if (response.hasOwnProperty("error_1"))
+                {
+                    const error_message = response.error_1;
+                    this.messageContainer.addErrorMessage({message: $t(error_message)});
+                } else {
+                    this.messageContainer.addErrorMessage({message: $t(defaultMessage)});
+                }
                 console.error(response);
 
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
+
+                this.hideSpinner();
+            },
+            seamlessFormInitErrorHandler: function (response) {
+                this.showErrorMessage(response, "credit_card_form_loading_error");
+            },
+            seamlessFormSubmitErrorHandler: function (response) {
+                this.showErrorMessage(response, "credit_card_form_submitting_error");
             },
             seamlessFormSizeHandler: function () {
                 this.hideSpinner();
