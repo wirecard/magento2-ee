@@ -178,7 +178,7 @@ define(
              * @param errorMessage
              */
             showErrorMessage: function (errorMessage) {
-                if (errors.length > 0) {
+                if (errorMessage.length > 0) {
                     this.messageContainer.addErrorMessage({message: $t(errorMessage)});
                 }
                 if (this.getCounter() <= 3) {
