@@ -178,7 +178,9 @@ define(
              * @param errorMessage
              */
             showErrorMessage: function (errorMessage) {
-                this.messageContainer.addErrorMessage({message: $t(errorMessage)});
+                if (errors.length > 0) {
+                    this.messageContainer.addErrorMessage({message: $t(errorMessage)});
+                }
                 if (this.getCounter() <= 3) {
                     setTimeout(function () {
                         location.reload();

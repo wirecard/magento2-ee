@@ -24,7 +24,8 @@ define([
             formIdSuffix: "_seamless_token_form",
             STATE_SUCCESS_INIT_PAYMENT_AJAX: "OK",
             WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
-            FORM_LOADING_ERROR: "credit_card_form_loading_error"
+            FORM_LOADING_ERROR: "credit_card_form_loading_error",
+            ERROR_COUNTER_STORAGE_KEY: "errorCounter"
          },
 
         showSpinner: function () {
@@ -91,21 +92,47 @@ define([
 
             return true;
         },
-
-        addErrorMessageAndRedirect: function(errors) {
-            if (errors.length > 0) {
-                this.messageContainer.addErrorMessage({message: errors});
-            }
-            setTimeout(function () {
-                location.reload();
-            }, 3000);
+        /**
+         * resets error counter to 0
+         */
+        resetCounter: function () {
+            localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
         },
-
+        /**
+         * Increments error counter and returns it's value
+         * @returns {number}
+         */
+        getCounter: function () {
+            if (localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
+                let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+                counter += 1;
+                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+            } else {
+                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
+            }
+            return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+        },
+        /**
+         * Show error message in the frontend checkout page
+         * @param errorMessage
+         */
+        showErrorMessage: function (errorMessage) {
+            if (errors.length > 0) {
+                this.messageContainer.addErrorMessage({message: $t(errorMessage)});
+            }
+            if (this.getCounter() <= 3) {
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
+            } else {
+                this.resetCounter();
+            }
+            this.hideSpinner();
+        },
         seamlessFormInitErrorHandler: function (response) {
             this.hideSpinner();
-            this.addErrorMessageAndRedirect([$translate(this.settings.FORM_LOADING_ERROR)]);
+            this.showErrorMessage([$translate(this.settings.FORM_LOADING_ERROR)]);
         },
-
         seamlessFormSubmitErrorHandler: function (response) {
             let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
 
@@ -121,7 +148,7 @@ define([
                 }
             );
             if (!isClientValidation) {
-                this.addErrorMessageAndRedirect(errorList);
+                this.showErrorMessage(errorList);
             }
         },
 
@@ -137,6 +164,7 @@ define([
         },
         seamlessFormSubmitSuccessHandler: function (response) {
             this.seamlessResponse = response;
+            this.resetCounter();
             this.placeOrder();
         },
         seamlessFormSizeHandler: function () {
