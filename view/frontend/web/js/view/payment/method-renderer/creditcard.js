@@ -25,6 +25,11 @@ define(
                 redirectAfterPlaceOrder: false
             },
 
+            settings : {
+                ERROR_COUNTER_STORAGE_KEY: "errorCounter",
+                WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"]
+            },
+
             /**
              * @returns {exports.initialize}
              */
@@ -88,6 +93,7 @@ define(
             },
             seamlessFormSubmitSuccessHandler: function (response) {
                 this.seamlessResponse = response;
+                this.resetCounter();
                 this.placeOrder();
             },
             afterPlaceOrder: function () {
@@ -148,37 +154,64 @@ define(
                 }
             },
             /**
+             * resets error counter to 0
+             */
+            resetCounter: function () {
+                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
+            },
+            /**
+             * Increments error counter and returns it's value
+             * @returns {number}
+             */
+            getCounter: function () {
+                if (localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
+                    let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+                    counter += 1;
+                    localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+                } else {
+                    localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
+                }
+                return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+            },
+            /**
              * Show error message in the frontend checkout page
              * @param errorMessage
              */
             showErrorMessage: function (errorMessage) {
                 this.messageContainer.addErrorMessage({message: $t(errorMessage)});
-                setTimeout(function () {
-                    location.reload();
-                }, 3000);
-
+                if (this.getCounter() <= 3) {
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
+                } else {
+                    this.resetCounter();
+                }
                 this.hideSpinner();
             },
             seamlessFormInitErrorHandler: function (response) {
                 console.error(response);
                 if (response.hasOwnProperty("error_1")) {
                     this.showErrorMessage(response.error_1);
+                } else {
+                    this.showErrorMessage(response, "credit_card_form_loading_error");
                 }
-                this.showErrorMessage(response, "credit_card_form_loading_error");
             },
             seamlessFormSubmitErrorHandler: function (response) {
                 console.error(response);
-                let errors = [];
-                if (response.hasOwnProperty("errors")) {
-                    for (let i = 0; i < response.errors.length; i++) {
-                        let error = response.errors[i];
-                        errors.push(error['error']['description']);
+                let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
+                let isClientValidation = false;
+                let errorList = [];
+                response.errors.forEach(
+                    function ( item ) {
+                        if (validErrorCodes.includes(item.error.code)) {
+                            isClientValidation = true;
+                        } else {
+                            errorList.push(item.error.description);
+                        }
                     }
-                }
-                if(errors.length > 0) {
-                    this.showErrorMessage(errors.toString());
-                } else {
-                    this.showErrorMessage("credit_card_form_submitting_error");
+                );
+                if (!isClientValidation) {
+                    this.showErrorMessage(errorList);
                 }
             },
             seamlessFormSizeHandler: function () {
