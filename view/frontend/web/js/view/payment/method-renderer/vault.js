@@ -168,7 +168,7 @@ define([
             let appendFormData = this.appendFormData.bind(this);
             $.ajax({
                 url: url.build("wirecard_elasticengine/frontend/callback"),
-                dataType: 'json',
+                dataType: "json",
                 type: "POST",
                 data: {
                     "jsresponse": response
@@ -184,7 +184,7 @@ define([
                     }
                 },
                 error: function (err) {
-                    this.addErrorMessageAndRedirect(errorList);
+                    this.addErrorMessageAndRedirect(err);
                 }
             });
         },
