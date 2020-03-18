@@ -27,7 +27,8 @@ define(
 
             settings : {
                 ERROR_COUNTER_STORAGE_KEY: "errorCounter",
-                WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"]
+                WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
+                MAX_ERROR_REPEAT_COUNT:3
             },
 
             /**
@@ -165,13 +166,13 @@ define(
              */
             getCounter: function () {
                 if (localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
-                    let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+                    let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
                     counter += 1;
                     localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
                 } else {
                     localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
                 }
-                return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+                return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
             },
             /**
              * Show error message in the frontend checkout page
@@ -179,9 +180,9 @@ define(
              */
             showErrorMessage: function (errorMessage) {
                 if (errorMessage.length > 0) {
-                    this.messageContainer.addErrorMessage({message: $t(errorMessage)});
+                    this.messageContainer.addErrorMessage({message: errorMessage});
                 }
-                if (this.getCounter() <= 3) {
+                if (this.getCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
                     setTimeout(function () {
                         location.reload();
                     }, 3000);
@@ -195,7 +196,7 @@ define(
                 if (response.hasOwnProperty("error_1")) {
                     this.showErrorMessage(response.error_1);
                 } else {
-                    this.showErrorMessage(response, "credit_card_form_loading_error");
+                    this.showErrorMessage($t("credit_card_form_loading_error"));
                 }
             },
             seamlessFormSubmitErrorHandler: function (response) {
@@ -206,6 +207,7 @@ define(
                 response.errors.forEach(
                     function ( item ) {
                         if (validErrorCodes.includes(item.error.code)) {
+                            this.resetCounter();
                             isClientValidation = true;
                         } else {
                             errorList.push(item.error.description);
@@ -213,7 +215,7 @@ define(
                     }
                 );
                 if (!isClientValidation) {
-                    this.showErrorMessage(errorList);
+                    this.showErrorMessage(errorList.toString());
                 }
             },
             seamlessFormSizeHandler: function () {

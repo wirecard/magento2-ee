@@ -25,7 +25,8 @@ define([
             STATE_SUCCESS_INIT_PAYMENT_AJAX: "OK",
             WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
             FORM_LOADING_ERROR: "credit_card_form_loading_error",
-            ERROR_COUNTER_STORAGE_KEY: "errorCounter"
+            ERROR_COUNTER_STORAGE_KEY: "errorCounter",
+            MAX_ERROR_REPEAT_COUNT:3
          },
 
         showSpinner: function () {
@@ -104,13 +105,13 @@ define([
          */
         getCounter: function () {
             if (localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
-                let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+                let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
                 counter += 1;
                 localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
             } else {
                 localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
             }
-            return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY));
+            return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
         },
         /**
          * Show error message in the frontend checkout page
@@ -120,7 +121,7 @@ define([
             if (errorMessage.length > 0) {
                 this.messageContainer.addErrorMessage({message: $t(errorMessage)});
             }
-            if (this.getCounter() <= 3) {
+            if (this.getCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
@@ -141,6 +142,7 @@ define([
             response.errors.forEach(
                 function ( item ) {
                     if (validErrorCodes.includes(item.error.code)) {
+                        this.resetCounter();
                         isClientValidation = true;
                     } else {
                         errorList.push(item.error.description);
@@ -148,7 +150,7 @@ define([
                 }
             );
             if (!isClientValidation) {
-                this.showErrorMessage(errorList);
+                this.showErrorMessage(errorList.toString());
             }
         },
 
