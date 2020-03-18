@@ -18,6 +18,7 @@ define([
     return VaultComponent.extend({
         defaults: {
             template: "Wirecard_ElasticEngine/payment/method-vault",
+            redirectAfterPlaceOrder: false
         },
 
         settings : {
@@ -138,6 +139,65 @@ define([
         seamlessFormSubmitSuccessHandler: function (response) {
             this.seamlessResponse = response;
             this.placeOrder();
+        },
+        afterPlaceOrder: function () {
+            if (this.seamlessResponse.hasOwnProperty("acs_url")) {
+                this.redirectCreditCard(this.seamlessResponse);
+            } else {
+                // Handle redirect for Non-3D transactions
+                $.ajax({
+                    url: url.build("wirecard_elasticengine/frontend/redirect"),
+                    type: "post",
+                    data: {
+                        "data": this.seamlessResponse,
+                        "method": "creditcard"
+                    }
+                }).done(function (data) {
+                    // Redirect non-3D credit card payment response
+                    window.location.replace(data["redirect-url"]);
+                });
+            }
+        },
+        /**
+         * Handle 3Ds credit card transactions within callback
+         * @param response
+         */
+        redirectCreditCard: function (response) {
+            let result = {};
+            result.data = {};
+            let appendFormData = this.appendFormData.bind(this);
+            $.ajax({
+                url: url.build("wirecard_elasticengine/frontend/callback"),
+                dataType: 'json',
+                type: "POST",
+                data: {
+                    "jsresponse": response
+                },
+                success: function (result) {
+                    if (result.data["form-url"]) {
+                        let form = $("<form />", {
+                            action: result.data["form-url"],
+                            method: result.data["form-method"]
+                        });
+                        appendFormData(result.data, form);
+                        form.appendTo("body").submit();
+                    }
+                },
+                error: function (err) {
+                    this.addErrorMessageAndRedirect(errorList);
+                }
+            });
+        },
+        appendFormData: function (data, form) {
+            for (let key in data) {
+                if (key !== "form-url" && key !== "form-method") {
+                    form.append($("<input />", {
+                        type: "hidden",
+                        name: key,
+                        value: data[key]
+                    }));
+                }
+            }
         },
         seamlessFormSizeHandler: function () {
             this.hideSpinner();
