@@ -29,6 +29,10 @@ define([
             MAX_ERROR_REPEAT_COUNT:3
          },
 
+        button : {
+            SUBMIT_ORDER: "wirecard_elasticengine_cc_vault_submit"
+        },
+
         showSpinner: function () {
             $("body").trigger("processStart");
         },
@@ -61,9 +65,11 @@ define([
                     token: this.getToken(),
                 };
 
+                let self = this;
                 this.showSpinner();
 
                 $.getScript(this.getPaymentPageScript(), function () {
+                    self.disableButtonById(self.button.SUBMIT_ORDER);
                     // Build seamless renderform with full transaction data
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/creditcard"),
@@ -103,15 +109,11 @@ define([
          * Increments error counter and returns it's value
          * @returns {number}
          */
-        getCounter: function () {
-            if (localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
-                let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
-                counter += 1;
-                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
-            } else {
-                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
-            }
-            return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
+        incrementCounter: function () {
+            var counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
+            counter = parseInt(counter, 10) + 1;
+            localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+            return counter;
         },
         /**
          * Show error message in the frontend checkout page
@@ -119,9 +121,9 @@ define([
          */
         showErrorMessage: function (errorMessage) {
             if (errorMessage.length > 0) {
-                this.messageContainer.addErrorMessage({message: $t(errorMessage)});
+                this.messageContainer.addErrorMessage({message: errorMessage});
             }
-            if (this.getCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
+            if (this.incrementCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
@@ -135,14 +137,15 @@ define([
             this.showErrorMessage([$translate(this.settings.FORM_LOADING_ERROR)]);
         },
         seamlessFormSubmitErrorHandler: function (response) {
+            console.error(response);
+            let self = this;
             let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
-
             let isClientValidation = false;
             let errorList = [];
             response.errors.forEach(
                 function ( item ) {
                     if (validErrorCodes.includes(item.error.code)) {
-                        this.resetCounter();
+                        self.resetCounter();
                         isClientValidation = true;
                     } else {
                         errorList.push(item.error.description);
@@ -171,6 +174,7 @@ define([
         },
         seamlessFormSizeHandler: function () {
             this.hideSpinner();
+            this.enableButtonById(this.button.SUBMIT_ORDER);
             let seamlessForm = document.getElementById(this.getFormId());
             window.addEventListener("resize", this.resizeIframe.bind(seamlessForm));
             if (seamlessForm !== null && typeof seamlessForm !== "undefined") {
@@ -247,5 +251,13 @@ define([
                 }
             };
         },
+
+        disableButtonById: function (id) {
+            document.getElementById(id).disabled = true;
+        },
+
+        enableButtonById: function (id) {
+            document.getElementById(id).disabled = false;
+        }
     });
 });

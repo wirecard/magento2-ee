@@ -31,11 +31,18 @@ define(
                 MAX_ERROR_REPEAT_COUNT:3
             },
 
+            button : {
+                SUBMIT_ORDER: "wirecard_elasticengine_creditcard_submit"
+            },
+
             /**
              * @returns {exports.initialize}
              */
             initialize: function () {
                 this._super();
+                if (!localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
+                    this.resetCounter();
+                }
                 return this;
             },
 
@@ -62,9 +69,11 @@ define(
                 let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
                 let hideSpinner = this.hideSpinner.bind(this);
                 let messageContainer = this.messageContainer;
+                let self = this;
                 this.showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(this.getPaymentPageScript(), function () {
+                    self.disableButtonById(self.button.SUBMIT_ORDER);
                     // Build seamless renderform with full transaction data
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/creditcard"),
@@ -164,15 +173,11 @@ define(
              * Increments error counter and returns it's value
              * @returns {number}
              */
-            getCounter: function () {
-                if (localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
-                    let counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
-                    counter += 1;
-                    localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
-                } else {
-                    localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
-                }
-                return parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
+            incrementCounter: function () {
+                var counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
+                counter = parseInt(counter, 10) + 1;
+                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+                return counter;
             },
             /**
              * Show error message in the frontend checkout page
@@ -182,7 +187,7 @@ define(
                 if (errorMessage.length > 0) {
                     this.messageContainer.addErrorMessage({message: errorMessage});
                 }
-                if (this.getCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
+                if (this.incrementCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
                     setTimeout(function () {
                         location.reload();
                     }, 3000);
@@ -201,13 +206,14 @@ define(
             },
             seamlessFormSubmitErrorHandler: function (response) {
                 console.error(response);
+                let self = this;
                 let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
                 let isClientValidation = false;
                 let errorList = [];
                 response.errors.forEach(
                     function ( item ) {
                         if (validErrorCodes.includes(item.error.code)) {
-                            this.resetCounter();
+                            self.resetCounter();
                             isClientValidation = true;
                         } else {
                             errorList.push(item.error.description);
@@ -220,6 +226,7 @@ define(
             },
             seamlessFormSizeHandler: function () {
                 this.hideSpinner();
+                this.enableButtonById(this.button.SUBMIT_ORDER);
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
                 let seamlessForm = document.getElementById(this.getCode() + "_seamless_form");
                 if (seamlessForm !== null) {
@@ -290,6 +297,14 @@ define(
             hideSpinner: function () {
                 $("body").trigger("processStop");
             },
+
+            disableButtonById: function (id) {
+                document.getElementById(id).disabled = true;
+            },
+
+            enableButtonById: function (id) {
+                document.getElementById(id).disabled = false;
+            }
 
         });
     }
