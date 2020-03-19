@@ -58,7 +58,8 @@
                         type="submit"
                         data-bind="
                             click: placeTokenSeamlessOrder,
-                            attr: {title: $t('Place Order')}">
+                            attr: {'id': getCode() + '_submit', title: $t('place_order')}
+                            ">
                     <span translate="'Place Order'"></span>
                 </button>
             </div>
