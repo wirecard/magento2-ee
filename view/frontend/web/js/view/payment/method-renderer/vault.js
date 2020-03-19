@@ -163,8 +163,9 @@ define([
          * @param response
          */
         redirectCreditCard: function (response) {
-            let result = {};
-            result.data = {};
+            let result = {
+                data: {}
+            };
             let appendFormData = this.appendFormData.bind(this);
             $.ajax({
                 url: url.build("wirecard_elasticengine/frontend/callback"),
