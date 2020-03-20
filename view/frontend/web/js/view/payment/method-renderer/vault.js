@@ -11,8 +11,9 @@ define([
     "jquery",
     "Magento_Vault/js/view/payment/method-renderer/vault",
     "mage/translate",
-    "mage/url"
-], function ($, VaultComponent, $translate, url) {
+    "mage/url",
+    'Magento_Ui/js/model/messageList'
+], function ($, VaultComponent, $translate, url, messageList) {
     "use strict";
 
     return VaultComponent.extend({
@@ -24,6 +25,7 @@ define([
             formIdSuffix: "_seamless_token_form",
             STATE_SUCCESS_INIT_PAYMENT_AJAX: "OK",
             WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
+            WPP_ERROR_PREFIX: "error_",
             FORM_LOADING_ERROR: "credit_card_form_loading_error",
             ERROR_COUNTER_STORAGE_KEY: "errorCounter",
             MAX_ERROR_REPEAT_COUNT:3
@@ -65,11 +67,9 @@ define([
                     token: this.getToken(),
                 };
 
-                let self = this;
                 this.showSpinner();
 
                 $.getScript(this.getPaymentPageScript(), function () {
-                    self.disableButtonById(self.button.SUBMIT_ORDER);
                     // Build seamless renderform with full transaction data
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/creditcard"),
@@ -99,53 +99,41 @@ define([
 
             return true;
         },
-        /**
-         * resets error counter to 0
-         */
-        resetCounter: function () {
-            localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
-        },
-        /**
-         * Increments error counter and returns it's value
-         * @returns {number}
-         */
-        incrementCounter: function () {
-            var counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
-            counter = parseInt(counter, 10) + 1;
-            localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
-            return counter;
-        },
-        /**
-         * Show error message in the frontend checkout page
-         * @param errorMessage
-         */
-        showErrorMessage: function (errorMessage) {
-            if (errorMessage.length > 0) {
-                this.messageContainer.addErrorMessage({message: errorMessage});
-            }
-            if (this.incrementCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
-                setTimeout(function () {
-                    location.reload();
-                }, 3000);
-            } else {
-                this.resetCounter();
-            }
-            this.hideSpinner();
-        },
         seamlessFormInitErrorHandler: function (response) {
+            console.error(response);
+            this.disableButtonById(this.button.SUBMIT_ORDER);
+            let keys = Object.keys(response);
+            let hasMessages = false;
+            keys.forEach(
+                function ( key ) {
+                    if (key.startsWith(self.settings.WPP_ERROR_PREFIX)) {
+                        hasMessages = true;
+                        let msg = response[key];
+                        messageList.addErrorMessage({
+                            message: msg
+                        });
+                    }
+                }
+            );
+            if (!hasMessages) {
+                messageList.addErrorMessage({
+                    message: $translate("credit_card_form_loading_error")
+                });
+            }
+            setTimeout(function () {
+                location.reload();
+            }, 3000);
             this.hideSpinner();
-            this.showErrorMessage([$translate(this.settings.FORM_LOADING_ERROR)]);
         },
         seamlessFormSubmitErrorHandler: function (response) {
             console.error(response);
-            let self = this;
+            this.hideSpinner();
             let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
             let isClientValidation = false;
             let errorList = [];
             response.errors.forEach(
                 function ( item ) {
                     if (validErrorCodes.includes(item.error.code)) {
-                        self.resetCounter();
                         isClientValidation = true;
                     } else {
                         errorList.push(item.error.description);
@@ -169,7 +157,6 @@ define([
         },
         seamlessFormSubmitSuccessHandler: function (response) {
             this.seamlessResponse = response;
-            this.resetCounter();
             this.placeOrder();
         },
         seamlessFormSizeHandler: function () {
@@ -194,6 +181,7 @@ define([
             }
         },
         placeTokenSeamlessOrder: function (data, event) {
+            this.showSpinner();
             if (event) {
                 event.preventDefault();
             }
