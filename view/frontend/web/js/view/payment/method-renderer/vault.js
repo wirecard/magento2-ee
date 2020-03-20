@@ -12,7 +12,7 @@ define([
     "Magento_Vault/js/view/payment/method-renderer/vault",
     "mage/translate",
     "mage/url",
-    'Magento_Ui/js/model/messageList'
+    "Magento_Ui/js/model/messageList"
 ], function ($, VaultComponent, $translate, url, messageList) {
     "use strict";
 
@@ -108,9 +108,8 @@ define([
                 function ( key ) {
                     if (key.startsWith(self.settings.WPP_ERROR_PREFIX)) {
                         hasMessages = true;
-                        let msg = response[key];
                         messageList.addErrorMessage({
-                            message: msg
+                            message: response[key]
                         });
                     }
                 }
