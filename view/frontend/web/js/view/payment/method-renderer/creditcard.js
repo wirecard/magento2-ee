@@ -29,6 +29,7 @@ define(
             settings : {
                 ERROR_COUNTER_STORAGE_KEY: "errorCounter",
                 WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
+                WPP_ERROR_PREFIX: "error_",
                 MAX_ERROR_REPEAT_COUNT:3
             },
 
@@ -185,13 +186,23 @@ define(
                 return counter;
             },
             seamlessFormInitErrorHandler: function (response) {
-                this.disableButtonById(this.button.SUBMIT_ORDER);
                 console.error(response);
-                if (response.hasOwnProperty("error_1")) {
-                    messageList.addErrorMessage({
-                        message: response.error_1
-                    });
-                } else {
+                this.disableButtonById(this.button.SUBMIT_ORDER);
+                let keys = Object.keys(response);
+                let hasMessages = false;
+                let self = this;
+                keys.forEach(
+                    function ( key ) {
+                        if (key.startsWith(self.settings.WPP_ERROR_PREFIX)) {
+                            hasMessages = true;
+                            let msg = response[key];
+                            messageList.addErrorMessage({
+                                message: msg
+                            });
+                        }
+                    }
+                );
+                if (!hasMessages) {
                     messageList.addErrorMessage({
                         message: $t("credit_card_form_loading_error")
                     });
