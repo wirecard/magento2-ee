@@ -14,9 +14,10 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "mage/translate",
         "mage/url",
-        "Magento_Vault/js/view/payment/vault-enabler"
+        "Magento_Vault/js/view/payment/vault-enabler",
+        'Magento_Ui/js/model/messageList'
     ],
-    function ($, Component, $t, url, VaultEnabler) {
+    function ($, Component, $t, url, VaultEnabler, messageList) {
         "use strict";
         return Component.extend({
             seamlessResponse: null,
@@ -68,12 +69,9 @@ define(
                 let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
                 let hideSpinner = this.hideSpinner.bind(this);
-                let messageContainer = this.messageContainer;
-                let self = this;
                 this.showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(this.getPaymentPageScript(), function () {
-                    self.disableButtonById(self.button.SUBMIT_ORDER);
                     // Build seamless renderform with full transaction data
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/creditcard"),
@@ -90,18 +88,23 @@ define(
                                 });
                             } else {
                                 hideSpinner();
-                                messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                                messageList.addErrorMessage({
+                                    message: $t("credit_card_form_loading_error")
+                                });
                             }
                         },
                         error: function (err) {
                             hideSpinner();
-                            messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                            messageList.addErrorMessage({
+                                message: $t("credit_card_form_loading_error")
+                            });
                             console.error("Error : " + JSON.stringify(err));
                         }
                     });
                 });
             },
             seamlessFormSubmitSuccessHandler: function (response) {
+                this.hideSpinner();
                 this.seamlessResponse = response;
                 this.resetCounter();
                 this.placeOrder();
@@ -147,7 +150,9 @@ define(
                         }
                     },
                     error: function (err) {
-                        this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        messageList.addErrorMessage({
+                            message: $t("credit_card_form_loading_error")
+                        });
                         console.error("Error : " + JSON.stringify(err));
                     }
                 });
@@ -179,13 +184,17 @@ define(
                 localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
                 return counter;
             },
-            /**
-             * Show error message in the frontend checkout page
-             * @param errorMessage
-             */
-            showErrorMessage: function (errorMessage) {
-                if (errorMessage.length > 0) {
-                    this.messageContainer.addErrorMessage({message: errorMessage});
+            seamlessFormInitErrorHandler: function (response) {
+                this.disableButtonById(this.button.SUBMIT_ORDER);
+                console.error(response);
+                if (response.hasOwnProperty("error_1")) {
+                    messageList.addErrorMessage({
+                        message: response.error_1
+                    });
+                } else {
+                    messageList.addErrorMessage({
+                        message: $t("credit_card_form_loading_error")
+                    });
                 }
                 if (this.incrementCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
                     setTimeout(function () {
@@ -196,35 +205,35 @@ define(
                 }
                 this.hideSpinner();
             },
-            seamlessFormInitErrorHandler: function (response) {
-                console.error(response);
-                if (response.hasOwnProperty("error_1")) {
-                    this.showErrorMessage(response.error_1);
-                } else {
-                    this.showErrorMessage($t("credit_card_form_loading_error"));
-                }
-            },
             seamlessFormSubmitErrorHandler: function (response) {
                 console.error(response);
                 let self = this;
+                this.hideSpinner();
                 let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
-                let isClientValidation = false;
-                let errorList = [];
-                response.errors.forEach(
-                    function ( item ) {
-                        if (validErrorCodes.includes(item.error.code)) {
-                            self.resetCounter();
-                            isClientValidation = true;
-                        } else {
-                            errorList.push(item.error.description);
+                var isClientValidation = false;
+                if (response.errors.length > 0) {
+                    response.errors.forEach(
+                        function ( item ) {
+                            if (validErrorCodes.includes(item.error.code)) {
+                                isClientValidation = true;
+                                self.enableButtonById(self.button.SUBMIT_ORDER);
+                            } else {
+                                messageList.addErrorMessage({
+                                    message: item.error.description
+                                });
+                            }
                         }
-                    }
-                );
+                    );
+                }
                 if (!isClientValidation) {
-                    this.showErrorMessage(errorList.toString());
+                    this.disableButtonById(this.button.SUBMIT_ORDER);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
                 }
             },
             seamlessFormSizeHandler: function () {
+                this.resetCounter();
                 this.hideSpinner();
                 this.enableButtonById(this.button.SUBMIT_ORDER);
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
@@ -270,6 +279,8 @@ define(
                 });
             },
             placeSeamlessOrder: function (data, event) {
+                this.showSpinner();
+                this.disableButtonById(this.button.SUBMIT_ORDER);
                 if (event) {
                     event.preventDefault();
                 }
