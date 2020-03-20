@@ -104,6 +104,7 @@ define([
             this.disableButtonById(this.button.SUBMIT_ORDER);
             let keys = Object.keys(response);
             let hasMessages = false;
+            let self = this;
             keys.forEach(
                 function ( key ) {
                     if (key.startsWith(self.settings.WPP_ERROR_PREFIX)) {
