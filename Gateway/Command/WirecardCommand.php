@@ -12,7 +12,6 @@ namespace Wirecard\ElasticEngine\Gateway\Command;
 use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\ConfigInterface;
-use Magento\Payment\Gateway\Data\PaymentDataObject;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\InvalidArgumentException;
@@ -88,6 +87,9 @@ class WirecardCommand implements CommandInterface
     public function execute(array $commandSubject)
     {
         $transaction = $this->transactionFactory->create($commandSubject);
+        if ($transaction instanceof CreditCardTransaction) {
+            return;
+        }
         $transactionService = $this->transactionServiceFactory->create($transaction::NAME);
 
         if (!isset($commandSubject[self::STATEOBJECT])
@@ -105,14 +107,7 @@ class WirecardCommand implements CommandInterface
             $operation = Operation::RESERVE;
         }
 
-        /** @var PaymentDataObject $paymentDO */
-        $paymentDO = $commandSubject['payment'];
         try {
-            if ($transaction instanceof CreditCardTransaction &&
-                !$paymentDO->getPayment()->hasAdditionalInformation('token_id')
-            ) {
-                return;
-            }
             $response = $transactionService->process($transaction, $operation);
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
