@@ -14,9 +14,10 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "mage/translate",
         "mage/url",
-        "Magento_Vault/js/view/payment/vault-enabler"
+        "Magento_Vault/js/view/payment/vault-enabler",
+        "Magento_Ui/js/model/messageList"
     ],
-    function ($, Component, $t, url, VaultEnabler) {
+    function ($, Component, $t, url, VaultEnabler, messageList) {
         "use strict";
         return Component.extend({
             seamlessResponse: null,
@@ -25,11 +26,25 @@ define(
                 redirectAfterPlaceOrder: false
             },
 
+            settings : {
+                ERROR_COUNTER_STORAGE_KEY: "errorCounter",
+                WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
+                WPP_ERROR_PREFIX: "error_",
+                MAX_ERROR_REPEAT_COUNT:3
+            },
+
+            button : {
+                SUBMIT_ORDER: "wirecard_elasticengine_creditcard_submit"
+            },
+
             /**
              * @returns {exports.initialize}
              */
             initialize: function () {
                 this._super();
+                if (!localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
+                    this.resetCounter();
+                }
                 return this;
             },
 
@@ -55,7 +70,6 @@ define(
                 let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
                 let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
                 let hideSpinner = this.hideSpinner.bind(this);
-                let messageContainer = this.messageContainer;
                 this.showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(this.getPaymentPageScript(), function () {
@@ -75,19 +89,35 @@ define(
                                 });
                             } else {
                                 hideSpinner();
-                                messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                                messageList.addErrorMessage({
+                                    message: $t("credit_card_form_loading_error")
+                                });
                             }
                         },
                         error: function (err) {
                             hideSpinner();
-                            messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                            messageList.addErrorMessage({
+                                message: $t("credit_card_form_loading_error")
+                            });
                             console.error("Error : " + JSON.stringify(err));
                         }
                     });
                 });
+                let self = this;
+                setTimeout(function(){
+                    if (typeof WPP === "undefined") {
+                        hideSpinner();
+                        self.disableButtonById(self.button.SUBMIT_ORDER);
+                        messageList.addErrorMessage({
+                            message: $t("credit_card_form_loading_error")
+                        });
+                    }
+                }, 1000);
             },
             seamlessFormSubmitSuccessHandler: function (response) {
+                this.hideSpinner();
                 this.seamlessResponse = response;
+                this.resetCounter();
                 this.placeOrder();
             },
             afterPlaceOrder: function () {
@@ -131,7 +161,9 @@ define(
                         }
                     },
                     error: function (err) {
-                        this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
+                        messageList.addErrorMessage({
+                            message: $t("credit_card_form_loading_error")
+                        });
                         console.error("Error : " + JSON.stringify(err));
                     }
                 });
@@ -147,22 +179,83 @@ define(
                     }
                 }
             },
+            /**
+             * resets error counter to 0
+             */
+            resetCounter: function () {
+                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
+            },
+            /**
+             * Increments error counter and returns it's value
+             * @returns {number}
+             */
+            incrementCounter: function () {
+                var counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
+                counter = parseInt(counter, 10) + 1;
+                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+                return counter;
+            },
             seamlessFormInitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
                 console.error(response);
+                this.disableButtonById(this.button.SUBMIT_ORDER);
+                let keys = Object.keys(response);
+                let hasMessages = false;
+                let self = this;
+                keys.forEach(
+                    function ( key ) {
+                        if (key.startsWith(self.settings.WPP_ERROR_PREFIX)) {
+                            hasMessages = true;
+                            messageList.addErrorMessage({
+                                message: response[key]
+                            });
+                        }
+                    }
+                );
+                if (!hasMessages) {
+                    messageList.addErrorMessage({
+                        message: $t("credit_card_form_loading_error")
+                    });
+                }
+                if (this.incrementCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
+                } else {
+                    this.resetCounter();
+                }
+                this.hideSpinner();
             },
             seamlessFormSubmitErrorHandler: function (response) {
-                this.hideSpinner();
-
-                this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
                 console.error(response);
-
-                setTimeout(function () {
-                    location.reload();
-                }, 3000);
+                let self = this;
+                this.hideSpinner();
+                let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
+                var isClientValidation = false;
+                if (response.errors.length > 0) {
+                    response.errors.forEach(
+                        function ( item ) {
+                            if (validErrorCodes.includes(item.error.code)) {
+                                isClientValidation = true;
+                                self.enableButtonById(self.button.SUBMIT_ORDER);
+                            } else {
+                                messageList.addErrorMessage({
+                                    message: item.error.description
+                                });
+                            }
+                        }
+                    );
+                }
+                if (!isClientValidation) {
+                    this.disableButtonById(this.button.SUBMIT_ORDER);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
+                }
             },
             seamlessFormSizeHandler: function () {
+                this.resetCounter();
                 this.hideSpinner();
+                this.enableButtonById(this.button.SUBMIT_ORDER);
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
                 let seamlessForm = document.getElementById(this.getCode() + "_seamless_form");
                 if (seamlessForm !== null) {
@@ -206,6 +299,8 @@ define(
                 });
             },
             placeSeamlessOrder: function (data, event) {
+                this.showSpinner();
+                this.disableButtonById(this.button.SUBMIT_ORDER);
                 if (event) {
                     event.preventDefault();
                 }
@@ -233,6 +328,14 @@ define(
             hideSpinner: function () {
                 $("body").trigger("processStop");
             },
+
+            disableButtonById: function (id) {
+                document.getElementById(id).disabled = true;
+            },
+
+            enableButtonById: function (id) {
+                document.getElementById(id).disabled = false;
+            }
 
         });
     }

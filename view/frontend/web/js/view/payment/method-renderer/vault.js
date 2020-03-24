@@ -11,8 +11,9 @@ define([
     "jquery",
     "Magento_Vault/js/view/payment/method-renderer/vault",
     "mage/translate",
-    "mage/url"
-], function ($, VaultComponent, $translate, url) {
+    "mage/url",
+    "Magento_Ui/js/model/messageList"
+], function ($, VaultComponent, $translate, url, messageList) {
     "use strict";
 
     return VaultComponent.extend({
@@ -25,8 +26,15 @@ define([
             formIdSuffix: "_seamless_token_form",
             STATE_SUCCESS_INIT_PAYMENT_AJAX: "OK",
             WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
-            FORM_LOADING_ERROR: "credit_card_form_loading_error"
+            WPP_ERROR_PREFIX: "error_",
+            FORM_LOADING_ERROR: "credit_card_form_loading_error",
+            ERROR_COUNTER_STORAGE_KEY: "errorCounter",
+            MAX_ERROR_REPEAT_COUNT:3
          },
+
+        button : {
+            SUBMIT_ORDER: "wirecard_elasticengine_cc_vault_submit"
+        },
 
         showSpinner: function () {
             $("body").trigger("processStart");
@@ -92,24 +100,36 @@ define([
 
             return true;
         },
-
-        addErrorMessageAndRedirect: function(errors) {
-            if (errors.length > 0) {
-                this.messageContainer.addErrorMessage({message: errors});
+        seamlessFormInitErrorHandler: function (response) {
+            console.error(response);
+            this.disableButtonById(this.button.SUBMIT_ORDER);
+            let keys = Object.keys(response);
+            let hasMessages = false;
+            let self = this;
+            keys.forEach(
+                function ( key ) {
+                    if (key.startsWith(self.settings.WPP_ERROR_PREFIX)) {
+                        hasMessages = true;
+                        messageList.addErrorMessage({
+                            message: response[key]
+                        });
+                    }
+                }
+            );
+            if (!hasMessages) {
+                messageList.addErrorMessage({
+                    message: $translate("credit_card_form_loading_error")
+                });
             }
             setTimeout(function () {
                 location.reload();
             }, 3000);
-        },
-
-        seamlessFormInitErrorHandler: function (response) {
             this.hideSpinner();
-            this.addErrorMessageAndRedirect([$translate(this.settings.FORM_LOADING_ERROR)]);
         },
-
         seamlessFormSubmitErrorHandler: function (response) {
+            console.error(response);
+            this.hideSpinner();
             let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
-
             let isClientValidation = false;
             let errorList = [];
             response.errors.forEach(
@@ -122,7 +142,7 @@ define([
                 }
             );
             if (!isClientValidation) {
-                this.addErrorMessageAndRedirect(errorList);
+                this.showErrorMessage(errorList.toString());
             }
         },
 
@@ -202,6 +222,7 @@ define([
         },
         seamlessFormSizeHandler: function () {
             this.hideSpinner();
+            this.enableButtonById(this.button.SUBMIT_ORDER);
             let seamlessForm = document.getElementById(this.getFormId());
             window.addEventListener("resize", this.resizeIframe.bind(seamlessForm));
             if (seamlessForm !== null && typeof seamlessForm !== "undefined") {
@@ -221,6 +242,7 @@ define([
             }
         },
         placeTokenSeamlessOrder: function (data, event) {
+            this.showSpinner();
             if (event) {
                 event.preventDefault();
             }
@@ -278,5 +300,13 @@ define([
                 }
             };
         },
+
+        disableButtonById: function (id) {
+            document.getElementById(id).disabled = true;
+        },
+
+        enableButtonById: function (id) {
+            document.getElementById(id).disabled = false;
+        }
     });
 });
