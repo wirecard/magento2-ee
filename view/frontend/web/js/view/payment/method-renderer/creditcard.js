@@ -103,6 +103,16 @@ define(
                         }
                     });
                 });
+                let self = this;
+                setTimeout(function(){
+                    if (typeof WPP === "undefined") {
+                        hideSpinner();
+                        self.disableButtonById(self.button.SUBMIT_ORDER);
+                        messageList.addErrorMessage({
+                            message: $t("credit_card_form_loading_error")
+                        });
+                    }
+                }, 1000);
             },
             seamlessFormSubmitSuccessHandler: function (response) {
                 this.hideSpinner();
