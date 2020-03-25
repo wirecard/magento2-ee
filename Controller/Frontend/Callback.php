@@ -127,16 +127,7 @@ class Callback extends Action
             $this->session->unsRedirectUrl();
             return $data;
         }
-        if ($this->session->hasFormUrl()) {
-            $data['form-url'] = $this->session->getFormUrl();
-            $data['form-method'] = $this->session->getFormMethod();
-            $data['form-fields'] = $this->session->getFormFields();
 
-            $this->session->unsFormUrl();
-            $this->session->unsFormMethod();
-            $this->session->unsFormFields();
-            return $data;
-        }
         $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
         return $data;
     }
