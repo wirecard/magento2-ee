@@ -15,34 +15,20 @@ define(
         "mage/translate",
         "mage/url",
         "Magento_Vault/js/view/payment/vault-enabler",
-        "Magento_Ui/js/model/messageList"
+        "Magento_Ui/js/model/messageList",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants"
     ],
-    function ($, Component, $t, url, VaultEnabler, messageList) {
+    function ($, Component, $t, url, VaultEnabler, messageList, constants) {
         "use strict";
         return Component.extend({
             seamlessResponse: null,
-            defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-creditcard",
-                redirectAfterPlaceOrder: false
-            },
-
-            settings : {
-                ERROR_COUNTER_STORAGE_KEY: "errorCounter",
-                WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
-                WPP_ERROR_PREFIX: "error_",
-                MAX_ERROR_REPEAT_COUNT:3
-            },
-
-            button : {
-                SUBMIT_ORDER: "wirecard_elasticengine_creditcard_submit"
-            },
 
             /**
              * @returns {exports.initialize}
              */
             initialize: function () {
                 this._super();
-                if (!localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
+                if (!localStorage.getItem(constants.settings.ERROR_COUNTER_STORAGE_KEY)) {
                     this.resetCounter();
                 }
                 return this;
@@ -107,7 +93,7 @@ define(
                 setTimeout(function(){
                     if (typeof WPP === "undefined") {
                         hideSpinner();
-                        self.disableButtonById(self.button.SUBMIT_ORDER);
+                        self.disableButtonById(constants.button.SUBMIT_ORDER);
                         messageList.addErrorMessage({
                             message: $t("credit_card_form_loading_error")
                         });
@@ -183,27 +169,27 @@ define(
              * resets error counter to 0
              */
             resetCounter: function () {
-                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, "0");
+                localStorage.setItem(constants.settings.ERROR_COUNTER_STORAGE_KEY, "0");
             },
             /**
              * Increments error counter and returns it's value
              * @returns {number}
              */
             incrementCounter: function () {
-                var counter = parseInt(localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY), 10);
+                var counter = parseInt(localStorage.getItem(constants.settings.ERROR_COUNTER_STORAGE_KEY), 10);
                 counter = parseInt(counter, 10) + 1;
-                localStorage.setItem(this.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+                localStorage.setItem(constants.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
                 return counter;
             },
             seamlessFormInitErrorHandler: function (response) {
                 console.error(response);
-                this.disableButtonById(this.button.SUBMIT_ORDER);
+                this.disableButtonById(constants.button.SUBMIT_ORDER);
                 let keys = Object.keys(response);
                 let hasMessages = false;
                 let self = this;
                 keys.forEach(
                     function ( key ) {
-                        if (key.startsWith(self.settings.WPP_ERROR_PREFIX)) {
+                        if (key.startsWith(constants.settings.WPP_ERROR_PREFIX)) {
                             hasMessages = true;
                             messageList.addErrorMessage({
                                 message: response[key]
@@ -216,7 +202,7 @@ define(
                         message: $t("credit_card_form_loading_error")
                     });
                 }
-                if (this.incrementCounter() <= this.settings.MAX_ERROR_REPEAT_COUNT) {
+                if (this.incrementCounter() <= constants.settings.MAX_ERROR_REPEAT_COUNT) {
                     setTimeout(function () {
                         location.reload();
                     }, 3000);
@@ -229,15 +215,16 @@ define(
                 console.error(response);
                 let self = this;
                 this.hideSpinner();
-                let validErrorCodes = this.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
+                let validErrorCodes = constants.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
                 var isClientValidation = false;
                 if (response.errors.length > 0) {
                     response.errors.forEach(
                         function ( item ) {
                             if (validErrorCodes.includes(item.error.code)) {
                                 isClientValidation = true;
-                                self.enableButtonById(self.button.SUBMIT_ORDER);
+                                self.enableButtonById(constants.button.SUBMIT_ORDER);
                             } else {
+                                self.showErrorMessage()
                                 messageList.addErrorMessage({
                                     message: item.error.description
                                 });
@@ -246,7 +233,7 @@ define(
                     );
                 }
                 if (!isClientValidation) {
-                    this.disableButtonById(this.button.SUBMIT_ORDER);
+                    this.disableButtonById(constants.button.SUBMIT_ORDER);
                     setTimeout(function () {
                         location.reload();
                     }, 3000);
@@ -255,7 +242,7 @@ define(
             seamlessFormSizeHandler: function () {
                 this.resetCounter();
                 this.hideSpinner();
-                this.enableButtonById(this.button.SUBMIT_ORDER);
+                this.enableButtonById(constants.button.SUBMIT_ORDER);
                 window.addEventListener("resize", this.resizeIFrame.bind(this));
                 let seamlessForm = document.getElementById(this.getCode() + "_seamless_form");
                 if (seamlessForm !== null) {
@@ -275,6 +262,8 @@ define(
                 }
             },
             getData: function () {
+                console.log(this.vaultEnabler);
+
                 return {
                     "method": this.getCode(),
                     "po_number": null,
@@ -300,7 +289,7 @@ define(
             },
             placeSeamlessOrder: function (data, event) {
                 this.showSpinner();
-                this.disableButtonById(this.button.SUBMIT_ORDER);
+                this.disableButtonById(constants.button.SUBMIT_ORDER);
                 if (event) {
                     event.preventDefault();
                 }
