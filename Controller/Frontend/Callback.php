@@ -16,7 +16,6 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -92,57 +91,24 @@ class Callback extends Action
      */
     public function execute()
     {
-        $resultData = $this->createResultDataFromResponse();
+        /** Non redirect payment methods */
+        $result = $this->createRedirectResult($this->baseUrl . 'frontend/redirect');
 
-        /** @var Json $result */
-        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $result->setData([
-            'status' => 'OK',
-            'data' => $resultData,
-        ]);
-
-        return $result;
-    }
-
-    /**
-     * @return array|mixed
-     * @throws LocalizedException
-     * @throws \Http\Client\Exception
-     * @since 3.0.0
-     */
-    private function createResultDataFromResponse()
-    {
-        $data = $this->initResultData();
-
+        /** Credit Card three d payments */
         if ($this->isCreditCardThreeD()) {
-            $response = $this->getRequest()->getPost()->toArray();
-            $data = $this->handleThreeDTransactions($response);
-            return $data;
+            $result = $this->handleThreeDTransactions(
+                $this->getRequest()->getPost()->toArray()
+            );
+            return $result;
         }
+
         /** Redirect payment methods */
         if ($this->session->hasRedirectUrl()) {
-            $data[self::REDIRECT_URL] = $this->session->getRedirectUrl();
+            $result = $this->createRedirectResult($this->session->getRedirectUrl());
             $this->session->unsRedirectUrl();
-            return $data;
         }
 
-        /** Payment methods without redirects */
-        $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
-        return $data;
-    }
-
-    /**
-     * @return array
-     * @since 3.0.0
-     */
-    private function initResultData()
-    {
-        return [
-            self::REDIRECT_URL => null,
-            'form-url' => null,
-            'form-method' => null,
-            'form-fields' => null
-        ];
+        return $result;
     }
 
     /**
@@ -169,6 +135,7 @@ class Callback extends Action
         $order = $this->session->getLastRealOrder();
         $this->paymentHelper->addTransaction($order->getPayment(), $response, true);
 
+        // create html response
         if ($response instanceof FormInteractionResponse) {
             $data['form-url'] = html_entity_decode($response->getUrl());
             $data['form-method'] = $response->getMethod();
@@ -188,6 +155,26 @@ class Callback extends Action
         if ($this->getRequest()->getParam('jsresponse')) {
             return true;
         }
+
         return false;
+    }
+
+    /**
+     * @param string $redirectUrl
+     * @return Json
+     */
+    private function createRedirectResult($redirectUrl)
+    {
+        $data[self::REDIRECT_URL] = $redirectUrl;
+
+        /** @var Json $result */
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result->setHttpResponseCode('200');
+        $result->setData([
+            'status' => 'OK',
+            'data' => $data
+        ]);
+
+        return $result;
     }
 }
