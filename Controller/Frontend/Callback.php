@@ -24,6 +24,7 @@ use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
@@ -56,11 +57,6 @@ class Callback extends Action
     private $transactionServiceFactory;
 
     /**
-     * @var UrlInterface
-     */
-    private $urlBuilder;
-
-    /**
      * @var Helper\Payment
      */
     private $paymentHelper;
@@ -86,13 +82,13 @@ class Callback extends Action
         $this->baseUrl = $context->getUrl()->getRouteUrl('wirecard_elasticengine');
         $this->logger = $logger;
         $this->transactionServiceFactory = $transactionServiceFactory;
-        $this->urlBuilder = $context->getUrl();
         $this->paymentHelper = $paymentHelper;
     }
 
     /**
      * @return \Magento\Framework\Controller\ResultInterface
      * @throws LocalizedException
+     * @throws \Http\Client\Exception
      */
     public function execute()
     {
@@ -111,23 +107,26 @@ class Callback extends Action
     /**
      * @return array|mixed
      * @throws LocalizedException
+     * @throws \Http\Client\Exception
      * @since 3.0.0
      */
     private function createResultDataFromResponse()
     {
         $data = $this->initResultData();
-        if ($this->getRequest()->getParam('jsresponse')) {
-            $response = null;
+
+        if ($this->isCreditCardThreeD()) {
             $response = $this->getRequest()->getPost()->toArray();
             $data = $this->handleThreeDTransactions($response);
             return $data;
         }
+        /** Redirect payment methods */
         if ($this->session->hasRedirectUrl()) {
             $data[self::REDIRECT_URL] = $this->session->getRedirectUrl();
             $this->session->unsRedirectUrl();
             return $data;
         }
 
+        /** Payment methods without redirects */
         $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
         return $data;
     }
@@ -153,33 +152,24 @@ class Callback extends Action
      *
      * @return mixed
      * @throws LocalizedException
+     * @throws \Http\Client\Exception
      */
     private function handleThreeDTransactions($response)
     {
-        $methodName = 'creditcard';
-
         try {
             /** @var TransactionService $transactionService */
-            $transactionService = $this->transactionServiceFactory->create($methodName);
+            $transactionService = $this->transactionServiceFactory->create(CreditCardTransaction::NAME);
+            /** @var Response $response */
+            $response = $transactionService->handleResponse($response['jsresponse']);
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage());
         }
-
-        // Create credit card redirection url
-        $wdBaseUrl    = $this->urlBuilder->getRouteUrl('wirecard_elasticengine');
-        $methodAppend = '?method=' . urlencode($methodName);
-        $url = $wdBaseUrl . 'frontend/redirect' . $methodAppend;
-
-        /** @var Response $response */
-        $response = $transactionService->processJsResponse($response['jsresponse'], $url);
-        $data[self::REDIRECT_URL] = $this->baseUrl . 'frontend/redirect';
 
         /** @var SuccessResponse|InteractionResponse|FormInteractionResponse $response */
         $order = $this->session->getLastRealOrder();
         $this->paymentHelper->addTransaction($order->getPayment(), $response, true);
 
         if ($response instanceof FormInteractionResponse) {
-            unset($data[self::REDIRECT_URL]);
             $data['form-url'] = html_entity_decode($response->getUrl());
             $data['form-method'] = $response->getMethod();
             foreach ($response->getFormFields() as $key => $value) {
@@ -188,5 +178,16 @@ class Callback extends Action
         }
 
         return $data;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isCreditCardThreeD()
+    {
+        if ($this->getRequest()->getParam('jsresponse')) {
+            return true;
+        }
+        return false;
     }
 }
