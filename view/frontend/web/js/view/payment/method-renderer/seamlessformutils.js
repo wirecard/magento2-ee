@@ -79,13 +79,13 @@ define(
             );
             if (!hasMessages) {
                 messageList.addErrorMessage({
-                    message: $t("credit_card_form_loading_error")
+                    message: $t(variables.error.creditCardFormLoading)
                 });
             }
             if (incrementErrorsCounter() <= variables.settings.maxErrorRepeatCount) {
                 setTimeout(function () {
                     location.reload();
-                }, 3000);
+                }, variables.settings.reloadTimeout);
             } else {
                 setErrorsCounter(variables.localStorage.initValue);
             }
@@ -114,7 +114,7 @@ define(
                 disableButtonById(variables.button.submitOrder);
                 setTimeout(function () {
                     location.reload();
-                }, 3000);
+                }, variables.settings.reloadTimeout);
             }
         };
 
@@ -127,7 +127,7 @@ define(
             for (let key in data) {
                 if (key !== variables.key.formUrl && key !== variables.key.formMethod) {
                     form.append($("<input />", {
-                        type: "hidden",
+                        type: variables.input.type.hidden,
                         name: key,
                         value: data[key]
                     }));
@@ -149,7 +149,7 @@ define(
                         }
                     }).done(function (data) {
                         // Redirect non-3D credit card payment response
-                        window.location.replace(data["redirect-url"]);
+                        window.location.replace(data[variables.key.redirectUrl]);
                     });
                 }
             },
@@ -240,14 +240,14 @@ define(
                             } else {
                                 hideSpinner();
                                 messageList.addErrorMessage({
-                                    message: $t("credit_card_form_loading_error")
+                                    message: $t(variables.error.creditCardFormLoading)
                                 });
                             }
                         },
                         error: function (err) {
                             hideSpinner();
                             messageList.addErrorMessage({
-                                message: $t("credit_card_form_loading_error")
+                                message: $t(variables.error.creditCardFormLoading)
                             });
                             console.error("Error : " + JSON.stringify(err));
                         }
@@ -258,14 +258,12 @@ define(
                         hideSpinner();
                         disableButtonById(variables.button.submitOrder);
                         messageList.addErrorMessage({
-                            message: $t("credit_card_form_loading_error")
+                            message: $t(variables.error.creditCardFormLoading)
                         });
                     }
                 }, 1000);
             }
-
-        }
+        };
         return exports;
     }
 );
-

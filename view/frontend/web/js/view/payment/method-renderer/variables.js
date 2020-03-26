@@ -28,7 +28,8 @@ define(
             settings: {
                 formIdSuffix: "_seamless_form",
                 formIdTokenSuffix: "_seamless_token_form",
-                maxErrorRepeatCount:3, // MAX_ERROR_REPEAT_COUNT
+                maxErrorRepeatCount:3,
+                reloadTimeout: 3000
             },
             wpp: {
                 errorPrefix: "error_", // WPP_ERROR_PREFIX
@@ -66,7 +67,8 @@ define(
             },
             method: {
                 get: "GET",
-                post: "POST"
+                post: "POST",
+                hidden: "hidden"
             },
             status: {
                 ok: "OK"
@@ -76,6 +78,11 @@ define(
             },
             tag: {
                 body: "body"
+            },
+            input: {
+                type: {
+                    hidden: "hidden"
+                }
             }
         };
     }

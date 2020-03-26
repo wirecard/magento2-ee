@@ -108,6 +108,7 @@ define([
         /**
          * Prepare order to be placed
          * @param data,event
+         * @param event
          */
         placeTokenSeamlessOrder: function (data, event) {
             return Utils.placeSeamlessOrder.call(this, event, this.getFormId);
@@ -121,6 +122,7 @@ define([
         /**
          * Handle 3Ds credit card transactions within callback
          * @param response
+         * @param err
          */
         redirectCreditCard: function (response,err) {
             Utils.redirectCreditCard.call(this,response, err);
