@@ -115,10 +115,22 @@ define(
                 }, 3000);
             }
         };
+
         function seamlessFormSubmitSuccessHandler(response) {
             this.seamlessResponse = response;
             resetErrorsCounter();
             this.placeOrder();
+        };
+        function appendFormData(data, form) {
+            for (let key in data) {
+                if (key !== "form-url" && key !== "form-method") {
+                    form.append($("<input />", {
+                        type: "hidden",
+                        name: key,
+                        value: data[key]
+                    }));
+                }
+            }
         };
         var exports = {
             afterPlaceOrder: function() {
@@ -143,7 +155,7 @@ define(
             redirectCreditCard: function(response) {
                 let result = {};
                 result.data = {};
-                let appendFormData = this.appendFormData.bind(this);
+                let appendFormData = appendFormData.bind(this);
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/callback"),
                     dataType: "json",
@@ -165,17 +177,6 @@ define(
                         });
                     }
                 });
-            },
-            appendFormData: function (data, form) {
-                for (let key in data) {
-                    if (key !== "form-url" && key !== "form-method") {
-                        form.append($("<input />", {
-                            type: "hidden",
-                            name: key,
-                            value: data[key]
-                        }));
-                    }
-                }
             },
             //todo: previus block will be substituted with smth like this
             /* redirectCreditCard: function(response) {
@@ -212,8 +213,8 @@ define(
             },
 
             seamlessFormInit: function() {
-                let uiInitData = {"txtype": this.getCode()};
-                let wrappingDivId = this.getCode() + "_seamless_form";
+                let uiInitData = this.getUiInitData();
+                let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
                 let formInitHandler = seamlessFormInitErrorHandler.bind(this);
                 showSpinner();
