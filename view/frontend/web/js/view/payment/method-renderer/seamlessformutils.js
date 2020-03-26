@@ -15,7 +15,6 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
     ],
 
-    //6211
     function ($, url, $t, messageList, variables) {
 
         function seamlessFormSizeHandler () {
@@ -35,6 +34,7 @@ define(
         function hideSpinner () {
             $("body").trigger("processStop");
         };
+
         function disableButtonById(id) {
             document.getElementById(id).disabled = true;
         };
@@ -66,14 +66,14 @@ define(
         function seamlessFormInitErrorHandler(response) {
             console.error(response);
             disableButtonById(variables.button.SUBMIT_ORDER);
-            let keys = Object.keys(response);
+            let responseKeys = Object.keys(response);
             let hasMessages = false;
-            keys.forEach(
-                function ( key ) {
-                    if (key.startsWith(variables.settings.WPP_ERROR_PREFIX)) {
+            responseKeys.forEach(
+                function ( responseKey ) {
+                    if (responseKey.startsWith(variables.settings.WPP_ERROR_PREFIX)) {
                         hasMessages = true;
                         messageList.addErrorMessage({
-                            message: response[key]
+                            message: response[responseKey]
                         });
                     }
                 }
@@ -120,7 +120,7 @@ define(
         };
 
         function seamlessFormSubmitSuccessHandler(response) {
-            this.seamlessResponse = response;
+            variables.seamlessResponse = response;
             setErrorsCounter("0");
             this.placeOrder();
         };
@@ -137,15 +137,15 @@ define(
         };
         var exports = {
             afterPlaceOrder: function() {
-                if (this.seamlessResponse.hasOwnProperty("acs_url")) {
-                    this.redirectCreditCard(this.seamlessResponse);
+                if (variables.seamlessResponse.hasOwnProperty("acs_url")) {
+                    this.redirectCreditCard(variables.seamlessResponse);
                 } else {
                     // Handle redirect for Non-3D transactions
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/redirect"),
                         type: "post",
                         data: {
-                            "data": this.seamlessResponse,
+                            "data": variables.seamlessResponse,
                             "method": "creditcard"
                         }
                     }).done(function (data) {
@@ -218,7 +218,7 @@ define(
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
-                let formInitHandler = seamlessFormInitErrorHandler.bind(this);
+                let formInitHandler = seamlessFormInitErrorHandler;
                 showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(this.getPaymentPageScript(), function () {

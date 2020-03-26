@@ -12,14 +12,12 @@ define(
     [
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "Magento_Vault/js/view/payment/vault-enabler",
-        "Magento_Ui/js/model/messageList",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
     ],
-    function (Component, VaultEnabler, messageList, Utils, variables) {
+    function (Component, VaultEnabler, Utils, variables) {
         "use strict";
         return Component.extend({
-            seamlessResponse: null,
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
@@ -30,7 +28,7 @@ define(
             initialize: function () {
                 this._super();
                 if (!localStorage.getItem(variables.settings.ERROR_COUNTER_STORAGE_KEY)) {
-                    this.resetErrorsCounter();
+                    localStorage.setItem(variables.settings.ERROR_COUNTER_STORAGE_KEY, "0");
                 }
                 return this;
             },
