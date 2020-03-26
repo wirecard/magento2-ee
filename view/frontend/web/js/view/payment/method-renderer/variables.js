@@ -9,34 +9,81 @@
 define(
     [],
     function () {
-        var exports = {
-            screenSize: {
+        return {
+            seamlessResponse: null,
+
+            screenWidth: {
                 medium: 768,
                 small: 460
             },
-            iFrameHeightSize: {
+            iFrameHeight: {
                 large: "415px",
                 medium: "341px",
                 small: "267px"
             },
-            seamlessResponse: null,
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
-
-            settings : {
+            settings: {
                 formIdSuffix: "_seamless_form",
-                ERROR_COUNTER_STORAGE_KEY: "errorCounter",
-                WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
-                WPP_ERROR_PREFIX: "error_",
-                MAX_ERROR_REPEAT_COUNT:3
+                maxErrorRepeatCount:3, // MAX_ERROR_REPEAT_COUNT
             },
-
-            button : {
-                SUBMIT_ORDER: "wirecard_elasticengine_creditcard_submit"
+            wpp: {
+                errorPrefix: "error_", // WPP_ERROR_PREFIX
+                clientValidationErrorCodes: ["FE0001"] // WPP_CLIENT_VALIDATION_ERROR_CODES
             },
-        }
-        return exports;
+            localStorage: {
+                initValue: "0",
+                counterKey: "errorCounter" // ERROR_COUNTER_STORAGE_KEY
+            },
+            button: {
+                submitOrder: "wirecard_elasticengine_creditcard_submit" // SUBMIT_ORDER
+            },
+            error: {
+                creditCardFormLoading: "§" //todo - translate here?
+            },
+            url: {
+                callback: "wirecard_elasticengine/frontend/callback",
+                creditCard: "wirecard_elasticengine/frontend/creditcard",
+                redirect: "wirecard_elasticengine/frontend/redirect",
+                vault: "wirecard_elasticengine/frontend/vault?hash="
+            },
+            spinner: {
+                start: "processStart",
+                stop: "processStop"
+            },
+            key: {
+                formUrl: "form-url",
+                formMethod: "form-method",
+                acsUrl: "acs_url",
+                redirectUrl: "redirect-url"
+            },
+            dataType: {
+                json: "json",
+                undefined: "undefined"
+            },
+            method: {
+                get: "GET",
+                post: "POST"
+            },
+            status: {
+                ok: "OK"
+            },
+            data: {
+                key: {
+                    data: "data",
+                    method: "method",
+                    jsResponse: "jsresponse",
+                    txType: "txtype"
+                },
+                value: {
+                    creditCard: "creditcard"
+                }
+            },
+            tag: {
+                body: "body"
+            }
+        };
     }
 );
