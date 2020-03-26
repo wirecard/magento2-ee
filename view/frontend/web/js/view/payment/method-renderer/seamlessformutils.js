@@ -15,7 +15,6 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
     ],
 
-    //6211
     function ($, url, $t, messageList, variables) {
 
         function seamlessFormSizeHandler () {
@@ -66,14 +65,14 @@ define(
         function seamlessFormInitErrorHandler(response) {
             console.error(response);
             disableButtonById(variables.button.submitOrder);
-            let keys = Object.keys(response);
+            let responseKeys = Object.keys(response);
             let hasMessages = false;
-            keys.forEach(
-                function ( key ) {
+            responseKeys.forEach(
+                function ( responseKey ) {
                     if (key.startsWith(variables.wpp.errorPrefix)) {
                         hasMessages = true;
                         messageList.addErrorMessage({
-                            message: response[key]
+                            message: response[responseKey]
                         });
                     }
                 }
@@ -120,7 +119,7 @@ define(
         };
 
         function seamlessFormSubmitSuccessHandler(response) {
-            this.seamlessResponse = response;
+            variables.seamlessResponse = response;
             setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
         };
@@ -138,14 +137,14 @@ define(
         var exports = {
             afterPlaceOrder: function() {
                 if (this.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
-                    this.redirectCreditCard(this.seamlessResponse);
+                    this.redirectCreditCard(variables.seamlessResponse);
                 } else {
                     // Handle redirect for Non-3D transactions
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/redirect"),
                         type: variables.method.post,
                         data: {
-                            "data": this.seamlessResponse,
+                            "data": variables.seamlessResponse,
                             "method": variables.data.value.creditCard
                         }
                     }).done(function (data) {
@@ -220,7 +219,7 @@ define(
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
-                let formInitHandler = seamlessFormInitErrorHandler.bind(this);
+                let formInitHandler = seamlessFormInitErrorHandler;
                 showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(this.getPaymentPageScript(), function () {

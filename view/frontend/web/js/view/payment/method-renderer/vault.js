@@ -11,11 +11,10 @@ define([
     "jquery",
     "Magento_Vault/js/view/payment/method-renderer/vault",
     "mage/url",
-    "Magento_Ui/js/model/messageList",
     "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
     "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
 ],
-    function ($, VaultComponent, url, messageList, Utils, variables) {
+    function ($, VaultComponent, url, Utils, variables) {
     "use strict";
 
     return VaultComponent.extend({
