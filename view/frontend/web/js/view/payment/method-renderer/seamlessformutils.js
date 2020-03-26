@@ -19,9 +19,9 @@ define(
     function ($, url, $t, messageList, variables) {
 
         function seamlessFormSizeHandler () {
-            setErrorsCounter("0");
+            setErrorsCounter( variables.localStorage.initValue);
             hideSpinner();
-            enableButtonById(variables.button.SUBMIT_ORDER);
+            enableButtonById(variables.button.submitOrder);
             //todo:getFormId has this in it
             let seamlessForm = document.getElementById(this.getFormId());
             window.addEventListener("resize", resizeIFrame);
@@ -30,10 +30,10 @@ define(
             }
         }
         function showSpinner () {
-            $("body").trigger("processStart");
+            $(variables.tag.body).trigger(variables.spinner.start);
         };
         function hideSpinner () {
-            $("body").trigger("processStop");
+            $(variables.tag.body).trigger(variables.spinner.stop);
         };
         function disableButtonById(id) {
             document.getElementById(id).disabled = true;
@@ -88,7 +88,7 @@ define(
                     location.reload();
                 }, 3000);
             } else {
-                setErrorsCounter("0");
+                setErrorsCounter(variables.localStorage.initValue);
             }
             hideSpinner();
         };
@@ -121,12 +121,12 @@ define(
 
         function seamlessFormSubmitSuccessHandler(response) {
             this.seamlessResponse = response;
-            setErrorsCounter("0");
+            setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
         };
         function appendFormData(data, form) {
             for (let key in data) {
-                if (key !== "form-url" && key !== "form-method") {
+                if (key !== variables.key.formUrl && key !== variables.key.formMethod) {
                     form.append($("<input />", {
                         type: "hidden",
                         name: key,
@@ -137,16 +137,16 @@ define(
         };
         var exports = {
             afterPlaceOrder: function() {
-                if (this.seamlessResponse.hasOwnProperty("acs_url")) {
+                if (this.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
                     this.redirectCreditCard(this.seamlessResponse);
                 } else {
                     // Handle redirect for Non-3D transactions
                     $.ajax({
                         url: url.build("wirecard_elasticengine/frontend/redirect"),
-                        type: "post",
+                        type: variables.method.post,
                         data: {
                             "data": this.seamlessResponse,
-                            "method": "creditcard"
+                            "method": variables.data.value.creditCard
                         }
                     }).done(function (data) {
                         // Redirect non-3D credit card payment response
@@ -159,18 +159,20 @@ define(
                 let result = {};
                 result.data = {};
                 $.ajax({
-                    url: url.build("wirecard_elasticengine/frontend/callback"),
-                    dataType: "json",
-                    type: "post",
-                    data: {"jsresponse": response},
+                    url: url.build(variables.url.callback),
+                    dataType: variables.dataType.json,
+                    type: variables.method.post,
+                    data: {
+                        "jsresponse": response
+                    },
                     success: function (result) {
-                        if (result.data["form-url"]) {
+                        if (result.data[variables.key.formUrl]) {
                             let form = $("<form />", {
-                                action: result.data["form-url"],
-                                method: result.data["form-method"]
+                                action: result.data[variables.key.formUrl],
+                                method: result.data[variables.key.formMethod]
                             });
                             appendFormData(result.data, form);
-                            form.appendTo("body").submit();
+                            form.appendTo(variables.tag.body).submit();
                         }
                     },
                     error: function (err) {
@@ -224,11 +226,11 @@ define(
                 $.getScript(this.getPaymentPageScript(), function () {
                     // Build seamless renderform with full transaction data
                     $.ajax({
-                        url: url.build("wirecard_elasticengine/frontend/creditcard"),
-                        type: "post",
+                        url: url.build(variables.url.creditCard),
+                        type: variables.method.post,
                         data: uiInitData,
                         success: function (result) {
-                            if ("OK" === result.status) {
+                            if (variables.status.ok === result.status) {
                                 let uiInitData = JSON.parse(result.uiData);
                                 WPP.seamlessRender({
                                     requestData: uiInitData,
@@ -253,7 +255,7 @@ define(
                     });
                 });
                 setTimeout(function(){
-                    if (typeof WPP === "undefined") {
+                    if (typeof WPP === variables.dataType.undefined) {
                         hideSpinner();
                         disableButtonById(variables.button.submitOrder);
                         messageList.addErrorMessage({
