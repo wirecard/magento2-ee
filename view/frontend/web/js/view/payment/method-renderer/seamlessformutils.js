@@ -10,12 +10,16 @@ define(
     [
         'jquery',
         "mage/url",
+        "mage/translate",
         "Magento_Ui/js/model/messageList",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
     ],
-    function ($, url, messageList, variables) {
+
+    //6211
+    function ($, url, $t, messageList, variables) {
+
         function seamlessFormSizeHandler () {
-            resetErrorsCounter();
+            setErrorsCounter("0");
             hideSpinner();
             enableButtonById(variables.button.SUBMIT_ORDER);
             //todo:getFormId has this in it
@@ -25,11 +29,6 @@ define(
                 resizeIFrame(seamlessForm);
             }
         }
-
-        function resetErrorsCounter() {
-            localStorage.setItem(variables.settings.ERROR_COUNTER_STORAGE_KEY, "0");
-        }
-
         function showSpinner () {
             $("body").trigger("processStart");
         };
@@ -54,10 +53,14 @@ define(
                 }
             }
         };
+
+        function setErrorsCounter(value) {
+            localStorage.setItem(variables.settings.ERROR_COUNTER_STORAGE_KEY, value);
+        };
         function incrementErrorsCounter() {
             var counter = parseInt(localStorage.getItem(variables.settings.ERROR_COUNTER_STORAGE_KEY), 10);
             counter = counter + 1;
-            localStorage.setItem(variables.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+            setErrorsCounter(counter.toString());
             return counter;
         };
         function seamlessFormInitErrorHandler(response) {
@@ -85,7 +88,7 @@ define(
                     location.reload();
                 }, 3000);
             } else {
-                resetErrorsCounter();
+                setErrorsCounter("0");
             }
             hideSpinner();
         };
@@ -118,7 +121,7 @@ define(
 
         function seamlessFormSubmitSuccessHandler(response) {
             this.seamlessResponse = response;
-            resetErrorsCounter();
+            setErrorsCounter("0");
             this.placeOrder();
         };
         function appendFormData(data, form) {
@@ -250,11 +253,10 @@ define(
                         }
                     });
                 });
-                let self = this;
                 setTimeout(function(){
                     if (typeof WPP === "undefined") {
                         hideSpinner();
-                        self.disableButtonById(self.button.SUBMIT_ORDER);
+                        disableButtonById(variables.button.SUBMIT_ORDER);
                         messageList.addErrorMessage({
                             message: $t("credit_card_form_loading_error")
                         });

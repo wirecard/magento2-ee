@@ -20,12 +20,9 @@ define(
                 small: "267px"
             },
             seamlessResponse: null,
-            defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-creditcard",
-                redirectAfterPlaceOrder: false
-            },
-
+            
             settings : {
+                formIdTokenSuffix: "_seamless_token_form",
                 formIdSuffix: "_seamless_form",
                 ERROR_COUNTER_STORAGE_KEY: "errorCounter",
                 WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
