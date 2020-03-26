@@ -136,7 +136,7 @@ define(
         };
         var exports = {
             afterPlaceOrder: function() {
-                if (this.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
+                if (variables.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
                     this.redirectCreditCard(variables.seamlessResponse);
                 } else {
                     // Handle redirect for Non-3D transactions

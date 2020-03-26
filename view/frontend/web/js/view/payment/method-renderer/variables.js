@@ -27,6 +27,7 @@ define(
             },
             settings: {
                 formIdSuffix: "_seamless_form",
+                formIdTokenSuffix: "_seamless_token_form",
                 maxErrorRepeatCount:3, // MAX_ERROR_REPEAT_COUNT
             },
             wpp: {
