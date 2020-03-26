@@ -27,8 +27,8 @@ define(
              */
             initialize: function () {
                 this._super();
-                if (!localStorage.getItem(variables.settings.ERROR_COUNTER_STORAGE_KEY)) {
-                    localStorage.setItem(variables.settings.ERROR_COUNTER_STORAGE_KEY, "0");
+                if (!localStorage.getItem(variables.localStorage.counterKey)) {
+                    localStorage.setItem(variables.localStorage.counterKey, variables.localStorage.initValue);
                 }
                 return this;
             },

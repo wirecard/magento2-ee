@@ -72,15 +72,7 @@ define(
                 ok: "OK"
             },
             data: {
-                key: {
-                    data: "data",
-                    method: "method",
-                    jsResponse: "jsresponse",
-                    txType: "txtype"
-                },
-                value: {
-                    creditCard: "creditcard"
-                }
+                creditCard: "creditcard"
             },
             tag: {
                 body: "body"

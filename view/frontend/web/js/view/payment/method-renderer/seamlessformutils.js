@@ -141,11 +141,11 @@ define(
                 } else {
                     // Handle redirect for Non-3D transactions
                     $.ajax({
-                        url: url.build("wirecard_elasticengine/frontend/redirect"),
+                        url: url.build(variables.url.redirect),
                         type: variables.method.post,
                         data: {
                             "data": variables.seamlessResponse,
-                            "method": variables.data.value.creditCard
+                            "method": variables.data.creditCard
                         }
                     }).done(function (data) {
                         // Redirect non-3D credit card payment response
