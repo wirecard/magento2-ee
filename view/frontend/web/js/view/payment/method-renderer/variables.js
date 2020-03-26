@@ -42,7 +42,7 @@ define(
                 submitOrder: "wirecard_elasticengine_creditcard_submit" // SUBMIT_ORDER
             },
             error: {
-                creditCardFormLoading: "§" //todo - translate here?
+                creditCardFormLoading: "credit_card_form_loading_error"
             },
             url: {
                 callback: "wirecard_elasticengine/frontend/callback",
