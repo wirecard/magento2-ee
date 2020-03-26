@@ -70,9 +70,9 @@ define([
         getData: function () {
             var result = null;
             $.ajax({
-                url: url.build("wirecard_elasticengine/frontend/vault?hash="+this.getToken()),
-                type: "GET",
-                dataType: "json",
+                url: url.build(variables.url.vault+this.getToken()),
+                type: variables.method.get,
+                dataType: variables.dataType.json,
                 async: false,
                 success: function (data) {
                     result = data;
