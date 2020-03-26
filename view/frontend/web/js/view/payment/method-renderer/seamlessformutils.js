@@ -10,12 +10,16 @@ define(
     [
         'jquery',
         "mage/url",
+        "mage/translate",
         "Magento_Ui/js/model/messageList",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
     ],
-    function ($, url, messageList, variables) {
+
+    //6211
+    function ($, url, $t, messageList, variables) {
+
         function seamlessFormSizeHandler () {
-            resetErrorsCounter();
+            setErrorsCounter("0");
             hideSpinner();
             enableButtonById(variables.button.SUBMIT_ORDER);
             //todo:getFormId has this in it
@@ -25,11 +29,6 @@ define(
                 resizeIFrame(seamlessForm);
             }
         }
-
-        function resetErrorsCounter() {
-            localStorage.setItem(variables.settings.ERROR_COUNTER_STORAGE_KEY, "0");
-        }
-
         function showSpinner () {
             $("body").trigger("processStart");
         };
@@ -45,29 +44,33 @@ define(
         function resizeIFrame(seamlessForm) {
             let iframe = seamlessForm.firstElementChild;
             if (iframe) {
-                if (iframe.clientWidth > variables.screenSize.medium) {
-                    iframe.style.height = variables.iFrameHeightSize.small;
-                } else if (iframe.clientWidth > variables.screenSize.small) {
-                    iframe.style.height = variables.iFrameHeightSize.medium;
+                if (iframe.clientWidth > variables.screenWidth.medium) {
+                    iframe.style.height = variables.iFrameHeight.small;
+                } else if (iframe.clientWidth > variables.screenWidth.small) {
+                    iframe.style.height = variables.iFrameHeight.medium;
                 } else {
-                    iframe.style.height = variables.iFrameHeightSize.large;
+                    iframe.style.height = variables.iFrameHeight.large;
                 }
             }
         };
+
+        function setErrorsCounter(value) {
+            localStorage.setItem(variables.localStorage.counterKey, value);
+        };
         function incrementErrorsCounter() {
-            var counter = parseInt(localStorage.getItem(variables.settings.ERROR_COUNTER_STORAGE_KEY), 10);
+            var counter = parseInt(localStorage.getItem(variables.localStorage.counterKey), 10);
             counter = counter + 1;
-            localStorage.setItem(variables.settings.ERROR_COUNTER_STORAGE_KEY, counter.toString());
+            setErrorsCounter(counter.toString());
             return counter;
         };
         function seamlessFormInitErrorHandler(response) {
             console.error(response);
-            disableButtonById(variables.button.SUBMIT_ORDER);
+            disableButtonById(variables.button.submitOrder);
             let keys = Object.keys(response);
             let hasMessages = false;
             keys.forEach(
                 function ( key ) {
-                    if (key.startsWith(variables.settings.WPP_ERROR_PREFIX)) {
+                    if (key.startsWith(variables.wpp.errorPrefix)) {
                         hasMessages = true;
                         messageList.addErrorMessage({
                             message: response[key]
@@ -80,26 +83,26 @@ define(
                     message: $t("credit_card_form_loading_error")
                 });
             }
-            if (incrementErrorsCounter() <= variables.settings.MAX_ERROR_REPEAT_COUNT) {
+            if (incrementErrorsCounter() <= variables.settings.maxErrorRepeatCount) {
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
             } else {
-                resetErrorsCounter();
+                setErrorsCounter("0");
             }
             hideSpinner();
         };
         function seamlessFormSubmitErrorHandler(response) {
             console.error(response);
             hideSpinner();
-            let validErrorCodes = variables.settings.WPP_CLIENT_VALIDATION_ERROR_CODES;
+            let validErrorCodes = variables.wpp.clientValidationErrorCodes;
             var isClientValidation = false;
             if (response.errors.length > 0) {
                 response.errors.forEach(
                     function ( item ) {
                         if (validErrorCodes.includes(item.error.code)) {
                             isClientValidation = true;
-                            enableButtonById(variables.button.SUBMIT_ORDER);
+                            enableButtonById(variables.button.submitOrder);
                         } else {
                             messageList.addErrorMessage({
                                 message: item.error.description
@@ -109,7 +112,7 @@ define(
                 );
             }
             if (!isClientValidation) {
-                disableButtonById(variables.button.SUBMIT_ORDER);
+                disableButtonById(variables.button.submitOrder);
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
@@ -118,7 +121,7 @@ define(
 
         function seamlessFormSubmitSuccessHandler(response) {
             this.seamlessResponse = response;
-            resetErrorsCounter();
+            setErrorsCounter("0");
             this.placeOrder();
         };
         function appendFormData(data, form) {
@@ -155,7 +158,6 @@ define(
             redirectCreditCard: function(response) {
                 let result = {};
                 result.data = {};
-                let appendFormData = appendFormData.bind(this);
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/callback"),
                     dataType: "json",
@@ -200,7 +202,7 @@ define(
 
             placeSeamlessOrder: function(event, divId) {
                 showSpinner();
-                disableButtonById(variables.button.SUBMIT_ORDER);
+                disableButtonById(variables.button.submitOrder);
                 //todo: do we need this event handling?
                 if (event) {
                     event.preventDefault();
@@ -250,11 +252,10 @@ define(
                         }
                     });
                 });
-                let self = this;
                 setTimeout(function(){
                     if (typeof WPP === "undefined") {
                         hideSpinner();
-                        self.disableButtonById(self.button.SUBMIT_ORDER);
+                        disableButtonById(variables.button.submitOrder);
                         messageList.addErrorMessage({
                             message: $t("credit_card_form_loading_error")
                         });

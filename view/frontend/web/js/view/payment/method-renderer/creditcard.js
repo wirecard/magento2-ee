@@ -10,15 +10,13 @@
 
 define(
     [
-        "jquery",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
-        "mage/translate",
-        "mage/url",
         "Magento_Vault/js/view/payment/vault-enabler",
         "Magento_Ui/js/model/messageList",
-        "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils"
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
     ],
-    function ($, Component, $t, url, VaultEnabler, messageList, Utils) {
+    function (Component, VaultEnabler, messageList, Utils, variables) {
         "use strict";
         return Component.extend({
             seamlessResponse: null,
@@ -26,25 +24,12 @@ define(
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
-
-            settings : {
-                formIdSuffix: "_seamless_form",
-                ERROR_COUNTER_STORAGE_KEY: "errorCounter",
-                WPP_CLIENT_VALIDATION_ERROR_CODES: ["FE0001"],
-                WPP_ERROR_PREFIX: "error_",
-                MAX_ERROR_REPEAT_COUNT:3
-            },
-
-            button : {
-                SUBMIT_ORDER: "wirecard_elasticengine_creditcard_submit"
-            },
-
             /**
              * @returns {exports.initialize}
              */
             initialize: function () {
                 this._super();
-                if (!localStorage.getItem(this.settings.ERROR_COUNTER_STORAGE_KEY)) {
+                if (!localStorage.getItem(variables.settings.ERROR_COUNTER_STORAGE_KEY)) {
                     this.resetErrorsCounter();
                 }
                 return this;
@@ -56,56 +41,45 @@ define(
             initClientConfig: function () {
                 this._super();
             },
+            /**
+             * Get the vault code
+             * @returns {String}
+             */
+            getVaultCode: function () {
+                return window.checkoutConfig.payment[this.getCode()].vaultCode;
+            },
 
             /**
+             * Check if vault is enabled
+             * @returns {bool}
+             */
+            isVaultEnabled: function () {
+                return this.vaultEnabler.isVaultEnabled();
+            },
+            /**
              * Get the wpp_url
+             * return {String}
              */
             getPaymentPageScript: function () {
                 return window.checkoutConfig.payment[this.getCode()].wpp_url;
             },
-
+            /**
+             * Initialize the vault enabler
+             */
             seamlessFormInitVaultEnabler: function () {
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
-
-            /**
-             * Handle form initialization
-             */
-            seamlessFormInit: function () {
-                return Utils.seamlessFormInit.call(this);
-            },
-
-            /**
-             * Prepare order to be placed
-             * @param data,event
-             */
-            placeSeamlessOrder: function (data, event) {
-                return Utils.placeSeamlessOrder.call(this, event, this.getFormId);
-            },
-
-            /**
-             * Handle post order creation operations
-             */
-            afterPlaceOrder: function () {
-                Utils.afterPlaceOrder.call(this);
-            },
-
-            /**
-             * Handle 3Ds credit card transactions within callback
-             * @param response
-             */
-            redirectCreditCard: function (response,err) {
-                Utils.redirectCreditCard.call(this,response, err);
-            },
-
             /**
              * Get the form id string
              */
             getFormId: function() {
-                return this.getCode() + this.settings.formIdSuffix;
+                return this.getCode() + variables.settings.formIdSuffix;
             },
-
+            /**
+             * Constructs the ui initialization data object
+             * return {Object}
+             */
             getUiInitData() {
                 return {"txtype": this.getCode()};
             },
@@ -121,7 +95,6 @@ define(
                     }
                 };
             },
-
             /**
              * Handle the selected payment method
              */
@@ -129,19 +102,32 @@ define(
                 this._super();
                 return true;
             },
-
             /**
-             * @returns {String}
+             * Handle form initialization
              */
-            getVaultCode: function () {
-                return window.checkoutConfig.payment[this.getCode()].vaultCode;
+            seamlessFormInit: function () {
+                Utils.seamlessFormInit.call(this);
             },
 
             /**
-             * @returns {bool}
+             * Prepare order to be placed
+             * @param data,event
              */
-            isVaultEnabled: function () {
-                return this.vaultEnabler.isVaultEnabled();
+            placeSeamlessOrder: function (data, event) {
+                Utils.placeSeamlessOrder.call(this, event, this.getFormId);
+            },
+            /**
+             * Handle post order creation operations
+             */
+            afterPlaceOrder: function () {
+                Utils.afterPlaceOrder.call(this);
+            },
+            /**
+             * Handle 3Ds credit card transactions within callback
+             * @param response
+             */
+            redirectCreditCard: function (response,err) {
+                Utils.redirectCreditCard.call(this,response, err);
             }
         });
     }
