@@ -81,7 +81,7 @@ define(
              * @param data,event
              */
             placeSeamlessOrder: function (data, event) {
-                return Utils.placeSeamlessOrder.call(this, event, this.getCode() + "_seamless_form");
+                return Utils.placeSeamlessOrder.call(this, event, this.getFormId);
             },
 
             /**
@@ -106,6 +106,9 @@ define(
                 return this.getCode() + this.settings.formIdSuffix;
             },
 
+            getUiInitData() {
+                return {"txtype": this.getCode()};
+            },
             /**
              * Get the data
              */
