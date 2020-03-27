@@ -10,6 +10,6 @@
 ?>
 <form id="wirecard_elasticengine_credit_card_three_d_form" method="<?= $this->getMethod() ?>" action="<?= $this->getAction() ?>">
     <?php foreach($this->getFormFields() as $name => $value): ?>
-        <input type="hidden" name="<?= $name ?>" value="<?= urldecode($value) ?>" />
+        <input type="hidden" name="<?= $name ?>" value="<?= $value ?>" />
     <?php endforeach; ?>
 </form>

@@ -123,18 +123,6 @@ define(
             setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
         };
-        //todo: remove when redirectCreditCard substituted
-        function appendFormData(data, form) {
-            for (let key in data) {
-                if (key !== variables.key.formUrl && key !== variables.key.formMethod) {
-                    form.append($("<input />", {
-                        type: variables.input.type.hidden,
-                        name: key,
-                        value: data[key]
-                    }));
-                }
-            }
-        };
         let exportedFunctions = {
             afterPlaceOrder: function() {
                 if (variables.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
@@ -154,56 +142,26 @@ define(
                     });
                 }
             },
-            //todo: substitute block until the next comment with the substitution
             redirectCreditCard: function(response) {
-                let result = {};
-                result.data = {};
-                $.ajax({
-                    url: url.build(variables.url.callback),
-                    dataType: variables.dataType.json,
-                    type: variables.method.post,
-                    data: {
-                        "jsresponse": response
-                    },
-                    success: function (result) {
-                        if (result.data[variables.key.formUrl]) {
-                            let form = $("<form />", {
-                                action: result.data[variables.key.formUrl],
-                                method: result.data[variables.key.formMethod]
-                            });
-                            appendFormData(result.data, form);
-                            form.appendTo(variables.tag.body).submit();
-                        }
-                    },
-                    error: function (err) {
-                        hideSpinner();
-                        window.scrollTo(0,0);
-                        console.error("Error : " + JSON.stringify(err));
-                        messageList.addErrorMessage({
-                            message: $t("credit_card_form_submitting_error")
-                        });
-                    }
-                });
-            },
-            //todo: previus block will be substituted with smth like this
-            /* redirectCreditCard: function(response) {
+                console.log($t("credit_card_form_loading_error"));
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/callback"),
-                    dataType: "json",
                     type: "post",
                     data: {"jsresponse": response},
                     success: function (form) {
                         if (form) {
-                            form.appendTo("body").submit();
+                            let formJquery = $(form);
+                            formJquery.appendTo("body").submit();
                         }
                     },
                     error: function (err) {
+                        hideSpinner();
                         messageList.addErrorMessage({
-                            message: err
+                            message: $t("credit_card_form_loading_error")
                         });
                     }
                 });
-            },*/
+            },
 
             placeSeamlessOrder: function(event, divId) {
                 showSpinner();
