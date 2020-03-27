@@ -31,6 +31,7 @@ use Wirecard\PaymentSdk\TransactionService;
  * Class Callback
  * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method Http getRequest()
+ * @since 3.1.2 Reworked handling of callback
  */
 class Callback extends Action
 {
@@ -89,6 +90,7 @@ class Callback extends Action
      * @return \Magento\Framework\Controller\ResultInterface
      * @throws LocalizedException
      * @throws \Http\Client\Exception
+     * @since 3.1.2 Update return results, adding of page result for three d flow
      */
     public function execute()
     {
@@ -120,6 +122,7 @@ class Callback extends Action
      * @return mixed
      * @throws LocalizedException
      * @throws \Http\Client\Exception
+     * @since 3.1.2 Update handling
      */
     private function handleThreeDTransactions($response)
     {
@@ -147,6 +150,7 @@ class Callback extends Action
 
     /**
      * @return bool
+     * @since 3.1.2
      */
     private function isCreditCardThreeD()
     {
@@ -160,6 +164,7 @@ class Callback extends Action
     /**
      * @param string $redirectUrl
      * @return Json
+     * @since 3.1.2
      */
     private function createRedirectResult($redirectUrl)
     {
