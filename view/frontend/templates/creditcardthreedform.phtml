@@ -1,0 +1,15 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+ */
+
+?>
+<form id="wirecard_elasticengine_credit_card_three_d_form" method="<?= $this->getMethod() ?>" action="<?= $this->getAction() ?>">
+    <?php foreach($this->getFormFields() as $name => $value): ?>
+        <input type="hidden" name="<?= $name ?>" value="<?= urldecode($value) ?>" />
+    <?php endforeach; ?>
+</form>
