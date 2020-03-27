@@ -64,6 +64,7 @@ define(
         };
         function seamlessFormInitErrorHandler(response) {
             console.error(response);
+            hideSpinner();
             disableButtonById(variables.button.submitOrder);
             let responseKeys = Object.keys(response);
             let hasMessages = false;
@@ -89,27 +90,24 @@ define(
             } else {
                 setErrorsCounter(variables.localStorage.initValue);
             }
-            hideSpinner();
         };
         function seamlessFormSubmitErrorHandler(response) {
             console.error(response);
             hideSpinner();
             let validErrorCodes = variables.wpp.clientValidationErrorCodes;
             var isClientValidation = false;
-            if (response.errors.length > 0) {
-                response.errors.forEach(
-                    function ( item ) {
-                        if (validErrorCodes.includes(item.error.code)) {
-                            isClientValidation = true;
-                            enableButtonById(variables.button.submitOrder);
-                        } else {
-                            messageList.addErrorMessage({
-                                message: item.error.description
-                            });
-                        }
+            response.errors.forEach(
+                function ( item ) {
+                    if (validErrorCodes.includes(item.error.code)) {
+                        isClientValidation = true;
+                        enableButtonById(variables.button.submitOrder);
+                    } else {
+                        messageList.addErrorMessage({
+                            message: item.error.description
+                        });
                     }
-                );
-            }
+                }
+            );
             if (!isClientValidation) {
                 disableButtonById(variables.button.submitOrder);
                 setTimeout(function () {
@@ -123,6 +121,7 @@ define(
             setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
         };
+        //todo: remove when redirectCreditCard substituted
         function appendFormData(data, form) {
             for (let key in data) {
                 if (key !== variables.key.formUrl && key !== variables.key.formMethod) {
@@ -134,7 +133,7 @@ define(
                 }
             }
         };
-        var exports = {
+        let exportedFunctions = {
             afterPlaceOrder: function() {
                 if (variables.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
                     this.redirectCreditCard(variables.seamlessResponse);
@@ -263,7 +262,9 @@ define(
                     }
                 }, 1000);
             }
-        };
-        return exports;
+
+        }
+        return exportedFunctions;
     }
 );
+
