@@ -88,7 +88,6 @@ class ResponseHandler implements HandlerInterface
      */
     public function handle(array $handlingSubject, array $response)
     {
-        $this->logger->debug('im processing the response');
         /** @var Response $sdkResponse */
         $sdkResponse = $response['paymentSDK-php'];
 
