@@ -8,7 +8,7 @@
 
 define(
     [
-        'jquery',
+        "jquery",
         "mage/url",
         "mage/translate",
         "Magento_Ui/js/model/messageList",
@@ -17,17 +17,6 @@ define(
 
     function ($, url, $t, messageList, variables) {
 
-        function seamlessFormSizeHandler () {
-            setErrorsCounter( variables.localStorage.initValue);
-            hideSpinner();
-            enableButtonById(variables.button.submitOrder);
-            //todo:getFormId has this in it
-            let seamlessForm = document.getElementById(this.getFormId());
-            window.addEventListener("resize", resizeIFrame);
-            if (seamlessForm !== null) {
-                resizeIFrame(seamlessForm);
-            }
-        }
         function showSpinner () {
             $(variables.tag.body).trigger(variables.spinner.start);
         };
@@ -62,6 +51,17 @@ define(
             setErrorsCounter(counter.toString());
             return counter;
         };
+        function seamlessFormSizeHandler () {
+            setErrorsCounter( variables.localStorage.initValue);
+            hideSpinner();
+            enableButtonById(variables.button.submitOrder);
+            //todo:getFormId has this in it
+            let seamlessForm = document.getElementById(this.getFormId());
+            window.addEventListener("resize", resizeIFrame);
+            if (seamlessForm !== null) {
+                resizeIFrame(seamlessForm);
+            }
+        }
         function seamlessFormInitErrorHandler(response) {
             console.error(response);
             hideSpinner();
@@ -123,6 +123,7 @@ define(
             setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
         };
+
         function seamlessFormGeneralErrorHandler(code) {
             hideSpinner();
             window.scrollTo(0,0);
@@ -150,7 +151,6 @@ define(
                 }
             },
             redirectCreditCard: function(response) {
-                console.log($t("credit_card_form_loading_error"));
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/callback"),
                     type: "post",
