@@ -176,9 +176,11 @@ define(
                         }
                     },
                     error: function (err) {
+                        hideSpinner();
                         window.scrollTo(0,0);
+                        console.error("Error : " + JSON.stringify(err));
                         messageList.addErrorMessage({
-                            message: err
+                            message: $t("credit_card_form_submitting_error")
                         });
                     }
                 });
