@@ -19,16 +19,20 @@ define(
 
         function showSpinner () {
             $(variables.tag.body).trigger(variables.spinner.start);
-        };
+        }
+
         function hideSpinner () {
             $(variables.tag.body).trigger(variables.spinner.stop);
-        };
+        }
+
         function disableButtonById(id) {
             document.getElementById(id).disabled = true;
-        };
+        }
+
         function enableButtonById(id) {
             document.getElementById(id).disabled = false;
-        };
+        }
+
         function resizeIFrame(seamlessForm) {
             let iframe = seamlessForm.firstElementChild;
             if (iframe) {
@@ -40,17 +44,19 @@ define(
                     iframe.style.height = variables.iFrameHeight.large;
                 }
             }
-        };
+        }
 
         function setErrorsCounter(value) {
             localStorage.setItem(variables.localStorage.counterKey, value);
-        };
+        }
+
         function incrementErrorsCounter() {
             var counter = parseInt(localStorage.getItem(variables.localStorage.counterKey), 10);
             counter = counter + 1;
             setErrorsCounter(counter.toString());
             return counter;
-        };
+        }
+
         function seamlessFormSizeHandler () {
             setErrorsCounter( variables.localStorage.initValue);
             hideSpinner();
@@ -62,8 +68,9 @@ define(
                 resizeIFrame(seamlessForm);
             }
         }
+
         function seamlessFormInitErrorHandler(response) {
-            console.error(response);
+            Console.log(response);
             hideSpinner();
             window.scrollTo(0,0);
             disableButtonById(variables.button.submitOrder);
@@ -91,9 +98,10 @@ define(
             } else {
                 setErrorsCounter(variables.localStorage.initValue);
             }
-        };
+        }
+
         function seamlessFormSubmitErrorHandler(response) {
-            console.error(response);
+            Console.log(response);
             hideSpinner();
             window.scrollTo(0,0);
             let validErrorCodes = variables.wpp.clientValidationErrorCodes;
@@ -116,13 +124,13 @@ define(
                     location.reload();
                 }, variables.settings.reloadTimeout);
             }
-        };
+        }
 
         function seamlessFormSubmitSuccessHandler(response) {
             variables.seamlessResponse = response;
             setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
-        };
+        }
 
         function seamlessFormGeneralErrorHandler(code) {
             hideSpinner();
@@ -131,6 +139,7 @@ define(
                 message: $t(code)
             });
         }
+
         let exportedFunctions = {
             afterPlaceOrder: function() {
                 if (variables.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
@@ -208,7 +217,7 @@ define(
                         },
                         error: function (err) {
                             seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
-                            console.error("Error : " + JSON.stringify(err));
+                            Console.log("Error : " + JSON.stringify(err));
                         }
                     });
                 });
