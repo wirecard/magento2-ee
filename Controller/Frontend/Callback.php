@@ -16,6 +16,7 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\View\Result\Layout;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
@@ -135,16 +136,13 @@ class Callback extends Action
         $order = $this->session->getLastRealOrder();
         $this->paymentHelper->addTransaction($order->getPayment(), $response, true);
 
-        // create html response
-        if ($response instanceof FormInteractionResponse) {
-            $data['form-url'] = html_entity_decode($response->getUrl());
-            $data['form-method'] = $response->getMethod();
-            foreach ($response->getFormFields() as $key => $value) {
-                $data[$key] = html_entity_decode($value);
-            }
-        }
+        /** @var Layout $page */
+        $page = $this->resultFactory->create(ResultFactory::TYPE_LAYOUT);
+        $block = $page->getLayout()->getBlock('frontend.creditcardthreedform');
+        $block->setResponse($response);
+        $page->setHttpResponseCode('200');
 
-        return $data;
+        return $page;
     }
 
     /**
