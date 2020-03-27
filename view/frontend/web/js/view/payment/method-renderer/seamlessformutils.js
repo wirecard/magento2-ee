@@ -65,12 +65,13 @@ define(
         function seamlessFormInitErrorHandler(response) {
             console.error(response);
             hideSpinner();
+            window.scrollTo(0,0);
             disableButtonById(variables.button.submitOrder);
             let responseKeys = Object.keys(response);
             let hasMessages = false;
             responseKeys.forEach(
                 function ( responseKey ) {
-                    if (key.startsWith(variables.wpp.errorPrefix)) {
+                    if (responseKey.startsWith(variables.wpp.errorPrefix)) {
                         hasMessages = true;
                         messageList.addErrorMessage({
                             message: response[responseKey]
@@ -94,6 +95,7 @@ define(
         function seamlessFormSubmitErrorHandler(response) {
             console.error(response);
             hideSpinner();
+            window.scrollTo(0,0);
             let validErrorCodes = variables.wpp.clientValidationErrorCodes;
             var isClientValidation = false;
             response.errors.forEach(
@@ -174,6 +176,7 @@ define(
                         }
                     },
                     error: function (err) {
+                        window.scrollTo(0,0);
                         messageList.addErrorMessage({
                             message: err
                         });
@@ -238,6 +241,7 @@ define(
                                 });
                             } else {
                                 hideSpinner();
+                                window.scrollTo(0,0);
                                 messageList.addErrorMessage({
                                     message: $t(variables.error.creditCardFormLoading)
                                 });
@@ -245,6 +249,7 @@ define(
                         },
                         error: function (err) {
                             hideSpinner();
+                            window.scrollTo(0,0);
                             messageList.addErrorMessage({
                                 message: $t(variables.error.creditCardFormLoading)
                             });
@@ -254,8 +259,9 @@ define(
                 });
                 setTimeout(function(){
                     if (typeof WPP === variables.dataType.undefined) {
-                        hideSpinner();
                         disableButtonById(variables.button.submitOrder);
+                        hideSpinner();
+                        window.scrollTo(0,0);
                         messageList.addErrorMessage({
                             message: $t(variables.error.creditCardFormLoading)
                         });

@@ -21,10 +21,6 @@ define(
                 medium: "341px",
                 small: "267px"
             },
-            defaults: {
-                template: "Wirecard_ElasticEngine/payment/method-creditcard",
-                redirectAfterPlaceOrder: false
-            },
             settings: {
                 formIdSuffix: "_seamless_form",
                 formIdTokenSuffix: "_seamless_token_form",
@@ -32,15 +28,15 @@ define(
                 reloadTimeout: 3000
             },
             wpp: {
-                errorPrefix: "error_", // WPP_ERROR_PREFIX
-                clientValidationErrorCodes: ["FE0001"] // WPP_CLIENT_VALIDATION_ERROR_CODES
+                errorPrefix: "error_",
+                clientValidationErrorCodes: ["FE0001"]
             },
             localStorage: {
                 initValue: "0",
-                counterKey: "errorCounter" // ERROR_COUNTER_STORAGE_KEY
+                counterKey: "errorCounter"
             },
             button: {
-                submitOrder: "wirecard_elasticengine_creditcard_submit" // SUBMIT_ORDER
+                submitOrder: "wirecard_elasticengine_creditcard_submit"
             },
             error: {
                 creditCardFormLoading: "credit_card_form_loading_error"
@@ -58,6 +54,7 @@ define(
             key: {
                 formUrl: "form-url",
                 formMethod: "form-method",
+                formFields: "form-fields",
                 acsUrl: "acs_url",
                 redirectUrl: "redirect-url"
             },
