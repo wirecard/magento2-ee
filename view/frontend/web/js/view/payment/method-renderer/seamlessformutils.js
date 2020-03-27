@@ -161,7 +161,7 @@ define(
                             formJquery.appendTo("body").submit();
                         }
                     },
-                    error:  () => {
+                    error: function () {
                         seamlessFormGeneralErrorHandler(variables.error.creditCardFormSubmitting);
                     }
                 });
