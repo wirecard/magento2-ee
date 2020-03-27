@@ -123,6 +123,13 @@ define(
             setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
         };
+        function seamlessFormGeneralErrorHandler(code) {
+            hideSpinner();
+            window.scrollTo(0,0);
+            messageList.addErrorMessage({
+                message: $t(code)
+            });
+        }
         let exportedFunctions = {
             afterPlaceOrder: function() {
                 if (variables.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
@@ -154,11 +161,8 @@ define(
                             formJquery.appendTo("body").submit();
                         }
                     },
-                    error: function (err) {
-                        hideSpinner();
-                        messageList.addErrorMessage({
-                            message: $t("credit_card_form_loading_error")
-                        });
+                    error:  () => {
+                        seamlessFormGeneralErrorHandler(variables.error.creditCardFormSubmitting);
                     }
                 });
             },
@@ -166,7 +170,6 @@ define(
             placeSeamlessOrder: function(event, divId) {
                 showSpinner();
                 disableButtonById(variables.button.submitOrder);
-                //todo: do we need this event handling?
                 if (event) {
                     event.preventDefault();
                 }
@@ -200,19 +203,11 @@ define(
                                     onError: formInitHandler
                                 });
                             } else {
-                                hideSpinner();
-                                window.scrollTo(0,0);
-                                messageList.addErrorMessage({
-                                    message: $t(variables.error.creditCardFormLoading)
-                                });
+                                seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
                             }
                         },
                         error: function (err) {
-                            hideSpinner();
-                            window.scrollTo(0,0);
-                            messageList.addErrorMessage({
-                                message: $t(variables.error.creditCardFormLoading)
-                            });
+                            seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
                             console.error("Error : " + JSON.stringify(err));
                         }
                     });
@@ -220,11 +215,7 @@ define(
                 setTimeout(function(){
                     if (typeof WPP === variables.dataType.undefined) {
                         disableButtonById(variables.button.submitOrder);
-                        hideSpinner();
-                        window.scrollTo(0,0);
-                        messageList.addErrorMessage({
-                            message: $t(variables.error.creditCardFormLoading)
-                        });
+                        seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
                     }
                 }, 1000);
             }

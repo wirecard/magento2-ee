@@ -74,8 +74,11 @@ define([
                 type: variables.method.get,
                 dataType: variables.dataType.json,
                 async: false,
-                success: function (data) {
+                success: (data) => {
                     result = data;
+                },
+                error: () => {
+
                 }
             });
 

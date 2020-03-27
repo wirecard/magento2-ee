@@ -39,7 +39,8 @@ define(
                 submitOrder: "wirecard_elasticengine_creditcard_submit"
             },
             error: {
-                creditCardFormLoading: "credit_card_form_loading_error"
+                creditCardFormLoading: "credit_card_form_loading_error",
+                creditCardFormSubmitting: "credit_card_form_submitting_error"
             },
             url: {
                 callback: "wirecard_elasticengine/frontend/callback",
