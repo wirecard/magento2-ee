@@ -17,22 +17,37 @@ define(
 
     function ($, url, $t, messageList, variables) {
 
+        /**
+         * Show loading spinner
+         */
         function showSpinner () {
             $(variables.tag.body).trigger(variables.spinner.start);
         }
 
+        /**
+         * Hide loading spinner
+         */
         function hideSpinner () {
             $(variables.tag.body).trigger(variables.spinner.stop);
         }
 
+        /**
+         * Disable submit order button
+         */
         function disableButtonById(id) {
             document.getElementById(id).disabled = true;
         }
 
+        /**
+         * Enable submit order button
+         */
         function enableButtonById(id) {
             document.getElementById(id).disabled = false;
         }
 
+        /**
+         * Resize credit card form frame on different screen sizes
+         */
         function resizeIFrame(seamlessForm) {
             let iframe = seamlessForm.firstElementChild;
             if (iframe) {
@@ -46,10 +61,17 @@ define(
             }
         }
 
+        /**
+         * Set local storage for error display counter
+         */
         function setErrorsCounter(value) {
             localStorage.setItem(variables.localStorage.counterKey, value);
         }
 
+        /**
+         * Increment the error counter in the local storage
+         * returns {Int}
+         */
         function incrementErrorsCounter() {
             var counter = parseInt(localStorage.getItem(variables.localStorage.counterKey), 10);
             counter = counter + 1;
@@ -57,11 +79,13 @@ define(
             return counter;
         }
 
+        /**
+         * Handle frame resize
+         */
         function seamlessFormSizeHandler () {
             setErrorsCounter( variables.localStorage.initValue);
             hideSpinner();
             enableButtonById(variables.button.submitOrder);
-            //todo:getFormId has this in it
             let seamlessForm = document.getElementById(this.getFormId());
             window.addEventListener("resize", resizeIFrame);
             if (seamlessForm !== null) {
@@ -69,8 +93,11 @@ define(
             }
         }
 
+        /**
+         * Handle errors on cc form initialization
+         */
         function seamlessFormInitErrorHandler(response) {
-            Console.log(response);
+            console.error(response);
             hideSpinner();
             window.scrollTo(0,0);
             disableButtonById(variables.button.submitOrder);
@@ -100,8 +127,11 @@ define(
             }
         }
 
+        /**
+         * Handle errors on cc form submit
+         */
         function seamlessFormSubmitErrorHandler(response) {
-            Console.log(response);
+            console.error(response);
             hideSpinner();
             window.scrollTo(0,0);
             let validErrorCodes = variables.wpp.clientValidationErrorCodes;
@@ -126,12 +156,18 @@ define(
             }
         }
 
+        /**
+         * Handle success on cc form submit
+         */
         function seamlessFormSubmitSuccessHandler(response) {
             variables.seamlessResponse = response;
             setErrorsCounter(variables.localStorage.initValue);
             this.placeOrder();
         }
 
+        /**
+         * Handle general errors on seamless form operations
+         */
         function seamlessFormGeneralErrorHandler(code) {
             hideSpinner();
             window.scrollTo(0,0);
@@ -141,6 +177,10 @@ define(
         }
 
         let exportedFunctions = {
+
+            /**
+             * Handle operations after order is placed
+             */
             afterPlaceOrder: function() {
                 if (variables.seamlessResponse.hasOwnProperty(variables.key.acsUrl)) {
                     this.redirectCreditCard(variables.seamlessResponse);
@@ -159,6 +199,10 @@ define(
                     });
                 }
             },
+
+            /**
+             * Redirect after seamless 3d transaction
+             */
             redirectCreditCard: function(response) {
                 $.ajax({
                     url: url.build("wirecard_elasticengine/frontend/callback"),
@@ -176,6 +220,9 @@ define(
                 });
             },
 
+            /**
+             * Place the seamless order
+             */
             placeSeamlessOrder: function(event, divId) {
                 showSpinner();
                 disableButtonById(variables.button.submitOrder);
@@ -189,6 +236,9 @@ define(
                 });
             },
 
+            /**
+             * Initialize the seamless cc form
+             */
             seamlessFormInit: function() {
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
@@ -217,7 +267,7 @@ define(
                         },
                         error: function (err) {
                             seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
-                            Console.log("Error : " + JSON.stringify(err));
+                            console.error("Error : " + JSON.stringify(err));
                         }
                     });
                 });

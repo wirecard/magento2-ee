@@ -22,6 +22,7 @@ define(
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
+            
             /**
              * @returns {exports.initialize}
              */
@@ -39,6 +40,7 @@ define(
             initClientConfig: function () {
                 this._super();
             },
+
             /**
              * Get the vault code
              * @returns {String}
@@ -54,6 +56,7 @@ define(
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
             },
+
             /**
              * Get the wpp_url
              * return {String}
@@ -61,6 +64,7 @@ define(
             getPaymentPageScript: function () {
                 return window.checkoutConfig.payment[this.getCode()].wpp_url;
             },
+
             /**
              * Initialize the vault enabler
              */
@@ -68,12 +72,14 @@ define(
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
+
             /**
              * Get the form id string
              */
             getFormId: function() {
                 return this.getCode() + variables.settings.formIdSuffix;
             },
+
             /**
              * Constructs the ui initialization data object
              * return {Object}
@@ -81,6 +87,7 @@ define(
             getUiInitData() {
                 return {"txtype": this.getCode()};
             },
+
             /**
              * Get the data
              */
@@ -93,6 +100,7 @@ define(
                     }
                 };
             },
+
             /**
              * Handle the selected payment method
              */
@@ -100,6 +108,7 @@ define(
                 this._super();
                 return true;
             },
+
             /**
              * Handle form initialization
              */
@@ -114,12 +123,14 @@ define(
             placeSeamlessOrder: function (data, event) {
                 Utils.placeSeamlessOrder.call(this, event, this.getFormId);
             },
+
             /**
              * Handle post order creation operations
              */
             afterPlaceOrder: function () {
                 Utils.afterPlaceOrder.call(this);
             },
+
             /**
              * Handle 3Ds credit card transactions within callback
              * @param response

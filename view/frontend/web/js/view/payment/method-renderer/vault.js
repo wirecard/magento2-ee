@@ -22,12 +22,14 @@ define([
             template: "Wirecard_ElasticEngine/payment/method-vault",
             redirectAfterPlaceOrder: false
         },
+
         /**
          * Get the form id string
          */
         getFormId: function() {
             return this.getId() + variables.settings.formIdTokenSuffix
         },
+
         /**
          * Get the wpp_url
          * return {String}
@@ -35,6 +37,7 @@ define([
         getPaymentPageScript: function () {
             return this.wppUrl;
         },
+
         /**
          * Constructs the ui initialization data object
          * return {Object}
@@ -45,6 +48,7 @@ define([
                 token: this.getToken(),
             };
         },
+
         /**
          * Get expiration date
          * @returns {String}
@@ -67,30 +71,33 @@ define([
         getToken: function () {
             return this.publicHash;
         },
+
+        /**
+         * Get the data
+         */
         getData: function () {
             var result = null;
+            $(variables.tag.body).trigger(variables.spinner.stop);
             $.ajax({
-                url: url.build(variables.url.vault+this.getToken()),
+                url: url.build(variables.url.vault+this.getToken()+"hhhh"),
                 type: variables.method.get,
                 dataType: variables.dataType.json,
                 async: false,
                 success: (data) => {
                     result = data;
+                    return {
+                        "method": result.method_code,
+                        "po_number": null,
+                        "additional_data": {
+                            "token_id": result.token_id,
+                            "recurring_payment" : true
+                        }
+                    };
                 },
-                error: () => {
-
-                }
             });
 
-            return {
-                "method": result.method_code,
-                "po_number": null,
-                "additional_data": {
-                    "token_id": result.token_id,
-                    "recurring_payment" : true
-                }
-            };
         },
+
         /**
          * Get last 4 digits of card
          * @returns {String}
@@ -98,6 +105,7 @@ define([
         getMaskedCard: function () {
             return this.details.maskedCC;
         },
+
         /**
          * Handle the selected payment method and initialize form
          */
@@ -108,6 +116,7 @@ define([
             }
             return true;
         },
+
         /**
          * Prepare order to be placed
          * @param data,event
@@ -116,12 +125,14 @@ define([
         placeTokenSeamlessOrder: function (data, event) {
             return Utils.placeSeamlessOrder.call(this, event, this.getFormId);
         },
+
         /**
          * Handle post order creation operations
          */
         afterPlaceOrder: function () {
             Utils.afterPlaceOrder.call(this);
         },
+
         /**
          * Handle 3Ds credit card transactions within callback
          * @param response
