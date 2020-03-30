@@ -51,7 +51,7 @@ define(
 
             /**
              * Check if vault is enabled
-             * @returns {bool}
+             * @returns {Boolean}
              */
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
@@ -92,13 +92,17 @@ define(
              * Get the data
              */
             getData: function () {
-                return {
-                    "method": this.getCode(),
-                    "po_number": null,
-                    "additional_data": {
-                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler()
+                var data =  {
+                    method: this.getCode(),
+                    po_number: null,
+                    additional_data: {
+                        is_active_payment_token_enabler: false,
                     }
                 };
+
+                this.vaultEnabler.visitAdditionalData(data);
+
+                return data;
             },
 
             /**
@@ -118,7 +122,8 @@ define(
 
             /**
              * Prepare order to be placed
-             * @param data,event
+             * @param {Object} data
+             * @param {Object} event
              */
             placeSeamlessOrder: function (data, event) {
                 Utils.placeSeamlessOrder.call(this, event, this.getFormId);
