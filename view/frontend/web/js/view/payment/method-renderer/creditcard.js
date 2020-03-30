@@ -13,11 +13,12 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "Magento_Vault/js/view/payment/vault-enabler",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
-        "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants"
     ],
-    function (Component, VaultEnabler, Utils, variables) {
+    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants) {
         "use strict";
-        return Component.extend({
+        return ParentPaymentMethod.extend({
+            seamlessResponse: null,
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
@@ -28,8 +29,8 @@ define(
              */
             initialize: function () {
                 this._super();
-                if (!localStorage.getItem(variables.localStorage.counterKey)) {
-                    localStorage.setItem(variables.localStorage.counterKey, variables.localStorage.initValue);
+                if (!localStorage.getItem(SeamlessCreditCardConstants.localStorage.counterKey)) {
+                    localStorage.setItem(SeamlessCreditCardConstants.localStorage.counterKey, SeamlessCreditCardConstants.localStorage.initValue);
                 }
                 return this;
             },
@@ -58,14 +59,6 @@ define(
             },
 
             /**
-             * Get the wpp_url
-             * return {String}
-             */
-            getPaymentPageScript: function () {
-                return window.checkoutConfig.payment[this.getCode()].wpp_url;
-            },
-
-            /**
              * Initialize the vault enabler
              */
             seamlessFormInitVaultEnabler: function () {
@@ -77,7 +70,7 @@ define(
              * Get the form id string
              */
             getFormId: function() {
-                return this.getCode() + variables.settings.formIdSuffix;
+                return this.getCode() + SeamlessCreditCardConstants.settings.formIdSuffix;
             },
 
             /**
@@ -85,7 +78,7 @@ define(
              * return {Object}
              */
             getUiInitData() {
-                return {"txtype": this.getCode()};
+                return {"txtype": SeamlessCreditCardConstants.data.wppTxType};
             },
 
             /**
@@ -113,7 +106,7 @@ define(
              * Handle form initialization
              */
             seamlessFormInit: function () {
-                Utils.seamlessFormInit.call(this);
+                SeamlessCreditCardUtils.seamlessFormInit.call(this);
             },
 
             /**
@@ -121,14 +114,14 @@ define(
              * @param data,event
              */
             placeSeamlessOrder: function (data, event) {
-                Utils.placeSeamlessOrder.call(this, event, this.getFormId);
+                SeamlessCreditCardUtils.placeSeamlessOrder.call(this, event, this.getFormId);
             },
 
             /**
-             * Handle post order creation operations
+             * Handle post order creation operationsgetPaymentPageScript
              */
             afterPlaceOrder: function () {
-                Utils.afterPlaceOrder.call(this);
+                SeamlessCreditCardUtils.afterPlaceOrder.call(this);
             },
 
             /**
@@ -136,7 +129,7 @@ define(
              * @param response
              */
             redirectCreditCard: function (response) {
-                Utils.redirectCreditCard.call(this,response);
+                SeamlessCreditCardUtils.redirectCreditCard.call(this,response);
             }
         });
     }
