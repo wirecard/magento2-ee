@@ -14,6 +14,7 @@ use Magento\Catalog\Model\Product\Type;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -212,14 +213,14 @@ class BasketFactory
         }
 
         //Current shipping
-        $origShipping = $orderObject->getOrigData('shipping_refunded');
-        $newShipping = $orderObject->getShippingRefunded();
-        $shipping = $newShipping - $origShipping;
+        $refundedShipping = $orderObject->getOrigData(OrderInterface::SHIPPING_REFUNDED);
+        $originShipping = $orderObject->getShippingAmount();
+        $openShippingAmount = $originShipping - $refundedShipping;
 
-        if ($shipping > 0) {
+        if ($openShippingAmount > 0) {
             $shippingItem = new Item(
                 'Shipping',
-                new Amount((float)$shipping, $order->getCurrencyCode()),
+                new Amount((float)$openShippingAmount, $order->getCurrencyCode()),
                 1
             );
 
