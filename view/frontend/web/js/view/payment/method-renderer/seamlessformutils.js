@@ -5,7 +5,7 @@
  * - License can be found under:
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
-
+/*global WPP*/
 define(
     [
         "jquery",
@@ -108,7 +108,7 @@ define(
                     if (responseKey.startsWith(variables.wpp.errorPrefix)) {
                         hasMessages = true;
                         messageList.addErrorMessage({
-                            message: response[responseKey]
+                            message: response[parseInt(responseKey)]
                         });
                     }
                 }
@@ -278,8 +278,7 @@ define(
                     }
                 }, 1000);
             }
-
-        }
+        };
         return exportedFunctions;
     }
 );

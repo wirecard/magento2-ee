@@ -27,7 +27,7 @@ define([
          * Get the form id string
          */
         getFormId: function() {
-            return this.getId() + variables.settings.formIdTokenSuffix
+            return this.getId() + variables.settings.formIdTokenSuffix;
         },
 
         /**
