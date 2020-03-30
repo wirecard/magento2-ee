@@ -135,8 +135,8 @@ define(
              * Handle 3Ds credit card transactions within callback
              * @param response
              */
-            redirectCreditCard: function (response,err) {
-                Utils.redirectCreditCard.call(this,response, err);
+            redirectCreditCard: function (response) {
+                Utils.redirectCreditCard.call(this,response);
             }
         });
     }

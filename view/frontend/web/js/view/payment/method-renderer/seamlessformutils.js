@@ -179,6 +179,67 @@ define(
         let exportedFunctions = {
 
             /**
+             * Initialize the seamless cc form
+             */
+            seamlessFormInit: function() {
+                console.log("loading-err", $t("credit_card_form_loading_error"));
+                console.log("submitting-err", $t("credit_card_form_submitting_error"));
+                let uiInitData = this.getUiInitData();
+                let wrappingDivId = this.getFormId();
+                let formSizeHandler = seamlessFormSizeHandler.bind(this);
+                let formInitHandler = seamlessFormInitErrorHandler;
+                showSpinner();
+                // wait until WPP-js has been loaded
+                $.getScript(this.getPaymentPageScript(), function () {
+                    // Build seamless renderform with full transaction data
+                    $.ajax({
+                        url: url.build(variables.url.creditCard),
+                        type: variables.method.post,
+                        data: uiInitData,
+                        success: function (result) {
+                            if (variables.status.ok === result.status) {
+                                let uiInitData = JSON.parse(result.uiData);
+                                WPP.seamlessRender({
+                                    requestData: uiInitData,
+                                    wrappingDivId: wrappingDivId,
+                                    onSuccess: formSizeHandler,
+                                    onError: formInitHandler
+                                });
+                            } else {
+                                seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
+                            }
+                        },
+                        error: function (err) {
+                            seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
+                            console.error("Error : " + JSON.stringify(err));
+                        }
+                    });
+                });
+                setTimeout(function(){
+                    if (typeof WPP === variables.dataType.undefined) {
+                        disableButtonById(variables.button.submitOrder);
+                        seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
+                    }
+                }, 1000);
+            },
+
+            /**
+             * Place the seamless order
+             */
+            placeSeamlessOrder: function(event, divId) {
+                showSpinner();
+                disableButtonById(variables.button.submitOrder);
+                if (event) {
+                    event.preventDefault();
+                }
+                WPP.seamlessSubmit({
+                    wrappingDivId: divId,
+                    onSuccess: seamlessFormSubmitSuccessHandler.bind(this),
+                    onError: seamlessFormSubmitErrorHandler.bind(this)
+                });
+            },
+
+            /**
              * Handle operations after order is placed
              */
             afterPlaceOrder: function() {
@@ -218,65 +279,6 @@ define(
                         seamlessFormGeneralErrorHandler(variables.error.creditCardFormSubmitting);
                     }
                 });
-            },
-
-            /**
-             * Place the seamless order
-             */
-            placeSeamlessOrder: function(event, divId) {
-                showSpinner();
-                disableButtonById(variables.button.submitOrder);
-                if (event) {
-                    event.preventDefault();
-                }
-                WPP.seamlessSubmit({
-                    wrappingDivId: divId,
-                    onSuccess: seamlessFormSubmitSuccessHandler.bind(this),
-                    onError: seamlessFormSubmitErrorHandler.bind(this)
-                });
-            },
-
-            /**
-             * Initialize the seamless cc form
-             */
-            seamlessFormInit: function() {
-                let uiInitData = this.getUiInitData();
-                let wrappingDivId = this.getFormId();
-                let formSizeHandler = seamlessFormSizeHandler.bind(this);
-                let formInitHandler = seamlessFormInitErrorHandler;
-                showSpinner();
-                // wait until WPP-js has been loaded
-                $.getScript(this.getPaymentPageScript(), function () {
-                    // Build seamless renderform with full transaction data
-                    $.ajax({
-                        url: url.build(variables.url.creditCard),
-                        type: variables.method.post,
-                        data: uiInitData,
-                        success: function (result) {
-                            if (variables.status.ok === result.status) {
-                                let uiInitData = JSON.parse(result.uiData);
-                                WPP.seamlessRender({
-                                    requestData: uiInitData,
-                                    wrappingDivId: wrappingDivId,
-                                    onSuccess: formSizeHandler,
-                                    onError: formInitHandler
-                                });
-                            } else {
-                                seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
-                            }
-                        },
-                        error: function (err) {
-                            seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
-                            console.error("Error : " + JSON.stringify(err));
-                        }
-                    });
-                });
-                setTimeout(function(){
-                    if (typeof WPP === variables.dataType.undefined) {
-                        disableButtonById(variables.button.submitOrder);
-                        seamlessFormGeneralErrorHandler(variables.error.creditCardFormLoading);
-                    }
-                }, 1000);
             }
         };
         return exportedFunctions;
