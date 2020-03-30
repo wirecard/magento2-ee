@@ -182,8 +182,6 @@ define(
              * Initialize the seamless cc form
              */
             seamlessFormInit: function() {
-                console.log("loading-err", $t("credit_card_form_loading_error"));
-                console.log("submitting-err", $t("credit_card_form_submitting_error"));
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
