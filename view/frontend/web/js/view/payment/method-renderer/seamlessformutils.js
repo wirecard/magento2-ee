@@ -197,6 +197,11 @@ define(
             });
         }
 
+        /**
+         * Check if payment is of type 3D
+         * @param response
+         * @since 3.1.2
+         */
         function isThreeDPayment(response) {
             if (response.hasOwnProperty(SeamlessCreditCardConstants.key.acsUrl)) {
                 return true;
@@ -214,10 +219,9 @@ define(
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
-                let paymentPageUrl = SeamlessCreditCardConstants.routes.paymentPage;
                 showSpinner();
                 // wait until WPP-js has been loaded
-                $.getScript(paymentPageUrl, function () {
+                $.getScript(SeamlessCreditCardConstants.routes.paymentPage, function () {
                     // Build seamless renderform with full transaction data
                     $.ajax({
                         url: url.build(SeamlessCreditCardConstants.routes.creditCardController),
@@ -251,7 +255,7 @@ define(
 
             /**
              * Place the seamless order
-             * @param event, divId
+             * @param event, creditcardFormId
              * @since 3.1.2
              */
             placeSeamlessOrder: function(event, creditcardFormId) {
@@ -273,7 +277,7 @@ define(
              */
             afterPlaceOrder: function() {
                 if (isThreeDPayment(this.seamlessResponse)) {
-                    this.redirectCreditCard(this.seamlessResponse);
+                    this.processThreeDPayment(this.seamlessResponse);
                 } else {
                     let self = this;
                     $.ajax({
@@ -295,7 +299,7 @@ define(
              * @param response
              * @since 3.1.2
              */
-            redirectCreditCard: function(response) {
+            processThreeDPayment: function(response) {
                 $.ajax({
                     url: url.build(SeamlessCreditCardConstants.routes.callbackController),
                     type: SeamlessCreditCardConstants.method.post,

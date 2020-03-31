@@ -128,8 +128,8 @@ define(
              * Handle 3Ds credit card transactions within callback
              * @param response
              */
-            redirectCreditCard: function (response) {
-                SeamlessCreditCardUtils.redirectCreditCard.call(this,response);
+            processThreeDPayment: function (response) {
+                SeamlessCreditCardUtils.processThreeDPayment.call(this,response);
             }
         });
     }

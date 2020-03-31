@@ -130,8 +130,8 @@ define([
          * @param response
          * @param err
          */
-        redirectCreditCard: function (response,err) {
-            SeamlessCreditCardUtils.redirectCreditCard.call(this,response, err);
+        processThreeDPayment: function (response,err) {
+            SeamlessCreditCardUtils.processThreeDPayment.call(this,response, err);
         }
     });
 });
