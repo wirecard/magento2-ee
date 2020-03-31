@@ -20,7 +20,6 @@ use Magento\Framework\Controller\Result\Redirect as RedirectResult;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
@@ -52,11 +51,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private $transactionServiceFactory;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var Context
      */
     private $context;
@@ -67,14 +61,12 @@ class Redirect extends Action implements CsrfAwareActionInterface
     private $transactionService;
 
     /**
-     * @var Helper\Order
-     */
-    private $orderHelper;
-
-    /**
      * @var Helper\Payment
      */
     private $paymentHelper;
+
+    /** @var mixed */
+    private $paymentMethodName;
 
     /**
      * Redirect constructor.
@@ -82,50 +74,70 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * @param Context $context
      * @param Session $checkoutSession
      * @param TransactionServiceFactory $transactionServiceFactory
-     * @param Helper\Order $orderHelper
-     * @param LoggerInterface $logger
      * @param Helper\Payment $paymentHelper
      */
     public function __construct(
         Context $context,
         Session $checkoutSession,
         TransactionServiceFactory $transactionServiceFactory,
-        Helper\Order $orderHelper,
-        LoggerInterface $logger,
         Helper\Payment $paymentHelper
     ) {
         $this->context = $context;
         $this->checkoutSession = $checkoutSession;
-        $this->transactionServiceFactory = $transactionServiceFactory;
-        $this->logger = $logger;
-        $this->orderHelper = $orderHelper;
         $this->paymentHelper = $paymentHelper;
         parent::__construct($context);
+        $this->paymentMethodName = $this->getMethodName();
+        $this->transactionService = $transactionServiceFactory->create($this->paymentMethodName);
     }
 
     /**
      * @return ResponseInterface|Json|RedirectResult|ResultInterface
+     * @throws LocalizedException
+     * @throws \Http\Client\Exception
      */
     public function execute()
     {
-        $methodName = $this->getMethodName();
-
-        if ($methodName === null || !$this->getRequest()->isPost() && !$this->getRequest()->isGet()) {
+        if (!$this->isValidateRequest()) {
             /** @var Json $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
             $this->handleFailedResponse();
 
-            return $this->getRedirectData($result, self::CHECKOUT_URL);
+            return $this->buildRedirectJsonResult($result, self::CHECKOUT_URL);
         }
 
-        $this->transactionService = $this->transactionServiceFactory->create($methodName);
-
         $params = $this->getRequestParam();
-        if (isset($params['data'])) {
+        if ($this->isCreditCardNonThreeDPayment($params)) {
             return $this->handleNonThreeDResponse($params['data']);
         }
 
         return $this->handleResponse($params);
+    }
+
+    /**
+     * @return bool
+     * @since 3.1.2
+     */
+    private function isValidateRequest()
+    {
+        if ($this->paymentMethodName === null || !$this->getRequest()->isPost() && !$this->getRequest()->isGet()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $params
+     * @return bool
+     * @since 3.1.2
+     */
+    private function isCreditCardNonThreeDPayment($params)
+    {
+        if ($this->paymentMethodName === 'creditcard' && isset($params['data'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -190,26 +202,25 @@ class Redirect extends Action implements CsrfAwareActionInterface
      *
      * @return Json
      * @throws LocalizedException
+     * @throws \Http\Client\Exception
      * @since 1.5.2
      */
     private function handleNonThreeDResponse($responseParams)
     {
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $response = $this->transactionService->processJsResponse($responseParams, $resultRedirect);
+        $response = $this->transactionService->processJsResponse($responseParams);
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
 
         $order = $this->checkoutSession->getLastRealOrder();
-
         // append -order prefix to get a new transaction record, if transactionId does not change
         $this->paymentHelper->addTransaction($order->getPayment(), $response, true, Helper\Payment::POSTFIX_ORDER);
 
         if ($response instanceof SuccessResponse) {
-            return $this->getRedirectData($result, self::CHECKOUT_ONEPAGE_SUCCESS);
+            return $this->buildRedirectJsonResult($result, self::CHECKOUT_ONEPAGE_SUCCESS);
         }
-        $this->handleFailedResponse();
 
-        return $this->getRedirectData($result, self::CHECKOUT_URL);
+        $this->handleFailedResponse();
+        return $this->buildRedirectJsonResult($result, self::CHECKOUT_URL);
     }
 
     /**
@@ -242,7 +253,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * @since 1.5.2
      * @since 2.2.2 add routeUrl for fully qualified RedirectUrl
      */
-    private function getRedirectData(Json $resultJson, $path)
+    private function buildRedirectJsonResult(Json $resultJson, $path)
     {
         $routeUrl = $this->context->getUrl()->getRouteUrl();
         $data = [
