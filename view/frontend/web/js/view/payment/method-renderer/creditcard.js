@@ -68,6 +68,7 @@ define(
 
             /**
              * Get the form id string
+             * return {String}
              */
             getFormId: function() {
                 return this.getCode() + SeamlessCreditCardConstants.settings.formIdSuffix;
@@ -83,6 +84,7 @@ define(
 
             /**
              * Get the data
+             * return {Object}
              */
             getData: function () {
                 var data =  {
