@@ -104,6 +104,18 @@ class ResponseHandler implements HandlerInterface
 
             $this->paymentHelper->addTransaction($payment, $sdkResponse);
         } elseif ($sdkResponse instanceof FormInteractionResponse) {
+            $this->session->setFormMethod($sdkResponse->getMethod());
+            $this->session->setFormUrl($sdkResponse->getUrl());
+
+            $formFields = [];
+            foreach ($sdkResponse->getFormFields() as $key => $value) {
+                $formFields[] = [
+                    'key' => $key,
+                    'value' => $value
+                ];
+            }
+            $this->session->setFormFields($formFields);
+
             $postfix = '';
             // add postfix for vault checkouts to avoid overwritten sales_payment_transactions
             // when processing the notify
