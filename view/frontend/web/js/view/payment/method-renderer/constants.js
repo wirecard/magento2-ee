@@ -5,7 +5,7 @@
  * - License can be found under:
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
-//todo: will be substituted by Sebs code
+
 define(
     [],
     function () {
@@ -42,11 +42,11 @@ define(
                 creditCardFormLoading: "credit_card_form_loading_error",
                 creditCardFormSubmitting: "credit_card_form_submitting_error"
             },
-            url: {
-                callback: "wirecard_elasticengine/frontend/callback",
-                creditCard: "wirecard_elasticengine/frontend/creditcard",
-                redirect: "wirecard_elasticengine/frontend/redirect",
-                vault: "wirecard_elasticengine/frontend/vault?hash="
+            routes: {
+                callbackController: "wirecard_elasticengine/frontend/callback",
+                creditCardController: "wirecard_elasticengine/frontend/creditcard",
+                redirectController: "wirecard_elasticengine/frontend/redirect",
+                vaultController: "wirecard_elasticengine/frontend/vault?hash="
             },
             spinner: {
                 start: "processStart",
@@ -65,14 +65,14 @@ define(
             },
             method: {
                 get: "GET",
-                post: "POST",
-                hidden: "hidden"
+                post: "POST"
             },
-            status: {
+            successStatus: {
                 ok: "OK"
             },
             data: {
-                creditCard: "creditcard"
+                creditCard: "creditcard",
+                wppTxType: "wirecard_elasticengine_creditcard"
             },
             tag: {
                 body: "body"
