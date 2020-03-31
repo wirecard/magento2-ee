@@ -99,9 +99,9 @@ class Redirect extends Action implements CsrfAwareActionInterface
     {
         if (!$this->isValidateRequest()) {
             /** @var Json $result */
+
             $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
             $this->handleFailedResponse();
-
             return $this->buildRedirectJsonResult($result, self::CHECKOUT_URL);
         }
 
@@ -119,6 +119,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
      */
     private function isValidateRequest()
     {
+        var_dump($this->paymentMethodName);
         if ($this->paymentMethodName === null || !$this->getRequest()->isPost() && !$this->getRequest()->isGet()) {
             return false;
         }
@@ -253,7 +254,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * @since 1.5.2
      * @since 2.2.2 add routeUrl for fully qualified RedirectUrl
      */
-    private function buildRedirectJsonResult(Json $resultJson, $path)
+    private function buildRedirectJsonResult($resultJson, $path)
     {
         $routeUrl = $this->context->getUrl()->getRouteUrl();
         $data = [
