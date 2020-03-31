@@ -111,6 +111,7 @@ define(
          * @since 3.1.2
          */
         function seamlessFormInitErrorHandler(response) {
+            /* eslint no-console: ["error", { allow: ["error"] }] */
             console.error(response);
             hideSpinner();
             window.scrollTo(0,0);
@@ -147,6 +148,7 @@ define(
          * @since 3.1.2
          */
         function seamlessFormSubmitErrorHandler(response) {
+            /* eslint no-console: ["error", { allow: ["error"] }] */
             console.error(response);
             hideSpinner();
             window.scrollTo(0,0);
@@ -241,6 +243,7 @@ define(
                         },
                         error: function (err) {
                             seamlessFormGeneralErrorHandler(SeamlessCreditCardConstants.error.creditCardFormLoading);
+                            /* eslint no-console: ["error", { allow: ["error"] }] */
                             console.error("Error : " + JSON.stringify(err));
                         }
                     });

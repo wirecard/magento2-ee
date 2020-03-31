@@ -65,8 +65,7 @@ define(
             },
             method: {
                 get: "GET",
-                post: "POST",
-                hidden: "hidden"
+                post: "POST"
             },
             successStatus: {
                 ok: "OK"
