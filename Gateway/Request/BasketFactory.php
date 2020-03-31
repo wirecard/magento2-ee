@@ -196,6 +196,8 @@ class BasketFactory
             throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
+        $totalAmountToRefund = $transaction->getAmount()->getValue();
+
         $basket = new Basket();
         $basket->setVersion($transaction);
         $items = $order->getItems();
@@ -212,12 +214,14 @@ class BasketFactory
             $basket->add($this->itemFactory->refund($item, $order->getCurrencyCode(), (int)$qty));
         }
 
+        $totalAmountToRefund -= $basket->getTotalAmount()->getValue();
         //Current shipping
         $refundedShipping = $orderObject->getOrigData(OrderInterface::SHIPPING_REFUNDED);
         $originShipping = $orderObject->getShippingAmount();
+
         $openShippingAmount = $originShipping - $refundedShipping;
 
-        if ($openShippingAmount > 0) {
+        if ($openShippingAmount > 0 && $totalAmountToRefund > 0) {
             $shippingItem = new Item(
                 'Shipping',
                 new Amount((float)$openShippingAmount, $order->getCurrencyCode()),
