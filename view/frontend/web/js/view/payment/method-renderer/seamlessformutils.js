@@ -12,7 +12,7 @@ define(
         "mage/url",
         "mage/translate",
         "Magento_Ui/js/model/messageList",
-        "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants"
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
     ],
 
     function ($, url, $t, messageList, SeamlessCreditCardConstants) {
@@ -221,7 +221,7 @@ define(
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
                 showSpinner();
                 // wait until WPP-js has been loaded
-                $.getScript(SeamlessCreditCardConstants.routes.paymentPage, function () {
+                $.getScript(window.checkoutConfig.payment[SeamlessCreditCardConstants.data.wppTxType].wpp_url, function () {
                     // Build seamless renderform with full transaction data
                     $.ajax({
                         url: url.build(SeamlessCreditCardConstants.routes.creditCardController),

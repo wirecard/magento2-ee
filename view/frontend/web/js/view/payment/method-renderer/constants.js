@@ -46,8 +46,7 @@ define(
                 callbackController: "wirecard_elasticengine/frontend/callback",
                 creditCardController: "wirecard_elasticengine/frontend/creditcard",
                 redirectController: "wirecard_elasticengine/frontend/redirect",
-                vaultController: "wirecard_elasticengine/frontend/vault?hash=",
-                paymentPage: "https://page-test.secure.epaiement-up2pay.fr/loader/paymentPage.js"
+                vaultController: "wirecard_elasticengine/frontend/vault?hash="
             },
             spinner: {
                 start: "processStart",
