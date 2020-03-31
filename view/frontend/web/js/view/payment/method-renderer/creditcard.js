@@ -52,7 +52,7 @@ define(
 
             /**
              * Check if vault is enabled
-             * @returns {bool}
+             * @returns {Boolean}
              */
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
@@ -68,6 +68,7 @@ define(
 
             /**
              * Get the form id string
+             * return {String}
              */
             getFormId: function() {
                 return this.getCode() + SeamlessCreditCardConstants.settings.formIdSuffix;
@@ -83,15 +84,20 @@ define(
 
             /**
              * Get the data
+             * return {Object}
              */
             getData: function () {
-                return {
-                    "method": this.getCode(),
-                    "po_number": null,
-                    "additional_data": {
-                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler()
+                var data =  {
+                    method: this.getCode(),
+                    po_number: null,
+                    additional_data: {
+                        is_active_payment_token_enabler: false,
                     }
                 };
+
+                this.vaultEnabler.visitAdditionalData(data);
+
+                return data;
             },
 
             /**
@@ -111,7 +117,8 @@ define(
 
             /**
              * Prepare order to be placed
-             * @param data,event
+             * @param {Object} data
+             * @param {Object} event
              */
             placeSeamlessOrder: function (data, event) {
                 SeamlessCreditCardUtils.placeSeamlessOrder.call(this, event, this.getFormId);
