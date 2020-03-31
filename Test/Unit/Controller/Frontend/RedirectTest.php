@@ -159,11 +159,9 @@ class RedirectTest extends PHPUnit_Framework_TestCase
         $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)->disableOriginalConstructor()->getMock();
         $transactionServiceFactory->method('create')->willReturn($this->transactionService);
 
-        $this->orderHelper = $this->getMockBuilder(\Wirecard\ElasticEngine\Gateway\Helper\Order::class)->disableOriginalConstructor()->getMock();
         $this->paymentHelper = $this->getMockBuilder(\Wirecard\ElasticEngine\Gateway\Helper\Payment::class)->disableOriginalConstructor()->getMock();
 
         $this->paymentRepository = $this->getMockBuilder(PaymentRepository::class)->disableOriginalConstructor()->getMock();
-        $this->logger            = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
         $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
         $this->order   = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
@@ -175,8 +173,6 @@ class RedirectTest extends PHPUnit_Framework_TestCase
             $context,
             $this->session,
             $transactionServiceFactory,
-            $this->orderHelper,
-            $this->logger,
             $this->paymentHelper
         );
     }
