@@ -173,18 +173,18 @@ class Callback extends Action
     }
 
     /**
-     * @param array $data
+     * @param array $formData
      * @return Json
      * @since 3.1.2
      */
-    private function createRedirectResult($data)
+    private function createRedirectResult($formData)
     {
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $result->setHttpResponseCode('200');
         $result->setData([
             'status' => 'OK',
-            'data' => $data
+            'data' => $formData
         ]);
 
         return $result;
