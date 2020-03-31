@@ -95,7 +95,7 @@ class Callback extends Action
     public function execute()
     {
         /** Non redirect payment methods */
-        $result = $this->createRedirectResult($this->baseUrl . 'frontend/redirect');
+        $result = $this->createRedirectResult([self::REDIRECT_URL => $this->baseUrl . 'frontend/redirect']);
 
         /** Credit Card three d payments */
         if ($this->isCreditCardThreeD()) {
@@ -107,8 +107,19 @@ class Callback extends Action
 
         /** Redirect payment methods */
         if ($this->session->hasRedirectUrl()) {
-            $result = $this->createRedirectResult($this->session->getRedirectUrl());
+            $result = $this->createRedirectResult([self::REDIRECT_URL => $this->session->getRedirectUrl()]);
             $this->session->unsRedirectUrl();
+        }
+
+        if ($this->session->hasFormUrl()) {
+            $data['form-url'] = $this->session->getFormUrl();
+            $data['form-method'] = $this->session->getFormMethod();
+            $data['form-fields'] = $this->session->getFormFields();
+
+            $this->session->unsFormUrl();
+            $this->session->unsFormMethod();
+            $this->session->unsFormFields();
+            $result = $this->createRedirectResult($data);
         }
 
         return $result;
@@ -162,20 +173,18 @@ class Callback extends Action
     }
 
     /**
-     * @param string $redirectUrl
+     * @param array $formData
      * @return Json
      * @since 3.1.2
      */
-    private function createRedirectResult($redirectUrl)
+    private function createRedirectResult($formData)
     {
-        $data[self::REDIRECT_URL] = $redirectUrl;
-
         /** @var Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $result->setHttpResponseCode('200');
         $result->setData([
             'status' => 'OK',
-            'data' => $data
+            'data' => $formData
         ]);
 
         return $result;

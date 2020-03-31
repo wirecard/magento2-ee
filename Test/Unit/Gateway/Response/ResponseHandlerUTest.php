@@ -75,7 +75,8 @@ class ResponseHandlerUTest extends \PHPUnit_Framework_TestCase
         $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $this->session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
-            ->setMethods([self::SET_REDIRECT_URL, 'unsRedirectUrl', 'unsFormMethod', 'unsFormUrl', 'unsFormFields'])
+            ->setMethods([self::SET_REDIRECT_URL, 'setFormMethod', 'setFormUrl', 'setFormFields',
+             'unsRedirectUrl', 'unsFormMethod', 'unsFormUrl', 'unsFormFields'])
             ->getMock();
 
         $this->paymentData = [
