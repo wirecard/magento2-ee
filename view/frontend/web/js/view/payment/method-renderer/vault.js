@@ -12,12 +12,13 @@ define([
     "Magento_Vault/js/view/payment/method-renderer/vault",
     "mage/url",
     "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
-    "Wirecard_ElasticEngine/js/view/payment/method-renderer/variables"
+    "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants"
 ],
-    function ($, VaultComponent, url, Utils, variables) {
+    function ($, VaultComponent, url, SeamlessCreditCardUtils, SeamlessCreditCardConstants) {
     "use strict";
 
     return VaultComponent.extend({
+        seamlessResponse: null,
         defaults: {
             template: "Wirecard_ElasticEngine/payment/method-vault",
             redirectAfterPlaceOrder: false
@@ -27,15 +28,7 @@ define([
          * Get the form id string
          */
         getFormId: function() {
-            return this.getId() + variables.settings.formIdTokenSuffix;
-        },
-
-        /**
-         * Get the wpp_url
-         * return {String}
-         */
-        getPaymentPageScript: function () {
-            return this.wppUrl;
+            return this.getId() + SeamlessCreditCardConstants.settings.formIdTokenSuffix;
         },
 
         /**
@@ -44,7 +37,7 @@ define([
          */
         getUiInitData() {
             return {
-                txtype: this.wpp_txtype,
+                txtype: SeamlessCreditCardConstants.data.wppTxType,
                 token: this.getToken(),
             };
         },
@@ -77,25 +70,24 @@ define([
          */
         getData: function () {
             var result = null;
-            $(variables.tag.body).trigger(variables.spinner.stop);
+            $(SeamlessCreditCardConstants.tag.body).trigger(SeamlessCreditCardConstants.spinner.stop);
             $.ajax({
-                url: url.build(variables.url.vault+this.getToken()+"hhhh"),
-                type: variables.method.get,
-                dataType: variables.dataType.json,
+                url: url.build(SeamlessCreditCardConstants.routes.vaultController+this.getToken()),
+                type: SeamlessCreditCardConstants.method.get,
+                dataType: SeamlessCreditCardConstants.dataType.json,
                 async: false,
                 success: (data) => {
                     result = data;
-                    return {
-                        "method": result.method_code,
-                        "po_number": null,
-                        "additional_data": {
-                            "token_id": result.token_id,
-                            "recurring_payment" : true
-                        }
-                    };
-                },
+                }
             });
-
+            return {
+                "method": result.method_code,
+                "po_number": null,
+                "additional_data": {
+                    "token_id": result.token_id,
+                    "recurring_payment" : true
+                }
+            };
         },
 
         /**
@@ -112,7 +104,7 @@ define([
         selectPaymentMethod: function () {
             this._super();
             if($("#" + this.getId()).is(":checked") && $("#" + this.getFormId()).is(":empty")) {
-                Utils.seamlessFormInit.call(this);
+                SeamlessCreditCardUtils.seamlessFormInit.call(this);
             }
             return true;
         },
@@ -123,14 +115,14 @@ define([
          * @param event
          */
         placeTokenSeamlessOrder: function (data, event) {
-            return Utils.placeSeamlessOrder.call(this, event, this.getFormId);
+            return SeamlessCreditCardUtils.placeSeamlessOrder.call(this, event, this.getFormId);
         },
 
         /**
          * Handle post order creation operations
          */
         afterPlaceOrder: function () {
-            Utils.afterPlaceOrder.call(this);
+            SeamlessCreditCardUtils.afterPlaceOrder.call(this);
         },
 
         /**
@@ -138,8 +130,8 @@ define([
          * @param response
          * @param err
          */
-        redirectCreditCard: function (response,err) {
-            Utils.redirectCreditCard.call(this,response, err);
+        processThreeDPayment: function (response,err) {
+            SeamlessCreditCardUtils.processThreeDPayment.call(this,response, err);
         }
     });
 });
