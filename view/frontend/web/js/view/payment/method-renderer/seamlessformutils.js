@@ -221,7 +221,7 @@ define(
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
-                let formErrorHandler = seamlessFormInitErrorHandler.bind(this)
+                let formErrorHandler = seamlessFormInitErrorHandler.bind(this);
                 showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(window.checkoutConfig.payment[SeamlessCreditCardConstants.data.wppTxType].wpp_url, function () {
