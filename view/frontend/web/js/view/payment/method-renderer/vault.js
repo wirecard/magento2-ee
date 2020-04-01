@@ -32,6 +32,13 @@ define([
         },
 
         /**
+         * Get the form submit button id
+         */
+        getSubmitBtnId: function() {
+            return SeamlessCreditCardConstants.button.submitOrderVaulted;
+        },
+
+        /**
          * Constructs the ui initialization data object
          * return {Object}
          */

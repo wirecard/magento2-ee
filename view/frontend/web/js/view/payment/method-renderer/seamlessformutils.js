@@ -38,8 +38,8 @@ define(
          * @param id
          * @since 3.1.2
          */
-        function disableButtonById(id) {
-            document.getElementById(id).disabled = true;
+        function disableButtonById() {
+            document.getElementById(this.getSubmitBtnId()).disabled = true;
         }
 
         /**
@@ -47,8 +47,8 @@ define(
          * @param id
          * @since 3.1.2
          */
-        function enableButtonById(id) {
-            document.getElementById(id).disabled = false;
+        function enableButtonById() {
+            document.getElementById(this.getSubmitBtnId()).disabled = false;
         }
 
         /**
@@ -97,7 +97,7 @@ define(
         function seamlessFormSizeHandler () {
             setErrorsCounter( SeamlessCreditCardConstants.localStorage.initValue);
             hideSpinner();
-            enableButtonById(SeamlessCreditCardConstants.button.submitOrder);
+            enableButtonById.call(this);
             let seamlessForm = document.getElementById(this.getFormId());
             window.addEventListener("resize", resizeIFrame);
             if (seamlessForm !== null) {
@@ -115,7 +115,7 @@ define(
             console.error(response);
             hideSpinner();
             window.scrollTo(0,0);
-            disableButtonById(SeamlessCreditCardConstants.button.submitOrder);
+            disableButtonById.call(this);
             let responseKeys = Object.keys(response);
             let hasMessages = false;
             responseKeys.forEach(
@@ -158,7 +158,7 @@ define(
                 function ( item ) {
                     if (validErrorCodes.includes(item.error.code)) {
                         isClientValidation = true;
-                        enableButtonById(SeamlessCreditCardConstants.button.submitOrder);
+                        enableButtonById.call(this);
                     } else {
                         messageList.addErrorMessage({
                             message: item.error.description
@@ -167,7 +167,7 @@ define(
                 }
             );
             if (!isClientValidation) {
-                disableButtonById(SeamlessCreditCardConstants.button.submitOrder);
+                disableButtonById.call(this);
                 setTimeout(function () {
                     location.reload();
                 }, SeamlessCreditCardConstants.settings.reloadTimeout);
@@ -193,7 +193,7 @@ define(
         function seamlessFormGeneralErrorHandler(code) {
             hideSpinner();
             window.scrollTo(0,0);
-            enableButtonById(SeamlessCreditCardConstants.button.submitOrder);
+            enableButtonById.call(this);
             messageList.addErrorMessage({
                 message: $t(code)
             });
@@ -221,6 +221,7 @@ define(
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
+                let formErrorHandler = seamlessFormInitErrorHandler.bind(this)
                 showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(window.checkoutConfig.payment[SeamlessCreditCardConstants.data.wppTxType].wpp_url, function () {
@@ -235,14 +236,14 @@ define(
                                     requestData: JSON.parse(result.uiData),
                                     wrappingDivId: wrappingDivId,
                                     onSuccess: formSizeHandler,
-                                    onError: seamlessFormInitErrorHandler
+                                    onError: formErrorHandler
                                 });
                             } else {
-                                seamlessFormGeneralErrorHandler(SeamlessCreditCardConstants.error.creditCardFormLoading);
+                                seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
                             }
                         },
                         error: function (err) {
-                            seamlessFormGeneralErrorHandler(SeamlessCreditCardConstants.error.creditCardFormLoading);
+                            seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
                             /* eslint no-console: ["error", { allow: ["error"] }] */
                             console.error("Error : " + JSON.stringify(err));
                         }
@@ -250,8 +251,8 @@ define(
                 });
                 setTimeout(function(){
                     if (typeof WPP === SeamlessCreditCardConstants.dataType.undefined) {
-                        disableButtonById(SeamlessCreditCardConstants.button.submitOrder);
-                        seamlessFormGeneralErrorHandler(SeamlessCreditCardConstants.error.creditCardFormLoading);
+                        disableButtonById.call(this);
+                        seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
                     }
                 }, 1000);
             },
@@ -263,7 +264,7 @@ define(
              */
             placeSeamlessOrder: function(event, creditcardFormId) {
                 showSpinner();
-                disableButtonById(SeamlessCreditCardConstants.button.submitOrder);
+                disableButtonById.call(this);
                 if (event) {
                     event.preventDefault();
                 }
@@ -315,7 +316,7 @@ define(
                         }
                     },
                     error: function () {
-                        seamlessFormGeneralErrorHandler(SeamlessCreditCardConstants.error.creditCardFormSubmitting);
+                        seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormSubmitting);
                     }
                 });
             }

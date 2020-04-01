@@ -51,6 +51,13 @@ define(
             },
 
             /**
+             * Get the form submit button id
+             */
+            getSubmitBtnId: function() {
+                return SeamlessCreditCardConstants.button.submitOrder;
+            },
+
+            /**
              * Check if vault is enabled
              * @returns {Boolean}
              */

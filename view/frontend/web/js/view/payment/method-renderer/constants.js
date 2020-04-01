@@ -36,7 +36,8 @@ define(
                 counterKey: "errorCounter"
             },
             button: {
-                submitOrder: "wirecard_elasticengine_creditcard_submit"
+                submitOrder: "wirecard_elasticengine_creditcard_submit",
+                submitOrderVaulted: "wirecard_elasticengine_cc_vault_submit"
             },
             error: {
                 creditCardFormLoading: "credit_card_form_loading_error",
