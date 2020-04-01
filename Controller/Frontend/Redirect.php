@@ -119,7 +119,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
      */
     private function isValidateRequest()
     {
-        var_dump($this->paymentMethodName);
         if ($this->paymentMethodName === null || !$this->getRequest()->isPost() && !$this->getRequest()->isGet()) {
             return false;
         }
