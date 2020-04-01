@@ -94,6 +94,8 @@ define(
              * return {Object}
              */
             getData: function () {
+                //this payload is needed in this format from magento
+                /*eslint-disable */
                 let data =  {
                     method: this.getCode(),
                     po_number: null,
@@ -101,6 +103,7 @@ define(
                         is_active_payment_token_enabler: false,
                     }
                 };
+                /*eslint-enable */
 
                 this.vaultEnabler.visitAdditionalData(data);
 
