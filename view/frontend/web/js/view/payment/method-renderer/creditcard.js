@@ -94,7 +94,7 @@ define(
              * return {Object}
              */
             getData: function () {
-                var data =  {
+                let data =  {
                     method: this.getCode(),
                     po_number: null,
                     additional_data: {
