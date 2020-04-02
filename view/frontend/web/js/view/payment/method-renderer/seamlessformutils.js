@@ -222,6 +222,7 @@ define(
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);
                 let formErrorHandler = seamlessFormInitErrorHandler.bind(this);
+                let self = this;
                 showSpinner();
                 // wait until WPP-js has been loaded
                 $.getScript(window.checkoutConfig.payment[SeamlessCreditCardConstants.data.wppTxType].wpp_url, function () {
@@ -239,11 +240,11 @@ define(
                                     onError: formErrorHandler
                                 });
                             } else {
-                                seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
+                                seamlessFormGeneralErrorHandler.call(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
                             }
                         },
                         error: function (err) {
-                            seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
+                            seamlessFormGeneralErrorHandler.call(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
                             /* eslint no-console: ["error", { allow: ["error"] }] */
                             console.error("Error : " + JSON.stringify(err));
                         }
@@ -251,8 +252,8 @@ define(
                 });
                 setTimeout(function(){
                     if (typeof WPP === SeamlessCreditCardConstants.dataType.undefined) {
-                        disableButtonById.call(this);
-                        seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormLoading);
+                        disableButtonById.call(self);
+                        seamlessFormGeneralErrorHandler.call(self,SeamlessCreditCardConstants.error.creditCardFormLoading);
                     }
                 }, 1000);
             },
@@ -316,7 +317,7 @@ define(
                         }
                     },
                     error: function () {
-                        seamlessFormGeneralErrorHandler.bind(this,SeamlessCreditCardConstants.error.creditCardFormSubmitting);
+                        seamlessFormGeneralErrorHandler.call(this,SeamlessCreditCardConstants.error.creditCardFormSubmitting);
                     }
                 });
             }

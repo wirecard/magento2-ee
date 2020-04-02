@@ -11,9 +11,9 @@
 define(
     [
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
-        "Magento_Vault/js/view/payment/vault-enabler",
+        "Wirecard_ElasticEngine/js/view/payment/seamless-vault-enabler",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
-        "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants"
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
     ],
     function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants) {
         "use strict";
