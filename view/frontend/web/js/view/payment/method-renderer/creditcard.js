@@ -23,7 +23,7 @@ define(
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
-            
+          
             /**
              * @returns {exports.initialize}
              */
@@ -72,7 +72,7 @@ define(
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
             },
-
+          
             /**
              * Get the form id string
              * return {String}
