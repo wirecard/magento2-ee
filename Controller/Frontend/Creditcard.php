@@ -25,6 +25,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
+use Wirecard\ElasticEngine\Gateway\Helper\AccountHolderMapper;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
@@ -187,9 +188,12 @@ class Creditcard extends Action
 
         $address = $this->getRequest()->getParam("address");
         if ($address) {
-            $this->updateAccountHolder(
-                $orderDto,
+            $accountHolderMapper = new AccountHolderMapper(
+                $orderDto->transaction->getAccountHolder(),
                 $address
+            );
+            $orderDto->transaction->setAccountHolder(
+                $accountHolderMapper->update()
             );
         }
 
@@ -377,52 +381,52 @@ class Creditcard extends Action
      *
      * @since 3.1.2
      */
-    private function updateAccountHolder(OrderDto $orderDto, $accountHolderData)
-    {
-        /** @var AccountHolder $accountHolder */
-        $accountHolder = $orderDto->transaction->getAccountHolder();
-        $accountHolderData = json_decode($accountHolderData, false);
-
-        if (property_exists($accountHolderData, "countryId") &&
-            property_exists($accountHolderData, "city") &&
-            property_exists($accountHolderData, "street") &&
-            is_array($accountHolderData->street) &&
-            count($accountHolderData->street) > 0
-        ) {
-            $address = new \Wirecard\PaymentSdk\Entity\Address(
-                $accountHolderData->countryId,
-                $accountHolderData->city,
-                $accountHolderData->street[0]
-            );
-            $streets = $accountHolderData->street;
-            if (array_key_exists(1, $streets))
-            {
-                $address->setStreet2($accountHolderData->street[1]);
-            }
-            if (array_key_exists(2, $streets))
-            {
-                $address->setStreet3($accountHolderData->street[2]);
-            }
-            $accountHolder->setAddress($address);
-        }
-        if (property_exists($accountHolderData, "regionCode")) {
-            $address->setState($accountHolderData->region);
-        }
-        if (property_exists($accountHolderData, "postcode")) {
-            $address->setPostalCode($accountHolderData->postcode);
-        }
-        if (property_exists($accountHolderData, "firstname")) {
-            $accountHolder->setFirstName($accountHolderData->firstname);
-        }
-        if (property_exists($accountHolderData, "lastname")) {
-            $accountHolder->setLastName($accountHolderData->lastname);
-        }
-        if (property_exists($accountHolderData, "telephone")) {
-            $accountHolder->setPhone($accountHolderData->telephone);
-        }
-
-        $orderDto->transaction->setAccountHolder($accountHolder);
-    }
+//    private function updateAccountHolder(OrderDto $orderDto, $accountHolderData)
+//    {
+//        /** @var AccountHolder $accountHolder */
+//        $accountHolder = $orderDto->transaction->getAccountHolder();
+//        $accountHolderData = json_decode($accountHolderData, false);
+//
+//        if (property_exists($accountHolderData, "countryId") &&
+//            property_exists($accountHolderData, "city") &&
+//            property_exists($accountHolderData, "street") &&
+//            is_array($accountHolderData->street) &&
+//            count($accountHolderData->street) > 0
+//        ) {
+//            $address = new \Wirecard\PaymentSdk\Entity\Address(
+//                $accountHolderData->countryId,
+//                $accountHolderData->city,
+//                $accountHolderData->street[0]
+//            );
+//            $streets = $accountHolderData->street;
+//            if (array_key_exists(1, $streets))
+//            {
+//                $address->setStreet2($accountHolderData->street[1]);
+//            }
+//            if (array_key_exists(2, $streets))
+//            {
+//                $address->setStreet3($accountHolderData->street[2]);
+//            }
+//            $accountHolder->setAddress($address);
+//        }
+//        if (property_exists($accountHolderData, "regionCode")) {
+//            $address->setState($accountHolderData->region);
+//        }
+//        if (property_exists($accountHolderData, "postcode")) {
+//            $address->setPostalCode($accountHolderData->postcode);
+//        }
+//        if (property_exists($accountHolderData, "firstname")) {
+//            $accountHolder->setFirstName($accountHolderData->firstname);
+//        }
+//        if (property_exists($accountHolderData, "lastname")) {
+//            $accountHolder->setLastName($accountHolderData->lastname);
+//        }
+//        if (property_exists($accountHolderData, "telephone")) {
+//            $accountHolder->setPhone($accountHolderData->telephone);
+//        }
+//
+//        $orderDto->transaction->setAccountHolder($accountHolder);
+//    }
 
     /**
      * Build basket based on stored items
