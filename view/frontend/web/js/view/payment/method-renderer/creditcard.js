@@ -14,8 +14,10 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/seamless-vault-enabler",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
+        "Magento_Checkout/js/model/quote",
+        "mage/url"
     ],
-    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants) {
+    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote, url) {
         "use strict";
         return ParentPaymentMethod.extend({
             seamlessResponse: null,
@@ -23,6 +25,9 @@ define(
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
+
+            previousBillingAddress: quote.billingAddress(),
+            newBillingAddress: null,
           
             /**
              * @returns {exports.initialize}
@@ -32,6 +37,18 @@ define(
                 if (!localStorage.getItem(SeamlessCreditCardConstants.localStorage.counterKey)) {
                     localStorage.setItem(SeamlessCreditCardConstants.localStorage.counterKey, SeamlessCreditCardConstants.localStorage.initValue);
                 }
+                let self = this;
+                quote.billingAddress.subscribe(function () {
+                    let currentBillingAddress = quote.billingAddress();
+                    if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
+                        (currentBillingAddress !== null)
+                    ) {
+                        self.newBillingAddress = currentBillingAddress;
+                        self.seamlessFormInit();
+                        self.newBillingAddress = null;
+                        self.previousBillingAddress = currentBillingAddress;
+                    }
+                });
                 return this;
             },
 
@@ -86,7 +103,14 @@ define(
              * return {Object}
              */
             getUiInitData() {
-                return {"txtype": SeamlessCreditCardConstants.data.wppTxType};
+                let payload = {
+                    txtype: SeamlessCreditCardConstants.data.wppTxType
+                };
+                if (this.newBillingAddress !== null)
+                {
+                    payload.address = JSON.stringify(this.newBillingAddress)
+                }
+                return payload;
             },
 
             /**
