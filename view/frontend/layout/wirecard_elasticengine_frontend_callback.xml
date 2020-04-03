@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+ */
+-->
+
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
+    <container name="root">
+        <block class="Wirecard\ElasticEngine\Block\Checkout\CreditCardThreeDForm" template="Wirecard_ElasticEngine::creditcardthreedform.phtml" name="frontend.creditcardthreedform" cacheable="false" />
+</container>
+</layout>
