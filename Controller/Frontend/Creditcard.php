@@ -383,28 +383,43 @@ class Creditcard extends Action
         $accountHolder = $orderDto->transaction->getAccountHolder();
         $accountHolderData = json_decode($accountHolderData, false);
 
-        $address = new \Wirecard\PaymentSdk\Entity\Address(
-            $accountHolderData->countryId,
-            $accountHolderData->city,
-            $accountHolderData->street[0]
-        );
-//        if ($accountHolderData->street[1]) {
-//            $address->setStreet2($accountHolderData->street[1]);
-//        }
-//        if ($accountHolderData->street[2]) {
-//            $address->setStreet3($accountHolderData->street[2]);
-//        }
-        if ($accountHolderData->regionCode) {
+        if (property_exists($accountHolderData, "countryId") &&
+            property_exists($accountHolderData, "city") &&
+            property_exists($accountHolderData, "street") &&
+            is_array($accountHolderData->street) &&
+            count($accountHolderData->street) > 0
+        ) {
+            $address = new \Wirecard\PaymentSdk\Entity\Address(
+                $accountHolderData->countryId,
+                $accountHolderData->city,
+                $accountHolderData->street[0]
+            );
+            $streets = $accountHolderData->street;
+            if (array_key_exists(1, $streets))
+            {
+                $address->setStreet2($accountHolderData->street[1]);
+            }
+            if (array_key_exists(2, $streets))
+            {
+                $address->setStreet3($accountHolderData->street[2]);
+            }
+            $accountHolder->setAddress($address);
+        }
+        if (property_exists($accountHolderData, "regionCode")) {
             $address->setState($accountHolderData->region);
         }
-        if ($accountHolderData->postcode) {
+        if (property_exists($accountHolderData, "postcode")) {
             $address->setPostalCode($accountHolderData->postcode);
         }
-
-        $accountHolder->setFirstName($accountHolderData->firstname);
-        $accountHolder->setLastName($accountHolderData->lastname);
-        $accountHolder->setPhone($accountHolderData->telephone);
-        $accountHolder->setAddress($address);
+        if (property_exists($accountHolderData, "firstname")) {
+            $accountHolder->setFirstName($accountHolderData->firstname);
+        }
+        if (property_exists($accountHolderData, "lastname")) {
+            $accountHolder->setLastName($accountHolderData->lastname);
+        }
+        if (property_exists($accountHolderData, "telephone")) {
+            $accountHolder->setPhone($accountHolderData->telephone);
+        }
 
         $orderDto->transaction->setAccountHolder($accountHolder);
     }
