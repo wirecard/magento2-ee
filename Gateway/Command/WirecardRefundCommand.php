@@ -101,12 +101,13 @@ class WirecardRefundCommand implements CommandInterface
         }
 
         if ($response instanceof FailureResponse) {
-            $errors = "";
+            $errors = [];
             foreach ($response->getStatusCollection()->getIterator() as $item) {
                 /** @var Status $item */
-                $errors .= $item->getDescription() . "<br>\n";
+                $errors[] = $item->getDescription();
             }
-            throw new InvalidArgumentException($errors);
+            $errorMessage = implode(" / ", $errors);
+            throw new InvalidArgumentException($errorMessage);
         }
     }
 }
