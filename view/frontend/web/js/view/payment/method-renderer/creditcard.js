@@ -106,9 +106,8 @@ define(
                 let payload = {
                     txtype: SeamlessCreditCardConstants.data.wppTxType
                 };
-                if (this.newBillingAddress !== null)
-                {
-                    payload.address = JSON.stringify(this.newBillingAddress)
+                if (this.newBillingAddress !== null) {
+                    payload.billing_address = JSON.stringify(this.newBillingAddress)
                 }
                 return payload;
             },

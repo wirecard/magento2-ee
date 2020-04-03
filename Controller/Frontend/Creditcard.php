@@ -47,6 +47,9 @@ class Creditcard extends Action
     /*' @var string FORM parameter name to send the transaction type in AJAX */
     const FRONTEND_DATAKEY_TXTYPE = 'txtype';
 
+    /** @var string */
+    const FRONTEND_BILLING_ADDRESS = "billing_address";
+
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
 
@@ -186,7 +189,7 @@ class Creditcard extends Action
         $this->addCreditCardThreeDsFields($orderDto);
         $this->addCreditCardToken($orderDto);
 
-        $address = $this->getRequest()->getParam("address");
+        $address = $this->getRequest()->getParam(self::FRONTEND_BILLING_ADDRESS);
         if ($address) {
             $accountHolderMapper = new AccountHolderMapper(
                 $orderDto->transaction->getAccountHolder(),
