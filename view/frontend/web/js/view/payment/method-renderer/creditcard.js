@@ -43,10 +43,17 @@ define(
                     let currentBillingAddress = quote.billingAddress();
                     self.newBillingAddress = currentBillingAddress;
 
-                    if($('#wirecard_elasticengine_creditcard').length) {
-                        if ($("#wirecard_elasticengine_creditcard").is(':checked')) {
-                            if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
-                                (currentBillingAddress !== null) && self.isOnSelect === false
+                    if(($(SeamlessCreditCardConstants.id.creditCardRadioButton).length) &&
+                        ($(SeamlessCreditCardConstants.id.creditCardRadioButton).is(':checked'))
+                    ) {
+                        if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
+                            (currentBillingAddress !== null) && self.isOnSelect === false
+                        ) {
+                            self.seamlessFormInit();
+                            self.previousBillingAddress = currentBillingAddress;
+                        } else if (self.isOnSelect === false) {
+                            if (($(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).length) &&
+                                ($(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).is(':checked'))
                             ) {
                                 self.seamlessFormInit();
                                 self.previousBillingAddress = currentBillingAddress;
