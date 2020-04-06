@@ -25,16 +25,23 @@
     "magento/community-edition": ">=2.1.0",
     "friendsofphp/php-cs-fixer": "^2.2",
     "codacy/coverage": "1.4.2",
-    "symfony/yaml": "^3"
+    "symfony/yaml": "^3",
+    "magento/magento-coding-standard": "^5.0"
   },
   "type": "magento2-module",
   "scripts": {
     "upload-coverage": "codacycoverage clover build/coverage/xml",
-    "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
+    "cs-check": "phpcs .",
     "cs-fix": "php-cs-fixer fix .",
     "test": "phpunit --colors=always",
     "test-coverage": "phpunit --coverage-clover build/coverage/xml",
-    "test-reports": "phpunit --coverage-html reports/coverage --coverage-clover reports/clover.xml --coverage-crap4j reports/crap4j.xml --log-junit reports/junit.xml"
+    "test-reports": "phpunit --coverage-html reports/coverage --coverage-clover reports/clover.xml --coverage-crap4j reports/crap4j.xml --log-junit reports/junit.xml",
+    "post-install-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ],
+    "post-update-cmd": [
+      "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/)"
+    ]
   },
   "autoload": {
     "psr-4": {
