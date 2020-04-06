@@ -47,10 +47,31 @@ class AccountHolderMapper
     }
 
     /**
+     * Update account holder personal data
      * @return AccountHolder
      * @since 3.1.2
      */
     public function updateAccountHolder()
+    {
+        $this->updateAccountHolderAddress();
+        if (property_exists($this->accountHolderData, self::KEY_FIRST_NAME)) {
+            $this->accountHolder->setFirstName($this->accountHolderData->firstname);
+        }
+        if (property_exists($this->accountHolderData, self::KEY_LAST_NAME)) {
+            $this->accountHolder->setLastName($this->accountHolderData->lastname);
+        }
+        if (property_exists($this->accountHolderData, self::KEY_PHONE)) {
+            $this->accountHolder->setPhone($this->accountHolderData->telephone);
+        }
+
+        return $this->accountHolder;
+    }
+
+    /**
+     * Update account holder address data
+     * @since 3.1.2
+     */
+    private function updateAccountHolderAddress()
     {
         if (property_exists($this->accountHolderData, self::KEY_COUNTRY_ID) &&
             property_exists($this->accountHolderData, self::KEY_CITY) &&
@@ -78,16 +99,5 @@ class AccountHolderMapper
             }
             $this->accountHolder->setAddress($address);
         }
-        if (property_exists($this->accountHolderData, self::KEY_FIRST_NAME)) {
-            $this->accountHolder->setFirstName($this->accountHolderData->firstname);
-        }
-        if (property_exists($this->accountHolderData, self::KEY_LAST_NAME)) {
-            $this->accountHolder->setLastName($this->accountHolderData->lastname);
-        }
-        if (property_exists($this->accountHolderData, self::KEY_PHONE)) {
-            $this->accountHolder->setPhone($this->accountHolderData->telephone);
-        }
-
-        return $this->accountHolder;
     }
 }
