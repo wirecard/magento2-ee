@@ -10,14 +10,14 @@
 
 define(
     [
+        "jquery",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "Wirecard_ElasticEngine/js/view/payment/seamless-vault-enabler",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
-        "Magento_Checkout/js/model/quote",
-        "mage/url"
+        "Magento_Checkout/js/model/quote"
     ],
-    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote, url) {
+    function ($, ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote) {
         "use strict";
         return ParentPaymentMethod.extend({
             seamlessResponse: null,
@@ -28,6 +28,7 @@ define(
 
             previousBillingAddress: quote.billingAddress(),
             newBillingAddress: null,
+            isOnSelect: false,
           
             /**
              * @returns {exports.initialize}
@@ -40,16 +41,33 @@ define(
                 let self = this;
                 quote.billingAddress.subscribe(function () {
                     let currentBillingAddress = quote.billingAddress();
-                    if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
-                        (currentBillingAddress !== null)
-                    ) {
-                        self.newBillingAddress = currentBillingAddress;
-                        self.seamlessFormInit();
-                        self.newBillingAddress = null;
-                        self.previousBillingAddress = currentBillingAddress;
+                    self.newBillingAddress = currentBillingAddress;
+
+                    if($('#wirecard_elasticengine_creditcard').length) {
+                        if ($("#wirecard_elasticengine_creditcard").is(':checked')) {
+                            if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
+                                (currentBillingAddress !== null) && self.isOnSelect === false
+                            ) {
+                                self.seamlessFormInit();
+                                self.previousBillingAddress = currentBillingAddress;
+                            }
+                        }
                     }
                 });
                 return this;
+            },
+
+            /**
+             *
+             */
+            getNewBillingAddress: function() {
+                let self = this;
+                if($('#wirecard_elasticengine_creditcard').length) {
+                    if ($("#wirecard_elasticengine_creditcard").is(':checked')) {
+                        self.newBillingAddress = quote.billingAddress();
+                        self.isOnSelect = false;
+                    }
+                }
             },
 
             /**
@@ -109,6 +127,7 @@ define(
                 if (this.newBillingAddress !== null) {
                     payload.billing_address = JSON.stringify(this.newBillingAddress)
                 }
+                this.newBillingAddress = null;
                 return payload;
             },
 
@@ -137,6 +156,7 @@ define(
              * Handle the selected payment method
              */
             selectPaymentMethod: function() {
+                this.isOnSelect = true;
                 this._super();
                 return true;
             },
