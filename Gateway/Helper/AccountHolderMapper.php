@@ -50,7 +50,7 @@ class AccountHolderMapper
      * @return AccountHolder
      * @since 3.1.2
      */
-    public function update()
+    public function updateAccountHolder()
     {
         if (property_exists($this->accountHolderData, self::KEY_COUNTRY_ID) &&
             property_exists($this->accountHolderData, self::KEY_CITY) &&
