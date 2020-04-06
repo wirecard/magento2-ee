@@ -44,7 +44,7 @@ define(
                     self.newBillingAddress = currentBillingAddress;
 
                     if(($(SeamlessCreditCardConstants.id.creditCardRadioButton).length) &&
-                        ($(SeamlessCreditCardConstants.id.creditCardRadioButton).is(':checked'))
+                        ($(SeamlessCreditCardConstants.id.creditCardRadioButton).is(":checked"))
                     ) {
                         if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
                             (currentBillingAddress !== null) && self.isOnSelect === false
@@ -53,7 +53,7 @@ define(
                             self.previousBillingAddress = currentBillingAddress;
                         } else if (self.isOnSelect === false) {
                             if (($(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).length) &&
-                                ($(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).is(':checked'))
+                                ($(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).is(":checked"))
                             ) {
                                 self.seamlessFormInit();
                                 self.previousBillingAddress = currentBillingAddress;
@@ -69,11 +69,10 @@ define(
              */
             getNewBillingAddress: function() {
                 let self = this;
-                if($('#wirecard_elasticengine_creditcard').length) {
-                    if ($("#wirecard_elasticengine_creditcard").is(':checked')) {
-                        self.newBillingAddress = quote.billingAddress();
-                        self.isOnSelect = false;
-                    }
+                if(($(SeamlessCreditCardConstants.id.creditCardRadioButton).length) &&
+                ($(SeamlessCreditCardConstants.id.creditCardRadioButton).is(":checked"))) {
+                    self.newBillingAddress = quote.billingAddress();
+                    self.isOnSelect = false;
                 }
             },
 
@@ -132,7 +131,7 @@ define(
                     txtype: SeamlessCreditCardConstants.data.wppTxType
                 };
                 if (this.newBillingAddress !== null) {
-                    payload.billing_address = JSON.stringify(this.newBillingAddress)
+                    payload.billingAddress = JSON.stringify(this.newBillingAddress);
                 }
                 this.newBillingAddress = null;
                 return payload;

@@ -64,12 +64,10 @@ class AccountHolderMapper
                 $this->accountHolderData->street[0]
             );
             $streets = $this->accountHolderData->street;
-            if (array_key_exists(1, $streets))
-            {
+            if (array_key_exists(1, $streets)) {
                 $address->setStreet2($this->accountHolderData->street[1]);
             }
-            if (array_key_exists(2, $streets))
-            {
+            if (array_key_exists(2, $streets)) {
                 $address->setStreet3($this->accountHolderData->street[2]);
             }
             if (property_exists($this->accountHolderData, self::KEY_REGION_CODE)) {

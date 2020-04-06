@@ -48,7 +48,7 @@ class Creditcard extends Action
     const FRONTEND_DATAKEY_TXTYPE = 'txtype';
 
     /** @var string */
-    const FRONTEND_BILLING_ADDRESS = "billing_address";
+    const FRONTEND_BILLING_ADDRESS = "billingAddress";
 
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
