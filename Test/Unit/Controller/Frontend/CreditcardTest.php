@@ -80,7 +80,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->initWithMockInput(
-            'fake',
             [
                 Creditcard::FRONTEND_DATAKEY_TXTYPE => "fake",
             ]
@@ -96,7 +95,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithFailedCreditCardUiFromBackend()
     {
         $this->initWithMockInput(
-            Creditcard::FRONTEND_CODE_CREDITCARD,
             [
                 Creditcard::FRONTEND_DATAKEY_TXTYPE => Creditcard::FRONTEND_CODE_CREDITCARD,
             ]
@@ -144,7 +142,6 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $mockedUiJson = '{"foo":"bar"}';
 
         $this->initWithMockInput(
-            Creditcard::FRONTEND_CODE_CREDITCARD,
             [
                 Creditcard::FRONTEND_DATAKEY_TXTYPE => Creditcard::FRONTEND_CODE_CREDITCARD,
             ]
@@ -186,17 +183,15 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         $this->controller->execute();
     }
 
-    private function initWithMockInput($mockedParameterValue = null, $requestParams = null)
+    private function initWithMockInput($requestParams = null)
     {
         $this->resultJson = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->getMock();
 
         $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
 
-        if (!empty($mockedParameterValue)) {
+        if (!empty($requestParams)) {
             $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
-            if ($requestParams === null) {
-                $requestMock->expects($this->once())->method('getParam')->willReturn($mockedParameterValue);
-            } else {
+            if ($requestParams !== null) {
                 $requestMock->expects($this->once())->method('getParams')->willReturn($requestParams);
             }
 
