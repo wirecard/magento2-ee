@@ -10,23 +10,11 @@
 namespace Wirecard\ElasticEngine\Controller\Frontend;
 
 use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\View\Result\Layout;
 
 class Sepamandate extends Action
 {
-
-    /**
-     * Sepamandate constructor.
-     * @param Context $context
-     */
-    public function __construct(
-        Context $context
-    ) {
-        parent::__construct($context);
-    }
-
     /**
      * @return Layout
      * @since 3.1.2 Update the template to layout
