@@ -79,7 +79,12 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             'errMsg' => 'Unknown transaction type',
         ];
 
-        $this->initWithMockInput('fake');
+        $this->initWithMockInput(
+            'fake',
+            array(
+                Creditcard::FRONTEND_DATAKEY_TXTYPE => "fake",
+            )
+        );
 
         $quote = $this->getMockBuilder(Quote::class)->disableOriginalConstructor()->getMock();
         $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
@@ -90,7 +95,12 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteWithFailedCreditCardUiFromBackend()
     {
-        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD, []);
+        $this->initWithMockInput(
+            Creditcard::FRONTEND_CODE_CREDITCARD,
+            array(
+                Creditcard::FRONTEND_DATAKEY_TXTYPE => Creditcard::FRONTEND_CODE_CREDITCARD,
+            )
+        );
 
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
@@ -133,7 +143,12 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     {
         $mockedUiJson = '{"foo":"bar"}';
 
-        $this->initWithMockInput(Creditcard::FRONTEND_CODE_CREDITCARD, []);
+        $this->initWithMockInput(
+            Creditcard::FRONTEND_CODE_CREDITCARD,
+            array(
+                Creditcard::FRONTEND_DATAKEY_TXTYPE => Creditcard::FRONTEND_CODE_CREDITCARD,
+            )
+        );
 
         $quote = $this->getMockBuilder(Quote::class)
             ->setMethods([
@@ -179,8 +194,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         if (!empty($mockedParameterValue)) {
             $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
-            $requestMock->expects($this->once())->method('getParam')->willReturn($mockedParameterValue);
-            if ($requestParams !== null) {
+            if ($requestParams === null) {
+                $requestMock->expects($this->once())->method('getParam')->willReturn($mockedParameterValue);
+            } else {
                 $requestMock->expects($this->once())->method('getParams')->willReturn($requestParams);
             }
 

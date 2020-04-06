@@ -169,8 +169,8 @@ class Creditcard extends Action
         if (is_null($quote)) {
             return $this->buildErrorResponse('no quote found');
         }
-
-        $transactionType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
+        $params = $this->getRequest()->getParams();
+        $transactionType = $params[self::FRONTEND_DATAKEY_TXTYPE];
 
         if (!$this->isCreditCardTransactionType($transactionType)) {
             return $this->buildErrorResponse('Unknown transaction type');
@@ -187,17 +187,18 @@ class Creditcard extends Action
         $orderDto->transaction = new CreditCardTransaction();
         $this->addCreditCardFields($orderDto);
         $this->addCreditCardThreeDsFields($orderDto);
-        $this->addCreditCardToken($orderDto);
+        $this->addCreditCardToken($orderDto, $params);
 
-        $address = $this->getRequest()->getParam(self::FRONTEND_BILLING_ADDRESS);
-        if ($address) {
-            $accountHolderMapper = new AccountHolderMapper(
-                $orderDto->transaction->getAccountHolder(),
-                $address
-            );
-            $orderDto->transaction->setAccountHolder(
-                $accountHolderMapper->updateAccountHolder()
-            );
+        if (array_key_exists(self::FRONTEND_BILLING_ADDRESS, $params)) {
+            if ($address = $params[self::FRONTEND_BILLING_ADDRESS]) {
+                $accountHolderMapper = new AccountHolderMapper(
+                    $orderDto->transaction->getAccountHolder(),
+                    $address
+                );
+                $orderDto->transaction->setAccountHolder(
+                    $accountHolderMapper->updateAccountHolder()
+                );
+            }
         }
 
         try {
@@ -328,9 +329,9 @@ class Creditcard extends Action
      * @param OrderDto $orderDto
      * @since 3.1.0
      */
-    private function addCreditCardToken(OrderDto $orderDto)
+    private function addCreditCardToken(OrderDto $orderDto, $params)
     {
-        if ($this->isTokenizedTransactionType($this->getRequest()->getParams())) {
+        if ($this->isTokenizedTransactionType($params)) {
             $tokenFromBrowser = $this->getRequest()->getParam('token');
             $customerId = $this->customerSession->getCustomerId();
             $token = $this->paymentTokenManagement->getByPublicHash($tokenFromBrowser, $customerId);
