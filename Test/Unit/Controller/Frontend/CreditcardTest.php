@@ -81,9 +81,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $this->initWithMockInput(
             'fake',
-            array(
+            [
                 Creditcard::FRONTEND_DATAKEY_TXTYPE => "fake",
-            )
+            ]
         );
 
         $quote = $this->getMockBuilder(Quote::class)->disableOriginalConstructor()->getMock();
@@ -97,9 +97,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
     {
         $this->initWithMockInput(
             Creditcard::FRONTEND_CODE_CREDITCARD,
-            array(
+            [
                 Creditcard::FRONTEND_DATAKEY_TXTYPE => Creditcard::FRONTEND_CODE_CREDITCARD,
-            )
+            ]
         );
 
         $quote = $this->getMockBuilder(Quote::class)
@@ -145,9 +145,9 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
 
         $this->initWithMockInput(
             Creditcard::FRONTEND_CODE_CREDITCARD,
-            array(
+            [
                 Creditcard::FRONTEND_DATAKEY_TXTYPE => Creditcard::FRONTEND_CODE_CREDITCARD,
-            )
+            ]
         );
 
         $quote = $this->getMockBuilder(Quote::class)
