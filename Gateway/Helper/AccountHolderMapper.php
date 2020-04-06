@@ -84,13 +84,7 @@ class AccountHolderMapper
                 $this->accountHolderData->city,
                 $this->accountHolderData->street[0]
             );
-            $streets = $this->accountHolderData->street;
-            if (array_key_exists(1, $streets)) {
-                $address->setStreet2($this->accountHolderData->street[1]);
-            }
-            if (array_key_exists(2, $streets)) {
-                $address->setStreet3($this->accountHolderData->street[2]);
-            }
+            $this->updateOptionalStreets($address);
             if (property_exists($this->accountHolderData, self::KEY_REGION_CODE)) {
                 $address->setState($this->accountHolderData->region);
             }
@@ -98,6 +92,22 @@ class AccountHolderMapper
                 $address->setPostalCode($this->accountHolderData->postcode);
             }
             $this->accountHolder->setAddress($address);
+        }
+    }
+
+    /**
+     * Update optional account holder streets
+     * @param Address $address
+     * @since 3.1.2
+     */
+    private function updateOptionalStreets(Address $address)
+    {
+        $streets = $this->accountHolderData->street;
+        if (array_key_exists(1, $streets)) {
+            $address->setStreet2($this->accountHolderData->street[1]);
+        }
+        if (array_key_exists(2, $streets)) {
+            $address->setStreet3($this->accountHolderData->street[2]);
         }
     }
 }
