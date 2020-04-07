@@ -3,7 +3,7 @@
 /**
  * Shop System Plugins:
  * - Terms of Use can be found under:
- * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE.txt
  * - License can be found under:
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
@@ -74,8 +74,8 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <model>PaypalFacade</model>
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
-                <merchant_account_id>9abf05c1-c266-46ae-8eac-7f87ca97af28</merchant_account_id>
-                <secret>5fca2a83-89ca-4f9e-8cf7-4ca74a02773f</secret>
+                <merchant_account_id>2a0e9351-24ed-4110-9a1b-fd0fee6bec26</merchant_account_id>
+                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
                 <send_shopping_basket>1</send_shopping_basket>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_paypal>
@@ -131,8 +131,8 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <merchant_account_id>933ad170-88f0-4c3d-a862-cff315ecfbc0</merchant_account_id>
                 <secret>5caf2ed9-5f79-4e65-98cb-0b70d6f569aa</secret>
                 <enable_bic>0</enable_bic>
-                <creditor_id>DE98ZZZ09999999999</creditor_id>
-                <creditor_name>Max Mustermann</creditor_name>
+                <creditor_id/>
+                <creditor_name/>
                 <creditor_city>City</creditor_city>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_sepadirectdebit>
@@ -255,8 +255,8 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <title>Wirecard Alipay Cross-border</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
-                <http_user>16390-testing</http_user>
-                <http_pass>3!3013=D3fD8X7</http_pass>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>0</can_void>
@@ -269,16 +269,16 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <model>AlipayXBorderFacade</model>
                 <order_status>processing</order_status>
                 <payment_action>debit</payment_action>
-                <merchant_account_id>47cd4edf-b13c-4298-9344-53119ab8b9df</merchant_account_id>
-                <secret>94fe4f40-16c5-4019-9c6c-bc33ec858b1d</secret>
+                <merchant_account_id>7ca48aa0-ab12-4560-ab4a-af1c477cce43</merchant_account_id>
+                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_alipayxborder>
             <wirecard_elasticengine_poipia>
                 <title>Wirecard Payment on Invoice / Payment in Advance</title>
                 <active>0</active>
                 <base_url>https://api-test.wirecard.com</base_url>
-                <http_user>16390-testing</http_user>
-                <http_pass>3!3013=D3fD8X7</http_pass>
+                <http_user>70000-APITEST-AP</http_user>
+                <http_pass>qD2wzQ_hrc!8</http_pass>
                 <can_initialize>1</can_initialize>
                 <can_authorize>0</can_authorize>
                 <can_void>1</can_void>
@@ -291,8 +291,8 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
                 <poipia_action>invoice</poipia_action>
-                <merchant_account_id>dcd72c94-25df-4794-8197-daf029c82d65</merchant_account_id>
-                <secret>cbdf53d2-b9ff-4355-80d5-8836342ac336</secret>
+                <merchant_account_id>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</merchant_account_id>
+                <secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</secret>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_poipia>
             <wirecard_elasticengine_paybybankapp>
