@@ -188,18 +188,7 @@ class Creditcard extends Action
         $this->addCreditCardFields($orderDto);
         $this->addCreditCardThreeDsFields($orderDto);
         $this->addCreditCardToken($orderDto, $params);
-
-        if (array_key_exists(self::FRONTEND_BILLING_ADDRESS, $params)) {
-            if ($address = $params[self::FRONTEND_BILLING_ADDRESS]) {
-                $accountHolderMapper = new AccountHolderMapper(
-                    $orderDto->transaction->getAccountHolder(),
-                    $address
-                );
-                $orderDto->transaction->setAccountHolder(
-                    $accountHolderMapper->updateAccountHolder()
-                );
-            }
-        }
+        $this->updateAccountHolder($orderDto, $params);
 
         try {
             $data = $transactionService->getCreditCardUiWithData(
@@ -327,6 +316,7 @@ class Creditcard extends Action
 
     /**
      * @param OrderDto $orderDto
+     * @param array $params
      * @since 3.1.0
      */
     private function addCreditCardToken(OrderDto $orderDto, $params)
@@ -336,6 +326,25 @@ class Creditcard extends Action
             $customerId = $this->customerSession->getCustomerId();
             $token = $this->paymentTokenManagement->getByPublicHash($tokenFromBrowser, $customerId);
             $orderDto->transaction->setTokenId($token->getGatewayToken());
+        }
+    }
+
+    /**
+     * @param OrderDto $orderDto
+     * @param array $params
+     */
+    private function updateAccountHolder(OrderDto $orderDto, array $params)
+    {
+        if ((array_key_exists(self::FRONTEND_BILLING_ADDRESS, $params)) &&
+            $params[self::FRONTEND_BILLING_ADDRESS]
+        ) {
+            $accountHolderMapper = new AccountHolderMapper(
+                $orderDto->transaction->getAccountHolder(),
+                $params[self::FRONTEND_BILLING_ADDRESS]
+            );
+            $orderDto->transaction->setAccountHolder(
+                $accountHolderMapper->updateAccountHolder()
+            );
         }
     }
 
@@ -378,59 +387,6 @@ class Creditcard extends Action
         $orderDto->transaction->setIpAddress($orderDto->quote->getRemoteIp());
         $orderDto->transaction->setConsumerId($orderDto->quote->getCustomerId());
     }
-
-    /**
-     * @param OrderDto $orderDto
-     * @param $accountHolderData
-     *
-     * @since 3.1.2
-     */
-//    private function updateAccountHolder(OrderDto $orderDto, $accountHolderData)
-//    {
-//        /** @var AccountHolder $accountHolder */
-//        $accountHolder = $orderDto->transaction->getAccountHolder();
-//        $accountHolderData = json_decode($accountHolderData, false);
-//
-//        if (property_exists($accountHolderData, "countryId") &&
-//            property_exists($accountHolderData, "city") &&
-//            property_exists($accountHolderData, "street") &&
-//            is_array($accountHolderData->street) &&
-//            count($accountHolderData->street) > 0
-//        ) {
-//            $address = new \Wirecard\PaymentSdk\Entity\Address(
-//                $accountHolderData->countryId,
-//                $accountHolderData->city,
-//                $accountHolderData->street[0]
-//            );
-//            $streets = $accountHolderData->street;
-//            if (array_key_exists(1, $streets))
-//            {
-//                $address->setStreet2($accountHolderData->street[1]);
-//            }
-//            if (array_key_exists(2, $streets))
-//            {
-//                $address->setStreet3($accountHolderData->street[2]);
-//            }
-//            $accountHolder->setAddress($address);
-//        }
-//        if (property_exists($accountHolderData, "regionCode")) {
-//            $address->setState($accountHolderData->region);
-//        }
-//        if (property_exists($accountHolderData, "postcode")) {
-//            $address->setPostalCode($accountHolderData->postcode);
-//        }
-//        if (property_exists($accountHolderData, "firstname")) {
-//            $accountHolder->setFirstName($accountHolderData->firstname);
-//        }
-//        if (property_exists($accountHolderData, "lastname")) {
-//            $accountHolder->setLastName($accountHolderData->lastname);
-//        }
-//        if (property_exists($accountHolderData, "telephone")) {
-//            $accountHolder->setPhone($accountHolderData->telephone);
-//        }
-//
-//        $orderDto->transaction->setAccountHolder($accountHolder);
-//    }
 
     /**
      * Build basket based on stored items
