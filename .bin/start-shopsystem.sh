@@ -42,6 +42,9 @@ fi
 docker-compose build --build-arg MAGENTO_VERSION="${MAGENTO2_VERSION}" web
 docker-compose up -d
 sleep 30
+docker-compose ps
+
+echo "NGROK_URL = $NGROK_URL"
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
     echo "Waiting for docker container to initialize"
     sleep 5
