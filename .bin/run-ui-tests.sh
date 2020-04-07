@@ -39,34 +39,33 @@ elif [[ $GIT_BRANCH =~ ${MINOR_RELEASE} ]]; then
   TEST_GROUP="${MINOR_RELEASE}"
 # run all tests in nothing else specified
 else
-  TEST_GROUP="major"
-#  TEST_GROUP="${MAJOR_RELEASE}"
+  TEST_GROUP="${MAJOR_RELEASE}"
 fi
 
 #install codeception and it's dependencies
 # we cannot use codeception container here because UI tests need to execute docker commands in
 # magento2 container (cleaning cache and running cron jobs)
 
-#rm -rf composer.lock
-#docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require codeception/codeception --dev
-#docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require codeception/module-webdriver --dev
-#docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require codeception/module-asserts --dev
-#docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require codeception/module-db --dev
+rm -rf composer.lock
+composer require codeception/codeception --dev
+composer require codeception/module-webdriver --dev
+composer require codeception/module-asserts --dev
+composer require codeception/module-db --dev
 
-# run tests
-#docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require wirecard/shopsystem-ui-testsuite:dev-master
-export SHOP_SYSTEM="${SHOP_SYSTEM}"
+#get shopsystem-ui-testsuite project
+composer require wirecard/shopsystem-ui-testsuite:dev-master
 export SHOP_URL="${NGROK_URL}"
-export SHOP_VERSION="${SHOP_VERSION}"
-export SHOP_SYSTEM_CONTAINER_NAME="${SHOP_SYSTEM_CONTAINER_NAME}"
 export EXTENSION_VERSION="${GIT_BRANCH}"
 export DB_HOST="${MYSQL_HOST}"
 export DB_NAME="${MYSQL_DATABASE}"
 export DB_USER="${MYSQL_USER}"
 export DB_PASSWORD="${MYSQL_PASSWORD}"
+export SHOP_SYSTEM_CONTAINER_NAME="${SHOP_SYSTEM_CONTAINER_NAME}"
+export SHOP_VERSION="${SHOP_VERSION}"
 export BROWSERSTACK_USER="${BROWSERSTACK_USER}"
 export BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}"
 
+# run tests
 vendor/bin/codecept run   acceptance \
   -g "${TEST_GROUP}" -g "${SHOP_SYSTEM}" \
   --env ci --html --xml
