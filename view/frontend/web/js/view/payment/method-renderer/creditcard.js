@@ -42,16 +42,12 @@ define(
                     let currentBillingAddress = quote.billingAddress();
                     self.newBillingAddress = currentBillingAddress;
                     if (self.isCreditCardSelected()) {
-                        if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
-                            (currentBillingAddress !== null) && self.isOnSelect === false
+                        if (((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
+                            (currentBillingAddress !== null) && self.isOnSelect === false) ||
+                            (self.isOnSelect === false && self.isSameShippingAndBillingAddress())
                         ) {
                             self.seamlessFormInit();
                             self.previousBillingAddress = currentBillingAddress;
-                        } else if (self.isOnSelect === false) {
-                            if (self.isSameShippingAndBillingAddress()) {
-                                self.seamlessFormInit();
-                                self.previousBillingAddress = currentBillingAddress;
-                            }
                         }
                     }
                 });
