@@ -41,19 +41,14 @@ define(
                 quote.billingAddress.subscribe(function () {
                     let currentBillingAddress = quote.billingAddress();
                     self.newBillingAddress = currentBillingAddress;
-
-                    if((document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton)) &&
-                        (document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton).checked)
-                    ) {
+                    if (self.isCreditCardSelected()) {
                         if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
                             (currentBillingAddress !== null) && self.isOnSelect === false
                         ) {
                             self.seamlessFormInit();
                             self.previousBillingAddress = currentBillingAddress;
                         } else if (self.isOnSelect === false) {
-                            if ((document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress)) &&
-                                (document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).checked)
-                            ) {
+                            if (self.isSameShippingAndBillingAddress()) {
                                 self.seamlessFormInit();
                                 self.previousBillingAddress = currentBillingAddress;
                             }
@@ -64,15 +59,32 @@ define(
             },
 
             /**
-             *
+             *  Get current billing address
              */
             getNewBillingAddress: function() {
                 let self = this;
-                if((document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton)) &&
-                (document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton).checked)) {
+                if (this.isCreditCardSelected()) {
                     self.newBillingAddress = quote.billingAddress();
                     self.isOnSelect = false;
                 }
+            },
+
+            /**
+             * Check if credit card is selected
+             * @returns {boolean}
+             */
+            isCreditCardSelected: function() {
+                return !!((document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton)) &&
+                    (document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton).checked));
+            },
+
+            /**
+             * Check if same shipping and billing checkbox is selected
+             * @returns {boolean}
+             */
+            isSameShippingAndBillingAddress: function() {
+                return !!((document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress)) &&
+                    (document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).checked));
             },
 
             /**
