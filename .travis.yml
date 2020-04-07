@@ -48,11 +48,11 @@ jobs:
         #   get latest release shop extension version from SHOPVERSIONS file
         - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
         - echo "Testing with Magento2 ${MAGENTO2_VERSION} version."
-        - bash .bin/remove-composer-lock-file.sh
-        - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
-        - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
-        - travis_retry composer install $COMPOSER_ARGS
-      script: bash .bin/run-ui-tests.sh
+#        - bash .bin/remove-composer-lock-file.sh
+#        - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
+#        - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
+#        - travis_retry composer install $COMPOSER_ARGS
+      script: bash .bin/setup-and-run-ui-tests.sh
       after_script: skip
       after_success:
         - bash .bin/upload-logs-and-notify.sh

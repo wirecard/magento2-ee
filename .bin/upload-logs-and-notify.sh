@@ -50,10 +50,10 @@ if [ ! -d "${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}" ]; then
 fi
 
 # copy report files
-cp tests/_output/*.html ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
-cp tests/_output/*.xml ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
+cp vendor/wirecard/shopsystem-ui-testsuite/_output/*.html ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
+cp vendor/wirecard/shopsystem-ui-testsuite/_output/*.xml ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
 if [[ $1 == 'fail' ]]; then
-    cp tests/_output/*.fail.png ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
+    cp vendor/wirecard/shopsystem-ui-testsuite/_output/*.fail.png ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
 fi
 
 cd ${REPO_NAME}

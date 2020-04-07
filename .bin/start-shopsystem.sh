@@ -1,19 +1,45 @@
 #!/bin/bash
-# Shop System SDK:
+# Shop System Plugins:
 # - Terms of Use can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
 set -e
+set -a
+source .env
 
-# input argument version of extension to install
+for ARGUMENT in "$@"; do
+  KEY=$(echo "${ARGUMENT}" | cut -f1 -d=)
+  VALUE=$(echo "${ARGUMENT}" | cut -f2 -d=)
+
+  case "${KEY}" in
+  NGROK_URL) NGROK_URL=${VALUE} ;;
+  SHOP_VERSION) MAGENTO2_VERSION=${VALUE} ;;
+  TRAVIS_PULL_REQUEST) TRAVIS_PULL_REQUEST="${VALUE}" ;;
+  TRAVIS_PULL_REQUEST_BRANCH) TRAVIS_PULL_REQUEST_BRANCH="${VALUE}" ;;
+  TRAVIS_BRANCH) TRAVIS_BRANCH="${VALUE}" ;;
+  IS_LATEST_EXTENSION_RELEASE) IS_LATEST_EXTENSION_RELEASE=${VALUE} ;;
+  LATEST_RELEASED_SHOP_EXTENSION_VERSION) LATEST_RELEASED_SHOP_EXTENSION_VERSION=${VALUE} ;;
+  *) ;;
+  esac
+done
+
 EXTENSION_VERSION="dev-master"
-if [ "$1" != "" ]; then
-    EXTENSION_VERSION="$1"
+# find out which shop extension vesion will be used for tests
+# if tests triggered by PR, use extension version (branch) which originated PR
+if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
+    EXTENSION_VERSION="dev-${TRAVIS_PULL_REQUEST_BRANCH}"
+# this means we want to test with latest released extension version
+elif [ "${IS_LATEST_EXTENSION_RELEASE}" == "1" ]; then
+# get latest released extension version
+    EXTENSION_VERSION="${LATEST_RELEASED_SHOP_EXTENSION_VERSION}"
+# otherwise use version from current branch
+else
+    EXTENSION_VERSION="dev-${TRAVIS_BRANCH}"
 fi
 
-docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
+docker-compose build --build-arg MAGENTO_VERSION="${MAGENTO2_VERSION}" web
 docker-compose up -d
 sleep 30
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
@@ -22,34 +48,26 @@ while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
 done
 
 # install magento shop
-docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento.sh
-docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata.sh
+docker-compose exec web install-magento.sh
+docker-compose exec web install-sampledata.sh
 
 # install wirecard magento2 plugin
-docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:${EXTENSION_VERSION}
-docker exec -it ${MAGENTO_CONTAINER_NAME} cp /var/www/html/vendor/wirecard/magento2-ee/tests/_data/crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
+docker-compose exec web composer require wirecard/magento2-ee:"${EXTENSION_VERSION}"
+#docker-compose exec web cp /var/www/html/vendor/wirecard/magento2-ee/tests/_data/crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc
+docker-compose exec web php bin/magento setup:upgrade
+docker-compose exec web php bin/magento setup:di:compile
 #this gives the shop time to init
-curl $NGROK_URL --head
+curl "$NGROK_URL" --head
 sleep 30
-curl $NGROK_URL --head
+curl "$NGROK_URL" --head
 
 echo "\nModify File Permissions To Load CSS!\n"
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
-
-# change gateway if so configured
-docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
-            --env MYSQL_USER=${MYSQL_USER} \
-            --env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-            --env GATEWAY=${GATEWAY} \
-            ${MAGENTO_CONTAINER_NAME} bash -c "cd /magento2-plugin/tests/_data/ && php configure_payment_method_db.php creditcard authorize"
-
+docker-compose exec web bash -c "chmod -R 777 ./"
 # start polling
-docker exec -it ${MAGENTO_CONTAINER_NAME}  service cron start
+docker-compose exec web service cron start
 
 # clean cache to activate payment method
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:flush
+docker-compose exec web php bin/magento cache:clean
+docker-compose exec web php bin/magento cache:flush
 
 sleep 60

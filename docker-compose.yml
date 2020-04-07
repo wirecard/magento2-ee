@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   web:
-    container_name: "${MAGENTO_CONTAINER_NAME}"
+    container_name: web
     build: .
     ports:
       - "9090:80"
@@ -13,9 +13,16 @@ services:
       MAGENTO_URL: "${NGROK_URL}"
     volumes:
       - ".:/magento2-plugin"
+    networks:
+      - magento2-net
   db:
     image: mysql:5.6.23
     ports:
       - ${MYSQL_PORT_OUT}:${MYSQL_PORT_IN}
     env_file:
       - .env
+    networks:
+      - magento2-net
+# Setup container network, this allows for mysql to be unavailable for the www
+networks:
+  magento2-net:
