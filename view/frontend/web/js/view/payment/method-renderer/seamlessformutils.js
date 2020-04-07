@@ -218,9 +218,6 @@ define(
              * @since 3.1.2
              */
             seamlessFormInit: function() {
-                if (typeof this.getNewBillingAddress === "function") {
-                    this.getNewBillingAddress();
-                }
                 let uiInitData = this.getUiInitData();
                 let wrappingDivId = this.getFormId();
                 let formSizeHandler = seamlessFormSizeHandler.bind(this);

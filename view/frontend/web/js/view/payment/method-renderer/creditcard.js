@@ -128,11 +128,9 @@ define(
              */
             getUiInitData() {
                 let payload = {
-                    txtype: SeamlessCreditCardConstants.data.wppTxType
+                    txtype: SeamlessCreditCardConstants.data.wppTxType,
+                    billingAddress: JSON.stringify(this.newBillingAddress)
                 };
-                if (this.newBillingAddress !== null) {
-                    payload.billingAddress = JSON.stringify(this.newBillingAddress);
-                }
                 this.newBillingAddress = null;
                 return payload;
             },
@@ -171,6 +169,7 @@ define(
              * Handle form initialization
              */
             seamlessFormInit: function () {
+                this.getNewBillingAddress();
                 SeamlessCreditCardUtils.seamlessFormInit.call(this);
             },
 
