@@ -25,6 +25,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
+use Wirecard\ElasticEngine\Gateway\Helper\AccountHolderMapper;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
 use Wirecard\ElasticEngine\Gateway\Helper\ThreeDsHelper;
@@ -45,6 +46,9 @@ class Creditcard extends Action
 
     /*' @var string FORM parameter name to send the transaction type in AJAX */
     const FRONTEND_DATAKEY_TXTYPE = 'txtype';
+
+    /** @var string */
+    const FRONTEND_BILLING_ADDRESS = "billingAddress";
 
     /** @var string key CREDITCARD as sent by frontend */
     const FRONTEND_CODE_CREDITCARD = 'wirecard_elasticengine_creditcard';
@@ -165,8 +169,8 @@ class Creditcard extends Action
         if (is_null($quote)) {
             return $this->buildErrorResponse('no quote found');
         }
-
-        $transactionType = $this->getRequest()->getParam(self::FRONTEND_DATAKEY_TXTYPE);
+        $params = $this->getRequest()->getParams();
+        $transactionType = $params[self::FRONTEND_DATAKEY_TXTYPE];
 
         if (!$this->isCreditCardTransactionType($transactionType)) {
             return $this->buildErrorResponse('Unknown transaction type');
@@ -183,7 +187,8 @@ class Creditcard extends Action
         $orderDto->transaction = new CreditCardTransaction();
         $this->addCreditCardFields($orderDto);
         $this->addCreditCardThreeDsFields($orderDto);
-        $this->addCreditCardToken($orderDto);
+        $this->addCreditCardToken($orderDto, $params);
+        $this->updateAccountHolder($orderDto, $params);
 
         try {
             $data = $transactionService->getCreditCardUiWithData(
@@ -311,15 +316,35 @@ class Creditcard extends Action
 
     /**
      * @param OrderDto $orderDto
+     * @param array $params
      * @since 3.1.0
      */
-    private function addCreditCardToken(OrderDto $orderDto)
+    private function addCreditCardToken(OrderDto $orderDto, $params)
     {
-        if ($this->isTokenizedTransactionType($this->getRequest()->getParams())) {
+        if ($this->isTokenizedTransactionType($params)) {
             $tokenFromBrowser = $this->getRequest()->getParam('token');
             $customerId = $this->customerSession->getCustomerId();
             $token = $this->paymentTokenManagement->getByPublicHash($tokenFromBrowser, $customerId);
             $orderDto->transaction->setTokenId($token->getGatewayToken());
+        }
+    }
+
+    /**
+     * @param OrderDto $orderDto
+     * @param array $params
+     */
+    private function updateAccountHolder(OrderDto $orderDto, array $params)
+    {
+        if ((array_key_exists(self::FRONTEND_BILLING_ADDRESS, $params)) &&
+            $params[self::FRONTEND_BILLING_ADDRESS]
+        ) {
+            $accountHolderMapper = new AccountHolderMapper(
+                $orderDto->transaction->getAccountHolder(),
+                $params[self::FRONTEND_BILLING_ADDRESS]
+            );
+            $orderDto->transaction->setAccountHolder(
+                $accountHolderMapper->updateAccountHolder()
+            );
         }
     }
 
