@@ -84,8 +84,8 @@ define(
                 }
             },
             id: {
-                creditCardRadioButton: "#wirecard_elasticengine_creditcard",
-                sameShippingAndBillingAddress: "#billing-address-same-as-shipping-wirecard_elasticengine_creditcard"
+                creditCardRadioButton: "wirecard_elasticengine_creditcard",
+                sameShippingAndBillingAddress: "billing-address-same-as-shipping-wirecard_elasticengine_creditcard"
             }
         };
     }

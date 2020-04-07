@@ -10,14 +10,13 @@
 
 define(
     [
-        "jquery",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "Wirecard_ElasticEngine/js/view/payment/seamless-vault-enabler",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
         "Magento_Checkout/js/model/quote"
     ],
-    function ($, ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote) {
+    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote) {
         "use strict";
         return ParentPaymentMethod.extend({
             seamlessResponse: null,
@@ -43,8 +42,8 @@ define(
                     let currentBillingAddress = quote.billingAddress();
                     self.newBillingAddress = currentBillingAddress;
 
-                    if(($(SeamlessCreditCardConstants.id.creditCardRadioButton).length) &&
-                        ($(SeamlessCreditCardConstants.id.creditCardRadioButton).is(":checked"))
+                    if((document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton)) &&
+                        (document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton).checked)
                     ) {
                         if ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
                             (currentBillingAddress !== null) && self.isOnSelect === false
@@ -52,8 +51,8 @@ define(
                             self.seamlessFormInit();
                             self.previousBillingAddress = currentBillingAddress;
                         } else if (self.isOnSelect === false) {
-                            if (($(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).length) &&
-                                ($(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).is(":checked"))
+                            if ((document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress)) &&
+                                (document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress).checked)
                             ) {
                                 self.seamlessFormInit();
                                 self.previousBillingAddress = currentBillingAddress;
@@ -69,8 +68,8 @@ define(
              */
             getNewBillingAddress: function() {
                 let self = this;
-                if(($(SeamlessCreditCardConstants.id.creditCardRadioButton).length) &&
-                ($(SeamlessCreditCardConstants.id.creditCardRadioButton).is(":checked"))) {
+                if((document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton)) &&
+                (document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton).checked)) {
                     self.newBillingAddress = quote.billingAddress();
                     self.isOnSelect = false;
                 }
