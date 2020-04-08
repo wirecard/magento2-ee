@@ -66,6 +66,8 @@ export BROWSERSTACK_USER="${BROWSERSTACK_USER}"
 export BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}"
 
 # run tests
-vendor/bin/codecept run   acceptance \
+
+echo "SHOP_SYSTEM_CONTAINER_NAME= ${SHOP_SYSTEM_CONTAINER_NAME}"
+vendor/bin/codecept run acceptance \
   -g "${TEST_GROUP}" -g "${SHOP_SYSTEM}" \
   --env ci --html --xml
