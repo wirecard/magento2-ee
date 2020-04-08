@@ -14,8 +14,9 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/seamless-vault-enabler",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
+        "Magento_Checkout/js/model/quote"
     ],
-    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants) {
+    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote) {
         "use strict";
         return ParentPaymentMethod.extend({
             seamlessResponse: null,
@@ -23,6 +24,10 @@ define(
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
+
+            previousBillingAddress: quote.billingAddress(),
+            newBillingAddress: null,
+            isOnSelect: false,
           
             /**
              * @returns {exports.initialize}
@@ -32,7 +37,49 @@ define(
                 if (!localStorage.getItem(SeamlessCreditCardConstants.localStorage.counterKey)) {
                     localStorage.setItem(SeamlessCreditCardConstants.localStorage.counterKey, SeamlessCreditCardConstants.localStorage.initValue);
                 }
+                let self = this;
+                quote.billingAddress.subscribe(function () {
+                    let currentBillingAddress = quote.billingAddress();
+                    self.newBillingAddress = currentBillingAddress;
+                    if (self.isCreditCardSelected() && ((
+                        ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
+                            currentBillingAddress !== null) ||
+                        self.isSameShippingAndBillingAddress()) &&
+                        self.isOnSelect === false)
+                    ) {
+                        self.seamlessFormInit();
+                        self.previousBillingAddress = currentBillingAddress;
+                    }
+                });
                 return this;
+            },
+
+            /**
+             *  Get current billing address
+             */
+            getNewBillingAddress: function() {
+                if (this.isCreditCardSelected()) {
+                    this.newBillingAddress = quote.billingAddress();
+                    this.isOnSelect = false;
+                }
+            },
+
+            /**
+             * Check if credit card radio button is selected
+             * @returns {boolean}
+             */
+            isCreditCardSelected: function() {
+                let creditCardRadioButton = document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton);
+                return !!(creditCardRadioButton) && (creditCardRadioButton.checked);
+            },
+
+            /**
+             * Check if same shipping and billing checkbox is selected
+             * @returns {boolean}
+             */
+            isSameShippingAndBillingAddress: function() {
+                let sameShippingAndBilling = document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress);
+                return !!(sameShippingAndBilling) && (sameShippingAndBilling.checked);
             },
 
             /**
@@ -86,7 +133,12 @@ define(
              * return {Object}
              */
             getUiInitData() {
-                return {"txtype": SeamlessCreditCardConstants.data.wppTxType};
+                let payload = {
+                    txtype: SeamlessCreditCardConstants.data.wppTxType,
+                    billingAddress: JSON.stringify(this.newBillingAddress)
+                };
+                this.newBillingAddress = null;
+                return payload;
             },
 
             /**
@@ -114,6 +166,7 @@ define(
              * Handle the selected payment method
              */
             selectPaymentMethod: function() {
+                this.isOnSelect = true;
                 this._super();
                 return true;
             },
@@ -122,6 +175,7 @@ define(
              * Handle form initialization
              */
             seamlessFormInit: function () {
+                this.getNewBillingAddress();
                 SeamlessCreditCardUtils.seamlessFormInit.call(this);
             },
 
