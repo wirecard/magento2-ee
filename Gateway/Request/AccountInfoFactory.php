@@ -127,6 +127,8 @@ class AccountInfoFactory
      * @param string $token
      * @throws \Exception
      * @since 2.2.0
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function setCreditCardCreationDate($accountInfo, $token)
     {
