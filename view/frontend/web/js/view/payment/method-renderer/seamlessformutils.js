@@ -116,18 +116,15 @@ define(
             hideSpinner();
             window.scrollTo(0,0);
             disableButtonById.call(this);
-            let responseKeys = Object.keys(response);
             let hasMessages = false;
-            responseKeys.forEach(
-                function ( responseKey ) {
-                    if (responseKey.startsWith(SeamlessCreditCardConstants.wpp.errorPrefix)) {
-                        hasMessages = true;
-                        messageList.addErrorMessage({
-                            message: response[responseKey]
-                        });
-                    }
+            Object.entries(response).forEach(([responseKey, value]) => {
+                if (responseKey.startsWith(SeamlessCreditCardConstants.wpp.errorPrefix)) {
+                    hasMessages = true;
+                    messageList.addErrorMessage({
+                        message: value
+                    });
                 }
-            );
+            });
             if (!hasMessages) {
                 messageList.addErrorMessage({
                     message: $t(SeamlessCreditCardConstants.error.creditCardFormLoading)
