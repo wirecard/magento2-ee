@@ -4,7 +4,7 @@ services:
     container_name: web
     build: .
     ports:
-      - "9090:80"
+      - "8080:80"
     links:
       - db
     env_file:
