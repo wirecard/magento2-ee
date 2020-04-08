@@ -54,10 +54,10 @@ composer require codeception/module-asserts --dev
 composer require codeception/module-db --dev
 
 #get shopsystem-ui-testsuite project
-composer require wirecard/shopsystem-ui-testsuite:dev-TPWDCEE-6288-configuration
+composer require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
 export SHOP_URL="${NGROK_URL}"
 export EXTENSION_VERSION="${GIT_BRANCH}"
-export DB_HOST="${MYSQL_HOST}"
+export DB_HOST="localhost"
 export DB_NAME="${MYSQL_DATABASE}"
 export DB_USER="${MYSQL_USER}"
 export DB_PORT="${MYSQL_PORT_OUT}"
@@ -69,6 +69,6 @@ export BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}"
 
 CURRENT_DIR=$(pwd)
 # run tests
-cd vendor/wirecard/shopsystem-ui-testsuite && $CURRENT_DIR/vendor/bin/codecept run acceptance vendor/wirecard/shopsystem-ui-testsuite \
+cd vendor/wirecard/shopsystem-ui-testsuite && "$CURRENT_DIR"/vendor/bin/codecept run acceptance \
   -g "${TEST_GROUP}" -g "${SHOP_SYSTEM}" \
-  --env ci-magento2 --html --xml
+  --env ci-magento2 --debug --steps --html --xml
