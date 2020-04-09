@@ -98,9 +98,6 @@ class ResponseHandler implements HandlerInterface
 
         // clear session variables
         $this->session->unsRedirectUrl();
-        $this->session->unsFormMethod();
-        $this->session->unsFormUrl();
-        $this->session->unsFormFields();
 
         if ($sdkResponse instanceof InteractionResponse) {
             $this->session->setRedirectUrl($sdkResponse->getRedirectUrl());
