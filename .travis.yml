@@ -27,7 +27,6 @@ jobs:
         - LATEST_EXTENSION_RELEASE=1
         - ALLOW_FAIL=1
   include:
-  
     - &acceptance-test
       stage: acceptance-test
       #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
@@ -40,7 +39,7 @@ jobs:
         - GATEWAY=API-TEST
         - MAGENTO2_RELEASE_VERSION=1
       install:
-         - export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_COMPATIBILITY_FILE}); fi
+        - export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_COMPATIBILITY_FILE}); fi
         #   get latest release shop extension version from SHOPVERSIONS file
         - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
         - echo "Testing with Magento2 ${MAGENTO2_VERSION} version."
