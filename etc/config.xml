@@ -131,9 +131,9 @@ BQnWHd2Us5b/ep7LME9hZ8u3hu/Kc6Vk24c5p3WUOiyaTiw+Ym3QDXl1wBSl9DdM
                 <merchant_account_id>933ad170-88f0-4c3d-a862-cff315ecfbc0</merchant_account_id>
                 <secret>5caf2ed9-5f79-4e65-98cb-0b70d6f569aa</secret>
                 <enable_bic>0</enable_bic>
-                <creditor_id/>
+                <creditor_id>DE98ZZZ09999999999</creditor_id>
                 <creditor_name/>
-                <creditor_city>City</creditor_city>
+                <creditor_city/>
                 <send_additional>1</send_additional>
             </wirecard_elasticengine_sepadirectdebit>
             <wirecard_elasticengine_sepacredit>
