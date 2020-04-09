@@ -58,7 +58,7 @@ docker-compose exec web install-sampledata.sh
 
 # install wirecard magento2 plugin
 docker-compose exec web composer require wirecard/magento2-ee:"${EXTENSION_VERSION}"
-docker-compose exec web cp /var/www/html/vendor/wirecard/magento2-ee/tests/_data/crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc
+docker-compose exec web cp /var/www/html/vendor/wirecard/magento2-ee/.bin/test-crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc/crontab.xml
 docker-compose exec web php bin/magento setup:upgrade
 docker-compose exec web php bin/magento setup:di:compile
 #this gives the shop time to init
