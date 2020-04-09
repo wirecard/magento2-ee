@@ -18,14 +18,19 @@
     "php-http/discovery": "1.4.0",
     "wirecard/magento2-ee-compat": "^1.0.0 || ^2.0.0",
     "wirecard/io-converter": "^1.0",
-    "wirecard/payment-sdk-php": "4.0.2"
+    "wirecard/payment-sdk-php": "4.0.2",
+    "wirecard/shopsystem-ui-testsuite": "dev-TWDCEE-6288-configuration"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7",
     "magento/community-edition": ">=2.1.0",
     "friendsofphp/php-cs-fixer": "^2.2",
     "codacy/coverage": "1.4.2",
-    "symfony/yaml": "^3"
+    "symfony/yaml": "^3",
+    "codeception/codeception": "^4.1",
+    "codeception/module-webdriver": "^1.0",
+    "codeception/module-asserts": "^1.1",
+    "codeception/module-db": "^1.0"
   },
   "type": "magento2-module",
   "scripts": {
