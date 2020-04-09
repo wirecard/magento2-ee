@@ -41,6 +41,7 @@ else
   TEST_GROUP="${MAJOR_RELEASE}"
 fi
 
+rm -rf composer.lock
 #get shopsystem-ui-testsuite project
 composer require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
 
