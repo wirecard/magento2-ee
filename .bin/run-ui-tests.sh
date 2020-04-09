@@ -43,7 +43,7 @@ fi
 
 rm -rf composer.lock
 #get shopsystem-ui-testsuite project
-composer config minimum-stability dev
+composer global config minimum-stability dev
 composer require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
 
 docker-compose run \
