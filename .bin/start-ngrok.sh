@@ -39,5 +39,6 @@ NGROK_URL_HTTPS=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-out
 while [ ! "${NGROK_URL_HTTPS}" ] || [ "${NGROK_URL_HTTPS}" = 'null' ]; do
   echo "Waiting for ngrok to initialize"
   NGROK_URL_HTTPS=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
+  ((c++)) && ((c == 50)) && break
   sleep 1
 done

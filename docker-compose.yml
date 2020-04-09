@@ -1,7 +1,6 @@
 version: '3.0'
 services:
   web:
-    container_name: web
     build: .
     ports:
       - "8080:80"
@@ -21,6 +20,15 @@ services:
       - ${MYSQL_PORT_OUT}:${MYSQL_PORT_IN}
     env_file:
       - .env
+    networks:
+      - magento2-net
+  codecept:
+    image: codeception/codeception
+    build:
+      context: .
+      dockerfile: Dockerfile_codeception
+    volumes:
+      - "${PWD}/vendor/wirecard/shopsystem-ui-testsuite:/project"
     networks:
       - magento2-net
 # Setup container network, this allows for mysql to be unavailable for the www

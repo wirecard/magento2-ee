@@ -39,7 +39,7 @@ else
     EXTENSION_VERSION="dev-${TRAVIS_BRANCH}"
 fi
 
-docker-compose build --build-arg MAGENTO_VERSION="${MAGENTO2_VERSION}" web
+#docker-compose build --build-arg MAGENTO_VERSION="${MAGENTO2_VERSION}" web
 docker-compose up -d
 sleep 30
 docker-compose ps
@@ -47,6 +47,7 @@ docker-compose ps
 echo "NGROK_URL = $NGROK_URL"
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
     echo "Waiting for docker container to initialize"
+    ((c++)) && ((c == 50)) && break
     sleep 5
 done
 
@@ -56,7 +57,7 @@ docker-compose exec web install-sampledata.sh
 
 # install wirecard magento2 plugin
 docker-compose exec web composer require wirecard/magento2-ee:"${EXTENSION_VERSION}"
-#docker-compose exec web cp /var/www/html/vendor/wirecard/magento2-ee/tests/_data/crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc
+docker-compose exec web cp /var/www/html/vendor/wirecard/magento2-ee/tests/_data/crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc
 docker-compose exec web php bin/magento setup:upgrade
 docker-compose exec web php bin/magento setup:di:compile
 #this gives the shop time to init
@@ -64,13 +65,15 @@ curl "$NGROK_URL" --head
 sleep 30
 curl "$NGROK_URL" --head
 
-echo "\nModify File Permissions To Load CSS!\n"
-docker-compose exec web bash -c "chmod -R 777 ./"
 # start polling
 docker-compose exec web service cron start
 
 # clean cache to activate payment method
 docker-compose exec web php bin/magento cache:clean
 docker-compose exec web php bin/magento cache:flush
+#docker-compose exec web php bin/magento cache:disable db_ddl collections config
+docker-compose exec web php bin/magento cache:disable config
 
+echo "\nModify File Permissions To Load CSS!\n"
+docker-compose exec web bash -c "chmod -R 777 ./"
 sleep 60
