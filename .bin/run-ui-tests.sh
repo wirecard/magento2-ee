@@ -40,12 +40,17 @@ elif [[ $GIT_BRANCH =~ ${MINOR_RELEASE} ]]; then
 else
   TEST_GROUP="${MAJOR_RELEASE}"
 fi
-
-rm -rf composer.lock
-rm -rf composer.json
+#
+#rm -rf composer.lock
+#rm -rf composer.json
 
 #get shopsystem-ui-testsuite project
-#composer global config minimum-stability dev
+composer global config minimum-stability dev
+cat composer.json
+
+git clone https://github.com/wirecard/shopsystems-ui-testsuite.git
+cd shopsystems-ui-testsuite
+git checkout TWDCEE-6288-configuration
 composer require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
 
 docker-compose run \
