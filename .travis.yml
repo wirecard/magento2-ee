@@ -4,13 +4,12 @@ language: php
 env:
   global:
     - COMPOSER_ARGS=--no-interaction
-    - MAGENTO2_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/compatible-shop-releases.txt
+    - MAGENTO2_COMPATIBILITY_FILE=${TRAVIS_BUILD_DIR}/.bin/compatible-shop-releases.txt
     - SHOP_SYSTEM_UPDATE_COMMIT=UpdateLatestShopReleases
     - MANUAL_UITEST_TRIGGER_COMMIT=TestMyBuild
     - PATCH_RELEASE=patch
     - MINOR_RELEASE=minor
     - MAJOR_RELEASE=major
-    - MAGENTO2_COMPATIBILITY_FILE=${TRAVIS_BUILD_DIR}/.bin/new-shop-releases.txt
 
 jobs:
   # these stages are allowed to fail
@@ -41,17 +40,10 @@ jobs:
         - GATEWAY=API-TEST
         - MAGENTO2_RELEASE_VERSION=1
       install:
-        #   check if files are same or not
-        - cmp --silent ${MAGENTO2_RELEASES_FILE} ${MAGENTO2_COMPATIBILITY_FILE} && export COMPATIBILITY_CHECK=0 || export COMPATIBILITY_CHECK=1
-        #   check from which file to take versions
-        - if [[ ${COMPATIBILITY_CHECK}  == "0" ]]; then export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_RELEASES_FILE}); else export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_COMPATIBILITY_FILE}); fi
+         - export MAGENTO2_VERSION=$(awk "NR==${MAGENTO2_RELEASE_VERSION} {print; exit}" ${MAGENTO2_COMPATIBILITY_FILE}); fi
         #   get latest release shop extension version from SHOPVERSIONS file
         - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release SHOPVERSIONS`
         - echo "Testing with Magento2 ${MAGENTO2_VERSION} version."
-#        - bash .bin/remove-composer-lock-file.sh
-#        - travis_retry composer require --dev $COMPOSER_ARGS phpunit/phpunit ^5.7
-#        - travis_retry composer require --dev $COMPOSER_ARGS codeception/codeception:^2.5
-#        - travis_retry composer install $COMPOSER_ARGS
       script: bash .bin/setup-and-run-ui-tests.sh
       after_script: skip
       after_success:
