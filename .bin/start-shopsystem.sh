@@ -15,7 +15,7 @@ for ARGUMENT in "$@"; do
 
   case "${KEY}" in
   NGROK_URL) NGROK_URL=${VALUE} ;;
-  SHOP_VERSION) MAGENTO2_VERSION=${VALUE} ;;
+  SHOP_VERSION) SHOP_VERSION=${VALUE} ;;
   TRAVIS_PULL_REQUEST) TRAVIS_PULL_REQUEST="${VALUE}" ;;
   TRAVIS_PULL_REQUEST_BRANCH) TRAVIS_PULL_REQUEST_BRANCH="${VALUE}" ;;
   TRAVIS_BRANCH) TRAVIS_BRANCH="${VALUE}" ;;
@@ -39,7 +39,7 @@ else
     EXTENSION_VERSION="dev-${TRAVIS_BRANCH}"
 fi
 
-#docker-compose build --build-arg MAGENTO_VERSION="${MAGENTO2_VERSION}" web
+docker-compose build --build-arg MAGENTO_VERSION="${SHOP_VERSION}" web
 docker-compose up -d
 sleep 30
 docker-compose ps
