@@ -38,6 +38,7 @@ elif [ "${IS_LATEST_EXTENSION_RELEASE}" == "1" ]; then
 else
     EXTENSION_VERSION="dev-${TRAVIS_BRANCH}"
 fi
+echo "SHOP_VERSION=${SHOP_VERSION}"
 
 docker-compose build --build-arg MAGENTO_VERSION="${SHOP_VERSION}" web
 docker-compose up -d
