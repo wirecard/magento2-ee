@@ -42,7 +42,7 @@ else
 fi
 
 #get shopsystem-ui-testsuite project
-composer require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
+docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
 
 docker-compose run --entrypoint "ls -la" codecept
 
