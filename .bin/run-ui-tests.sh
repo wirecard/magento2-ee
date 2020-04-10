@@ -44,8 +44,6 @@ fi
 #get shopsystem-ui-testsuite project
 docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
 
-docker-compose run --entrypoint "ls -la" codecept
-
 docker-compose run \
   -e SHOP_SYSTEM="${SHOP_SYSTEM}" \
   -e SHOP_URL="${NGROK_URL}" \
