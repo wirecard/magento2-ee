@@ -1,14 +1,14 @@
 # Changelog
 
 ## v3.1.2
-
-*   Fix saving credit card despite unchecked checkbox on submit  
+ 
 *   Fix format for card creation date sent with the transaction data  
-*   Fix credit card checkout with new user and virtual product  
+*   Fix Credit Card checkout with new user and virtual product  
 *   Fix Guaranteed Invoice refund after capture error  
 *   Fix Sepa Direct Debit mandate template issues  
 *   Fix update of credit card form on address change  
-*   Include proper error message in case of error on submit of credit card   
+*   Include proper error message in case of error on submit of Credit Card  
+*   Improve handling of saving Credit Cards  
 *   Improve UX of payment methods list  
 *   Update Alipay Cross-border logo  
 
