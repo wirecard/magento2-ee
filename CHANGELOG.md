@@ -6,7 +6,7 @@
 *   Fix Credit Card checkout with new user and virtual product  
 *   Fix Guaranteed Invoice refund after capture error  
 *   Fix Sepa Direct Debit mandate template issues  
-*   Fix update of credit card form on address change  
+*   Fix update of Credit Card form on address change  
 *   Include proper error message in case of error on submit of Credit Card  
 *   Improve handling of saving Credit Cards  
 *   Improve UX of payment methods list  
