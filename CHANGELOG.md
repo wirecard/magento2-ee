@@ -1,5 +1,22 @@
 # Changelog
 
+## v3.1.2
+ 
+*   Fix format for card creation date sent with the transaction data  
+*   Fix Credit Card checkout with new user and virtual product  
+*   Fix Guaranteed Invoice refund after capture error  
+*   Fix Sepa Direct Debit mandate template issues  
+*   Fix update of Credit Card form on address change  
+*   Include proper error message in case of error on submit of Credit Card  
+*   Improve handling of saving Credit Cards  
+*   Improve UX of payment methods list  
+*   Update Alipay Cross-border logo  
+
+|  Overview | Magento version | PHP 7.1 | PHP 7.2 | PHP 7.3 |    
+|---|---|:---:|:---:|:---:|    
+| **Tested version(s)** | Magento Community Edition 2.3.4 | :x: | :x: | &#9989; |    
+| **Compatibility** | Magento Community Edition 2.2.0 - 2.3.4 | &#9989; | &#9989; | &#9989; |   
+
 ## v3.1.1
 
 *   Prevent double transaction being executed in one-click  

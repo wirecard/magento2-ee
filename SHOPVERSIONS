@@ -1,5 +1,22 @@
 [
   {
+    "release": "3.1.2",
+    "shopsystem": "Magento Community Edition",
+    "tested": "2.3.4",
+    "compatibility": "2.2.0",
+    "changelog": [
+        Fix format for card creation date sent with the transaction data
+        Fix Credit Card checkout with new user and virtual product
+        Fix Guaranteed Invoice refund after capture error
+        Fix Sepa Direct Debit mandate template issues
+        Fix update of Credit Card form on address change
+        Include proper error message in case of error on submit of Credit Card
+        Improve handling of saving Credit Cards
+        Improve UX of payment methods list
+        Update Alipay Cross-border logo
+    ]
+  },
+  {
     "release": "3.1.1",
     "shopsystem": "Magento Community Edition",
     "tested": "2.3.4",
