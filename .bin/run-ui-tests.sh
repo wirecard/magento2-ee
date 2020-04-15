@@ -41,20 +41,30 @@ else
   TEST_GROUP="${MAJOR_RELEASE}"
 fi
 
-#get shopsystem-ui-testsuite project
-docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 require wirecard/shopsystem-ui-testsuite:dev-TWDCEE-6288-configuration
+#setup codeception and dependencies
+rm -rf composer.lock
 
-docker-compose run \
-  -e SHOP_SYSTEM="${SHOP_SYSTEM}" \
-  -e SHOP_URL="${NGROK_URL}" \
-  -e SHOP_VERSION="${SHOP_VERSION}" \
-  -e EXTENSION_VERSION="${GIT_BRANCH}" \
-  -e DB_HOST="${MYSQL_HOST}" \
-  -e DB_NAME="${MYSQL_DATABASE}" \
-  -e DB_USER="${MYSQL_USER}" \
-  -e DB_PASSWORD="${MYSQL_PASSWORD}" \
-  -e BROWSERSTACK_USER="${BROWSERSTACK_USER}" \
-  -e BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}" \
-  codecept run acceptance \
+#get shopsystem-ui-testsuite project
+git clone  --branch TPWDCEE-6288-a51try-configuration https://github.com/wirecard/shopsystems-ui-testsuite.git
+cd shopsystems-ui-testsuite
+echo "Installing shopsystems-ui-testsuite dependencies"
+docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 install --dev
+
+export SHOP_SYSTEM=${SHOP_SYSTEM}
+export SHOP_URL="${NGROK_URL}"
+export EXTENSION_VERSION="${GIT_BRANCH}"
+export DB_HOST="${MAGENTO2_DB_HOST%%:*}"
+export DB_NAME="${MAGENTO2_DB_NAME}"
+export DB_USER="${MYSQL_DB_USER}"
+export DB_PORT="${MAGENTO2_DB_HOST#*:}"
+export DB_PASSWORD="${MYSQL_DB_PASSWORD}"
+export SHOP_VERSION="${SHOP_VERSION}"
+export BROWSERSTACK_USER="${BROWSERSTACK_USER}"
+export BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}"
+echo "Running tests"
+
+docker ps
+# run tests
+vendor/bin/codecept run acceptance \
   -g "${TEST_GROUP}" -g "${SHOP_SYSTEM}" \
-  --env ci --html --xml --debug
+  --env ci_magento2 --html --xml --debug

@@ -25,26 +25,32 @@ for ARGUMENT in "$@"; do
   esac
 done
 
-EXTENSION_VERSION="dev-master"
+EXTENSION_VERSION="master"
 # find out which shop extension vesion will be used for tests
 # if tests triggered by PR, use extension version (branch) which originated PR
 if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
-    EXTENSION_VERSION="dev-${TRAVIS_PULL_REQUEST_BRANCH}"
+    EXTENSION_VERSION="${TRAVIS_PULL_REQUEST_BRANCH}"
 # this means we want to test with latest released extension version
 elif [ "${USE_SPECIFIC_EXTENSION_RELEASE}" == "1" ]; then
 # get latest released extension version
     EXTENSION_VERSION="${SPECIFIC_RELEASED_SHOP_EXTENSION_VERSION}"
 # otherwise use version from current branch
 else
-    EXTENSION_VERSION="dev-${TRAVIS_BRANCH}"
+    EXTENSION_VERSION="${TRAVIS_BRANCH}"
 fi
-echo "SHOP_VERSION=${SHOP_VERSION}"
 
-docker-compose build --build-arg MAGENTO_VERSION="${SHOP_VERSION}" web
-docker-compose up -d
-sleep 30
-docker-compose ps
+export MAGENTO2_CONTAINER_NAME=web
 
+export PHP_VERSION=71
+export SHOP_VERSION=${SHOP_VERSION}
+export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
+
+git clone https://github.com/wirecard-cee/xc.git
+cd https://github.com/wirecard-cee/docker-images/magento2-dev
+./run.xsh ${MAGENTO2_CONTAINER_NAME} >/dev/null &
+
+
+#somehow wait till shop is up
 echo "NGROK_URL = $NGROK_URL"
 while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
     echo "Waiting for docker container to initialize"
@@ -52,29 +58,12 @@ while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
     sleep 5
 done
 
-# install magento shop
-docker-compose exec web install-magento.sh
-docker-compose exec web install-sampledata.sh
+#change hostname
+docker exec -ti ${MAGENTO2_CONTAINER_NAME}  /opt/wirecard/apps/magento2/bin/hostname-changed.xsh ${NGROK_URL#*//}
 
-# install wirecard magento2 plugin
-docker-compose exec web composer require wirecard/magento2-ee:"${EXTENSION_VERSION}"
-docker-compose exec web cp /var/www/html/vendor/wirecard/magento2-ee/.bin/test-crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc/crontab.xml
-docker-compose exec web php bin/magento setup:upgrade
-docker-compose exec web php bin/magento setup:di:compile
-#this gives the shop time to init
-curl "$NGROK_URL" --head
-sleep 30
-curl "$NGROK_URL" --head
+#set cron to every minute
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} "sed 's/15/1/g' /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml > /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml"
 
-# start polling
-docker-compose exec web service cron start
+# disable config cache
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:disable config
 
-# clean cache to activate payment method
-docker-compose exec web php bin/magento cache:clean
-docker-compose exec web php bin/magento cache:flush
-#docker-compose exec web php bin/magento cache:disable db_ddl collections config
-docker-compose exec web php bin/magento cache:disable config
-
-echo "\nModify File Permissions To Load CSS!\n"
-docker-compose exec web bash -c "chmod -R 777 ./"
-sleep 60
