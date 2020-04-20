@@ -55,16 +55,14 @@ export SHOP_URL="${NGROK_URL}"
 export EXTENSION_VERSION="${GIT_BRANCH}"
 export DB_HOST="${MAGENTO2_DB_HOST%%:*}"
 export DB_NAME="${MAGENTO2_DB_NAME}"
-export DB_USER="${MYSQL_DB_USER}"
+export DB_USER="${MAGENTO2_DB_USER}"
 export DB_PORT="${MAGENTO2_DB_HOST#*:}"
-export DB_PASSWORD="${MYSQL_DB_PASSWORD}"
+export DB_PASSWORD="${MAGENTO2_DB_PASSWORD}"
 export SHOP_VERSION="${SHOP_VERSION}"
 export BROWSERSTACK_USER="${BROWSERSTACK_USER}"
 export BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}"
-echo "Running tests"
 
-docker ps
-# run tests
+echo "Running tests"
 vendor/bin/codecept run acceptance \
   -g "${TEST_GROUP}" -g "${SHOP_SYSTEM}" \
   --env ci_magento2 --html --xml --debug

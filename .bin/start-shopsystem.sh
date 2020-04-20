@@ -25,7 +25,6 @@ for ARGUMENT in "$@"; do
   esac
 done
 
-EXTENSION_VERSION="master"
 # find out which shop extension vesion will be used for tests
 # if tests triggered by PR, use extension version (branch) which originated PR
 if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
@@ -40,21 +39,23 @@ else
 fi
 
 export MAGENTO2_CONTAINER_NAME=web
-
 export PHP_VERSION=71
-export SHOP_VERSION=${SHOP_VERSION}
 export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
 
-git clone https://github.com/wirecard-cee/xc.git
-cd https://github.com/wirecard-cee/docker-images/magento2-dev
-./run.xsh ${MAGENTO2_CONTAINER_NAME} >/dev/null &
+#pip3 install xonsh
+#git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
+cd docker-images/magento2-dev
+
+nohup ./run.xsh ${MAGENTO2_CONTAINER_NAME} &>/dev/null
+#./run.xsh ${MAGENTO2_CONTAINER_NAME} >>/dev/null 2>&1 &
 
 
-#somehow wait till shop is up
-echo "NGROK_URL = $NGROK_URL"
-while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
+sleep 10
+
+# wait till shop is up
+while [[ $(docker exec -ti ${MAGENTO2_CONTAINER_NAME} supervisorctl status | grep magento2) != *"EXITED"* ]]; do
     echo "Waiting for docker container to initialize"
-    ((c++)) && ((c == 50)) && break
+    ((c++)) && ((c == 100)) && break
     sleep 5
 done
 
@@ -62,7 +63,8 @@ done
 docker exec -ti ${MAGENTO2_CONTAINER_NAME}  /opt/wirecard/apps/magento2/bin/hostname-changed.xsh ${NGROK_URL#*//}
 
 #set cron to every minute
-docker exec -ti ${MAGENTO2_CONTAINER_NAME} "sed 's/15/1/g' /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml > /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml"
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "sed 's/15/1/g' /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml > /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml"
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "cp /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml"
 
 # disable config cache
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:disable config
