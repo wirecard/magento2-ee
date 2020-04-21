@@ -42,12 +42,6 @@ export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
 
 export PHP_VERSION=71
 export MAGENTO2_CONTAINER_NAME=web
-#install dependencies for A51 docker scripts
-export PYENV_VERSION=3.6.3
-pip3 install xonsh
-#stop mysql started by travis to free up the port
-sudo stop mysql
-sudo stop ssh
 
 git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
 cd docker-images/magento2-dev
