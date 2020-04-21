@@ -50,7 +50,7 @@ cd shopsystems-ui-testsuite
 echo "Installing shopsystems-ui-testsuite dependencies"
 docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 install --dev
 
-export SHOP_SYSTEM=${SHOP_SYSTEM}
+export SHOP_SYSTEM="${SHOP_SYSTEM}"
 export SHOP_URL="${NGROK_URL}"
 export EXTENSION_VERSION="${GIT_BRANCH}"
 export DB_HOST="${MAGENTO2_DB_HOST%%:*}"

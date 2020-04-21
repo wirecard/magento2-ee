@@ -40,7 +40,7 @@ fi
 export SHOP_VERSION=${SHOP_VERSION}
 export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
 
-export PHP_VERSION=71
+export PHP_VERSION=72
 export MAGENTO2_CONTAINER_NAME=web
 
 git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
