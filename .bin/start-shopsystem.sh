@@ -37,18 +37,17 @@ elif [ "${USE_SPECIFIC_EXTENSION_RELEASE}" == "1" ]; then
 else
     EXTENSION_VERSION="${TRAVIS_BRANCH}"
 fi
-
-export MAGENTO2_CONTAINER_NAME=web
-export PHP_VERSION=71
+export SHOP_VERSION=${SHOP_VERSION}
 export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
 
-#pip3 install xonsh
-#git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
+export PHP_VERSION=71
+export MAGENTO2_CONTAINER_NAME=web
+
+pip3 install xonsh
+git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
 cd docker-images/magento2-dev
-
-nohup ./run.xsh ${MAGENTO2_CONTAINER_NAME} &>/dev/null
-#./run.xsh ${MAGENTO2_CONTAINER_NAME} >>/dev/null 2>&1 &
-
+#run shop system in the background
+nohup ./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon &>/dev/null
 
 sleep 10
 
@@ -58,7 +57,7 @@ while [[ $(docker exec -ti ${MAGENTO2_CONTAINER_NAME} supervisorctl status | gre
     ((c++)) && ((c == 100)) && break
     sleep 5
 done
-
+sleep 15
 #change hostname
 docker exec -ti ${MAGENTO2_CONTAINER_NAME}  /opt/wirecard/apps/magento2/bin/hostname-changed.xsh ${NGROK_URL#*//}
 
