@@ -47,6 +47,7 @@ export PYENV_VERSION=3.6.3
 pip3 install xonsh
 #stop mysql started by travis to free up the port
 sudo stop mysql
+sudo stop ssh
 
 git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
 cd docker-images/magento2-dev
