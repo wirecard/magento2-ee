@@ -45,22 +45,14 @@ export MAGENTO2_CONTAINER_NAME=web
 #install dependencies for A51 docker scripts
 export PYENV_VERSION=3.6.3
 pip3 install xonsh
+#stop mysql started by travis to free up the port
+sudo stop mysql
+
 git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
 cd docker-images/magento2-dev
 
-./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon
 #run shop system in the background
-#nohup ./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon &>/dev/null
-
-sleep 10
-
-echo "Loading images"
-
-sleep 60
-
-docker ps
-
-sleep 60
+./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon
 
 docker ps
 # wait till shop is up
