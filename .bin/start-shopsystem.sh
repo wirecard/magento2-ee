@@ -43,20 +43,30 @@ export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
 export PHP_VERSION=71
 export MAGENTO2_CONTAINER_NAME=web
 #install dependencies for A51 docker scripts
-export PYENV_VERSION=3.6.3
-pip3 install xonsh
+#export PYENV_VERSION=3.6.3
+#pip3 install xonsh
+#git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
 
-git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
+git clone https://github.com/wirecard-cee/docker-images.git
 cd docker-images/magento2-dev
 #run shop system in the background
 nohup ./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon &>/dev/null
 
 sleep 10
 
+echo "Loading images"
+
+sleep 60
+
+docker ps
+
+sleep 60
+
+docker ps
 # wait till shop is up
 while [[ $(docker exec -ti ${MAGENTO2_CONTAINER_NAME} supervisorctl status | grep magento2) != *"EXITED"* ]]; do
     echo "Waiting for docker container to initialize"
-    ((c++)) && ((c == 100)) && break
+    ((c++)) && ((c == 150)) && break
     sleep 5
 done
 sleep 15
