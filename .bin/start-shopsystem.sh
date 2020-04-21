@@ -43,7 +43,7 @@ export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
 export PHP_VERSION=71
 export MAGENTO2_CONTAINER_NAME=web
 
-pip3.6.3 install xonsh
+pip install xonsh
 git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
 cd docker-images/magento2-dev
 #run shop system in the background
