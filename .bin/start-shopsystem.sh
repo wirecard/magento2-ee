@@ -47,8 +47,10 @@ export PYENV_VERSION=3.6.3
 pip3 install xonsh
 git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
 cd docker-images/magento2-dev
+
+./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon
 #run shop system in the background
-nohup ./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon &>/dev/null
+#nohup ./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon &>/dev/null
 
 sleep 10
 
