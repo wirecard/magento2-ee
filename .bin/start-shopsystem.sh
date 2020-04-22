@@ -28,14 +28,14 @@ done
 # find out which shop extension vesion will be used for tests
 # if tests triggered by PR, use extension version (branch) which originated PR
 if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
-    EXTENSION_VERSION="${TRAVIS_PULL_REQUEST_BRANCH}"
+  EXTENSION_VERSION="${TRAVIS_PULL_REQUEST_BRANCH}"
 # this means we want to test with latest released extension version
 elif [ "${USE_SPECIFIC_EXTENSION_RELEASE}" == "1" ]; then
-# get latest released extension version
-    EXTENSION_VERSION="${SPECIFIC_RELEASED_SHOP_EXTENSION_VERSION}"
+  # get latest released extension version
+  EXTENSION_VERSION="${SPECIFIC_RELEASED_SHOP_EXTENSION_VERSION}"
 # otherwise use version from current branch
 else
-    EXTENSION_VERSION="${TRAVIS_BRANCH}"
+  EXTENSION_VERSION="${TRAVIS_BRANCH}"
 fi
 export SHOP_VERSION="${SHOP_VERSION}"
 export WIRECARD_PLUGIN_VERSION="${EXTENSION_VERSION}"
@@ -52,13 +52,13 @@ cd docker-images/magento2-dev
 docker ps
 # wait till shop is up
 while [[ $(docker exec -ti ${MAGENTO2_CONTAINER_NAME} supervisorctl status | grep magento2) != *"EXITED"* ]]; do
-    echo "Waiting for docker container to initialize"
-    ((c++)) && ((c == 150)) && break
-    sleep 5
+  echo "Waiting for docker container to initialize"
+  ((c++)) && ((c == 150)) && break
+  sleep 5
 done
-sleep 15
+sleep 5
 #change hostname
-docker exec -ti ${MAGENTO2_CONTAINER_NAME}  /opt/wirecard/apps/magento2/bin/hostname-changed.xsh "${NGROK_URL#*//}"
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} /opt/wirecard/apps/magento2/bin/hostname-changed.xsh "${NGROK_URL#*//}"
 
 #set cron to every minute
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "sed 's/15/1/g' /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml > /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml"
@@ -68,3 +68,5 @@ docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "cp /srv/http/vendor/wirec
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:disable config
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:flush
 
+# randomize PayPal orderNumber
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} bash -c "sed -i 's/ = \$this->orderNumber\;/ = \$this->orderNumber . md5(time())\;/' /srv/http/vendor/wirecard/payment-sdk-php/src/Transaction/PayPalTransaction.php"
