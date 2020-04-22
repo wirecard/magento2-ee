@@ -32,7 +32,7 @@ echo "SUBDOMAIN=${SUBDOMAIN}"
 
 # Open ngrok tunnel
 "${PWD}"/ngrok authtoken "${NGROK_TOKEN}"
-"${PWD}"/ngrok http 8080 -subdomain="${SUBDOMAIN}" >/dev/null &
+"${PWD}"/ngrok http 80 -subdomain="${SUBDOMAIN}" >/dev/null &
 NGROK_URL_HTTPS=$(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
 
 # allow ngrok to initialize
