@@ -64,9 +64,9 @@ docker exec -ti ${MAGENTO2_CONTAINER_NAME} /opt/wirecard/apps/magento2/bin/hostn
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "sed 's/15/1/g' /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml > /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml"
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "cp /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml"
 
+# randomize PayPal orderNumber
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} bash -c "sed -i 's/ = \$this->orderNumber\;/ = \$this->orderNumber . md5(time())\;/' /srv/http/vendor/wirecard/payment-sdk-php/src/Transaction/PayPalTransaction.php"
+
 # disable config cache
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:disable config
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:flush
-
-# randomize PayPal orderNumber
-docker exec -ti ${MAGENTO2_CONTAINER_NAME} bash -c "sed -i 's/ = \$this->orderNumber\;/ = \$this->orderNumber . md5(time())\;/' /srv/http/vendor/wirecard/payment-sdk-php/src/Transaction/PayPalTransaction.php"
