@@ -67,3 +67,5 @@ docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "cp /srv/http/vendor/wirec
 # disable config cache
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:disable config
 
+# see status of services
+docker exec -ti  ${MAGENTO2_CONTAINER_NAME} supervisorctl status

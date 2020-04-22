@@ -63,6 +63,6 @@ export BROWSERSTACK_USER="${BROWSERSTACK_USER}"
 export BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}"
 
 echo "Running tests"
-vendor/bin/codecept run acceptance \
+vendor/bin/codecept run acceptance CreditCard/CreditCardInitialTransactionHappyPath.feature \
   -g "${TEST_GROUP}" -g "${SHOP_SYSTEM}" \
   --env ci_magento2 --html --xml --debug
