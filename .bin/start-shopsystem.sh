@@ -37,8 +37,8 @@ elif [ "${USE_SPECIFIC_EXTENSION_RELEASE}" == "1" ]; then
 else
     EXTENSION_VERSION="${TRAVIS_BRANCH}"
 fi
-export SHOP_VERSION=${SHOP_VERSION}
-export WIRECARD_PLUGIN_VERSION=${EXTENSION_VERSION}
+export SHOP_VERSION="${SHOP_VERSION}"
+export WIRECARD_PLUGIN_VERSION="${EXTENSION_VERSION}"
 
 export PHP_VERSION=72
 export MAGENTO2_CONTAINER_NAME=web
@@ -58,7 +58,7 @@ while [[ $(docker exec -ti ${MAGENTO2_CONTAINER_NAME} supervisorctl status | gre
 done
 sleep 15
 #change hostname
-docker exec -ti ${MAGENTO2_CONTAINER_NAME}  /opt/wirecard/apps/magento2/bin/hostname-changed.xsh ${NGROK_URL#*//}
+docker exec -ti ${MAGENTO2_CONTAINER_NAME}  /opt/wirecard/apps/magento2/bin/hostname-changed.xsh "${NGROK_URL#*//}"
 
 #set cron to every minute
 docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "sed 's/15/1/g' /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml > /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml"
