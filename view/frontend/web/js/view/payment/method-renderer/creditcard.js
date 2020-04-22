@@ -10,27 +10,76 @@
 
 define(
     [
-        "jquery",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
-        "mage/translate",
-        "mage/url",
-        "Magento_Vault/js/view/payment/vault-enabler"
+        "Wirecard_ElasticEngine/js/view/payment/seamless-vault-enabler",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
+        "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
+        "Magento_Checkout/js/model/quote"
     ],
-    function ($, Component, $t, url, VaultEnabler) {
+    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote) {
         "use strict";
-        return Component.extend({
+        return ParentPaymentMethod.extend({
             seamlessResponse: null,
             defaults: {
                 template: "Wirecard_ElasticEngine/payment/method-creditcard",
                 redirectAfterPlaceOrder: false
             },
 
+            previousBillingAddress: quote.billingAddress(),
+            newBillingAddress: null,
+            isOnSelect: false,
+          
             /**
              * @returns {exports.initialize}
              */
             initialize: function () {
                 this._super();
+                if (!localStorage.getItem(SeamlessCreditCardConstants.localStorage.counterKey)) {
+                    localStorage.setItem(SeamlessCreditCardConstants.localStorage.counterKey, SeamlessCreditCardConstants.localStorage.initValue);
+                }
+                let self = this;
+                quote.billingAddress.subscribe(function () {
+                    let currentBillingAddress = quote.billingAddress();
+                    self.newBillingAddress = currentBillingAddress;
+                    if (self.isCreditCardSelected() && ((
+                        ((JSON.stringify(self.previousBillingAddress) !== JSON.stringify(currentBillingAddress)) &&
+                            currentBillingAddress !== null) ||
+                        self.isSameShippingAndBillingAddress()) &&
+                        self.isOnSelect === false)
+                    ) {
+                        self.seamlessFormInit();
+                        self.previousBillingAddress = currentBillingAddress;
+                    }
+                });
                 return this;
+            },
+
+            /**
+             *  Get current billing address
+             */
+            getNewBillingAddress: function() {
+                if (this.isCreditCardSelected()) {
+                    this.newBillingAddress = quote.billingAddress();
+                    this.isOnSelect = false;
+                }
+            },
+
+            /**
+             * Check if credit card radio button is selected
+             * @returns {boolean}
+             */
+            isCreditCardSelected: function() {
+                let creditCardRadioButton = document.getElementById(SeamlessCreditCardConstants.id.creditCardRadioButton);
+                return !!(creditCardRadioButton) && (creditCardRadioButton.checked);
+            },
+
+            /**
+             * Check if same shipping and billing checkbox is selected
+             * @returns {boolean}
+             */
+            isSameShippingAndBillingAddress: function() {
+                let sameShippingAndBilling = document.getElementById(SeamlessCreditCardConstants.id.sameShippingAndBillingAddress);
+                return !!(sameShippingAndBilling) && (sameShippingAndBilling.checked);
             },
 
             /**
@@ -40,179 +89,8 @@ define(
                 this._super();
             },
 
-            getPaymentPageScript: function () {
-                return window.checkoutConfig.payment[this.getCode()].wpp_url;
-            },
-
-            seamlessFormInitVaultEnabler: function () {
-                this.vaultEnabler = new VaultEnabler();
-                this.vaultEnabler.setPaymentCode(this.getVaultCode());
-            },
-
-            seamlessFormInit: function () {
-                let uiInitData = {"txtype": this.getCode()};
-                let wrappingDivId = this.getCode() + "_seamless_form";
-                let formSizeHandler = this.seamlessFormSizeHandler.bind(this);
-                let formInitHandler = this.seamlessFormInitErrorHandler.bind(this);
-                let hideSpinner = this.hideSpinner.bind(this);
-                let messageContainer = this.messageContainer;
-                this.showSpinner();
-                // wait until WPP-js has been loaded
-                $.getScript(this.getPaymentPageScript(), function () {
-                    // Build seamless renderform with full transaction data
-                    $.ajax({
-                        url: url.build("wirecard_elasticengine/frontend/creditcard"),
-                        type: "post",
-                        data: uiInitData,
-                        success: function (result) {
-                            if ("OK" === result.status) {
-                                let uiInitData = JSON.parse(result.uiData);
-                                WPP.seamlessRender({
-                                    requestData: uiInitData,
-                                    wrappingDivId: wrappingDivId,
-                                    onSuccess: formSizeHandler,
-                                    onError: formInitHandler
-                                });
-                            } else {
-                                hideSpinner();
-                                messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                            }
-                        },
-                        error: function (err) {
-                            hideSpinner();
-                            messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                            console.error("Error : " + JSON.stringify(err));
-                        }
-                    });
-                });
-            },
-            seamlessFormSubmitSuccessHandler: function (response) {
-                this.seamlessResponse = response;
-                this.placeOrder();
-            },
-            afterPlaceOrder: function () {
-                if (this.seamlessResponse.hasOwnProperty("acs_url")) {
-                    this.redirectCreditCard(this.seamlessResponse);
-                } else {
-                    // Handle redirect for Non-3D transactions
-                    $.ajax({
-                        url: url.build("wirecard_elasticengine/frontend/redirect"),
-                        type: "post",
-                        data: {
-                            "data": this.seamlessResponse,
-                            "method": "creditcard"
-                        }
-                    }).done(function (data) {
-                        // Redirect non-3D credit card payment response
-                        window.location.replace(data["redirect-url"]);
-                    });
-                }
-            },
             /**
-             * Handle 3Ds credit card transactions within callback
-             * @param response
-             */
-            redirectCreditCard: function (response) {
-                let result = {};
-                result.data = {};
-                let appendFormData = this.appendFormData.bind(this);
-                $.ajax({
-                    url: url.build("wirecard_elasticengine/frontend/callback"),
-                    type: "post",
-                    data: {"jsresponse": response},
-                    success: function (result) {
-                        if (result.data["form-url"]) {
-                            let form = $("<form />", {
-                                action: result.data["form-url"],
-                                method: result.data["form-method"]
-                            });
-                            appendFormData(result.data, form);
-                            form.appendTo("body").submit();
-                        }
-                    },
-                    error: function (err) {
-                        this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                        console.error("Error : " + JSON.stringify(err));
-                    }
-                });
-            },
-            appendFormData: function (data, form) {
-                for (let key in data) {
-                    if (key !== "form-url" && key !== "form-method") {
-                        form.append($("<input />", {
-                            type: "hidden",
-                            name: key,
-                            value: data[key]
-                        }));
-                    }
-                }
-            },
-            seamlessFormInitErrorHandler: function (response) {
-                this.messageContainer.addErrorMessage({message: $t("credit_card_form_loading_error")});
-                console.error(response);
-            },
-            seamlessFormSubmitErrorHandler: function (response) {
-                this.hideSpinner();
-
-                this.messageContainer.addErrorMessage({message: $t("credit_card_form_submitting_error")});
-                console.error(response);
-
-                setTimeout(function () {
-                    location.reload();
-                }, 3000);
-            },
-            seamlessFormSizeHandler: function () {
-                this.hideSpinner();
-                window.addEventListener("resize", this.resizeIFrame.bind(this));
-                let seamlessForm = document.getElementById(this.getCode() + "_seamless_form");
-                if (seamlessForm !== null) {
-                    this.resizeIFrame(seamlessForm);
-                }
-            },
-            resizeIFrame: function (seamlessForm) {
-                let iframe = seamlessForm.firstElementChild;
-                if (iframe) {
-                    if (iframe.clientWidth > 768) {
-                        iframe.style.height = "267px";
-                    } else if (iframe.clientWidth > 460) {
-                        iframe.style.height = "341px";
-                    } else {
-                        iframe.style.height = "415px";
-                    }
-                }
-            },
-            getData: function () {
-                return {
-                    "method": this.getCode(),
-                    "po_number": null,
-                    "additional_data": {
-                        "is_active_payment_token_enabler": this.vaultEnabler.isActivePaymentTokenEnabler()
-                    }
-                };
-            },
-            selectPaymentMethod: function () {
-                this._super();
-
-                return true;
-            },
-            /**
-             * Submit credit card request
-             */
-            seamlessFormSubmit: function() {
-                WPP.seamlessSubmit({
-                    wrappingDivId: this.getCode() + "_seamless_form",
-                    onSuccess: this.seamlessFormSubmitSuccessHandler.bind(this),
-                    onError: this.seamlessFormSubmitErrorHandler.bind(this)
-                });
-            },
-            placeSeamlessOrder: function (data, event) {
-                if (event) {
-                    event.preventDefault();
-                }
-
-                this.seamlessFormSubmit();
-            },
-            /**
+             * Get the vault code
              * @returns {String}
              */
             getVaultCode: function () {
@@ -220,20 +98,110 @@ define(
             },
 
             /**
-             * @returns {bool}
+             * Get the form submit button id
+             */
+            getSubmitBtnId: function() {
+                return SeamlessCreditCardConstants.button.submitOrder;
+            },
+
+            /**
+             * Check if vault is enabled
+             * @returns {Boolean}
              */
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
             },
 
-            showSpinner: function () {
-                $("body").trigger("processStart");
+            /**
+             * Initialize the vault enabler
+             */
+            seamlessFormInitVaultEnabler: function () {
+                this.vaultEnabler = new VaultEnabler();
+                this.vaultEnabler.setPaymentCode(this.getVaultCode());
+            },
+          
+            /**
+             * Get the form id string
+             * return {String}
+             */
+            getFormId: function() {
+                return this.getCode() + SeamlessCreditCardConstants.settings.formIdSuffix;
             },
 
-            hideSpinner: function () {
-                $("body").trigger("processStop");
+            /**
+             * Constructs the ui initialization data object
+             * return {Object}
+             */
+            getUiInitData() {
+                let payload = {
+                    txtype: SeamlessCreditCardConstants.data.wppTxType,
+                    billingAddress: JSON.stringify(this.newBillingAddress)
+                };
+                this.newBillingAddress = null;
+                return payload;
             },
 
+            /**
+             * Get the data
+             * return {Object}
+             */
+            getData: function () {
+                //this payload is needed in this format from magento
+                /*eslint-disable */
+                let data =  {
+                    method: this.getCode(),
+                    po_number: null,
+                    additional_data: {
+                        is_active_payment_token_enabler: false,
+                    }
+                };
+                /*eslint-enable */
+
+                this.vaultEnabler.visitAdditionalData(data);
+
+                return data;
+            },
+
+            /**
+             * Handle the selected payment method
+             */
+            selectPaymentMethod: function() {
+                this.isOnSelect = true;
+                this._super();
+                return true;
+            },
+
+            /**
+             * Handle form initialization
+             */
+            seamlessFormInit: function () {
+                this.getNewBillingAddress();
+                SeamlessCreditCardUtils.seamlessFormInit.call(this);
+            },
+
+            /**
+             * Prepare order to be placed
+             * @param {Object} data
+             * @param {Object} event
+             */
+            placeSeamlessOrder: function (data, event) {
+                SeamlessCreditCardUtils.placeSeamlessOrder.call(this, event, this.getFormId);
+            },
+
+            /**
+             * Handle post order creation operationsgetPaymentPageScript
+             */
+            afterPlaceOrder: function () {
+                SeamlessCreditCardUtils.afterPlaceOrder.call(this);
+            },
+
+            /**
+             * Handle 3Ds credit card transactions within callback
+             * @param response
+             */
+            processThreeDPayment: function (response) {
+                SeamlessCreditCardUtils.processThreeDPayment.call(this,response);
+            }
         });
     }
 );
