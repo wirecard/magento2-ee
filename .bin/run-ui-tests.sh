@@ -45,7 +45,7 @@ fi
 rm -rf composer.lock
 
 #get shopsystem-ui-testsuite project
-git clone  --branch TPWDCEE-6288-a51try-configuration https://github.com/wirecard/shopsystems-ui-testsuite.git
+git clone  --branch master https://github.com/wirecard/shopsystems-ui-testsuite.git
 cd shopsystems-ui-testsuite
 echo "Installing shopsystems-ui-testsuite dependencies"
 docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 install --dev
@@ -65,4 +65,4 @@ export BROWSERSTACK_ACCESS_KEY="${BROWSERSTACK_ACCESS_KEY}"
 echo "Running tests"
 vendor/bin/codecept run acceptance \
   -g "${TEST_GROUP}" -g "${SHOP_SYSTEM}" \
-  --env ci_magento2 --html --xml --debug
+  --env ci_magento2 --html --xml
