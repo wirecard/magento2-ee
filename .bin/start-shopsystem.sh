@@ -1,55 +1,72 @@
 #!/bin/bash
-# Shop System SDK:
+# Shop System Extensions:
 # - Terms of Use can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
 # - License can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/LICENSE
 
 set -e
+set -a
+source .env
 
-# input argument version of extension to install
-EXTENSION_VERSION="dev-master"
-if [ "$1" != "" ]; then
-    EXTENSION_VERSION="$1"
-fi
+for ARGUMENT in "$@"; do
+  KEY=$(echo "${ARGUMENT}" | cut -f1 -d=)
+  VALUE=$(echo "${ARGUMENT}" | cut -f2 -d=)
 
-docker-compose build --build-arg MAGENTO_VERSION=${MAGENTO2_VERSION} web
-docker-compose up -d
-sleep 30
-while ! $(curl --output /dev/null --silent --head --fail "${NGROK_URL}"); do
-    echo "Waiting for docker container to initialize"
-    sleep 5
+  case "${KEY}" in
+  NGROK_URL) NGROK_URL=${VALUE} ;;
+  SHOP_VERSION) SHOP_VERSION=${VALUE} ;;
+  TRAVIS_PULL_REQUEST) TRAVIS_PULL_REQUEST="${VALUE}" ;;
+  TRAVIS_PULL_REQUEST_BRANCH) TRAVIS_PULL_REQUEST_BRANCH="${VALUE}" ;;
+  TRAVIS_BRANCH) TRAVIS_BRANCH="${VALUE}" ;;
+  USE_SPECIFIC_EXTENSION_RELEASE) USE_SPECIFIC_EXTENSION_RELEASE=${VALUE} ;;
+  SPECIFIC_RELEASED_SHOP_EXTENSION_VERSION) SPECIFIC_RELEASED_SHOP_EXTENSION_VERSION=${VALUE} ;;
+  *) ;;
+  esac
 done
 
-# install magento shop
-docker exec -it ${MAGENTO_CONTAINER_NAME} install-magento.sh
-docker exec -it ${MAGENTO_CONTAINER_NAME} install-sampledata.sh
+# find out which shop extension vesion will be used for tests
+# if tests triggered by PR, use extension version (branch) which originated PR
+if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
+  EXTENSION_VERSION="${TRAVIS_PULL_REQUEST_BRANCH}"
+# this means we want to test with latest released extension version
+elif [ "${USE_SPECIFIC_EXTENSION_RELEASE}" == "1" ]; then
+  # get latest released extension version
+  EXTENSION_VERSION="${SPECIFIC_RELEASED_SHOP_EXTENSION_VERSION}"
+# otherwise use version from current branch
+else
+  EXTENSION_VERSION="${TRAVIS_BRANCH}"
+fi
+export SHOP_VERSION="${SHOP_VERSION}"
+export WIRECARD_PLUGIN_VERSION="${EXTENSION_VERSION}"
 
-# install wirecard magento2 plugin
-docker exec -it ${MAGENTO_CONTAINER_NAME} composer require wirecard/magento2-ee:${EXTENSION_VERSION}
-docker exec -it ${MAGENTO_CONTAINER_NAME} cp /var/www/html/vendor/wirecard/magento2-ee/tests/_data/crontab.xml /var/www/html/vendor/wirecard/magento2-ee/etc
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:upgrade
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento setup:di:compile
-#this gives the shop time to init
-curl $NGROK_URL --head
-sleep 30
-curl $NGROK_URL --head
+export PHP_VERSION=72
+export MAGENTO2_CONTAINER_NAME=web
 
-echo "\nModify File Permissions To Load CSS!\n"
-docker exec -it ${MAGENTO_CONTAINER_NAME} bash -c "chmod -R 777 ./"
+git clone https://"${WIRECARD_CEE_GITHUB_TOKEN}":@github.com/wirecard-cee/docker-images.git
+cd docker-images/magento2-dev
 
-# change gateway if so configured
-docker exec --env MYSQL_DATABASE=${MYSQL_DATABASE} \
-            --env MYSQL_USER=${MYSQL_USER} \
-            --env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-            --env GATEWAY=${GATEWAY} \
-            ${MAGENTO_CONTAINER_NAME} bash -c "cd /magento2-plugin/tests/_data/ && php configure_payment_method_db.php creditcard authorize"
+#run shop system in the background
+./run.xsh ${MAGENTO2_CONTAINER_NAME} --daemon
 
-# start polling
-docker exec -it ${MAGENTO_CONTAINER_NAME}  service cron start
+docker ps
+# wait till shop is up
+while [[ $(docker exec -ti ${MAGENTO2_CONTAINER_NAME} supervisorctl status | grep magento2) != *"EXITED"* ]]; do
+  echo "Waiting for docker container to initialize"
+  ((c++)) && ((c == 150)) && break
+  sleep 5
+done
+sleep 5
+#change hostname
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} /opt/wirecard/apps/magento2/bin/hostname-changed.xsh "${NGROK_URL#*//}"
 
-# clean cache to activate payment method
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:clean
-docker exec -it ${MAGENTO_CONTAINER_NAME} php bin/magento cache:flush
+#set cron to every minute
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "sed 's/15/1/g' /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml > /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml"
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} /bin/sh -c "cp /srv/http/vendor/wirecard/magento2-ee/etc/crontab1.xml /srv/http/vendor/wirecard/magento2-ee/etc/crontab.xml"
 
-sleep 60
+# randomize PayPal orderNumber
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} bash -c "sed -i 's/ = \$this->orderNumber\;/ = \$this->orderNumber . md5(time())\;/' /srv/http/vendor/wirecard/payment-sdk-php/src/Transaction/PayPalTransaction.php"
+
+# disable config cache
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:disable config
+docker exec -ti ${MAGENTO2_CONTAINER_NAME} php /srv/http/bin/magento cache:flush

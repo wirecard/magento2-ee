@@ -1,52 +1,52 @@
 {
-  "name": "wirecard/magento2-ee",
-  "description": "Wirecard Magento 2 Extension",
-  "license": "GPL-3.0-only",
-  "minimum-stability": "beta",
-  "prefer-stable": true,
-  "require": {
-    "php": ">=7.0",
-    "ext-json": "*",
-    "magento/module-payment": ">=100.1.0",
-    "magento/module-checkout": ">=100.1.0",
-    "magento/module-sales": ">=100.0.0",
-    "magento/module-vault": ">=100.0.0",
-    "magento/module-cron": ">=100.0.0",
-    "guzzlehttp/psr7": "1.4.2 || >= 1.5.2",
-    "php-http/guzzle6-adapter": ">=1.1.1",
-    "nyholm/psr7": "^0.2.3",
-    "php-http/discovery": "1.4.0",
-    "wirecard/magento2-ee-compat": "^1.0.0 || ^2.0.0",
-    "wirecard/io-converter": "^1.0",
-    "wirecard/payment-sdk-php": "4.0.2"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^5.7",
-    "magento/community-edition": ">=2.1.0",
-    "friendsofphp/php-cs-fixer": "^2.2",
-    "codacy/coverage": "1.4.2",
-    "symfony/yaml": "^3"
-  },
-  "type": "magento2-module",
-  "scripts": {
-    "upload-coverage": "codacycoverage clover build/coverage/xml",
-    "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
-    "cs-fix": "php-cs-fixer fix .",
-    "test": "phpunit --colors=always",
-    "test-coverage": "phpunit --coverage-clover build/coverage/xml",
-    "test-reports": "phpunit --coverage-html reports/coverage --coverage-clover reports/clover.xml --coverage-crap4j reports/crap4j.xml --log-junit reports/junit.xml"
-  },
-  "autoload": {
-    "psr-4": {
-      "Wirecard\\ElasticEngine\\": ""
+    "name": "wirecard/magento2-ee",
+    "description": "Wirecard Magento 2 Extension",
+    "license": "GPL-3.0-only",
+    "minimum-stability": "beta",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.0",
+        "ext-json": "*",
+        "magento/module-payment": ">=100.1.0",
+        "magento/module-checkout": ">=100.1.0",
+        "magento/module-sales": ">=100.0.0",
+        "magento/module-vault": ">=100.0.0",
+        "magento/module-cron": ">=100.0.0",
+        "guzzlehttp/psr7": "1.4.2 || >= 1.5.2",
+        "php-http/guzzle6-adapter": ">=1.1.1",
+        "nyholm/psr7": "^0.2.3",
+        "php-http/discovery": "1.4.0",
+        "wirecard/magento2-ee-compat": "^1.0.0 || ^2.0.0",
+        "wirecard/io-converter": "^1.0",
+        "wirecard/payment-sdk-php": "4.0.2"
     },
-    "files": [
-      "registration.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "WirecardTest\\ElasticEngine\\": "Test"
+    "require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "magento/community-edition": ">=2.1.0",
+        "friendsofphp/php-cs-fixer": "^2.2",
+        "codacy/coverage": "1.4.2",
+        "symfony/yaml": "^3"
+    },
+    "type": "magento2-module",
+    "scripts": {
+        "upload-coverage": "codacycoverage clover build/coverage/xml",
+        "cs-check": "php-cs-fixer fix -v --dry-run --using-cache=no .",
+        "cs-fix": "php-cs-fixer fix .",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --coverage-clover build/coverage/xml",
+        "test-reports": "phpunit --coverage-html reports/coverage --coverage-clover reports/clover.xml --coverage-crap4j reports/crap4j.xml --log-junit reports/junit.xml"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wirecard\\ElasticEngine\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WirecardTest\\ElasticEngine\\": "Test"
+        }
     }
-  }
 }

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Shop System SDK:
+# Shop System Extensions:
 # - Terms of Use can be found under:
 # https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
 # - License can be found under:
@@ -50,10 +50,10 @@ if [ ! -d "${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}" ]; then
 fi
 
 # copy report files
-cp tests/_output/*.html ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
-cp tests/_output/*.xml ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
+cp shopsystems-ui-testsuite/tests/_output/*.html ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
+cp shopsystems-ui-testsuite/tests/_output/*.xml ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
 if [[ $1 == 'fail' ]]; then
-    cp tests/_output/*.fail.png ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
+    cp shopsystems-ui-testsuite/tests/_output/*.fail.png ${REPO_NAME}/${RELATIVE_REPORTS_LOCATION}
 fi
 
 cd ${REPO_NAME}
