@@ -10,7 +10,7 @@
 -->
 
 <layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
-<container name="root">
-    <block class="Wirecard\ElasticEngine\Block\Checkout\SepaMandateBlock" template="Wirecard_ElasticEngine::sepamandate.phtml" name="frontend.sepamandate" cacheable="false"/>
-</container>
+    <container name="root">
+        <block class="Wirecard\ElasticEngine\Block\Checkout\CreditCardThreeDForm" template="Wirecard_ElasticEngine::creditcardthreedform.phtml" name="frontend.creditcardthreedform" cacheable="false" />
+    </container>
 </layout>

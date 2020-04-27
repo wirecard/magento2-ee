@@ -17,6 +17,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -297,12 +298,19 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
         $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
 
-        $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
+        $shippingAmountValue = 5.0;
+        $shippingAmount = new Amount($shippingAmountValue, 'EUR');
+        $shipping = new Item('Shipping', $shippingAmount, 1);
         $shipping->setDescription('Fixed Flat Rate');
         $shipping->setArticleNumber('flatrate_flatrate');
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
+
+        $this->orderObject->expects($this->at(OrderInterface::SHIPPING_REFUNDED))->method('getOrigData')->willReturn(0);
+        $this->orderObject->method('getShippingAmount')->willReturn($shippingAmountValue);
+
         $this->orderRepository->method('get')->willReturn($this->orderObject);
+        $this->transaction->method('getAmount')->willReturn($expected->getTotalAmount());
 
         $this->assertEquals($expected, $basketFactory->refund($this->order, $this->transaction));
     }

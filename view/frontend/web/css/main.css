@@ -1,0 +1,5 @@
+.checkout-payment-method .payment-method-title .pg-payment-method-icon {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+}

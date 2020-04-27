@@ -15,11 +15,11 @@ jobs:
       uses: actions/checkout@master
 
     - name: PHP Setup
-      uses: wirecard/setup-php@master
+      uses: wirecard/setup-php@2.1.3
       with:
         php-version: ${{ matrix.php-versions }}
-        extension-csv: mbstring, intl, simplexml, dom
-        ini-values-csv: post_max_size=256M, short_open_tag=On
+        extension: mbstring, intl, simplexml, dom
+        ini-values: post_max_size=256M, short_open_tag=On
         coverage: xdebug
         pecl: false
 
