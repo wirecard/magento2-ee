@@ -12,7 +12,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Test
     steps:
     - name: Checkout
-      uses: actions/checkout@master
+      uses: wirecard/checkout@v2.0.0
 
     - name: PHP Setup
       uses: wirecard/setup-php@2.1.3
