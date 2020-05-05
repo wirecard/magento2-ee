@@ -23,7 +23,10 @@ jobs:
         coverage: xdebug
         pecl: false
 
-    - name: Install Composer
+    - name: Check Composer Dependencies Installable
+      run: composer install --dry-run
+
+    - name: Install php-coveralls
       run: composer require --dev --no-interaction satooshi/php-coveralls:^1.0
 
     - name: Run Style Check
