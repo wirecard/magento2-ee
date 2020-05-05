@@ -1,6 +1,8 @@
 name: Validate travis.yml file
 
-on: [push]
+on:
+  push:
+    paths: '.travis.yml'
 
 jobs:
   validate-travis:
