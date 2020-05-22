@@ -29,6 +29,8 @@ config_merchant_public,Public Key
 config_merchant_secret,Secret Key,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:113, : classes/includes/class-wc-gateway-wirecard-creditcard.php:181, : classes/includes/class-wc-gateway-wirecard-eps.php:111, : classes/includes/class-wc-gateway-wirecard-giropay.php:112, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:121, : classes/includes/class-wc-gateway-wirecard-ideal.php:117, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:113, : classes/includes/class-wc-gateway-wirecard-paypal.php:115, : classes/includes/class-wc-gateway-wirecard-poipia.php:111, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:112, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:116, : classes/includes/class-wc-gateway-wirecard-sofort.php:115"
 config_message,Your message,: classes/admin/class-wirecard-settings.php:234
 config_payment_action,Payment Action,": classes/includes/class-wc-gateway-wirecard-creditcard.php:251, : classes/includes/class-wc-gateway-wirecard-creditcard.php:255, : classes/includes/class-wc-gateway-wirecard-paypal.php:155, : classes/includes/class-wc-gateway-wirecard-paypal.php:159, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:185, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:189"
+config_PSD2_information,PSD 2
+config_PSD2_information_desc_magento2,In regards to PSD 2 regulations consider https://github.com/wirecard/magento2-ee/wiki/Credit-Card in order to minimize rejected transactions due to missing information.
 config_shopping_basket,Shopping Basket,: classes/includes/class-wc-gateway-wirecard-paypal.php:169
 config_sort_order,Sort Order
 config_ssl_max_limit,Non 3-D Secure Max. Limit,: classes/includes/class-wc-gateway-wirecard-creditcard.php:140
@@ -44,25 +46,25 @@ config_zapp_merchant_return_string_desc,Merchant Return URL to redirect consumer
 creditor,Creditor,: classes/helper/sepa-template.php:38
 creditor_id_input,Creditor ID,: classes/helper/sepa-template.php:40
 creditor_mandate_id,Mandate ID
-credit_card_form_loading_error,An error occurred loading the credit card form. Please try again.
-credit_card_form_submitting_error,An error occurred submitting the credit card form.
+credit_card_form_loading_error,An error occurred loading the payment form. Please try again.
+credit_card_form_submitting_error,An error occurred submitting the payment form.
 debtor,Debtor,: classes/helper/sepa-template.php:52
 debtor_acc_owner,Account Owner,: classes/helper/sepa-template.php:53
 default_currency,Default Currency
 enter_valid_email_error,Please enter a valid email address.
 error_credentials,"Test failed, please check your credentials.",: classes/includes/class-wc-wirecard-payment-gateway.php:682
 first_name_input,First Name
-heading_title_alipay_crossborder,Wirecard Alipay Cross-border,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:60, : classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:104"
-heading_title_creditcard,Wirecard Credit Card,": classes/includes/class-wc-gateway-wirecard-creditcard.php:61, : classes/includes/class-wc-gateway-wirecard-creditcard.php:113"
-heading_title_giropay,Wirecard giropay,": classes/includes/class-wc-gateway-wirecard-giropay.php:65, : classes/includes/class-wc-gateway-wirecard-giropay.php:108"
-heading_title_ideal,Wirecard iDEAL,": classes/includes/class-wc-gateway-wirecard-ideal.php:63, : classes/includes/class-wc-gateway-wirecard-ideal.php:108"
-heading_title_paybybankapp,Wirecard Pay by Bank app,": classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:60, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:106"
-heading_title_paypal,Wirecard PayPal,": classes/includes/class-wc-gateway-wirecard-paypal.php:61, : classes/includes/class-wc-gateway-wirecard-paypal.php:106"
-heading_title_poi_pia,Wirecard Payment On Invoice / Payment In Advance,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
-heading_title_ratepayinvoice,Wirecard Guaranteed Invoice by Wirecard,": classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:63, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:113"
-heading_title_sepact,Wirecard SEPA Credit Transfer,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
-heading_title_sepadd,Wirecard SEPA Direct Debit,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
-heading_title_sofortbanking,Wirecard Sofort.,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
+heading_title_alipay_crossborder,Alipay Cross-border,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:60, : classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:104"
+heading_title_creditcard,Card Payments,": classes/includes/class-wc-gateway-wirecard-creditcard.php:61, : classes/includes/class-wc-gateway-wirecard-creditcard.php:113"
+heading_title_giropay,giropay,": classes/includes/class-wc-gateway-wirecard-giropay.php:65, : classes/includes/class-wc-gateway-wirecard-giropay.php:108"
+heading_title_ideal,iDEAL,": classes/includes/class-wc-gateway-wirecard-ideal.php:63, : classes/includes/class-wc-gateway-wirecard-ideal.php:108"
+heading_title_paybybankapp,Pay by Bank app,": classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:60, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:106"
+heading_title_paypal,PayPal,": classes/includes/class-wc-gateway-wirecard-paypal.php:61, : classes/includes/class-wc-gateway-wirecard-paypal.php:106"
+heading_title_poi_pia,Payment On Invoice / Payment In Advance,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Guaranteed Invoice by Wirecard,": classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:63, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:113"
+heading_title_sepact,SEPA Credit Transfer,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
+heading_title_sepadd,SEPA Direct Debit,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
+heading_title_sofortbanking,Sofort.,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
 heading_title_support,Wirecard Support,": woocommerce-wirecard-payment-gateway.php:316, : woocommerce-wirecard-payment-gateway.php:317, : woocommerce-wirecard-payment-gateway.php:324, : woocommerce-wirecard-payment-gateway.php:325"
 iban,IBAN,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
 ideal_legend,Select your bank
