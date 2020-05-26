@@ -14,7 +14,7 @@
         "magento/module-cron": ">=100.0.0",
         "guzzlehttp/psr7": "1.4.2 || >= 1.5.2",
         "php-http/guzzle6-adapter": ">=1.1.1",
-        "nyholm/psr7": "^0.2.3",
+        "nyholm/psr7": "^1.2.1",
         "php-http/discovery": "1.4.0",
         "wirecard/magento2-ee-compat": "^1.0.0 || ^2.0.0",
         "wirecard/io-converter": "^1.0",
