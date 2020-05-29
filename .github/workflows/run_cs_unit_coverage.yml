@@ -12,7 +12,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Test
     steps:
     - name: Checkout
-      uses: actions/checkout@master
+      uses: wirecard/checkout@v2.0.0
 
     - name: PHP Setup
       uses: wirecard/setup-php@2.1.3
@@ -23,7 +23,10 @@ jobs:
         coverage: xdebug
         pecl: false
 
-    - name: Install Composer
+    - name: Check Composer Dependencies Installable
+      run: composer install --dry-run
+
+    - name: Install php-coveralls
       run: composer require --dev --no-interaction satooshi/php-coveralls:^1.0
 
     - name: Run Style Check
