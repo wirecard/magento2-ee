@@ -86,7 +86,7 @@ class AccountHolderMapper
             );
             $this->updateOptionalStreets($address);
             if (property_exists($this->accountHolderData, self::KEY_REGION_CODE) && $this->accountHolderData->region) {
-                $address->setState($this->accountHolderData->region);
+                $address->setState($this->accountHolderData->regionCode);
             }
             if (property_exists($this->accountHolderData, self::KEY_POST_CODE)) {
                 $address->setPostalCode($this->accountHolderData->postcode);
