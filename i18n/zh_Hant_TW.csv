@@ -30,7 +30,7 @@ config_merchant_secret,祕密金鑰,": classes/includes/class-wc-gateway-wirecar
 config_message,您的訊息,: classes/admin/class-wirecard-settings.php:234
 config_payment_action,付款動作,": classes/includes/class-wc-gateway-wirecard-creditcard.php:251, : classes/includes/class-wc-gateway-wirecard-creditcard.php:255, : classes/includes/class-wc-gateway-wirecard-paypal.php:155, : classes/includes/class-wc-gateway-wirecard-paypal.php:159, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:185, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:189"
 config_PSD2_information,PSD 2
-config_PSD2_information_desc_magento2,In regards to PSD 2 regulations consider https://github.com/wirecard/magento2-ee/wiki/Credit-Card in order to minimize rejected transactions due to missing information.
+config_PSD2_information_desc_magento2,"With regard to PSD 2 requirements, you should request certain personal information from your consumers during <a target=""_blank"" href='https://github.com/wirecard/magento2-ee/wiki/Magento-2-Checkout'>checkout</a> to reduce the risk of transactions being rejected."
 config_shopping_basket,購物籃,: classes/includes/class-wc-gateway-wirecard-paypal.php:169
 config_sort_order,排列順序
 config_ssl_max_limit,非 3-D 安全上限,: classes/includes/class-wc-gateway-wirecard-creditcard.php:140
