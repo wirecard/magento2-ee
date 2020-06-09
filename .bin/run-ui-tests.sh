@@ -47,6 +47,7 @@ rm -rf composer.lock
 #get shopsystem-ui-testsuite project
 git clone  --branch master https://github.com/wirecard/shopsystems-ui-testsuite.git
 cd shopsystems-ui-testsuite
+git checkout TPWDCEE-6904-configuration
 echo "Installing shopsystems-ui-testsuite dependencies"
 docker run --rm -it --volume $(pwd):/app prooph/composer:7.2 install --dev
 
