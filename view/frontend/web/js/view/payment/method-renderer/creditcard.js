@@ -67,7 +67,7 @@ define(
                     if (self.isCreditCardSelected())  {
                         self.seamlessFormInit();
                     }
-                }
+                };
             },
 
             /**
