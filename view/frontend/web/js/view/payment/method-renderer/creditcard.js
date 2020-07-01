@@ -40,8 +40,8 @@ define(
                     localStorage.setItem(SeamlessCreditCardConstants.localStorage.counterKey, SeamlessCreditCardConstants.localStorage.initValue);
                 }
                 let self = this;
-                setCoupon.registerSuccessCallback(this.getResetFormFunction());
-                cancelCoupon.registerSuccessCallback(this.getResetFormFunction());
+                setCoupon.registerSuccessCallback(this.reloadForm());
+                cancelCoupon.registerSuccessCallback(this.reloadForm());
                 quote.billingAddress.subscribe(function () {
                     let currentBillingAddress = quote.billingAddress();
                     self.newBillingAddress = currentBillingAddress;
@@ -61,7 +61,7 @@ define(
             /**
              *  Reset the form after coupon apply/cancel
              */
-            getResetFormFunction: function() {
+            reloadForm: function() {
                 let self = this;
                 return function() {
                     if (self.isCreditCardSelected())  {
