@@ -62,29 +62,51 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $transportInterface = $this->getMockBuilder(\Magento\Framework\Mail\TransportInterface::class)->disableOriginalConstructor()->getMock();
+        $transportInterface = $this->getMockBuilder(\Magento\Framework\Mail\TransportInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)->disableOriginalConstructor()->getMock();
+        $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->transportBuilder = $this->getMockBuilder(TransportBuilder::class)->disableOriginalConstructor()->getMock();
-        $this->transportBuilder->method('setTemplateIdentifier')->willReturn($this->transportBuilder);
-        $this->transportBuilder->method('setTemplateOptions')->willReturn($this->transportBuilder);
-        $this->transportBuilder->method('setTemplateVars')->willReturn($this->transportBuilder);
-        $this->transportBuilder->method('setFrom')->willReturn($this->transportBuilder);
-        $this->transportBuilder->method('addTo')->willReturn($this->transportBuilder);
-        $this->transportBuilder->method('getTransport')->willReturn($transportInterface);
+        $this->transportBuilder = $this->getMockBuilder(TransportBuilder::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transportBuilder->method('setTemplateIdentifier')
+            ->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('setTemplateOptions')
+            ->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('setTemplateVars')
+            ->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('setFrom')
+            ->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('addTo')
+            ->willReturn($this->transportBuilder);
+        $this->transportBuilder->method('getTransport')
+            ->willReturn($transportInterface);
 
-        $this->moduleLoader = $this->getMockBuilder(Loader::class)->disableOriginalConstructor()->getMock();
-        $this->moduleLoader->method('load')->willReturn(['Module1' => ['name' => 'Magento_TestModule']]);
+        $this->moduleLoader = $this->getMockBuilder(Loader::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->moduleLoader->method('load')
+            ->willReturn(['Module1' => ['name' => 'Magento_TestModule']]);
 
-        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $this->config->method('getActiveMethods')->willReturn([
+        $this->config = $this->getMockBuilder(Config::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->config->method('getActiveMethods')
+            ->willReturn([
             'wirecard_elasticengine_paypal' => []
         ]);
 
-        $this->moduleListInterface = $this->getMockBuilder(ModuleListInterface::class)->disableOriginalConstructor()->getMock();
+        $this->moduleListInterface = $this->getMockBuilder(ModuleListInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)->disableOriginalConstructor()->getMock();
+        $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->postObject = new DataObject();
     }
@@ -123,7 +145,8 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
 
     public function testSendrequest()
     {
-        $this->scopeConfig->method('getValue')->will($this->returnCallback([$this, 'configValueMap']));
+        $this->scopeConfig->method('getValue')
+            ->will($this->returnCallback([$this, 'configValueMap']));
 
         $this->createSupport();
         $this->postObject->addData(['to' => 'email@address.com', 'replyto' => 'email@address.com']);

@@ -18,9 +18,9 @@ use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Controller\Adminhtml\Test\Credentials;
 
 /**
+ * This class tests configuration
+ *
  * Class CredentialsTest
- * @package Wirecard\ElasticEngine\Test\Unit\Adminhtml\Test
- * @method _isAllowed()
  */
 class CredentialsTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,20 +51,39 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $authorization = $this->getMockBuilder(Authorization::class)->disableOriginalConstructor()->setMethods(['isAllowed'])->getMock();
-        $authorization->method('isAllowed')->willReturn(true);
-        $context->method('getAuthorization')->willReturn($authorization);
+        $authorization = $this->getMockBuilder(Authorization::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isAllowed'])
+            ->getMock();
+        $authorization->method('isAllowed')
+            ->willReturn(true);
+        $context->method('getAuthorization')
+            ->willReturn($authorization);
 
-        $this->request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->setMethods(['getParams'])->getMock();
-        $context->method('getRequest')->willReturn($this->request);
+        $this->request = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getParams'])
+            ->getMock();
+        $context->method('getRequest')
+            ->willReturn($this->request);
 
-        $this->json = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->setMethods(['setData'])->getMock();
-        $this->resultJsonFactory = $this->getMockBuilder(JsonFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
-        $this->resultJsonFactory->method('create')->willReturn($this->json);
+        $this->json = $this->getMockBuilder(Json::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setData'])
+            ->getMock();
+        $this->resultJsonFactory = $this->getMockBuilder(JsonFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+        $this->resultJsonFactory->method('create')
+            ->willReturn($this->json);
 
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)
+            ->getMock();
 
         /** @var Context $context */
         $this->instance = new Credentials($context, $this->resultJsonFactory, $this->logger);
@@ -72,7 +91,11 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructor()
     {
-        $this->assertAttributeEquals($this->resultJsonFactory, 'resultJsonFactory', $this->instance);
+        $this->assertAttributeEquals(
+            $this->resultJsonFactory,
+            'resultJsonFactory',
+            $this->instance
+        );
     }
 
     public function testExecuteProvider()

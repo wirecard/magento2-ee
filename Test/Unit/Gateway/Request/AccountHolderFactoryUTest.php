@@ -30,20 +30,34 @@ class AccountHolderFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $this->address->method('getEmail')->willReturn('test@example.com');
-        $this->address->method('getFirstname')->willReturn('Joe');
-        $this->address->method('getLastname')->willReturn('Doe');
-        $this->address->method('getTelephone')->willReturn('00433165349753');
+        $this->address = $this->getMockBuilder(AddressAdapterInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->address->method('getEmail')
+            ->willReturn('test@example.com');
+        $this->address->method('getFirstname')
+            ->willReturn('Joe');
+        $this->address->method('getLastname')
+            ->willReturn('Doe');
+        $this->address->method('getTelephone')
+            ->willReturn('00433165349753');
 
-        $this->addressFactory = $this->getMockBuilder(AddressFactory::class)->getMock();
-        $this->addressFactory->method('create')->willReturn(new Address('', '', ''));
+        $this->addressFactory = $this->getMockBuilder(AddressFactory::class)
+            ->getMock();
+        $this->addressFactory->method('create')
+            ->willReturn(new Address('', '', ''));
 
-        $this->addressInterfaceValidator = $this->getMockBuilder(AddressAdapterInterfaceValidator::class)->disableOriginalConstructor()->getMock();
-        $this->addressInterfaceValidator->method('validate')->willReturn(true);
+        $this->addressInterfaceValidator = $this->getMockBuilder(AddressAdapterInterfaceValidator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->addressInterfaceValidator->method('validate')
+            ->willReturn(true);
 
-        $this->validatorFactory = $this->getMockBuilder(AddressValidatorFactory::class)->disableOriginalConstructor()->getMock();
-        $this->validatorFactory->method('create')->willReturn($this->addressInterfaceValidator);
+        $this->validatorFactory = $this->getMockBuilder(AddressValidatorFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->validatorFactory->method('create')
+            ->willReturn($this->addressInterfaceValidator);
     }
 
     public function testCreate()

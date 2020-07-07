@@ -98,21 +98,26 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['create'])
             ->getMock();
 
-        $this->resultFactory->method('create')->willReturn($this->json);
+        $this->resultFactory->method('create')
+            ->willReturn($this->json);
 
         $urlBuilder = $this->getMock(UrlInterface::class);
-        $urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
+        $urlBuilder->method('getRouteUrl')
+            ->willReturn('http://magen.to/');
         $this->context = $this->getMockBuilder(Context::class)
             ->disableOriginalConstructor()
             ->setMethods(['getResultFactory', 'getUrl', 'getRequest'])
             ->getMock();
-        $this->context->method('getUrl')->willReturn($urlBuilder);
+        $this->context->method('getUrl')
+            ->willReturn($urlBuilder);
 
-        $this->context->method('getResultFactory')->willReturn($this->resultFactory);
+        $this->context->method('getResultFactory')
+            ->willReturn($this->resultFactory);
 
         $this->payment = $this->getMockWithoutInvokingTheOriginalConstructor(Order\Payment::class);
         $this->order   = $this->getMockWithoutInvokingTheOriginalConstructor(Order::class);
-        $this->order->method('getPayment')->willReturn($this->payment);
+        $this->order->method('getPayment')
+            ->willReturn($this->payment);
 
         $this->session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
@@ -130,28 +135,42 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
                 'unsFormFields'
             ])
             ->getMock();
-        $this->session->method('getRedirectUrl')->willReturn('http://redir.ect');
-        $this->session->method('getFormUrl')->willReturn('http://formpost.ect');
-        $this->session->method('getFormMethod')->willReturn('post');
-        $this->session->method('getFormFields')->willReturn('myfieldsarray');
-        $this->session->method('getLastRealOrder')->willReturn($this->order);
+        $this->session->method('getRedirectUrl')
+            ->willReturn('http://redir.ect');
+        $this->session->method('getFormUrl')
+            ->willReturn('http://formpost.ect');
+        $this->session->method('getFormMethod')
+            ->willReturn('post');
+        $this->session->method('getFormFields')
+            ->willReturn('myfieldsarray');
+        $this->session->method('getLastRealOrder')
+            ->willReturn($this->order);
 
         $this->logger = $this->getMock(LoggerInterface::class);
 
-        $transactionService              = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionService::class);
-        $this->transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(TransactionServiceFactory::class);
-        $this->transactionServiceFactory->method('create')->willReturn($transactionService);
+        $transactionService              = $this->getMockWithoutInvokingTheOriginalConstructor(
+            TransactionService::class
+        );
+        $this->transactionServiceFactory = $this->getMockWithoutInvokingTheOriginalConstructor(
+            TransactionServiceFactory::class
+        );
+        $this->transactionServiceFactory->method('create')
+            ->willReturn($transactionService);
         $this->urlBuilder = $this->getMockForAbstractClass(UrlInterface::class);
 
         $postParams = $this->getMock(ParametersInterface::class);
         $postParams->method('toArray')->willReturn(['jsresponse' => 'payload']);
 
         $this->request = $this->getMockWithoutInvokingTheOriginalConstructor(HttpRequest::class);
-        $this->request->method('getPost')->willReturn($postParams);
-        $this->request->method('getParams')->willReturn(['request_id' => '1234']);
-        $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
+        $this->request->method('getPost')
+            ->willReturn($postParams);
+        $this->request->method('getParams')
+            ->willReturn(['request_id' => '1234']);
+        $this->request->method('getContent')
+            ->willReturn('<xmlContent></xmlContent>');
 
-        $this->context->method('getRequest')->willReturn($this->request);
+        $this->context->method('getRequest')
+            ->willReturn($this->request);
 
         $this->response = $this->getMockBuilder(Http::class)
             ->disableOriginalConstructor()
@@ -161,12 +180,15 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRedirectUnsetsRedirect()
     {
-        $this->request->method('getParam')->willReturn(null);
+        $this->request->method('getParam')
+            ->willReturn(null);
 
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock = $this->session;
-        $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(true);
-        $sessionMock->expects($this->once())->method('unsRedirectUrl');
+        $sessionMock->method(self::HAS_REDIRECT_URL)
+            ->willReturn(true);
+        $sessionMock->expects($this->once())
+            ->method('unsRedirectUrl');
 
         /** @var $sessionMock Session */
         $redirect = new Callback(
@@ -183,10 +205,14 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
     {
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock = $this->session;
-        $sessionMock->method(self::HAS_FORM_URL)->willReturn(true);
-        $sessionMock->expects($this->once())->method('unsFormUrl');
-        $sessionMock->expects($this->once())->method('unsFormMethod');
-        $sessionMock->expects($this->once())->method('unsFormFields');
+        $sessionMock->method(self::HAS_FORM_URL)
+            ->willReturn(true);
+        $sessionMock->expects($this->once())
+            ->method('unsFormUrl');
+        $sessionMock->expects($this->once())
+            ->method('unsFormMethod');
+        $sessionMock->expects($this->once())
+            ->method('unsFormFields');
 
         /** @var $sessionMock Session */
         $redirect = new Callback(
@@ -203,7 +229,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
     {
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock = $this->session;
-        $sessionMock->method(self::HAS_FORM_URL)->willReturn(true);
+        $sessionMock->method(self::HAS_FORM_URL)
+            ->willReturn(true);
 
         /** @var Session $sessionMock */
         $redirect = new Callback(
@@ -219,7 +246,15 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $responseMock = $this->response;
         $responseMock->expects($this->once())
             ->method(self::RESPONSE_JSON)
-            ->with('{"status":"OK","data":{"redirect-url":null,"form-url":"http:\/\/formpost.ect","form-method":"post","form-fields":"myfieldsarray"}}');
+            ->with(json_encode([
+                'status' => 'OK',
+                'data' => [
+                    'redirect-url' => null,
+                    'form-url' => 'http://formpost.ect',
+                    'form-method' => 'post',
+                    'form-fields' => 'myfieldsarray'
+                ]
+            ]));
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);
@@ -245,7 +280,15 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $responseMock = $this->response;
         $responseMock->expects($this->once())
             ->method(self::RESPONSE_JSON)
-            ->with('{"status":"OK","data":{"redirect-url":"http:\/\/redir.ect","form-url":null,"form-method":null,"form-fields":null}}');
+            ->with(json_encode([
+                'status' => 'OK',
+                'data' => [
+                    'redirect-url' => 'http://redir.ect',
+                    'form-url' => null,
+                    'form-method' => null,
+                    'form-fields' => null
+                ]
+            ]));
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);
@@ -255,7 +298,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
     {
         /** @var PHPUnit_Framework_MockObject_MockObject $sessionMock */
         $sessionMock = $this->session;
-        $sessionMock->method(self::HAS_REDIRECT_URL)->willReturn(false);
+        $sessionMock->method(self::HAS_REDIRECT_URL)
+            ->willReturn(false);
 
         /** @var Session $sessionMock */
         $redirect = new Callback(
@@ -271,7 +315,15 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
         $responseMock = $this->response;
         $responseMock->expects($this->once())
             ->method(self::RESPONSE_JSON)
-            ->with('{"status":"OK","data":{"redirect-url":"http:\/\/magen.to\/frontend\/redirect","form-url":null,"form-method":null,"form-fields":null}}');
+            ->with(json_encode([
+                'status' => 'OK',
+                'data' => [
+                    'redirect-url' => 'http://magen.to/frontend/redirect',
+                    'form-url' => null,
+                    'form-method' => null,
+                    'form-fields' => null
+                ]
+            ]));
 
         /** @var $responseMock ResponseInterface */
         $result->renderResult($responseMock);

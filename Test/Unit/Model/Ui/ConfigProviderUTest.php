@@ -30,26 +30,44 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfigDummyWithoutBic()
     {
-        $assetRepo = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+        $assetRepo = $this->getMockBuilder(Repository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $assetRepo->method('getUrlWithParams')
+            ->willReturn('/logo/url.png');
 
-        $store = $this->getMockBuilder(Resolver::class)->disableOriginalConstructor()->getMock();
-        $store->method('getLocale')->willReturn('en');
+        $store = $this->getMockBuilder(Resolver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $store->method('getLocale')
+            ->willReturn('en');
 
-        $currency = $this->getMockBuilder(Currency::class)->disableOriginalConstructor()->getMock();
-        $currency->method('getCode')->willReturn('EUR');
+        $currency = $this->getMockBuilder(Currency::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $currency->method('getCode')
+            ->willReturn('EUR');
 
-        $storeModel = $this->getMockBuilder(Store::class)->disableOriginalConstructor()->getMock();
-        $storeModel->method('getCurrentCurrency')->willReturn($currency);
+        $storeModel = $this->getMockBuilder(Store::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $storeModel->method('getCurrentCurrency')
+            ->willReturn($currency);
 
-        $storeManager = $this->getMockBuilder(StoreManager::class)->disableOriginalConstructor()->getMock();
-        $storeManager->method('getStore')->willReturn($storeModel);
+        $storeManager = $this->getMockBuilder(StoreManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $storeManager->method('getStore')
+            ->willReturn($storeModel);
 
         $seamlessRequestData = [
             'key' => 'value'
         ];
-        $transactionService = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
-        $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
+        $transactionService = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionService->method('getDataForCreditCardUi')
+            ->willReturn(json_encode($seamlessRequestData));
 
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
@@ -67,25 +85,39 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         /**
          * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
          */
-        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)->disableOriginalConstructor()->getMock();
-        $transactionServiceFactory->method('create')->willReturn($transactionService);
+        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionServiceFactory->method('create')
+            ->willReturn($transactionService);
 
-        $methodInterface = $this->getMockBuilder(MethodInterface::class)->disableOriginalConstructor()->getMock();
-        $methodInterface->method('getConfigData')->will($this->onConsecutiveCalls(
-            self::WPP_URL,
-            false,
-            false,
-            self::WPP_URL
-        ));
-        $paymentHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
-        $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $methodInterface = $this->getMockBuilder(MethodInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $methodInterface->method('getConfigData')
+            ->will($this->onConsecutiveCalls(
+                self::WPP_URL,
+                false,
+                false,
+                self::WPP_URL
+            ));
+        $paymentHelper = $this->getMockBuilder(Data::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $paymentHelper->method('getMethodInstance')
+            ->willReturn($methodInterface);
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         /**
          * @var $assetRepo Repository|\PHPUnit_Framework_MockObject_MockObject
          */
-        $assetRepo = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
+        $assetRepo = $this->getMockBuilder(Repository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $assetRepo->method('getUrlWithParams')
+            ->willReturn(self::LOGO_URL_PATH);
 
         $ratepayScript = '
         <script>
@@ -159,26 +191,44 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfigDummyWithBic()
     {
-        $assetRepo = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $assetRepo->method('getUrlWithParams')->willReturn('/logo/url.png');
+        $assetRepo = $this->getMockBuilder(Repository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $assetRepo->method('getUrlWithParams')
+            ->willReturn('/logo/url.png');
 
-        $store = $this->getMockBuilder(Resolver::class)->disableOriginalConstructor()->getMock();
-        $store->method('getLocale')->willReturn('en');
+        $store = $this->getMockBuilder(Resolver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $store->method('getLocale')
+            ->willReturn('en');
 
-        $currency = $this->getMockBuilder(Currency::class)->disableOriginalConstructor()->getMock();
-        $currency->method('getCode')->willReturn('EUR');
+        $currency = $this->getMockBuilder(Currency::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $currency->method('getCode')
+            ->willReturn('EUR');
 
-        $storeModel = $this->getMockBuilder(Store::class)->disableOriginalConstructor()->getMock();
-        $storeModel->method('getCurrentCurrency')->willReturn($currency);
+        $storeModel = $this->getMockBuilder(Store::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $storeModel->method('getCurrentCurrency')
+            ->willReturn($currency);
 
-        $storeManager = $this->getMockBuilder(StoreManager::class)->disableOriginalConstructor()->getMock();
-        $storeManager->method('getStore')->willReturn($storeModel);
+        $storeManager = $this->getMockBuilder(StoreManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $storeManager->method('getStore')
+            ->willReturn($storeModel);
 
         $seamlessRequestData = [
             'key' => 'value'
         ];
-        $transactionService = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
-        $transactionService->method('getDataForCreditCardUi')->willReturn(json_encode($seamlessRequestData));
+        $transactionService = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionService->method('getDataForCreditCardUi')
+            ->willReturn(json_encode($seamlessRequestData));
 
         $idealBic = [
             ['key' => IdealBic::ABNANL2A, 'label' => 'ABN Amro Bank'],
@@ -196,25 +246,39 @@ class ConfigProviderUTest extends \PHPUnit_Framework_TestCase
         /**
          * @var $transactionServiceFactory TransactionServiceFactory|\PHPUnit_Framework_MockObject_MockObject
          */
-        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)->disableOriginalConstructor()->getMock();
-        $transactionServiceFactory->method('create')->willReturn($transactionService);
+        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionServiceFactory->method('create')
+            ->willReturn($transactionService);
 
-        $methodInterface = $this->getMockBuilder(MethodInterface::class)->disableOriginalConstructor()->getMock();
-        $methodInterface->method('getConfigData')->will($this->onConsecutiveCalls(
-            self::WPP_URL,
-            true,
-            true,
-            self::WPP_URL
-        ));
-        $paymentHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
-        $paymentHelper->method('getMethodInstance')->willReturn($methodInterface);
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $methodInterface = $this->getMockBuilder(MethodInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $methodInterface->method('getConfigData')
+            ->will($this->onConsecutiveCalls(
+                self::WPP_URL,
+                true,
+                true,
+                self::WPP_URL
+            ));
+        $paymentHelper = $this->getMockBuilder(Data::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $paymentHelper->method('getMethodInstance')
+            ->willReturn($methodInterface);
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         /**
          * @var $assetRepo Repository|\PHPUnit_Framework_MockObject_MockObject
          */
-        $assetRepo = $this->getMockBuilder(Repository::class)->disableOriginalConstructor()->getMock();
-        $assetRepo->method('getUrlWithParams')->willReturn(self::LOGO_URL_PATH);
+        $assetRepo = $this->getMockBuilder(Repository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $assetRepo->method('getUrlWithParams')
+            ->willReturn(self::LOGO_URL_PATH);
 
         $ratepayScript = '
         <script>

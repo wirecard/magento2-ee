@@ -12,7 +12,7 @@ namespace WirecardTest\ElasticEngine\Unit\Controller\Adminhtml\Support;
 use Wirecard\ElasticEngine\Controller\Adminhtml\Support\Contact;
 
 /**
- * Test contact
+ * Test contact for unit testing
  *
  * Class TestContact
  */

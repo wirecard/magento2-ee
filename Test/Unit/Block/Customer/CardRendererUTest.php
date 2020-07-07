@@ -38,13 +38,23 @@ class CardRendererUTest extends \PHPUnit_Framework_TestCase
             'height' => 20
         ];
 
-        $this->token = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->setMethods(['getPaymentMethodCode', 'getTokenDetails'])->getMockForAbstractClass();
-        $this->token->method('getPaymentMethodCode')->willReturn('wirecard_elasticengine_creditcard');
-        $this->token->method('getTokenDetails')->willReturn(json_encode($tokenDetails));
+        $this->token = $this->getMockBuilder(PaymentTokenInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getPaymentMethodCode', 'getTokenDetails'])
+            ->getMockForAbstractClass();
+        $this->token->method('getPaymentMethodCode')
+            ->willReturn('wirecard_elasticengine_creditcard');
+        $this->token->method('getTokenDetails')
+            ->willReturn(json_encode($tokenDetails));
 
-        $this->cardRenderer = $this->getMockBuilder(CardRenderer::class)->disableOriginalConstructor()->setMethods(['getTokenDetails', 'getIconForType'])->getMockForAbstractClass();
-        $this->cardRenderer->method('getTokenDetails')->willReturn($tokenDetails);
-        $this->cardRenderer->method('getIconForType')->willReturn($icon);
+        $this->cardRenderer = $this->getMockBuilder(CardRenderer::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getTokenDetails', 'getIconForType'])
+            ->getMockForAbstractClass();
+        $this->cardRenderer->method('getTokenDetails')
+            ->willReturn($tokenDetails);
+        $this->cardRenderer->method('getIconForType')
+            ->willReturn($icon);
     }
 
     public function testCardRenderer()
