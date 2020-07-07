@@ -10,17 +10,14 @@
 namespace Wirecard\ElasticEngine\Test\Unit\Controller\Frontend;
 
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\View\Element\AbstractBlock;
 use Magento\Framework\View\Layout;
 use Magento\Framework\View\Result\Page;
-use Magento\Framework\View\Result\PageFactory;
 use Wirecard\ElasticEngine\Controller\Frontend\Sepamandate;
 
 class SepamandateUTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var PageFactory|\PHPUnit_Framework_MockObject_MockObject
-     */
     private $resultFactory;
 
     /**
@@ -56,13 +53,19 @@ class SepamandateUTest extends \PHPUnit_Framework_TestCase
         $this->layout->method('getBlock')->with('frontend.sepamandate')->willReturn($this->block);
         $this->page->method('getLayout')->willReturn($this->layout);
 
-        $this->resultFactory = $this->getMockBuilder(PageFactory::class)->disableOriginalConstructor()->getMock();
+        $this->resultFactory = $this->getMockBuilder(ResultFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+
         $this->resultFactory->method('create')->willReturn($this->page);
+
+        $this->context->method('getResultFactory')->willReturn($this->resultFactory);
     }
 
     public function testExecute()
     {
-        $prov = new Sepamandate($this->context, $this->resultFactory);
+        $prov = new Sepamandate($this->context);
         $result = $prov->execute();
 
         $this->assertEquals($this->page, $result);
