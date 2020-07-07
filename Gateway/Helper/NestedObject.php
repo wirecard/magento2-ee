@@ -13,7 +13,6 @@ namespace Wirecard\ElasticEngine\Gateway\Helper;
  * Helper for managing nested objects
  *
  * @since 2.1.0
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class NestedObject
 {

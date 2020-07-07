@@ -18,7 +18,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
  * Class Order
  *
  * @since 2.1.0
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class Order
 {

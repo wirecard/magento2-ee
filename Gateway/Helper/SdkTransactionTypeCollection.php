@@ -15,7 +15,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
  * Class SdkTransactionTypeCollection
  *
  * @since 2.2.2
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class SdkTransactionTypeCollection
 {
