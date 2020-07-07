@@ -151,11 +151,12 @@ define(
             window.scrollTo(0,0);
             let validErrorCodes = SeamlessCreditCardConstants.wpp.clientValidationErrorCodes;
             var isClientValidation = false;
+            var self = this;
             response.errors.forEach(
                 function ( item ) {
                     if (validErrorCodes.includes(item.error.code)) {
                         isClientValidation = true;
-                        enableButtonById.call(this);
+                        enableButtonById.call(self);
                     } else {
                         messageList.addErrorMessage({
                             message: item.error.description
