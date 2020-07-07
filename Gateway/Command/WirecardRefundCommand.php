@@ -22,7 +22,6 @@ use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
  * Class WirecardRefundCommand
- * @package Wirecard\ElasticEngine\Gateway
  */
 class WirecardRefundCommand implements CommandInterface
 {

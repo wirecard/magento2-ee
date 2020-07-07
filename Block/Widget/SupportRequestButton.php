@@ -11,6 +11,7 @@ namespace Wirecard\ElasticEngine\Block\Widget;
 
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Backend\Block\Widget\Button;
 
 class SupportRequestButton extends Field
 {
@@ -19,7 +20,7 @@ class SupportRequestButton extends Field
         $this->setElement($element);
 
         $url = $this->getUrl('wirecard_elasticengine/support/contact');
-        $html = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')
+        $html = $this->getLayout()->createBlock(Button::class)
             ->setType('button')
             ->setClass('scalable')
             ->setLabel('Contact support')

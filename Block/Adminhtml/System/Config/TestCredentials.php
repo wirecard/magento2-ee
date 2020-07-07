@@ -11,7 +11,6 @@ namespace Wirecard\ElasticEngine\Block\Adminhtml\System\Config;
 
 /**
  * Class TestCredentials
- * @package Wirecard\ElasticEngine\Block\Adminhtml\System\Config
  * @since 3.0.0
  */
 class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field

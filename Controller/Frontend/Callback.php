@@ -29,7 +29,6 @@ use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Class Callback
- * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method Http getRequest()
  * @since 3.1.2 Reworked handling of callback
  */

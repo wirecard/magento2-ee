@@ -166,7 +166,7 @@ class Creditcard extends Action
     public function execute()
     {
         $quote = $this->checkoutSession->getQuote();
-        if (is_null($quote)) {
+        if (null === $quote) {
             return $this->buildErrorResponse('no quote found');
         }
         $params = $this->getRequest()->getParams();

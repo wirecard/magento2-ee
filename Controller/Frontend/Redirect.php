@@ -27,7 +27,6 @@ use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Class Redirect
- * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method Http getRequest()
  */
 class Redirect extends Action implements CsrfAwareActionInterface

@@ -21,7 +21,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class AlipayXBorderTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class AlipayXBorderTransactionFactory extends TransactionFactory
 {

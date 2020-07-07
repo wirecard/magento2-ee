@@ -29,7 +29,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class TransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class TransactionFactory
 {

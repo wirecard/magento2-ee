@@ -20,7 +20,6 @@ use Wirecard\ElasticEngine\Gateway\Model\TransactionUpdater;
 /**
  * Class Notify
  *
- * @package Wirecard\ElasticEngine\Controller\Frontend
  * @method Http getRequest()
  */
 class Notify extends Action implements CsrfAwareActionInterface

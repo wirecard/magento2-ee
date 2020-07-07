@@ -23,7 +23,6 @@ use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
  * Class WirecardVoidCommand
- * @package Wirecard\ElasticEngine\Gateway
  */
 class WirecardVoidCommand implements CommandInterface
 {
