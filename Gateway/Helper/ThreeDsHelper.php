@@ -21,7 +21,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class ThreeDsHelper
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class ThreeDsHelper
 {

@@ -22,7 +22,6 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  * Class Payment
  *
  * @since 2.1.0
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class Payment
 {
