@@ -15,7 +15,6 @@ use Wirecard\PaymentSdk\Entity\Address;
 
 /**
  * Class AddressFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class AddressFactory
 {

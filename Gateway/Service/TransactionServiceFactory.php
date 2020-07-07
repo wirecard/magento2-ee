@@ -15,7 +15,6 @@ use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Class TransactionServiceFactory
- * @package Wirecard\ElasticEngine\Gateway\Service
  */
 class TransactionServiceFactory
 {

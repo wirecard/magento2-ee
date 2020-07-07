@@ -11,7 +11,6 @@ namespace Wirecard\ElasticEngine\Gateway;
 
 /**
  * Class Validator
- * @package Wirecard\ElasticEngine\Gateway\Validator
  * @since 2.2.1
  */
 class Validator

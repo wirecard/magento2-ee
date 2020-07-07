@@ -21,7 +21,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class SepaCreditTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class SepaCreditTransactionFactory extends TransactionFactory
 {

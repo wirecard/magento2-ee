@@ -7,7 +7,7 @@
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 
-$mandateId = $this->getMandateId();
+$mandateId = $block->getMandateId();
 ?>
 <table  class="stretch">
     <tr>
@@ -15,11 +15,14 @@ $mandateId = $this->getMandateId();
             <table>
                 <tr>
                     <td class="text11justify">
-                        <i ><?php echo __('creditor') ?></i><br />
-                        <?php echo $this->getCreditorName() ?>, <?php echo $this->getStoreCity() ?><br />
-                        <?php echo __('config_creditor_id') ?> <?php echo $this->getCreditorId() ?><br />
-                        <?php echo __('creditor_mandate_id') ?> <?php echo $mandateId ?><br />
-                        <input type="hidden" name="mandateId" value="<?php echo $mandateId ?>">
+                        <i ><?= $block->escapeHtml(__('creditor')) ?></i><br />
+                        <?= $block->escapeHtml($block->getCreditorName()) ?>,
+                        <?= $block->escapeHtml($block->getStoreCity()) ?><br />
+                        <?= $block->escapeHtml(__('config_creditor_id')) ?>
+                        <?= $block->escapeHtml($block->getCreditorId()) ?><br />
+                        <?= $block->escapeHtml(__('creditor_mandate_id')) ?>
+                        <?= $block->escapeHtml($mandateId) ?><br />
+                        <input type="hidden" name="mandateId" value="<?= $block->escapeHtml($mandateId) ?>">
                     </td>
                     <td>&nbsp;</td>
                 </tr>
@@ -31,11 +34,11 @@ $mandateId = $this->getMandateId();
             <table>
                 <tr>
                     <td class="text11">
-                        <i><?php echo __('debtor') ?></i><br />
-                        <?php echo __('debtor_acc_owner') ?> %firstname% %lastname%<br />
-                        <?php echo __('iban') ?> %bankAccountIban% <br />
-                        <?php if ($this->getBankBicEnabled()) {
-                            echo __('bic') ?> %bankBic% <br /><?php
+                        <i><?= $block->escapeHtml(__('debtor')) ?></i><br />
+                        <?= $block->escapeHtml(__('debtor_acc_owner')) ?> %firstname% %lastname%<br />
+                        <?= $block->escapeHtml(__('iban')) ?> %bankAccountIban% <br />
+                        <?php if ($block->getBankBicEnabled()) {
+                            echo $block->escapeHtml(__('bic')) ?> %bankBic% <br /><?php
                         }
                         ?>
                     </td>
@@ -49,25 +52,25 @@ $mandateId = $this->getMandateId();
             <table>
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('sepa_text_1') . ' ' .
-                            $this->getCreditorName() . ' ' .
+                        <?= $block->escapeHtml(__('sepa_text_1') . ' ' .
+                            $block->getCreditorName() . ' ' .
                             __('sepa_text_2') . ' ' .
-                            $this->getCreditorName() .
-                            __('sepa_text_2b'); ?>
+                            $block->getCreditorName() .
+                            __('sepa_text_2b')); ?>
                     </td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('sepa_text_3') ?>
+                        <?= $block->escapeHtml(__('sepa_text_3')) ?>
                     </td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="text11justify">
-                        <?php echo __('sepa_text_4') . ' ' .
-                                    $this->getCreditorName() . ' ' .
-                                    __('sepa_text_5'); ?>
+                        <?= $block->escapeHtml(__('sepa_text_4') . ' ' .
+                            $block->getCreditorName() . ' ' .
+                                    __('sepa_text_5')); ?>
                     </td>
                     <td>&nbsp;</td>
                 </tr>
@@ -79,13 +82,15 @@ $mandateId = $this->getMandateId();
             <table>
                 <tr>
                     <td class="text11justify">
-                        <?php echo $this->getStoreCity() ?>, <?php echo date("d.m.Y") ?> %firstname% %lastname%
+                        <?= $block->escapeHtml($block->getStoreCity()) ?>,
+                        <?= $block->escapeHtml(date("d.m.Y")) ?> %firstname% %lastname%
                     </td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" id="sepa-accept"><label for="sepa-accept"><?php echo __('sepa_text_6') ?><label
+                        <input type="checkbox" id="sepa-accept"><label for="sepa-accept">
+                            <?= $block->escapeHtml(__('sepa_text_6')) ?><label
                     </td>
                 </tr>
             </table>

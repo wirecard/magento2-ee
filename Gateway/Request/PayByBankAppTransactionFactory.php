@@ -25,7 +25,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class PayByBankAppTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class PayByBankAppTransactionFactory extends TransactionFactory
 {

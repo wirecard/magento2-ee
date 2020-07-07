@@ -21,7 +21,6 @@ use Wirecard\PaymentSdk\Entity\AccountInfo;
 
 /**
  * Class AccountInfoFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class AccountInfoFactory
 {
@@ -228,7 +227,7 @@ class AccountInfoFactory
      */
     private function getTransactionCountForOrderIds($order_ids)
     {
-        if (is_null($this->transactionRepository) || empty($order_ids)) {
+        if (null === $this->transactionRepository || empty($order_ids)) {
             return 0;
         }
 

@@ -7,6 +7,6 @@
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 ?>
-<?php foreach ($this->getModules() as $_m): ?>
-    <?php echo "$_m\n" ?>
+<?php foreach ($block->getModules() as $_m): ?>
+    <?= $block->escapeHtml("$_m\n") ?>
 <?php endforeach; ?>

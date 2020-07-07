@@ -21,7 +21,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class PayPalTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class PayPalTransactionFactory extends TransactionFactory
 {

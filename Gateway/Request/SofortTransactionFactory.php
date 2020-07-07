@@ -20,7 +20,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class SofortTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class SofortTransactionFactory extends TransactionFactory
 {
