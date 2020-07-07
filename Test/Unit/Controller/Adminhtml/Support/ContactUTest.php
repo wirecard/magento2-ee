@@ -16,6 +16,7 @@ use Magento\Framework\View\Page\Config;
 use Magento\Framework\View\Page\Title;
 use Magento\Framework\View\Result\PageFactory;
 use Wirecard\ElasticEngine\Controller\Adminhtml\Support\Contact;
+use WirecardTest\ElasticEngine\Unit\Controller\Adminhtml\Support\TestContact;
 
 /**
  * Class CredentialsTest
@@ -35,6 +36,9 @@ class ContactUTest extends \PHPUnit_Framework_TestCase
 
     private $page;
 
+    /**
+     * @var Context $context
+     */
     private $context;
 
     public function setUp()

@@ -7,10 +7,15 @@
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\ElasticEngine\Test\Unit\Adminhtml\Support;
+namespace WirecardTest\ElasticEngine\Unit\Controller\Adminhtml\Support;
 
 use Wirecard\ElasticEngine\Controller\Adminhtml\Support\Contact;
 
+/**
+ * Test contact
+ *
+ * Class TestContact
+ */
 class TestContact extends Contact
 {
     public function testIsAllowed($authorization)
