@@ -16,6 +16,7 @@ use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Module\ModuleList\Loader;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Model\Config;
+use Wirecard\ElasticEngine\Gateway\Exception\InvalidEmailException;
 
 class Support
 {
@@ -234,13 +235,15 @@ class Support
      * @param DataObject $postObject
      *
      * @return bool
-     * @throws \Exception
+     * @throws InvalidEmailException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\MailException
      */
     public function sendrequest($postObject)
     {
         if (strlen(trim($postObject->getData('replyto')))) {
             if (!filter_var($postObject->getData('replyto'), FILTER_VALIDATE_EMAIL)) {
-                throw new \Exception(__('enter_valid_email_error'));
+                throw new InvalidEmailException(__('enter_valid_email_error'));
             }
             $this->transportBuilder->setReplyTo(trim($postObject->getData('replyto')));
         }
@@ -251,7 +254,7 @@ class Support
         ];
 
         if (!strlen($sender['email'])) {
-            throw new \Exception(__('enter_valid_email_error'));
+            throw new InvalidEmailException(__('enter_valid_email_error'));
         }
 
         $modules = [];

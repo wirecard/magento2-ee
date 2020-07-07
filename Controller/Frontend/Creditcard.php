@@ -25,6 +25,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
+use Wirecard\ElasticEngine\Gateway\Exception\CreditCardUiException;
 use Wirecard\ElasticEngine\Gateway\Helper\AccountHolderMapper;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;
@@ -196,13 +197,15 @@ class Creditcard extends Action
                 $this->getTransactionTypeForPaymentAction(),
                 $this->getSupportedWppLangCode()
             );
-            if (empty($data)) {
-                throw new \Exception("Cannot create UI");
+
+            if (!empty($data)) {
+                return $this->buildSuccessResponse($data);
             }
-            return $this->buildSuccessResponse($data);
         } catch (\Exception $e) {
             return $this->buildErrorResponse('cannot create UI', ['exception' => get_class($e)]);
         }
+
+        return $this->buildErrorResponse('cannot create UI', ['exception' => "Exception"]);
     }
 
     /**
