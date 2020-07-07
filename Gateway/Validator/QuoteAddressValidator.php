@@ -13,7 +13,6 @@ use Magento\Quote\Model\Quote\Address;
 
 /**
  * Class QuoteAddressValidator
- * @package Wirecard\ElasticEngine\Gateway\Validator
  * @since 2.2.1
  */
 class QuoteAddressValidator extends AbstractValidator

@@ -16,7 +16,6 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
  * Class AccountHolderFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class AccountHolderFactory
 {

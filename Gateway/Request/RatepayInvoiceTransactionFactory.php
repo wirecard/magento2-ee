@@ -23,7 +23,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class RatepayInvoiceTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class RatepayInvoiceTransactionFactory extends TransactionFactory
 {

@@ -13,7 +13,6 @@ use Wirecard\ElasticEngine\Gateway\Validator;
 
 /**
  * Class ValidatorFactory
- * @package Wirecard\ElasticEngine\Gateway\Validator
  * @since 2.2.1
  */
 class ValidatorFactory

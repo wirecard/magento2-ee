@@ -21,7 +21,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class GiropayTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class GiropayTransactionFactory extends TransactionFactory
 {

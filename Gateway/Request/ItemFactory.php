@@ -18,7 +18,6 @@ use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 
 /**
  * Class ItemFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class ItemFactory
 {

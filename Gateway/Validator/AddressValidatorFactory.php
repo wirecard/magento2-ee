@@ -14,7 +14,6 @@ use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
 /**
  * Class AddressValidatorFactory
- * @package Wirecard\ElasticEngine\Gateway\Validator
  * @since 3.0.0
  */
 class AddressValidatorFactory

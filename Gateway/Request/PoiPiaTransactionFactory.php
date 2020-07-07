@@ -20,7 +20,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class PoiPiaTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class PoiPiaTransactionFactory extends TransactionFactory
 {

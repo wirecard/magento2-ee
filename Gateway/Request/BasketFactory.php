@@ -29,7 +29,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 /**
  * Class BasketFactory
  *
- * @package Wirecard\ElasticEngine\Gateway\Request
  */
 class BasketFactory
 {
@@ -127,11 +126,11 @@ class BasketFactory
 
         /** @var Order $orderObject */
         $orderObject = $this->orderFactory->create();
-        if (!is_null($orderObject)) {
+        if (null !== $orderObject) {
             $orderObject = $this->orderRepository->get($orderId);
         }
 
-        if (is_null($orderObject)) {
+        if (null === $orderObject) {
             throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
@@ -188,11 +187,11 @@ class BasketFactory
 
         /** @var Order $orderObject */
         $orderObject = $this->orderFactory->create();
-        if (!is_null($orderObject)) {
+        if (null !== $orderObject) {
             $orderObject = $this->orderRepository->get($orderId);
         }
 
-        if (is_null($orderObject)) {
+        if (null === $orderObject) {
             throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
@@ -257,11 +256,11 @@ class BasketFactory
 
         /** @var Order $orderObject */
         $orderObject = $this->orderFactory->create();
-        if (!is_null($orderObject)) {
+        if (null !== $orderObject) {
             $orderObject = $this->orderRepository->get($orderId);
         }
 
-        if (is_null($orderObject)) {
+        if (null === $orderObject) {
             throw new NoSuchEntityException(__('no_such_order_error'));
         }
 
