@@ -18,6 +18,8 @@ use Wirecard\ElasticEngine\Gateway\Model\Notify as NotifyModel;
 use Wirecard\ElasticEngine\Gateway\Model\TransactionUpdater;
 
 /**
+ * Class for processing notification
+ *
  * Class Notify
  *
  * @method Http getRequest()
