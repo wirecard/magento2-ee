@@ -34,10 +34,10 @@ $mandateId = $this->getMandateId();
                         <i><?php echo __('debtor') ?></i><br />
                         <?php echo __('debtor_acc_owner') ?> %firstname% %lastname%<br />
                         <?php echo __('iban') ?> %bankAccountIban% <br />
-                        <?php if($this->getBankBicEnabled()) {
+                        <?php if ($this->getBankBicEnabled()) {
                             echo __('bic') ?> %bankBic% <br /><?php
-                                }
-                                ?>
+                        }
+                        ?>
                     </td>
                     <td>&nbsp;</td>
                 </tr>

@@ -31,8 +31,8 @@
   "type": "magento2-module",
   "scripts": {
     "upload-coverage": "codacycoverage clover build/coverage/xml",
-    "cs-check": "phpcs --report=summary  .",
-    "cs-fix": "php-cs-fixer fix .",
+    "cs-check": "phpcs -s .",
+    "cs-fix": "phpcbf",
     "test": "phpunit --colors=always",
     "test-coverage": "phpunit --coverage-clover build/coverage/xml",
     "test-reports": "phpunit --coverage-html reports/coverage --coverage-clover reports/clover.xml --coverage-crap4j reports/crap4j.xml --log-junit reports/junit.xml",
