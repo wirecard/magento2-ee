@@ -94,42 +94,6 @@ class FormUTest extends \PHPUnit_Framework_TestCase
 
         $testForm = new TestForm($this->context, $this->registry, $this->formFactory, [], $requestInterface);
 
-        $testForm->test_prepareForm();
-    }
-}
-
-class TestForm extends Form
-{
-    private $requestInterface;
-
-    public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Data\FormFactory $formFactory,
-        array $data,
-        $requestInterface
-    ) {
-        parent::__construct($context, $registry, $formFactory, $data);
-        $this->requestInterface = $requestInterface;
-    }
-
-    public function getRequest()
-    {
-        return $this->requestInterface;
-    }
-
-    public function getUrl($route = '', $params = [])
-    {
-        return "url";
-    }
-
-    public function setForm(\Magento\Framework\Data\Form $form)
-    {
-        return true;
-    }
-
-    public function test_prepareForm()
-    {
-        return $this->_prepareForm();
+        $testForm->testPrepareForm();
     }
 }

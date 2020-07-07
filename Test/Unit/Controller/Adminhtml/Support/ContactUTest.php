@@ -19,8 +19,6 @@ use Wirecard\ElasticEngine\Controller\Adminhtml\Support\Contact;
 
 /**
  * Class CredentialsTest
- * @package Wirecard\ElasticEngine\Test\Unit\Adminhtml\Test
- * @method _isAllowed()
  */
 class ContactUTest extends \PHPUnit_Framework_TestCase
 {
@@ -68,15 +66,6 @@ class ContactUTest extends \PHPUnit_Framework_TestCase
         $authorization = $this->getMockBuilder(AuthorizationInterface::class)->disableOriginalConstructor()->getMock();
 
         $testContact = new TestContact($this->context, $this->resultPageFactory);
-        $this->assertNull($testContact->test_isAllowed($authorization));
-    }
-}
-
-class TestContact extends Contact
-{
-    public function test_isAllowed($authorization)
-    {
-        $this->_authorization = $authorization;
-        return $this->_isAllowed();
+        $this->assertNull($testContact->testIsAllowed($authorization));
     }
 }
