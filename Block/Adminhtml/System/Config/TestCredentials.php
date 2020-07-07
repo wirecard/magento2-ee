@@ -10,7 +10,10 @@
 namespace Wirecard\ElasticEngine\Block\Adminhtml\System\Config;
 
 /**
+ * Class for getting data for testing payment methods in the Magento 2 backend
+ *
  * Class TestCredentials
+ *
  * @since 3.0.0
  */
 class TestCredentials extends \Magento\Config\Block\System\Config\Form\Field
