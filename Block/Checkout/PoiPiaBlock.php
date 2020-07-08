@@ -48,8 +48,8 @@ class PoiPiaBlock extends Template
         Template\Context $context,
         Session $session,
         Data $pricingHelper,
-        array $data = [],
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        array $data = []
     ) {
         parent::__construct($context, $data);
         $this->context = $context;

@@ -49,7 +49,7 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
         $pricingHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
         $pricingHelper->method('currency')->willReturn("€30.5");
 
-        $this->block = new PoiPiaBlock($context, $session, $pricingHelper, [], $this->methodConfig);
+        $this->block = new PoiPiaBlock($context, $session, $pricingHelper, $this->methodConfig, []);
     }
 
     public function testGetMerchantBankAccount()
