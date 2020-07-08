@@ -28,6 +28,8 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
+ * Class used for executing callback
+ *
  * Class Callback
  * @method Http getRequest()
  * @since 3.1.2 Reworked handling of callback

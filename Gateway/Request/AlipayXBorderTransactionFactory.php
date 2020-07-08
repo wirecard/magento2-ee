@@ -20,6 +20,8 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for creating AlipayXborder transaction
+ *
  * Class AlipayXBorderTransactionFactory
  */
 class AlipayXBorderTransactionFactory extends TransactionFactory

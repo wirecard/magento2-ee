@@ -17,6 +17,8 @@ use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 
 /**
+ * Class used for creating an order item
+ *
  * Class ItemFactory
  */
 class ItemFactory

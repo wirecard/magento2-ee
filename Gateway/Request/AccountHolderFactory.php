@@ -15,6 +15,8 @@ use Wirecard\ElasticEngine\Gateway\Validator\AddressValidatorFactory;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
+ * Class used for creating Account holder
+ *
  * Class AccountHolderFactory
  */
 class AccountHolderFactory

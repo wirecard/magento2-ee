@@ -26,6 +26,8 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
+ * Class used for executing redirect
+ *
  * Class Redirect
  * @method Http getRequest()
  */

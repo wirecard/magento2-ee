@@ -19,6 +19,8 @@ use Wirecard\PaymentSdk\Transaction\PoiPiaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for creating POI/PIA transaction
+ *
  * Class PoiPiaTransactionFactory
  */
 class PoiPiaTransactionFactory extends TransactionFactory

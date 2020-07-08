@@ -21,6 +21,8 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for creating SEPA transaction
+ *
  * Class SepaTransactionFactory
  */
 class SepaTransactionFactory extends TransactionFactory

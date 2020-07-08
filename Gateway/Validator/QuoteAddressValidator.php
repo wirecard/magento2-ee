@@ -12,6 +12,8 @@ namespace Wirecard\ElasticEngine\Gateway\Validator;
 use Magento\Quote\Model\Quote\Address;
 
 /**
+ * Validator for business related object
+ *
  * Class QuoteAddressValidator
  * @since 2.2.1
  */

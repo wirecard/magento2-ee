@@ -19,6 +19,8 @@ use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
+ * Payment helper for adding transaction
+ *
  * Class Payment
  *
  * @since 2.1.0

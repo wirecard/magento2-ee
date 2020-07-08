@@ -20,6 +20,8 @@ use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for creating Giropay transaction
+ *
  * Class GiropayTransactionFactory
  */
 class GiropayTransactionFactory extends TransactionFactory

@@ -14,6 +14,8 @@ use Psr\Log\LoggerInterface;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
+ * Class used for creating transaction service
+ *
  * Class TransactionServiceFactory
  */
 class TransactionServiceFactory

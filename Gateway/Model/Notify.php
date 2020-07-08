@@ -44,8 +44,9 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 
 /**
- * Class Notify
+ * Class used for processing notification
  *
+ * Class Notify
  */
 class Notify
 {

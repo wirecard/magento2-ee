@@ -20,6 +20,8 @@ use Wirecard\PaymentSdk\Constant\AuthMethod;
 use Wirecard\PaymentSdk\Entity\AccountInfo;
 
 /**
+ * Account info factory - class used for creating Account info
+ *
  * Class AccountInfoFactory
  */
 class AccountInfoFactory

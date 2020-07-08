@@ -13,6 +13,8 @@ use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
 /**
+ * Class used for creating address validator
+ *
  * Class AddressValidatorFactory
  * @since 3.0.0
  */
