@@ -14,6 +14,9 @@ use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Gateway\ConfigInterface;
 
+/**
+ * Class for POI/PIA checkout
+ */
 class PoiPiaBlock extends Template
 {
 

@@ -22,8 +22,6 @@ use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
  * Class used for executing refund command on business object
- *
- * Class WirecardRefundCommand
  */
 class WirecardRefundCommand implements CommandInterface
 {

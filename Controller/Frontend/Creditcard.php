@@ -25,7 +25,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Psr\Log\LoggerInterface;
 use Wirecard\Converter\WppVTwoConverter;
-use Wirecard\ElasticEngine\Gateway\Exception\CreditCardUiException;
 use Wirecard\ElasticEngine\Gateway\Helper\AccountHolderMapper;
 use Wirecard\ElasticEngine\Gateway\Helper\CalculationTrait;
 use Wirecard\ElasticEngine\Gateway\Helper\OrderDto;

@@ -24,9 +24,7 @@ use Wirecard\PaymentSdk\Transaction\PayByBankAppTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class used for creating PayByBank transaction
- *
- * Class PayByBankAppTransactionFactory
+ * Class used for creating Pay by Bank transaction
  */
 class PayByBankAppTransactionFactory extends TransactionFactory
 {

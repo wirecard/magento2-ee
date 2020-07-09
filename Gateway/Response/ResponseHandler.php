@@ -27,8 +27,6 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Class used for handling response
- *
- * Class ResponseHandler
  */
 class ResponseHandler implements HandlerInterface
 {

@@ -24,9 +24,7 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class used for creating Credit card transaction
- *
- * Class CreditCardTransactionFactory
+ * Class used for creating Credit Card transaction
  */
 class CreditCardTransactionFactory extends TransactionFactory
 {

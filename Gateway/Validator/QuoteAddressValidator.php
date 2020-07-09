@@ -14,7 +14,6 @@ use Magento\Quote\Model\Quote\Address;
 /**
  * Validator for business related object
  *
- * Class QuoteAddressValidator
  * @since 2.2.1
  */
 class QuoteAddressValidator extends AbstractValidator

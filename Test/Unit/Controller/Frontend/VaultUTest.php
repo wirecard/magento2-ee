@@ -67,8 +67,10 @@ class VaultUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(['getRequest', 'getUrl', 'getResultFactory'])
             ->getMock();
-        $this->context->method('getRequest')->willReturn($httpRequest);
-        $this->context->method('getUrl')->willReturn($urlBuilder);
+        $this->context->method('getRequest')
+            ->willReturn($httpRequest);
+        $this->context->method('getUrl')
+            ->willReturn($urlBuilder);
 
         $this->customerSession = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()

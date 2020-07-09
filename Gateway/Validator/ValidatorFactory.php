@@ -14,7 +14,6 @@ use Wirecard\ElasticEngine\Gateway\Validator;
 /**
  * Class used for creating validator
  *
- * Class ValidatorFactory
  * @since 2.2.1
  */
 class ValidatorFactory

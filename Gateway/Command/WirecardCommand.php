@@ -26,8 +26,6 @@ use Wirecard\PaymentSdk\Transaction\Reservable;
 
 /**
  * Class used for executing command on business object
- *
- * Class WirecardCommand
  */
 class WirecardCommand implements CommandInterface
 {

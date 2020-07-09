@@ -28,25 +28,39 @@ class PoiPIaBlockUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
-        $this->methodConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->methodConfig = $this->getMockBuilder(ConfigInterface::class)
+            ->getMock();
 
-        $payment = $this->getMockBuilder(Order\Payment::class)->disableOriginalConstructor()->getMock();
-        $payment->method('getAdditionalInformation')->willReturn(
-            [
-                'merchant-bank-account.0.iban' => 'IB0123456789',
-                'merchant-bank-account.0.bic' => 'biccc',
-                'provider-transaction-reference-id' => 'P0T1R2I3D4'
-            ]
-        );
+        $payment = $this->getMockBuilder(Order\Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $payment->method('getAdditionalInformation')
+            ->willReturn(
+                [
+                    'merchant-bank-account.0.iban' => 'IB0123456789',
+                    'merchant-bank-account.0.bic' => 'biccc',
+                    'provider-transaction-reference-id' => 'P0T1R2I3D4'
+                ]
+            );
 
-        $order = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
-        $order->method('getPayment')->willReturn($payment);
+        $order = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $order->method('getPayment')
+            ->willReturn($payment);
 
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
-        $session->method('getLastRealOrder')->willReturn($order);
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $session->method('getLastRealOrder')
+            ->willReturn($order);
 
-        $pricingHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
+        $pricingHelper = $this->getMockBuilder(Data::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $pricingHelper->method('currency')->willReturn("€30.5");
 
         $this->block = new PoiPiaBlock($context, $session, $pricingHelper, $this->methodConfig, []);

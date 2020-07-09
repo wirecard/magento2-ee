@@ -20,9 +20,7 @@ use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class used for creating SEPA credit transaction
- *
- * Class SepaCreditTransactionFactory
+ * Class used for creating SEPA Credit transaction
  */
 class SepaCreditTransactionFactory extends TransactionFactory
 {

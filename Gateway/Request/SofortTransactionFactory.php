@@ -20,8 +20,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class used for creating Sofort. transaction
- *
- * Class SofortTransactionFactory
  */
 class SofortTransactionFactory extends TransactionFactory
 {

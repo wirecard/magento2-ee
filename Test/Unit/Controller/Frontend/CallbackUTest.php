@@ -85,7 +85,8 @@ class CallbackUTest extends \PHPUnit_Framework_TestCase
 
         /** @var InlineInterface|PHPUnit_Framework_MockObject_MockObject $inline */
         $inline = $this->getMockForAbstractClass(InlineInterface::class);
-        $inline->method('processResponseBody')->willReturn(null);
+        $inline->method('processResponseBody')
+            ->willReturn(null);
 
         $this->json = new Json($inline);
 

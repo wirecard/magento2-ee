@@ -16,6 +16,8 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for retrieving transaction
+ *
  * @since 2.1.0
  */
 class RetrieveTransaction

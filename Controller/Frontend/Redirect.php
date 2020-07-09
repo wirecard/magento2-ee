@@ -27,9 +27,6 @@ use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Class used for executing redirect
- *
- * Class Redirect
- * @method Http getRequest()
  */
 class Redirect extends Action implements CsrfAwareActionInterface
 {

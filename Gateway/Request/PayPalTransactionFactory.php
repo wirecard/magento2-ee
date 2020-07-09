@@ -21,8 +21,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class used for creating PayPal transaction
- *
- * Class PayPalTransactionFactory
  */
 class PayPalTransactionFactory extends TransactionFactory
 {

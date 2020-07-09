@@ -19,9 +19,7 @@ use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class used for creating Ideal transaction
- *
- * Class IdealTransactionFactory
+ * Class used for creating iDEAL transaction
  */
 class IdealTransactionFactory extends TransactionFactory
 {

@@ -15,8 +15,6 @@ use Wirecard\PaymentSdk\Entity\Address;
 /**
  * A helper for mapping a user account
  *
- * Class AccountHolderMapper
- *
  * @since 3.1.2
  */
 class AccountHolderMapper

@@ -16,7 +16,6 @@ use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 /**
  * This class is for creating a Credit Card three d form
  *
- * Class CreditCardThreeDForm
  * @since 3.1.2
  */
 class CreditCardThreeDForm extends Template

@@ -27,6 +27,8 @@ use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for updating the transaction
+ *
  * @since 2.1.0
  */
 class TransactionUpdater

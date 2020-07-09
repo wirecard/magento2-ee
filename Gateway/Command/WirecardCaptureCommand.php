@@ -23,8 +23,6 @@ use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
  * Class used for executing capture command on business object
- *
- * Class WirecardCommand
  */
 class WirecardCaptureCommand implements CommandInterface
 {

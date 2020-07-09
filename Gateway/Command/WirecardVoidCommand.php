@@ -23,8 +23,6 @@ use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
  * Class used for executing void command on business object
- *
- * Class WirecardVoidCommand
  */
 class WirecardVoidCommand implements CommandInterface
 {

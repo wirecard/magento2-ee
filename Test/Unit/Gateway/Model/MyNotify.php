@@ -13,8 +13,6 @@ use Wirecard\ElasticEngine\Gateway\Model\Notify;
 
 /**
  * Test notify class
- *
- * Class MyNotify
  */
 class MyNotify extends Notify
 {

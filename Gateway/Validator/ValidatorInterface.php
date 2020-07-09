@@ -10,7 +10,8 @@
 namespace Wirecard\ElasticEngine\Gateway\Validator;
 
 /**
- * Interface ValidatorInterface
+ * Interface for validation of parameters
+ *
  * @since 2.2.1
  */
 interface ValidatorInterface

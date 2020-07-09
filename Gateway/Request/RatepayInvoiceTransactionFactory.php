@@ -22,9 +22,7 @@ use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class used for creating Ratepay invoice transaction
- *
- * Class RatepayInvoiceTransactionFactory
+ * Class used for creating Ratepay Invoice transaction
  */
 class RatepayInvoiceTransactionFactory extends TransactionFactory
 {

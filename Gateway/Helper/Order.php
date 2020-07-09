@@ -17,8 +17,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 /**
  * Helper for getting order from order repository
  *
- * Class Order
- *
  * @since 2.1.0
  */
 class Order

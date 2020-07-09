@@ -19,11 +19,16 @@ class ContactUTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
-        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $buttonList = $this->getMockBuilder(ButtonList::class)->disableOriginalConstructor()->getMock();
+        $buttonList = $this->getMockBuilder(ButtonList::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $context->method('getButtonList')->willReturn($buttonList);
+        $context->method('getButtonList')
+            ->willReturn($buttonList);
 
         new Contact($context);
     }

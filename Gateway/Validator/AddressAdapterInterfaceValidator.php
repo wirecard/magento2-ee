@@ -13,6 +13,7 @@ use Magento\Payment\Gateway\Data\AddressAdapterInterface;
 
 /**
  * Class AddressInterfaceValidator
+ *
  * @since 2.2.1
  */
 class AddressAdapterInterfaceValidator extends AbstractValidator

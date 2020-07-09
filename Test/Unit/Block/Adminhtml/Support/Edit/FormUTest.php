@@ -51,17 +51,25 @@ class FormUTest extends \PHPUnit_Framework_TestCase
         $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
 
         $this->objectManager = new ObjectManager($this);
-        $this->context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+        $this->context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->registry = $this->getMockBuilder(Registry::class)->disableOriginalConstructor()->getMock();
+        $this->registry = $this->getMockBuilder(Registry::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $fieldset = $this->getMock(Fieldset::class, [], [], '', false);
 
         $form = $this->getMock(MagentoForm::class, [], [], '', false);
-        $form->method('addFieldset')->willReturn($fieldset);
+        $form->method('addFieldset')
+            ->willReturn($fieldset);
 
-        $this->formFactory = $this->getMockBuilder(FormFactory::class)->disableOriginalConstructor()->getMock();
-        $this->formFactory->method('create')->willReturn($form);
+        $this->formFactory = $this->getMockBuilder(FormFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->formFactory->method('create')
+            ->willReturn($form);
 
         $this->form = $this->objectManager->getObject(
             Form::class,

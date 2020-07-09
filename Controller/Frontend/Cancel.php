@@ -20,8 +20,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Class for executing order cancellation
- *
- * Class Cancel
  */
 class Cancel extends Action implements CsrfAwareActionInterface
 {

@@ -29,8 +29,6 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 /**
  * Class used for creating the Basket
  *
- * Class BasketFactory
- *
  */
 class BasketFactory
 {

@@ -14,8 +14,6 @@ use Magento\Sales\Api\Data\TransactionInterface as MagentoTransactionInterface;
 /**
  * Helper for mapping transaction type
  *
- * Class TransactionTypeMapper
- *
  * @since 2.2.2
  */
 class TransactionTypeMapper
