@@ -47,11 +47,36 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
         $this->objectManager = new ObjectManager($this);
 
         $directory = $this->getMockForAbstractClass(ReadInterface::class);
-        $filesystem = $this->getMock(Filesystem::class, ['getDirectoryRead'], [], '', false);
-        $filesystem->method('getDirectoryRead')->willReturn($directory);
-        $eventManager = $this->getMock(EventManager::class, ['dispatch'], [], '', false);
-        $appState = $this->getMock(State::class, ['getAreaCode'], [], '', false);
-        $resolver = $this->getMock(Resolver::class, ['getTemplateFileName'], [], '', false);
+        $filesystem = $this->getMock(
+            Filesystem::class,
+            ['getDirectoryRead'],
+            [],
+            '',
+            false
+        );
+        $filesystem->method('getDirectoryRead')
+            ->willReturn($directory);
+        $eventManager = $this->getMock(
+            EventManager::class,
+            ['dispatch'],
+            [],
+            '',
+            false
+        );
+        $appState = $this->getMock(
+            State::class,
+            ['getAreaCode'],
+            [],
+            '',
+            false
+        );
+        $resolver = $this->getMock(
+            Resolver::class,
+            ['getTemplateFileName'],
+            [],
+            '',
+            false
+        );
         $validator = $this->getMock(
             Validator::class,
             ['isValid'],
@@ -59,8 +84,20 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
             '',
             false
         );
-        $logger = $this->getMock(Logger::class, ['critical'], [], '', false);
-        $urlBuilder = $this->getMock(Url::class, ['getUrl'], [], '', false);
+        $logger = $this->getMock(
+            Logger::class,
+            ['critical'],
+            [],
+            '',
+            false
+        );
+        $urlBuilder = $this->getMock(
+            Url::class,
+            ['getUrl'],
+            [],
+            '',
+            false
+        );
 
         $layoutMock = $this->getMockBuilder('Magento\Framework\View\Layout')
             ->disableOriginalConstructor()
@@ -70,10 +107,13 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(['setData', 'toHtml'])
             ->getMock();
-        $button->method('setData')->willReturn($button);
-        $button->method('toHtml')->willReturn(self::BUTTON);
+        $button->method('setData')
+            ->willReturn($button);
+        $button->method('toHtml')
+            ->willReturn(self::BUTTON);
 
-        $layoutMock->method('createBlock')->willReturn($button);
+        $layoutMock->method('createBlock')
+            ->willReturn($button);
 
         $context = $this->getMock(Context::class, [
             'getFilesystem',
@@ -85,20 +125,31 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
             'getUrlBuilder',
             'getLayout'
         ], [], '', false);
-        $context->method('getFilesystem')->willReturn($filesystem);
-        $context->method('getEventManager')->willReturn($eventManager);
-        $context->method('getAppState')->willReturn($appState);
-        $context->method('getResolver')->willReturn($resolver);
-        $context->method('getValidator')->willReturn($validator);
-        $context->method('getLogger')->willReturn($logger);
-        $context->method('getUrlBuilder')->willReturn($urlBuilder);
-        $context->method('getLayout')->willReturn($layoutMock);
+        $context->method('getFilesystem')
+            ->willReturn($filesystem);
+        $context->method('getEventManager')
+            ->willReturn($eventManager);
+        $context->method('getAppState')
+            ->willReturn($appState);
+        $context->method('getResolver')
+            ->willReturn($resolver);
+        $context->method('getValidator')
+            ->willReturn($validator);
+        $context->method('getLogger')
+            ->willReturn($logger);
+        $context->method('getUrlBuilder')
+            ->willReturn($urlBuilder);
+        $context->method('getLayout')
+            ->willReturn($layoutMock);
 
         $data = [
             'context' => $context,
         ];
 
-        $this->instance = $this->objectManager->getObject(TestCredentialsButton::class, $data);
+        $this->instance = $this->objectManager->getObject(
+            TestCredentialsButton::class,
+            $data
+        );
         //$this->instance = new TestCredentialsButton($context, []);
     }
 
@@ -120,7 +171,14 @@ class TestCredentialsButtonTest extends \PHPUnit_Framework_TestCase
 
         /** @var $element AbstractElement */
         $this->assertEquals(
-            '<tr id="row_"><td class="label"><label for=""><span></span></label></td><td class="value"></td><td class=""></td></tr>',
+            '<tr id="row_">' .
+            '<td class="label">' .
+            '<label for=""><span></span></label>' .
+            '</td>' .
+            '<td class="value">' .
+            '</td>' .
+            '<td class="">' .
+            '</td></tr>',
             $this->instance->render($element)
         );
     }

@@ -14,8 +14,7 @@ use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Wirecard\PaymentSdk\Entity\Address;
 
 /**
- * Class AddressFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
+ * Class used for creating Address
  */
 class AddressFactory
 {

@@ -166,7 +166,7 @@ class Creditcard extends Action
     public function execute()
     {
         $quote = $this->checkoutSession->getQuote();
-        if (is_null($quote)) {
+        if (null === $quote) {
             return $this->buildErrorResponse('no quote found');
         }
         $params = $this->getRequest()->getParams();
@@ -196,13 +196,15 @@ class Creditcard extends Action
                 $this->getTransactionTypeForPaymentAction(),
                 $this->getSupportedWppLangCode()
             );
-            if (empty($data)) {
-                throw new \Exception("Cannot create UI");
+
+            if (!empty($data)) {
+                return $this->buildSuccessResponse($data);
             }
-            return $this->buildSuccessResponse($data);
         } catch (\Exception $e) {
             return $this->buildErrorResponse('cannot create UI', ['exception' => get_class($e)]);
         }
+
+        return $this->buildErrorResponse('cannot create UI', ['exception' => "Exception"]);
     }
 
     /**

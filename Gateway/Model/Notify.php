@@ -40,13 +40,9 @@ use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
- * @since 2.1.0
- */
-
-/**
- * Class Notify
+ * Class used for processing notification
  *
- * @package Wirecard\ElasticEngine\Gateway\Model
+ * @since 2.1.0
  */
 class Notify
 {
@@ -196,7 +192,7 @@ class Notify
     public function process(Response $response)
     {
         $orderId = $response->getCustomFields()->get('orderId');
-        if (is_null($orderId)) {
+        if (null === $orderId) {
             $this->logger->error('No orderID found in custom fields');
 
             return;

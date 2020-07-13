@@ -19,8 +19,7 @@ use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class SofortTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
+ * Class used for creating Sofort. transaction
  */
 class SofortTransactionFactory extends TransactionFactory
 {

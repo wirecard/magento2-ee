@@ -46,21 +46,32 @@ class SepamandateUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->page = $this->getMockBuilder(Page::class)->disableOriginalConstructor()->getMock();
-        $this->layout = $this->getMockBuilder(Layout::class)->disableOriginalConstructor()->getMock();
-        $this->block = $this->getMockBuilder(AbstractBlock::class)->disableOriginalConstructor()->getMock();
+        $this->page = $this->getMockBuilder(Page::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->layout = $this->getMockBuilder(Layout::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->block = $this->getMockBuilder(AbstractBlock::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->layout->method('getBlock')->with('frontend.sepamandate')->willReturn($this->block);
-        $this->page->method('getLayout')->willReturn($this->layout);
+        $this->layout->method('getBlock')
+            ->with('frontend.sepamandate')
+            ->willReturn($this->block);
+        $this->page->method('getLayout')
+            ->willReturn($this->layout);
 
         $this->resultFactory = $this->getMockBuilder(ResultFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
             ->getMock();
 
-        $this->resultFactory->method('create')->willReturn($this->page);
+        $this->resultFactory->method('create')
+            ->willReturn($this->page);
 
-        $this->context->method('getResultFactory')->willReturn($this->resultFactory);
+        $this->context->method('getResultFactory')
+            ->willReturn($this->resultFactory);
     }
 
     public function testExecute()

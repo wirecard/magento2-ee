@@ -25,8 +25,7 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Reservable;
 
 /**
- * Class WirecardCommand
- * @package Wirecard\ElasticEngine\Gateway
+ * Class used for executing command on business object
  */
 class WirecardCommand implements CommandInterface
 {

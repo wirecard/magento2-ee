@@ -22,12 +22,11 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
- * Class WirecardVoidCommand
- * @package Wirecard\ElasticEngine\Gateway
+ * Class used for executing void command on business object
  */
 class WirecardVoidCommand implements CommandInterface
 {
-    const STATEOBJECT='stateObject';
+    const STATEOBJECT = 'stateObject';
 
     /**
      * @var TransactionFactory

@@ -16,6 +16,8 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for retrieving transaction
+ *
  * @since 2.1.0
  */
 class RetrieveTransaction
@@ -90,7 +92,7 @@ class RetrieveTransaction
             $data,
             [Transaction::PARAM_PAYMENT, Transaction::PARAM_PARENT_TRANSACTION_ID]
         );
-        if (is_null($parentTransactionId)) {
+        if (null === $parentTransactionId) {
             return null;
         }
 
@@ -100,12 +102,12 @@ class RetrieveTransaction
         }
 
         $payment = $this->findTransactionByType($payments, $transactionType);
-        if (is_null($payment)) {
+        if (null === $payment) {
             return null;
         }
 
         $requestId = $this->nestedObjectHelper->get($payment, self::FIELD_REQUEST_ID);
-        if (is_null($requestId)) {
+        if (null === $requestId) {
             return null;
         }
 
@@ -125,7 +127,7 @@ class RetrieveTransaction
         $payment = null;
         foreach (array_reverse($payments) as $p) {
             $paymentTransactionType = $this->nestedObjectHelper->get($p, Transaction::PARAM_TRANSACTION_TYPE);
-            if (is_null($paymentTransactionType)) {
+            if (null === $paymentTransactionType) {
                 continue;
             }
 

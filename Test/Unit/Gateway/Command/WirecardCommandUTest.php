@@ -86,36 +86,53 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
     {
         // Transaction mocks
         $this->response = $this->getMockBuilder(SuccessResponse::class)
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->transactionFactory = $this->getMockBuilder(TransactionFactory::class)
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->transactionFactory->method(self::METHOD_CREATE)
             ->willReturn($this->getMockBuilder(PayPalTransaction::class)->getMock());
 
         // TransactionService mocks
         $this->transactionService = $this->getMockBuilder(TransactionService::class)
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->transactionService->method(self::METHOD_PROCESS)->willReturn($this->response);
 
         $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->transactionServiceFactory->method(self::METHOD_CREATE)->willReturn($this->transactionService);
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transactionServiceFactory->method(self::METHOD_CREATE)
+            ->willReturn($this->transactionService);
 
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)
+            ->getMock();
 
-        $this->handler = $this->getMockBuilder(HandlerInterface::class)->getMock();
+        $this->handler = $this->getMockBuilder(HandlerInterface::class)
+            ->getMock();
 
-        $this->methodConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $this->methodConfig->method('getValue')->willReturn('authorize');
+        $this->methodConfig = $this->getMockBuilder(ConfigInterface::class)
+            ->getMock();
+        $this->methodConfig->method('getValue')
+            ->willReturn('authorize');
 
-        $stateObject = $this->getMockBuilder(DataObject::class)->getMock();
+        $stateObject = $this->getMockBuilder(DataObject::class)
+            ->getMock();
 
-        $payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
-        $payment->method('getAdditionalInformation')->willReturn(true);
+        $payment = $this->getMockBuilder(Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $payment->method('getAdditionalInformation')
+            ->willReturn(true);
 
-        $this->paymentDO = $this->getMockBuilder(DataObject::class)->disableOriginalConstructor()->setMethods(['getPayment'])->getMock();
-        $this->paymentDO->method('getPayment')->willReturn($payment);
+        $this->paymentDO = $this->getMockBuilder(DataObject::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getPayment'])
+            ->getMock();
+        $this->paymentDO->method('getPayment')
+            ->willReturn($payment);
 
         $this->commandSubject = [
             'stateObject' => $stateObject,
@@ -126,11 +143,14 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
     public function testExecuteCreatesTransactionService()
     {
         $testTransactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
-            ->disableOriginalConstructor()->getMock();
-        $testTransactionServiceFactory->method(self::METHOD_CREATE)->willReturn($this->transactionService);
+            ->disableOriginalConstructor()
+            ->getMock();
+        $testTransactionServiceFactory->method(self::METHOD_CREATE)
+            ->willReturn($this->transactionService);
 
         // Test if the transactionService is created with the correct values
-        $testTransactionServiceFactory->expects($this->Once())->method(self::METHOD_CREATE);
+        $testTransactionServiceFactory->expects($this->Once())
+            ->method(self::METHOD_CREATE);
 
         /** @var TransactionServiceFactory $testTransactionServiceFactory */
         $command = new WirecardCommand(
@@ -181,20 +201,32 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
         $transactionServiceMock = $this->getMockBuilder(TransactionService::class)
             ->disableOriginalConstructor()->getMock();
 
-        $status = $this->getMockBuilder(Status::class)->disableOriginalConstructor()->getMock();
-        $status->method('getDescription')->willReturn('description');
+        $status = $this->getMockBuilder(Status::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $status->method('getDescription')
+            ->willReturn('description');
 
-        $statusCollection = $this->getMockBuilder(StatusCollection::class)->disableArgumentCloning()->getMock();
-        $statusCollection->method('getIterator')->willReturn([$status]);
+        $statusCollection = $this->getMockBuilder(StatusCollection::class)
+            ->disableArgumentCloning()
+            ->getMock();
+        $statusCollection->method('getIterator')
+            ->willReturn([$status]);
 
-        $failureResponse = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
-        $failureResponse->method('getStatusCollection')->willReturn($statusCollection);
+        $failureResponse = $this->getMockBuilder(FailureResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $failureResponse->method('getStatusCollection')
+            ->willReturn($statusCollection);
 
-        $transactionServiceMock->method('process')->willReturn($failureResponse);
+        $transactionServiceMock->method('process')
+            ->willReturn($failureResponse);
 
         $transactionServiceFactoryMock = $this->getMockBuilder(TransactionServiceFactory::class)
-            ->disableOriginalConstructor()->getMock();
-        $transactionServiceFactoryMock->method('create')->willReturn($transactionServiceMock);
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionServiceFactoryMock->method('create')
+            ->willReturn($transactionServiceMock);
 
         $command = new WirecardCommand(
             $this->transactionFactory,
@@ -204,7 +236,8 @@ class WirecardCommandUTest extends \PHPUnit_Framework_TestCase
             $this->methodConfig
         );
 
-        $stateObject = $this->getMockBuilder(DataObject::class)->getMock();
+        $stateObject = $this->getMockBuilder(DataObject::class)
+            ->getMock();
 
         $commandSubject = [
             'stateObject' => $stateObject,

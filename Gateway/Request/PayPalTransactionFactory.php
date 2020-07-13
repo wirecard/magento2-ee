@@ -20,8 +20,7 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class PayPalTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
+ * Class used for creating PayPal transaction
  */
 class PayPalTransactionFactory extends TransactionFactory
 {

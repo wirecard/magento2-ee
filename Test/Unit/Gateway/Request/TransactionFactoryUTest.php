@@ -50,39 +50,68 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
-        $this->urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
+        $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->urlBuilder->method('getRouteUrl')
+            ->willReturn('http://magen.to/');
 
-        $this->resolver = $this->getMockBuilder(ResolverInterface::class)->disableOriginalConstructor()->getMock();
+        $this->resolver = $this->getMockBuilder(ResolverInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $address->method('getEmail')->willReturn('test@example.com');
-        $address->method('getFirstname')->willReturn('Joe');
-        $address->method('getLastname')->willReturn('Doe');
+        $address = $this->getMockBuilder(AddressAdapterInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $address->method('getEmail')
+            ->willReturn('test@example.com');
+        $address->method('getFirstname')
+            ->willReturn('Joe');
+        $address->method('getLastname')
+            ->willReturn('Doe');
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
-        $this->order->method('getCurrencyCode')->willReturn('EUR');
-        $this->order->method('getId')->willReturn('1');
-        $this->order->method('getShippingAddress')->willReturn($address);
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->order->method('getGrandTotalAmount')
+            ->willReturn(1.0);
+        $this->order->method('getCurrencyCode')
+            ->willReturn('EUR');
+        $this->order->method('getId')
+            ->willReturn('1');
+        $this->order->method('getShippingAddress')
+            ->willReturn($address);
         $this->payment = $this->getMockBuilder(PaymentDataObjectInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->payment->method('getOrder')
+            ->willReturn($this->order);
+
+        $store = $this->getMockBuilder(StoreInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->payment->method('getOrder')->willReturn($this->order);
+        $store->method('getName')
+            ->willReturn('My shop name');
 
-        $store = $this->getMockBuilder(StoreInterface::class)->disableOriginalConstructor()->getMock();
-        $store->method('getName')->willReturn('My shop name');
+        $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->storeManager->method('getStore')
+            ->willReturn($store);
 
-        $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
-        $this->storeManager->method('getStore')->willReturn($store);
+        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->basketFactory->method('create')
+            ->willReturn(new Basket());
 
-        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
-        $this->basketFactory->method('create')->willReturn(new Basket());
+        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->accountHolderFactory->method('create')
+            ->willReturn(new AccountHolder());
 
-        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
-        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
-
-        $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder(ConfigInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->commandSubject = ['payment' => $this->payment];
     }
@@ -139,7 +168,9 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCreateSetsAmountValues()
     {
         $transactionMock = $this->getMockBuilder(Transaction::class)->getMock();
-        $transactionMock->expects($this->Once())->method('setAmount')->with($this->equalTo(new Amount(1.0, 'EUR')));
+        $transactionMock->expects($this->Once())
+            ->method('setAmount')
+            ->with($this->equalTo(new Amount(1.0, 'EUR')));
 
         $transactionFactory = new TransactionFactory(
             $this->urlBuilder,
@@ -162,7 +193,9 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             'http://magen.to/frontend/cancel?method=paypal',
             'http://magen.to/frontend/redirect?method=paypal'
         );
-        $transactionMock->expects($this->Once())->method('setRedirect')->with($this->equalTo($redirect));
+        $transactionMock->expects($this->Once())
+            ->method('setRedirect')
+            ->with($this->equalTo($redirect));
 
         $transactionFactory = new TransactionFactory(
             $this->urlBuilder,
@@ -178,16 +211,26 @@ class TransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateWithAdditionalInformation()
     {
-        $this->config->expects($this->at(0))->method('getValue')->willReturn(true);
+        $this->config->expects($this->at(0))
+            ->method('getValue')
+            ->willReturn(true);
 
-        $transactionMock = $this->getMockBuilder(Transaction::class)->getMock();
-        $transactionMock->method('setDescriptor')->willReturn('Testshop');
-        $transactionMock->method('setAccountHolder')->willReturn(new AccountHolder());
-        $transactionMock->method('setShipping')->willReturn(new AccountHolder());
-        $transactionMock->method('setOrderNumber')->willReturn('1');
-        $transactionMock->method('setBasket')->willReturn(new Basket());
-        $transactionMock->method('setIpAddress')->willReturn('127.0.0.1');
-        $transactionMock->method('setConsumerId')->willReturn('1');
+        $transactionMock = $this->getMockBuilder(Transaction::class)
+            ->getMock();
+        $transactionMock->method('setDescriptor')
+            ->willReturn('Testshop');
+        $transactionMock->method('setAccountHolder')
+            ->willReturn(new AccountHolder());
+        $transactionMock->method('setShipping')
+            ->willReturn(new AccountHolder());
+        $transactionMock->method('setOrderNumber')
+            ->willReturn('1');
+        $transactionMock->method('setBasket')
+            ->willReturn(new Basket());
+        $transactionMock->method('setIpAddress')
+            ->willReturn('127.0.0.1');
+        $transactionMock->method('setConsumerId')
+            ->willReturn('1');
 
         $transactionFactory = new TransactionFactory(
             $this->urlBuilder,

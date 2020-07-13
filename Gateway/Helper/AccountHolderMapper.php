@@ -13,8 +13,8 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Address;
 
 /**
- * Class AccountHolderMapper
- * @package Wirecard\ElasticEngine\Gateway\Helper
+ * A helper for mapping a user account
+ *
  * @since 3.1.2
  */
 class AccountHolderMapper

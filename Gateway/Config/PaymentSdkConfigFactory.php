@@ -25,7 +25,6 @@ use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
 /**
  * Class PaymentSDKConfig
- * @package Wirecard\ElasticEngine\Gateway\Config
  */
 class PaymentSdkConfigFactory implements ConfigFactoryInterface
 {

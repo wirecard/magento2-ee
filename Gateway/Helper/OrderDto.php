@@ -19,7 +19,6 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 /**
  * A simple Data Transfer Object (Dto) to bundle related information
- *
  * All properties are public, there is no logic in this class.
  */
 class OrderDto

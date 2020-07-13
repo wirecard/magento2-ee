@@ -51,17 +51,25 @@ class FormUTest extends \PHPUnit_Framework_TestCase
         $this->markTestSkipped('ObjectManager Unit Helper needs newer PHPUnit');
 
         $this->objectManager = new ObjectManager($this);
-        $this->context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+        $this->context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->registry = $this->getMockBuilder(Registry::class)->disableOriginalConstructor()->getMock();
+        $this->registry = $this->getMockBuilder(Registry::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $fieldset = $this->getMock(Fieldset::class, [], [], '', false);
 
         $form = $this->getMock(MagentoForm::class, [], [], '', false);
-        $form->method('addFieldset')->willReturn($fieldset);
+        $form->method('addFieldset')
+            ->willReturn($fieldset);
 
-        $this->formFactory = $this->getMockBuilder(FormFactory::class)->disableOriginalConstructor()->getMock();
-        $this->formFactory->method('create')->willReturn($form);
+        $this->formFactory = $this->getMockBuilder(FormFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->formFactory->method('create')
+            ->willReturn($form);
 
         $this->form = $this->objectManager->getObject(
             Form::class,
@@ -94,42 +102,6 @@ class FormUTest extends \PHPUnit_Framework_TestCase
 
         $testForm = new TestForm($this->context, $this->registry, $this->formFactory, [], $requestInterface);
 
-        $testForm->test_prepareForm();
-    }
-}
-
-class TestForm extends Form
-{
-    private $requestInterface;
-
-    public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Data\FormFactory $formFactory,
-        array $data,
-        $requestInterface
-    ) {
-        parent::__construct($context, $registry, $formFactory, $data);
-        $this->requestInterface = $requestInterface;
-    }
-
-    public function getRequest()
-    {
-        return $this->requestInterface;
-    }
-
-    public function getUrl($route = '', $params = [])
-    {
-        return "url";
-    }
-
-    public function setForm(\Magento\Framework\Data\Form $form)
-    {
-        return true;
-    }
-
-    public function test_prepareForm()
-    {
-        return $this->_prepareForm();
+        $testForm->testPrepareForm();
     }
 }

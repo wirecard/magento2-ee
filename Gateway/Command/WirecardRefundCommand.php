@@ -21,8 +21,7 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Zend\Loader\Exception\InvalidArgumentException;
 
 /**
- * Class WirecardRefundCommand
- * @package Wirecard\ElasticEngine\Gateway
+ * Class used for executing refund command on business object
  */
 class WirecardRefundCommand implements CommandInterface
 {

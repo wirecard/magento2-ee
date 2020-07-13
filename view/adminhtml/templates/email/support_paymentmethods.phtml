@@ -7,16 +7,18 @@
  * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
  */
 ?>
-<?php foreach ($this->getMethods() as $code => $_m): ?>
-<?php
-    if(array_key_exists('label', $_m) && array_key_exists('value', $_m)) {
-        printf("%s:%s\n", $_m['label'], $_m['value']);
+<?php foreach ($block->getMethods() as $code => $_m): ?>
+    <?php
+    if (array_key_exists('label', $_m) && array_key_exists('value', $_m)) {
+        echo $block->escapeHtml(sprintf("%s:%s\n", $_m['label'], $_m['value']));
     }
-    if (count($_m['config']))
+    if (count($_m['config'])) {
         print "\n";
+    }
 
-    foreach ($_m['config'] as $key => $val)
-        printf("%s:%s\n", $key, $val);
+    foreach ($_m['config'] as $key => $val) {
+        echo $block->escapeHtml(sprintf("%s:%s\n", $key, $val));
+    }
     print "\n";
-?>
+    ?>
 <?php endforeach; ?>

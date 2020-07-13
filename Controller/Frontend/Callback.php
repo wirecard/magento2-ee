@@ -28,9 +28,8 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
- * Class Callback
- * @package Wirecard\ElasticEngine\Controller\Frontend
- * @method Http getRequest()
+ * Class used for executing callback
+ *
  * @since 3.1.2 Reworked handling of callback
  */
 class Callback extends Action

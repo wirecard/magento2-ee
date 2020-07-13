@@ -10,8 +10,8 @@
 namespace Wirecard\ElasticEngine\Gateway;
 
 /**
- * Class Validator
- * @package Wirecard\ElasticEngine\Gateway\Validator
+ * Class in which are defined validator constants
+ *
  * @since 2.2.1
  */
 class Validator

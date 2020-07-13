@@ -56,18 +56,26 @@ class CancelTest extends \PHPUnit_Framework_TestCase
         $this->redirectResult = $this->getMockBuilder(Redirect::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $resultFactory->method('create')->willReturn($this->redirectResult);
-        $context->method('getResultFactory')->willReturn($resultFactory);
+        $resultFactory->method('create')
+            ->willReturn($this->redirectResult);
+        $context->method('getResultFactory')
+            ->willReturn($resultFactory);
 
-        $this->messageManager = $this->getMockBuilder(ManagerInterface::class)->getMock();
-        $context->method('getMessageManager')->willReturn($this->messageManager);
+        $this->messageManager = $this->getMockBuilder(ManagerInterface::class)
+            ->getMock();
+        $context->method('getMessageManager')
+            ->willReturn($this->messageManager);
 
         /**
          * @var $orderRepository OrderRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
          */
-        $orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)->getMock();
-        $this->order = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
-        $orderRepository->method('get')->willReturn($this->order);
+        $orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)
+            ->getMock();
+        $this->order = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $orderRepository->method('get')
+            ->willReturn($this->order);
 
         /**
          * @var $checkoutSession Session|\PHPUnit_Framework_MockObject_MockObject
@@ -76,8 +84,10 @@ class CancelTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $checkoutSession->expects($this->once())->method('restoreQuote');
-        $checkoutSession->expects($this->once())->method('getLastRealOrder')->willReturn($this->order);
+        $checkoutSession->expects($this->once())
+            ->method('restoreQuote');
+        $checkoutSession->expects($this->once())
+            ->method('getLastRealOrder')->willReturn($this->order);
 
         $this->controller = new Cancel($context, $checkoutSession, $orderRepository);
     }
@@ -85,8 +95,10 @@ class CancelTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $this->order->expects($this->once())->method('cancel');
-        $this->redirectResult->expects($this->once())->method('setPath')->with('checkout/cart');
-        $this->messageManager->expects($this->once())->method('addNoticeMessage')->with('canceled_payment_process');
+        $this->redirectResult->expects($this->once())
+            ->method('setPath')->with('checkout/cart');
+        $this->messageManager->expects($this->once())
+            ->method('addNoticeMessage')->with('canceled_payment_process');
         $result = $this->controller->execute();
         $this->assertEquals($result, $this->redirectResult);
     }

@@ -55,45 +55,80 @@ class PoiPiaTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
-        $this->urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
+        $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->urlBuilder->method('getRouteUrl')
+            ->willReturn('http://magen.to/');
 
-        $this->resolver = $this->getMockBuilder(ResolverInterface::class)->disableOriginalConstructor()->getMock();
-        $this->resolver->method('getLocale')->willReturn('en_US');
+        $this->resolver = $this->getMockBuilder(ResolverInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->resolver->method('getLocale')
+            ->willReturn('en_US');
 
-        $store = $this->getMockBuilder(StoreInterface::class)->disableOriginalConstructor()->getMock();
-        $store->method('getName')->willReturn('My shop name');
+        $store = $this->getMockBuilder(StoreInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $store->method('getName')
+            ->willReturn('My shop name');
 
-        $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
-        $this->storeManager->method('getStore')->willReturn($store);
+        $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->storeManager->method('getStore')
+            ->willReturn($store);
 
-        $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder(ConfigInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
-        $this->basketFactory->method('create')->willReturn(new Basket());
+        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->basketFactory->method('create')
+            ->willReturn(new Basket());
 
-        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
-        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
+        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->accountHolderFactory->method('create')
+            ->willReturn(new AccountHolder());
 
-        $address = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
-        $address->method('getEmail')->willReturn('test@example.com');
-        $address->method('getFirstname')->willReturn('Joe');
-        $address->method('getLastname')->willReturn('Doe');
+        $address = $this->getMockBuilder(AddressAdapterInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $address->method('getEmail')
+            ->willReturn('test@example.com');
+        $address->method('getFirstname')
+            ->willReturn('Joe');
+        $address->method('getLastname')
+            ->willReturn('Doe');
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
-        $this->order->method('getBillingAddress')->willReturn($address);
-        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
-        $this->order->method('getCurrencyCode')->willReturn('EUR');
+        $this->order->method('getOrderIncrementId')
+            ->willReturn(self::ORDER_ID);
+        $this->order->method('getBillingAddress')
+            ->willReturn($address);
+        $this->order->method('getGrandTotalAmount')
+            ->willReturn(1.0);
+        $this->order->method('getCurrencyCode')
+            ->willReturn('EUR');
 
-        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
-        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
+        $this->payment = $this->getMockBuilder(Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->payment->method('getParentTransactionId')
+            ->willReturn('123456PARENT');
 
         $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->paymentDo->method('getOrder')->willReturn($this->order);
-        $this->paymentDo->method('getPayment')->willReturn($this->payment);
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->paymentDo->method('getOrder')
+            ->willReturn($this->order);
+        $this->paymentDo->method('getPayment')
+            ->willReturn($this->payment);
 
         $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => 1.0];
     }

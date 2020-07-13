@@ -8,8 +8,9 @@
  */
 
 ?>
-<form id="wirecard_elasticengine_credit_card_three_d_form" method="<?= $this->getMethod() ?>" action="<?= $this->getAction() ?>">
-    <?php foreach($this->getFormFields() as $name => $value): ?>
-        <input type="hidden" name="<?= $name ?>" value="<?= $value ?>" />
+<form id="wirecard_elasticengine_credit_card_three_d_form"
+      method="<?= $block->escapeHtml($block->getMethod()) ?>" action="<?= $block->escapeHtml($block->getAction()) ?>">
+    <?php foreach ($block->getFormFields() as $name => $value): ?>
+        <input type="hidden" name="<?= $block->escapeHtml($name) ?>" value="<?= $block->escapeHtml($value) ?>" />
     <?php endforeach; ?>
 </form>

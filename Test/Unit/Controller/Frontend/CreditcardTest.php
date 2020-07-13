@@ -67,8 +67,12 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->initWithMockInput(null);
-        $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn(null);
-        $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
+        $this->checkoutSession->expects($this->once())
+            ->method('getQuote')
+            ->willReturn(null);
+        $this->resultJson->expects($this->once())
+            ->method('setData')
+            ->with($this->equalTo($expectedResultData));
         $this->controller->execute();
     }
 
@@ -85,10 +89,15 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $quote = $this->getMockBuilder(Quote::class)->disableOriginalConstructor()->getMock();
-        $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
+        $quote = $this->getMockBuilder(Quote::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->checkoutSession->expects($this->once())
+            ->method('getQuote')->willReturn($quote);
 
-        $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
+        $this->resultJson->expects($this->once())
+            ->method('setData')
+            ->with($this->equalTo($expectedResultData));
         $this->controller->execute();
     }
 
@@ -110,29 +119,57 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             ])
             ->disableOriginalConstructor()
             ->getMock();
-        $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
-        $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
-        $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
-        $quote->expects($this->once())->method('getBaseGrandTotal')->willReturn(self::TOTAL_AMOUNT);
-        $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
+        $quote->expects($this->once())
+            ->method('reserveOrderId')
+            ->willReturn($quote);
+        $quote->expects($this->once())
+            ->method('getReservedOrderId')
+            ->willReturn(self::ORDER_ID);
+        $quote->expects($this->once())
+            ->method('getBaseCurrencyCode')
+            ->willReturn(self::CURRENCY_CODE);
+        $quote->expects($this->once())
+            ->method('getBaseGrandTotal')
+            ->willReturn(self::TOTAL_AMOUNT);
+        $this->checkoutSession->expects($this->once())
+            ->method('getQuote')
+            ->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $this->paymentHelper->expects($this->any())->method('getMethodInstance')->wilLReturn($method);
+        $this->paymentHelper->expects($this->any())
+            ->method('getMethodInstance')
+            ->wilLReturn($method);
 
-        $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
-        $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $config->expects($this->once())->method('get')->willReturn($creditCardConfig);
-        $transactionService = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
-        $transactionService->expects($this->once())->method('getConfig')->willReturn($config);
-        $transactionService->expects($this->once())->method('getCreditCardUiWithData')->willReturn(null);
-        $this->transactionServiceFactory->expects($this->once())->method('create')->willReturn($transactionService);
+        $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $config = $this->getMockBuilder(Config::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $config->expects($this->once())
+            ->method('get')
+            ->willReturn($creditCardConfig);
+        $transactionService = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionService->expects($this->once())
+            ->method('getConfig')
+            ->willReturn($config);
+        $transactionService->expects($this->once())
+            ->method('getCreditCardUiWithData')
+            ->willReturn(null);
+        $this->transactionServiceFactory->expects($this->once())
+            ->method('create')
+            ->willReturn($transactionService);
 
         $expectedResultData = [
             'status'  => 'ERR',
             'errMsg'  => 'cannot create UI',
             'details' => ['exception' => 'Exception'],
         ];
-        $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
+        $this->resultJson->expects($this->once())
+            ->method('setData')
+            ->with($this->equalTo($expectedResultData));
 
         $this->controller->execute();
     }
@@ -157,78 +194,129 @@ class CreditcardTest extends \PHPUnit_Framework_TestCase
             ])
             ->disableOriginalConstructor()
             ->getMock();
-        $quote->expects($this->once())->method('reserveOrderId')->willReturn($quote);
-        $quote->expects($this->once())->method('getReservedOrderId')->willReturn(self::ORDER_ID);
-        $quote->expects($this->once())->method('getBaseCurrencyCode')->willReturn(self::CURRENCY_CODE);
-        $quote->expects($this->once())->method('getBaseGrandTotal')->willReturn(self::TOTAL_AMOUNT);
-        $this->checkoutSession->expects($this->once())->method('getQuote')->willReturn($quote);
+        $quote->expects($this->once())
+            ->method('reserveOrderId')
+            ->willReturn($quote);
+        $quote->expects($this->once())
+            ->method('getReservedOrderId')
+            ->willReturn(self::ORDER_ID);
+        $quote->expects($this->once())
+            ->method('getBaseCurrencyCode')
+            ->willReturn(self::CURRENCY_CODE);
+        $quote->expects($this->once())
+            ->method('getBaseGrandTotal')
+            ->willReturn(self::TOTAL_AMOUNT);
+        $this->checkoutSession->expects($this->once())
+            ->method('getQuote')
+            ->willReturn($quote);
 
         $method = $this->getMockForAbstractClass(MethodInterface::class);
-        $this->paymentHelper->expects($this->any())->method('getMethodInstance')->wilLReturn($method);
+        $this->paymentHelper->expects($this->any())
+            ->method('getMethodInstance')
+            ->wilLReturn($method);
 
-        $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)->disableOriginalConstructor()->getMock();
-        $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $config->expects($this->once())->method('get')->willReturn($creditCardConfig);
-        $transactionService = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
-        $transactionService->expects($this->once())->method('getConfig')->willReturn($config);
-        $transactionService->expects($this->once())->method('getCreditCardUiWithData')->willReturn($mockedUiJson);
-        $this->transactionServiceFactory->expects($this->once())->method('create')->willReturn($transactionService);
+        $creditCardConfig = $this->getMockBuilder(CreditCardConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $config = $this->getMockBuilder(Config::class)
+            ->disableOriginalConstructor()->getMock();
+        $config->expects($this->once())->method('get')
+            ->willReturn($creditCardConfig);
+        $transactionService = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionService->expects($this->once())
+            ->method('getConfig')
+            ->willReturn($config);
+        $transactionService->expects($this->once())
+            ->method('getCreditCardUiWithData')
+            ->willReturn($mockedUiJson);
+        $this->transactionServiceFactory->expects($this->once())
+            ->method('create')
+            ->willReturn($transactionService);
 
         $expectedResultData = [
             'status'  => 'OK',
             'uiData'  => $mockedUiJson,
         ];
-        $this->resultJson->expects($this->once())->method('setData')->with($this->equalTo($expectedResultData));
+        $this->resultJson->expects($this->once())
+            ->method('setData')
+            ->with($this->equalTo($expectedResultData));
 
         $this->controller->execute();
     }
 
     private function initWithMockInput($requestParams = null)
     {
-        $this->resultJson = $this->getMockBuilder(Json::class)->disableOriginalConstructor()->getMock();
+        $this->resultJson = $this->getMockBuilder(Json::class)
+            ->disableOriginalConstructor()->getMock();
 
-        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         if (!empty($requestParams)) {
             $requestMock = $this->getMockForAbstractClass(RequestInterface::class);
             if ($requestParams !== null) {
-                $requestMock->expects($this->once())->method('getParams')->willReturn($requestParams);
+                $requestMock->expects($this->once())
+                    ->method('getParams')
+                    ->willReturn($requestParams);
             }
 
             $urlBuilderMock = $this->getMockForAbstractClass(UrlInterface::class);
 
-            $context->expects($this->once())->method('getRequest')->willReturn($requestMock);
-            $context->expects($this->any())->method('getUrl')->willReturn($urlBuilderMock);
+            $context->expects($this->once())
+                ->method('getRequest')
+                ->willReturn($requestMock);
+            $context->expects($this->any())
+                ->method('getUrl')
+                ->willReturn($urlBuilderMock);
         }
 
-        $resultJsonFactory = $this->getMockBuilder(JsonFactory::class)->disableOriginalConstructor()->getMock();
-        $resultJsonFactory->expects($this->once())->method('create')->willReturn($this->resultJson);
+        $resultJsonFactory = $this->getMockBuilder(JsonFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultJsonFactory->expects($this->once())
+            ->method('create')
+            ->willReturn($this->resultJson);
 
         $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
         $quoteRepository = $this->getMockForAbstractClass(CartRepositoryInterface::class);
 
-        $this->checkoutSession = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $this->checkoutSession = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $taxCalculation = $this->getMockBuilder(Calculation::class)->disableOriginalConstructor()->getMock();
+        $taxCalculation = $this->getMockBuilder(Calculation::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $resolver  = $this->getMockForAbstractClass(ResolverInterface::class);
 
         $storeManager = $this->getMockForAbstractClass(StoreManagerInterface::class);
 
-        $this->paymentHelper = $this->getMockBuilder(Data::class)->disableOriginalConstructor()->getMock();
+        $this->paymentHelper = $this->getMockBuilder(Data::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $methodConfig = $this->getMockForAbstractClass(ConfigInterface::class);
 
         $logger = $this->getMockForAbstractClass(LoggerInterface::class);
 
         $tokenManagement = $this->getMockForAbstractClass(PaymentTokenManagementInterface::class);
-        $customerSession = $this->getMockBuilder(CustomerSession::class)->disableOriginalConstructor()->getMock();
-        $customerSession->method('isLoggedIn')->willReturn(false);
+        $customerSession = $this->getMockBuilder(CustomerSession::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $customerSession->method('isLoggedIn')
+            ->willReturn(false);
 
-        $this->threeDsHelper = $this->getMockBuilder(ThreeDsHelper::class)->disableOriginalConstructor()->getMock();
-        $this->threeDsHelper->method('getThreeDsTransaction')->willReturn(new CreditCardTransaction());
+        $this->threeDsHelper = $this->getMockBuilder(ThreeDsHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->threeDsHelper->method('getThreeDsTransaction')
+            ->willReturn(new CreditCardTransaction());
 
         $this->controller = new Creditcard(
             $context,

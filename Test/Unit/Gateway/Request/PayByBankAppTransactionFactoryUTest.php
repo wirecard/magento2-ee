@@ -66,53 +66,86 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)->disableOriginalConstructor()->getMock();
-        $this->urlBuilder->method('getRouteUrl')->willReturn('http://magen.to/');
+        $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->urlBuilder->method('getRouteUrl')
+            ->willReturn('http://magen.to/');
 
-        $this->resolver = $this->getMockBuilder(ResolverInterface::class)->disableOriginalConstructor()->getMock();
-        $this->resolver->method('getLocale')->willReturn('en_US');
+        $this->resolver = $this->getMockBuilder(ResolverInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->resolver->method('getLocale')
+            ->willReturn('en_US');
 
-        $store = $this->getMockBuilder(StoreInterface::class)->disableOriginalConstructor()->getMock();
-        $store->method('getName')->willReturn('My shop name');
+        $store = $this->getMockBuilder(StoreInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $store->method('getName')
+            ->willReturn('My shop name');
 
-        $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)->disableOriginalConstructor()->getMock();
-        $this->storeManager->method('getStore')->willReturn($store);
+        $this->storeManager = $this->getMockBuilder(StoreManagerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->storeManager->method('getStore')
+            ->willReturn($store);
 
-        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)->disableOriginalConstructor()->getMock();
-        $this->basketFactory->method('create')->willReturn(new Basket());
+        $this->basketFactory = $this->getMockBuilder(BasketFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->basketFactory->method('create')
+            ->willReturn(new Basket());
 
-        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)->disableOriginalConstructor()->getMock();
-        $this->accountHolderFactory->method('create')->willReturn(new AccountHolder());
+        $this->accountHolderFactory = $this->getMockBuilder(AccountHolderFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->accountHolderFactory->method('create')
+            ->willReturn(new AccountHolder());
 
-        $this->config = $this->getMockBuilder(ConfigInterface::class)->disableOriginalConstructor()->getMock();
-        $this->config->method('getValue')->withConsecutive(
-            [$this->equalTo('send_additional'), $this->isNull()],
-            [$this->equalTo('zapp_merchant_return_string')]
-        )
+        $this->config = $this->getMockBuilder(ConfigInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->config->method('getValue')
+            ->withConsecutive(
+                [$this->equalTo('send_additional'), $this->isNull()],
+                [$this->equalTo('zapp_merchant_return_string')]
+            )
             ->willReturnOnConsecutiveCalls(0, self::RETURNSTRING);
 
         $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->order->method('getOrderIncrementId')->willReturn(self::ORDER_ID);
-        $this->order->method('getId')->willReturn(self::ORDER_ID);
-        $this->order->method('getGrandTotalAmount')->willReturn(1.0);
-        $this->order->method('getCurrencyCode')->willReturn('GBP');
+        $this->order->method('getOrderIncrementId')
+            ->willReturn(self::ORDER_ID);
+        $this->order->method('getId')
+            ->willReturn(self::ORDER_ID);
+        $this->order->method('getGrandTotalAmount')
+            ->willReturn(1.0);
+        $this->order->method('getCurrencyCode')
+            ->willReturn('GBP');
 
-        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
-        $this->payment->method('getParentTransactionId')->willReturn('123456PARENT');
-        $this->payment->method('getAdditionalInformation')->willReturn('mypersonaltoken');
+        $this->payment = $this->getMockBuilder(Payment::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->payment->method('getParentTransactionId')
+            ->willReturn('123456PARENT');
+        $this->payment->method('getAdditionalInformation')
+            ->willReturn('mypersonaltoken');
 
         $this->paymentDo = $this->getMockBuilder(PaymentDataObjectInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->paymentDo->method('getPayment')->willReturn($this->payment);
-        $this->paymentDo->method('getOrder')->willReturn($this->order);
+        $this->paymentDo->method('getPayment')
+            ->willReturn($this->payment);
+        $this->paymentDo->method('getOrder')
+            ->willReturn($this->order);
 
         $this->commandSubject = ['payment' => $this->paymentDo, 'amount' => 1.0];
 
         $this->request = $this->getMockBuilder(Http::class)
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->transaction = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
+        $this->transaction = $this->getMockBuilder(Transaction::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     public function testRefundOperationSetter()
@@ -152,7 +185,8 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateWithUserAgent()
     {
-        $this->request->method('getServer')->willReturn('User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 6P ' .
+        $this->request->method('getServer')
+            ->willReturn('User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 6P ' .
             'Build/MDB08L) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.69 Mobile Safari/537.36');
         $transaction = new PayByBankAppTransaction();
         $transactionFactory = new PayByBankAppTransactionFactory(
@@ -178,7 +212,8 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateWithMalformedUserAgent()
     {
-        $this->request->method('getServer')->willReturn('foo');
+        $this->request->method('getServer')
+            ->willReturn('foo');
         $transaction = new PayByBankAppTransaction();
         $transactionFactory = new PayByBankAppTransactionFactory(
             $this->urlBuilder,
@@ -212,7 +247,10 @@ class PayByBankAppTransactionFactoryUTest extends \PHPUnit_Framework_TestCase
             $this->request
         );
 
-        $this->assertEquals($this->minimumExpectedRefundTransaction(), $transactionFactory->refund($this->commandSubject));
+        $this->assertEquals(
+            $this->minimumExpectedRefundTransaction(),
+            $transactionFactory->refund($this->commandSubject)
+        );
     }
 
     /**
