@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.1.4
+ 
+*   Update SDK version
+*   Update coding standards
+*   Fix special characters handling
+*   Fix discount price handling
+
+|  Overview | Magento version | PHP 7.1 | PHP 7.2 | PHP 7.3 |    
+|---|---|:---:|:---:|:---:|    
+| **Tested version(s)** | Magento Community Edition 2.3.4 | :x: | :x: | &#9989; |    
+| **Compatibility** | Magento Community Edition 2.2.0 - 2.3.4 | &#9989; | &#9989; | &#9989; |  
+
 ## v3.1.3
  
 *   Add PSD2 hint in Credit Card configuration mask
