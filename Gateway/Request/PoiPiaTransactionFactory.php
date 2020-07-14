@@ -19,8 +19,7 @@ use Wirecard\PaymentSdk\Transaction\PoiPiaTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class PoiPiaTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
+ * Class used for creating POI/PIA transaction
  */
 class PoiPiaTransactionFactory extends TransactionFactory
 {

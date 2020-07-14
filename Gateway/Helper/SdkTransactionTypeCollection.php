@@ -12,10 +12,9 @@ namespace Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\PaymentSdk\Transaction\Transaction as SdkTransaction;
 
 /**
- * Class SdkTransactionTypeCollection
+ * Collection of transaction types
  *
  * @since 2.2.2
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class SdkTransactionTypeCollection
 {

@@ -60,49 +60,93 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->order = $this->getMockBuilder(OrderAdapterInterface::class)->disableOriginalConstructor()->getMock();
+        $this->order = $this->getMockBuilder(OrderAdapterInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $item        = $this->getOrderItemMock();
-        $item->method('getName')->willReturn('item');
+        $item->method('getName')
+            ->willReturn('item');
 
-        $zeroItem = $this->getOrderItemMock(0, 0, 0, 0, 0, 0, 0, 0);
+        $zeroItem = $this->getOrderItemMock(
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        );
 
         // bundle product with dynamic pricing, only bundledItem must be added to the basket
-        $bundleDynamic = $this->getOrderItemMock(100.0, 0, 0, 0, 0, 0, 0, 0, Type::TYPE_BUNDLE);
-        $bundleDynamic->method('getName')->willReturn('bundledDynamic');
+        $bundleDynamic = $this->getOrderItemMock(
+            100.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            Type::TYPE_BUNDLE
+        );
+        $bundleDynamic->method('getName')
+            ->willReturn('bundledDynamic');
 
         $product = $this->getMockBuilder(Product::class)
             ->disableOriginalConstructor()
             ->setMethods(['getPriceType'])
             ->getMock();
-        $product->method('getPriceType')->willReturn(Price::PRICE_TYPE_DYNAMIC);
+        $product->method('getPriceType')
+            ->willReturn(Price::PRICE_TYPE_DYNAMIC);
 
-        $bundleDynamic->method('getProduct')->willReturn($product);
+        $bundleDynamic->method('getProduct')
+            ->willReturn($product);
 
         $bundledItem1 = $this->getOrderItemMock();
-        $bundledItem1->method('getName')->willReturn('bundledItem1');
-        $bundledItem1->method('getParentItem')->willReturn($bundleDynamic);
+        $bundledItem1->method('getName')
+            ->willReturn('bundledItem1');
+        $bundledItem1->method('getParentItem')
+            ->willReturn($bundleDynamic);
 
         // bundle product with fixed pricing, only the bundleItem must be added to the basket
-        $bundleFixed = $this->getOrderItemMock(100.0, 1, 2, 2.0, 1, 2, 2.0, 1, Type::TYPE_BUNDLE);
-        $bundleFixed->method('getName')->willReturn('bundleFixed');
+        $bundleFixed = $this->getOrderItemMock(
+            100.0,
+            1,
+            2,
+            2.0,
+            1,
+            2,
+            2.0,
+            1,
+            Type::TYPE_BUNDLE
+        );
+        $bundleFixed->method('getName')
+            ->willReturn('bundleFixed');
 
         $product = $this->getMockBuilder(Product::class)
             ->disableOriginalConstructor()
             ->setMethods(['getPriceType'])
             ->getMock();
-        $product->method('getPriceType')->willReturn(Price::PRICE_TYPE_FIXED);
+        $product->method('getPriceType')
+            ->willReturn(Price::PRICE_TYPE_FIXED);
 
-        $bundleFixed->method('getProduct')->willReturn($product);
+        $bundleFixed->method('getProduct')
+            ->willReturn($product);
 
         $bundledItem2 = $this->getOrderItemMock();
-        $bundledItem2->method('getParentItem')->willReturn($bundleFixed);
-        $bundledItem2->method('getName')->willReturn('bundledItem2');
+        $bundledItem2->method('getParentItem')
+            ->willReturn($bundleFixed);
+        $bundledItem2->method('getName')
+            ->willReturn('bundledItem2');
 
         // must not be added to the basket
         $itemWithParent = $this->getOrderItemMock();
-        $itemWithParent->method('getParentItem')->willReturn($item);
+        $itemWithParent->method('getParentItem')
+            ->willReturn($item);
 
-        $this->order->method('getItems')->willReturn([
+        $this->order->method('getItems')
+            ->willReturn([
             $item,
             $zeroItem,
             $bundleDynamic,
@@ -111,20 +155,34 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
             $bundledItem2,
             $itemWithParent
         ]);
-        $this->order->method('getCurrencyCode')->willReturn('EUR');
+        $this->order->method('getCurrencyCode')
+            ->willReturn('EUR');
 
-        $this->itemFactory = $this->getMockBuilder(ItemFactory::class)->getMock();
+        $this->itemFactory = $this->getMockBuilder(ItemFactory::class)
+            ->getMock();
 
-        $this->itemFactory->method('capture')->willReturn(new Item('', new Amount(0.0, 'EUR'), 0));
-        $this->itemFactory->method('refund')->willReturn(new Item('', new Amount(0.0, 'EUR'), 0));
+        $this->itemFactory->method('capture')
+            ->willReturn(
+                new Item('', new Amount(0.0, 'EUR'), 0)
+            );
+        $this->itemFactory->method('refund')
+            ->willReturn(
+                new Item('', new Amount(0.0, 'EUR'), 0)
+            );
 
-        $this->orderFactory = $this->getMockBuilder(OrderFactory::class)->disableOriginalConstructor()
-            ->setMethods(['create'])->getMock();
+        $this->orderFactory = $this->getMockBuilder(OrderFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
 
-        $this->orderObject = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
+        $this->orderObject = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)->disableOriginalConstructor()
-            ->setMethods(['get', 'getList', 'delete', 'save'])->getMock();
+        $this->orderRepository = $this->getMockBuilder(OrderRepositoryInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['get', 'getList', 'delete', 'save'])
+            ->getMock();
 
         $this->shippingAddress = $this->getMockBuilder(Address::class)
             ->disableOriginalConstructor()
@@ -166,68 +224,117 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(['getOrigData', 'getQtyInvoiced', 'getProduct', 'getName'])
             ->getMockForAbstractClass();
-        $item->method('getPriceInclTax')->willReturn($priceInc);
-        $item->method('getBasePriceInclTax')->willReturn($priceInc);
-        $item->method('getOrigData')->willReturn($origData);
-        $item->method('getQtyInvoiced')->willReturn($qtyInvoice);
-        $item->method('getDiscountInvoiced')->willReturn($discountInvoices);
-        $item->method('getBaseRowInvoiced')->willReturn($baseRowInvoiced);
-        $item->method('getQtyRefunded')->willReturn($qtyRefunded);
-        $item->method('getDiscountRefunded')->willReturn($discountRefunded);
-        $item->method('getBaseAmountRefunded')->willReturn($baseAmountRefunded);
-        $item->method('getProductType')->willReturn($type);
+        $item->method('getPriceInclTax')
+            ->willReturn($priceInc);
+        $item->method('getBasePriceInclTax')
+            ->willReturn($priceInc);
+        $item->method('getOrigData')
+            ->willReturn($origData);
+        $item->method('getQtyInvoiced')
+            ->willReturn($qtyInvoice);
+        $item->method('getDiscountInvoiced')
+            ->willReturn($discountInvoices);
+        $item->method('getBaseRowInvoiced')
+            ->willReturn($baseRowInvoiced);
+        $item->method('getQtyRefunded')
+            ->willReturn($qtyRefunded);
+        $item->method('getDiscountRefunded')
+            ->willReturn($discountRefunded);
+        $item->method('getBaseAmountRefunded')
+            ->willReturn($baseAmountRefunded);
+        $item->method('getProductType')
+            ->willReturn($type);
 
         return $item;
     }
 
     public function setUpWithQuoteData()
     {
-        $this->shippingAddress->method('getBaseShippingInclTax')->willReturn(5.0);
-        $this->shippingAddress->method('getShippingDescription')->willReturn('Fixed Flat Rate');
-        $this->shippingAddress->method('getShippingMethod')->willReturn('flatrate_flatrate');
-        $this->shippingAddress->method('getBaseShippingTaxAmount')->willReturn(0.0);
-        $this->shippingAddress->method('getBaseDiscountAmount')->willReturn(-1.0);
+        $this->shippingAddress->method('getBaseShippingInclTax')
+            ->willReturn(5.0);
+        $this->shippingAddress->method('getShippingDescription')
+            ->willReturn('Fixed Flat Rate');
+        $this->shippingAddress->method('getShippingMethod')
+            ->willReturn('flatrate_flatrate');
+        $this->shippingAddress->method('getBaseShippingTaxAmount')
+            ->willReturn(0.0);
+        $this->shippingAddress->method('getBaseDiscountAmount')
+            ->willReturn(-1.0);
 
-        $this->quote->method('getShippingAddress')->willReturn($this->shippingAddress);
-        $this->checkoutSession->method('getQuote')->willReturn($this->quote);
+        $this->quote->method('getShippingAddress')
+            ->willReturn($this->shippingAddress);
+        $this->checkoutSession->method('getQuote')
+            ->willReturn($this->quote);
     }
 
     public function setUpWithoutQuoteData()
     {
-        $this->shippingAddress->method('getShippingInclTax')->willReturn(false);
+        $this->shippingAddress->method('getShippingInclTax')
+            ->willReturn(false);
 
-        $this->orderObject = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
-        $this->orderObject->method('getShippingInclTax')->willReturn(5.0);
-        $this->orderObject->method('getShippingDescription')->willReturn('Fixed Flat Rate');
-        $this->orderObject->method('getShippingMethod')->willReturn('flatrate_flatrate');
-        $this->orderObject->method('getShippingTaxAmount')->willReturn(0.0);
-        $this->orderObject->method('getShippingInvoiced')->willReturn(5.0);
-        $this->orderObject->method('getShippingRefunded')->willReturn(5.0);
+        $this->orderObject = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->orderObject->method('getShippingInclTax')
+            ->willReturn(5.0);
+        $this->orderObject->method('getShippingDescription')
+            ->willReturn('Fixed Flat Rate');
+        $this->orderObject->method('getShippingMethod')
+            ->willReturn('flatrate_flatrate');
+        $this->orderObject->method('getShippingTaxAmount')
+            ->willReturn(0.0);
+        $this->orderObject->method('getShippingInvoiced')
+            ->willReturn(5.0);
+        $this->orderObject->method('getShippingRefunded')
+            ->willReturn(5.0);
 
-        $this->orderFactory->method('create')->willReturn($this->orderObject);
+        $this->orderFactory->method('create')
+            ->willReturn($this->orderObject);
 
-        $this->quote->method('getShippingAddress')->willReturn($this->shippingAddress);
-        $this->checkoutSession->method('getQuote')->willReturn($this->quote);
+        $this->quote->method('getShippingAddress')
+            ->willReturn($this->shippingAddress);
+        $this->checkoutSession->method('getQuote')
+            ->willReturn($this->quote);
     }
 
     public function testCreate()
     {
         $this->setUpWithQuoteData();
 
-        $this->itemFactory->expects($this->at(0))->method('create')
-            ->willReturn(new Item('item', new Amount(0.0, 'EUR'), 0));
-        $this->itemFactory->expects($this->at(1))->method('create')
-            ->willReturn(new Item('bundledItem1', new Amount(0.0, 'EUR'), 0));
-        $this->itemFactory->expects($this->at(2))->method('create')
-            ->willReturn(new Item('bundleFixed', new Amount(0.0, 'EUR'), 0));
+        $this->itemFactory->expects($this->at(0))
+            ->method('create')
+            ->willReturn(
+                new Item('item', new Amount(0.0, 'EUR'), 0)
+            );
+        $this->itemFactory->expects($this->at(1))
+            ->method('create')
+            ->willReturn(
+                new Item('bundledItem1', new Amount(0.0, 'EUR'), 0)
+            );
+        $this->itemFactory->expects($this->at(2))
+            ->method('create')
+            ->willReturn(
+                new Item('bundleFixed', new Amount(0.0, 'EUR'), 0)
+            );
 
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
-        $expected->add(new Item('item', new Amount(0.0, 'EUR'), 0));
-        $expected->add(new Item('bundledItem1', new Amount(0.0, 'EUR'), 0));
-        $expected->add(new Item('bundleFixed', new Amount(0.0, 'EUR'), 0));
+        $expected->add(
+            new Item('item', new Amount(0.0, 'EUR'), 0)
+        );
+        $expected->add(
+            new Item('bundledItem1', new Amount(0.0, 'EUR'), 0)
+        );
+        $expected->add(
+            new Item('bundleFixed', new Amount(0.0, 'EUR'), 0)
+        );
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
@@ -243,7 +350,12 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateThrowsException()
     {
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
         $basketFactory->create(null, null);
     }
 
@@ -251,19 +363,29 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUpWithoutQuoteData();
 
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
+        $expected->add(
+            new Item('', new Amount(0.0, 'EUR'), 0)
+        );
+        $expected->add(
+            new Item('', new Amount(0.0, 'EUR'), 0)
+        );
 
         $shipping = new Item('Shipping', new Amount(5.0, 'EUR'), 1);
         $shipping->setDescription('Fixed Flat Rate');
         $shipping->setArticleNumber('flatrate_flatrate');
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
-        $this->orderRepository->method('get')->willReturn($this->orderObject);
+        $this->orderRepository->method('get')
+            ->willReturn($this->orderObject);
 
         $this->assertEquals($expected, $basketFactory->capture($this->order, $this->transaction));
     }
@@ -273,7 +395,12 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testCaptureThrowsException()
     {
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
         $basketFactory->capture(null, null);
     }
 
@@ -283,7 +410,12 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testCaptureThrowsNoOrderException()
     {
         $this->setUpWithQuoteData();
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
         $basketFactory->capture($this->order, $this->transaction);
     }
 
@@ -291,12 +423,21 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUpWithoutQuoteData();
 
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
 
         $expected = new Basket();
         $expected->setVersion($this->transaction);
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
-        $expected->add(new Item('', new Amount(0.0, 'EUR'), 0));
+        $expected->add(
+            new Item('', new Amount(0.0, 'EUR'), 0)
+        );
+        $expected->add(
+            new Item('', new Amount(0.0, 'EUR'), 0)
+        );
 
         $shippingAmountValue = 5.0;
         $shippingAmount = new Amount($shippingAmountValue, 'EUR');
@@ -306,11 +447,16 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
         $shipping->setTaxRate(0.00);
         $expected->add($shipping);
 
-        $this->orderObject->expects($this->at(OrderInterface::SHIPPING_REFUNDED))->method('getOrigData')->willReturn(0);
-        $this->orderObject->method('getShippingAmount')->willReturn($shippingAmountValue);
+        $this->orderObject->expects($this->at(OrderInterface::SHIPPING_REFUNDED))
+            ->method('getOrigData')
+            ->willReturn(0);
+        $this->orderObject->method('getShippingAmount')
+            ->willReturn($shippingAmountValue);
 
-        $this->orderRepository->method('get')->willReturn($this->orderObject);
-        $this->transaction->method('getAmount')->willReturn($expected->getTotalAmount());
+        $this->orderRepository->method('get')
+            ->willReturn($this->orderObject);
+        $this->transaction->method('getAmount')
+            ->willReturn($expected->getTotalAmount());
 
         $this->assertEquals($expected, $basketFactory->refund($this->order, $this->transaction));
     }
@@ -320,7 +466,12 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
      */
     public function testRefundThrowsException()
     {
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
         $basketFactory->refund(null, null);
     }
 
@@ -330,7 +481,12 @@ class BasketFactoryUTest extends \PHPUnit_Framework_TestCase
     public function testRefundThrowsNoOrderException()
     {
         $this->setUpWithQuoteData();
-        $basketFactory = new BasketFactory($this->itemFactory, $this->checkoutSession, $this->orderFactory, $this->orderRepository);
+        $basketFactory = new BasketFactory(
+            $this->itemFactory,
+            $this->checkoutSession,
+            $this->orderFactory,
+            $this->orderRepository
+        );
         $basketFactory->refund($this->order, $this->transaction);
     }
 }

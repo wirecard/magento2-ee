@@ -22,13 +22,19 @@ class AddressValidatorFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->quoteAddressValidator = $this->getMockBuilder(QuoteAddressValidator::class)->disableOriginalConstructor()->getMock();
-        $this->addressAdapterInterfaceValidator = $this->getMockBuilder(AddressAdapterInterfaceValidator::class)->disableOriginalConstructor()->getMock();
+        $this->quoteAddressValidator = $this->getMockBuilder(QuoteAddressValidator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->addressAdapterInterfaceValidator = $this->getMockBuilder(AddressAdapterInterfaceValidator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     public function testCreateQuoteAddressValidator()
     {
-        $magentoQuoteAddress = $this->getMockBuilder(\Magento\Quote\Model\Quote\Address::class)->disableOriginalConstructor()->getMock();
+        $magentoQuoteAddress = $this->getMockBuilder(\Magento\Quote\Model\Quote\Address::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $expected = new QuoteAddressValidator($magentoQuoteAddress);
 
         $factory = new Validator\AddressValidatorFactory();
@@ -39,7 +45,9 @@ class AddressValidatorFactoryUTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateAddressAdapterInterfaceValidator()
     {
-        $magentoAddressAdapterInterface = $this->getMockBuilder(AddressAdapterInterface::class)->disableOriginalConstructor()->getMock();
+        $magentoAddressAdapterInterface = $this->getMockBuilder(AddressAdapterInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $expected = new AddressAdapterInterfaceValidator($magentoAddressAdapterInterface);
 
         $factory = new Validator\AddressValidatorFactory();

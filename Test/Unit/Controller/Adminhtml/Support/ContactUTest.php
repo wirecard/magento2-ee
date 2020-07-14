@@ -16,11 +16,10 @@ use Magento\Framework\View\Page\Config;
 use Magento\Framework\View\Page\Title;
 use Magento\Framework\View\Result\PageFactory;
 use Wirecard\ElasticEngine\Controller\Adminhtml\Support\Contact;
+use WirecardTest\ElasticEngine\Unit\Controller\Adminhtml\Support\TestContact;
 
 /**
  * Class CredentialsTest
- * @package Wirecard\ElasticEngine\Test\Unit\Adminhtml\Test
- * @method _isAllowed()
  */
 class ContactUTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,23 +36,40 @@ class ContactUTest extends \PHPUnit_Framework_TestCase
 
     private $page;
 
+    /**
+     * @var Context $context
+     */
     private $context;
 
     public function setUp()
     {
-        $this->context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
+        $this->context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $title = $this->getMockBuilder(Title::class)->disableOriginalConstructor()->getMock();
+        $title = $this->getMockBuilder(Title::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $resultPageConfig = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $resultPageConfig->method('getTitle')->willReturn($title);
+        $resultPageConfig = $this->getMockBuilder(Config::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultPageConfig->method('getTitle')
+            ->willReturn($title);
 
-        $this->page = $this->getMockBuilder(Page::class)->disableOriginalConstructor()->getMock();
-        $this->page->method('setActiveMenu')->willReturn($this->page);
-        $this->page->method('getConfig')->willReturn($resultPageConfig);
+        $this->page = $this->getMockBuilder(Page::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->page->method('setActiveMenu')
+            ->willReturn($this->page);
+        $this->page->method('getConfig')
+            ->willReturn($resultPageConfig);
 
-        $this->resultPageFactory = $this->getMockBuilder(PageFactory::class)->disableOriginalConstructor()->getMock();
-        $this->resultPageFactory->method('create')->willReturn($this->page);
+        $this->resultPageFactory = $this->getMockBuilder(PageFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->resultPageFactory->method('create')
+            ->willReturn($this->page);
 
         $this->contact = new Contact($this->context, $this->resultPageFactory);
     }
@@ -65,18 +81,11 @@ class ContactUTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAllowed()
     {
-        $authorization = $this->getMockBuilder(AuthorizationInterface::class)->disableOriginalConstructor()->getMock();
+        $authorization = $this->getMockBuilder(AuthorizationInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $testContact = new TestContact($this->context, $this->resultPageFactory);
-        $this->assertNull($testContact->test_isAllowed($authorization));
-    }
-}
-
-class TestContact extends Contact
-{
-    public function test_isAllowed($authorization)
-    {
-        $this->_authorization = $authorization;
-        return $this->_isAllowed();
+        $this->assertNull($testContact->testIsAllowed($authorization));
     }
 }

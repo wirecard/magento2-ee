@@ -12,6 +12,9 @@ namespace Wirecard\ElasticEngine\Block\Adminhtml\Support\Edit;
 use Magento\Backend\Block\Widget\Form\Generic;
 use Magento\Backend\Block\Widget\Tab\TabInterface;
 
+/**
+ * Class used for Wirecard merchant support form
+ */
 class Form extends Generic implements TabInterface
 {
     const LABEL = 'label';

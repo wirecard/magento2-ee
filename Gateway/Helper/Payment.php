@@ -19,10 +19,9 @@ use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
- * Class Payment
+ * Payment helper for adding transaction
  *
  * @since 2.1.0
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class Payment
 {

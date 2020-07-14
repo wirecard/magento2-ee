@@ -19,8 +19,7 @@ use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class IdealTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
+ * Class used for creating iDEAL transaction
  */
 class IdealTransactionFactory extends TransactionFactory
 {

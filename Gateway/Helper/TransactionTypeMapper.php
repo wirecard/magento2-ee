@@ -12,10 +12,9 @@ namespace Wirecard\ElasticEngine\Gateway\Helper;
 use Magento\Sales\Api\Data\TransactionInterface as MagentoTransactionInterface;
 
 /**
- * Class TransactionTypeMapper
+ * Helper for mapping transaction type
  *
  * @since 2.2.2
- * @package Wirecard\ElasticEngine\Gateway\Helper
  */
 class TransactionTypeMapper
 {

@@ -12,8 +12,8 @@ namespace Wirecard\ElasticEngine\Gateway\Validator;
 use Wirecard\ElasticEngine\Gateway\Validator;
 
 /**
- * Class ValidatorFactory
- * @package Wirecard\ElasticEngine\Gateway\Validator
+ * Class used for creating validator
+ *
  * @since 2.2.1
  */
 class ValidatorFactory

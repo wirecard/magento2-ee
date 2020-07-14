@@ -14,9 +14,11 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/seamless-vault-enabler",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/seamlessformutils",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
-        "Magento_Checkout/js/model/quote"
+        "Magento_Checkout/js/model/quote",
+        "Magento_SalesRule/js/action/set-coupon-code",
+        "Magento_SalesRule/js/action/cancel-coupon",
     ],
-    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote) {
+    function (ParentPaymentMethod, VaultEnabler, SeamlessCreditCardUtils, SeamlessCreditCardConstants, quote, setCoupon, cancelCoupon) {
         "use strict";
         return ParentPaymentMethod.extend({
             seamlessResponse: null,
@@ -38,6 +40,8 @@ define(
                     localStorage.setItem(SeamlessCreditCardConstants.localStorage.counterKey, SeamlessCreditCardConstants.localStorage.initValue);
                 }
                 let self = this;
+                setCoupon.registerSuccessCallback(this.reloadForm());
+                cancelCoupon.registerSuccessCallback(this.reloadForm());
                 quote.billingAddress.subscribe(function () {
                     let currentBillingAddress = quote.billingAddress();
                     self.newBillingAddress = currentBillingAddress;
@@ -52,6 +56,18 @@ define(
                     }
                 });
                 return this;
+            },
+
+            /**
+             *  Reset the form after coupon apply/cancel
+             */
+            reloadForm: function() {
+                let self = this;
+                return function() {
+                    if (self.isCreditCardSelected())  {
+                        self.seamlessFormInit();
+                    }
+                };
             },
 
             /**

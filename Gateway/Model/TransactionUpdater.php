@@ -27,6 +27,8 @@ use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
+ * Class used for updating the transaction
+ *
  * @since 2.1.0
  */
 class TransactionUpdater
@@ -132,7 +134,7 @@ class TransactionUpdater
 
             try {
                 $result = $this->fetchNotify($transaction);
-                if (is_null($result)) {
+                if (null === $result) {
                     continue;
                 }
 
@@ -176,7 +178,7 @@ class TransactionUpdater
         $rawData = $this->nestedObjectHelper->get($additional, Order\Payment\Transaction::RAW_DETAILS);
 
         $params = $this->sanitizeRawData($rawData);
-        if (is_null($params)) {
+        if (null === $params) {
             return null;
         }
 
@@ -186,7 +188,7 @@ class TransactionUpdater
             $params->maid
         );
 
-        if (is_null($result)) {
+        if (null === $result) {
             // try to get transaction by transaction-id for CC 3ds payments
             if ($params->paymentMethod === CreditCardTransaction::NAME) {
                 $result = $this->retrieveTransaction->byTransactionId(
@@ -198,7 +200,7 @@ class TransactionUpdater
             }
         }
 
-        if (is_null($result)) {
+        if (null === $result) {
             $this->logger->debug($logStr . 'no notify found');
 
             return null;
@@ -221,14 +223,14 @@ class TransactionUpdater
      */
     protected function sanitizeRawData($rawData)
     {
-        if (is_null($rawData)) {
+        if (null === $rawData) {
             return null;
         }
 
         $ret = new stdClass();
 
         $ret->paymentMethod = $this->nestedObjectHelper->get($rawData, self::FIELD_PAYMENTMETHOD1);
-        if (is_null($ret->paymentMethod)) {
+        if (null === $ret->paymentMethod) {
             $ret->paymentMethod = $this->nestedObjectHelper->get($rawData, self::FIELD_PAYMENTMETHOD2);
         }
 
@@ -238,11 +240,11 @@ class TransactionUpdater
         $ret->maid            = $this->nestedObjectHelper->get($rawData, self::FIELD_MAID);
 
         // should never happen (in theory)
-        if (is_null($ret->requestId)
-            || is_null($ret->paymentMethod)
-            || is_null($ret->transactionType)
-            || is_null($ret->transactionId)
-            || is_null($ret->maid)) {
+        if (null === $ret->requestId
+            || null === $ret->paymentMethod
+            || null === $ret->transactionType
+            || null === $ret->transactionId
+            || null === $ret->maid) {
             return null;
         }
 

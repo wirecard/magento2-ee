@@ -19,7 +19,6 @@ use Magento\Vault\Api\PaymentTokenManagementInterface;
 
 /**
  * Class Callback
- * @package Wirecard\ElasticEngine\Controller\Frontend
  */
 class Vault extends Action
 {

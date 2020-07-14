@@ -52,19 +52,32 @@ class TokenUiComponentProviderUTest extends \PHPUnit_Framework_TestCase
             'name' => 'Wirecard_ElasticEngine/js/view/payment/method-renderer/vault'
         ];
 
-        $this->componentFactory = $this->getMockBuilder(TokenUiComponentInterfaceFactory::class)->disableOriginalConstructor()->setMethods(['create'])->getMock();
-        $this->componentFactory->method('create')->willReturn($this->component);
+        $this->componentFactory = $this->getMockBuilder(TokenUiComponentInterfaceFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+        $this->componentFactory->method('create')
+            ->willReturn($this->component);
 
-        $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)->disableOriginalConstructor()->getMock();
-        $this->paymentToken->method('getTokenDetails')->willReturn($details);
-        $this->paymentToken->method('getPublicHash')->willReturn(self::HASH);
+        $this->paymentToken = $this->getMockBuilder(PaymentTokenInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->paymentToken->method('getTokenDetails')
+            ->willReturn($details);
+        $this->paymentToken->method('getPublicHash')
+            ->willReturn(self::HASH);
     }
 
     public function testGetComponentForToken()
     {
-        $logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
-        $config = $this->getMockBuilder(ConfigProvider::class)->disableOriginalConstructor()->getMock();
-        $config->method('getWppUrl')->willReturn('https://wpp-test.wirecard.com');
+        $logger = $this->getMockBuilder(LoggerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $config = $this->getMockBuilder(ConfigProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $config->method('getWppUrl')
+            ->willReturn('https://wpp-test.wirecard.com');
         $conf = new TokenUiComponentProvider($this->componentFactory, $config, $logger);
 
         $this->assertEquals($this->component, $conf->getComponentForToken($this->paymentToken));

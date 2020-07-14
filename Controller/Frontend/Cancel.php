@@ -19,8 +19,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
- * Class Cancel
- * @package Wirecard\ElasticEngine\Controller\Frontend
+ * Class for executing order cancellation
  */
 class Cancel extends Action implements CsrfAwareActionInterface
 {

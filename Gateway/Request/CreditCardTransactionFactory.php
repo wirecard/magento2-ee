@@ -24,8 +24,7 @@ use Wirecard\PaymentSdk\Transaction\Operation;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class CreditCardTransactionFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
+ * Class used for creating Credit Card transaction
  */
 class CreditCardTransactionFactory extends TransactionFactory
 {

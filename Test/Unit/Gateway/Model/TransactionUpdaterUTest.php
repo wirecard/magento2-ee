@@ -82,25 +82,47 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)->disableOriginalConstructor()->getMock();
-        $transactionService              = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
-        $this->config                    = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $transactionService->method('getConfig')->willReturn($this->config);
-        $this->transactionServiceFactory->method('create')->willReturn($transactionService);
+        $this->transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionService              = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->config                    = $this->getMockBuilder(Config::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionService->method('getConfig')
+            ->willReturn($this->config);
+        $this->transactionServiceFactory->method('create')
+            ->willReturn($transactionService);
 
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)
+            ->getMock();
 
-        $this->transactionCollection = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
+        $this->transactionCollection = $this->getMockBuilder(Collection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->transactionRepository = $this->getMockBuilder(TransactionRepository::class)->disableOriginalConstructor()->getMock();
-        $this->transaction           = $this->getMockBuilder(Transaction::class)->disableOriginalConstructor()->getMock();
-        $this->transactionRepository->method('get')->willReturn($this->transaction);
+        $this->transactionRepository = $this->getMockBuilder(TransactionRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transaction           = $this->getMockBuilder(Transaction::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transactionRepository->method('get')
+            ->willReturn($this->transaction);
 
-        $this->retreiveTransaction = $this->getMockBuilder(RetrieveTransaction::class)->disableOriginalConstructor()->getMock();
+        $this->retreiveTransaction = $this->getMockBuilder(RetrieveTransaction::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->notify = $this->getMockBuilder(Notify::class)->disableOriginalConstructor()->getMock();
+        $this->notify = $this->getMockBuilder(Notify::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->nestedObject = $this->getMockBuilder(NestedObject::class)->disableOriginalConstructor()->getMock();
+        $this->nestedObject = $this->getMockBuilder(NestedObject::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->updater = new TransactionUpdater(
             $this->logger,
@@ -124,13 +146,16 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
                 "merchant-account-id"    => "maid"
             ]
         ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
+        $this->transaction->method('getData')
+            ->willReturn(json_encode($rawData));
 
-        $this->nestedObject->method('get')->willReturnCallback(function ($object, $param) use ($rawData) {
-            return $object->$param;
-        });
+        $this->nestedObject->method('get')
+            ->willReturnCallback(function ($object, $param) use ($rawData) {
+                return $object->$param;
+            });
 
-        $this->retreiveTransaction->method('byRequestId')->willReturn('<xml/>');
+        $this->retreiveTransaction->method('byRequestId')
+            ->willReturn('<xml/>');
 
         /** @var SuccessResponse|PHPUnit_Framework_MockObject_MockObject $sdkResponse */
         $sdkResponse = $this->getMockBuilder(SuccessResponse::class)
@@ -138,25 +163,33 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
             ->setMockClassName('SuccessResponse')
             ->getMock();
 
-        $this->notify->method('fromXmlResponse')->with('<xml/>')->willReturn($sdkResponse);
+        $this->notify->method('fromXmlResponse')
+            ->with('<xml/>')
+            ->willReturn($sdkResponse);
 
-        $this->transactionCollection->method('fetchItem')->willReturnOnConsecutiveCalls(
-            $this->transaction,
-            false
-        );
+        $this->transactionCollection->method('fetchItem')
+            ->willReturnOnConsecutiveCalls(
+                $this->transaction,
+                false
+            );
 
-        $this->logger->expects($this->at(1))->method('debug')
-            ->with('WirecardTransactionUpdater::transaction: order: Notification response is instance of: SuccessResponse');
+        $this->logger->expects($this->at(1))
+            ->method('debug')
+            ->with(
+                'WirecardTransactionUpdater::transaction: order:' .
+                ' Notification response is instance of: SuccessResponse'
+            );
 
         $this->updater->run();
     }
 
     public function testRunWithoutRawData()
     {
-        $this->transactionCollection->method('fetchItem')->willReturnOnConsecutiveCalls(
-            $this->transaction,
-            false
-        );
+        $this->transactionCollection->method('fetchItem')
+            ->willReturnOnConsecutiveCalls(
+                $this->transaction,
+                false
+            );
 
         $this->updater->run();
     }
@@ -173,18 +206,23 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-        $this->retreiveTransaction->method('byRequestId')->willThrowException(new Exception('foo'));
-        $this->nestedObject->method('get')->willReturnCallback(function ($object, $param) {
-            return $object->$param;
-        });
+        $this->transaction->method('getData')
+            ->willReturn(json_encode($rawData));
+        $this->retreiveTransaction->method('byRequestId')
+            ->willThrowException(new Exception('foo'));
+        $this->nestedObject->method('get')
+            ->willReturnCallback(function ($object, $param) {
+                return $object->$param;
+            });
 
         $this->notify->expects($this->never())->method('process');
-        $this->transactionCollection->method('fetchItem')->willReturnOnConsecutiveCalls(
-            $this->transaction,
-            false
-        );
-        $this->logger->expects($this->once())->method('error');
+        $this->transactionCollection->method('fetchItem')
+            ->willReturnOnConsecutiveCalls(
+                $this->transaction,
+                false
+            );
+        $this->logger->expects($this->once())
+            ->method('error');
 
         $this->updater->run();
     }
@@ -193,7 +231,8 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyWithoutRawDetails()
     {
-        $this->transaction->method('getData')->willReturn("{}");
+        $this->transaction->method('getData')
+            ->willReturn("{}");
 
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
@@ -201,98 +240,116 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
 
     public function testFetchNotifyWithAltMethodName()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            null,
-            'creditcard',
-            'rid',
-            'tid',
-            'ttype',
-            'maid'
-        );
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                null,
+                'creditcard',
+                'rid',
+                'tid',
+                'ttype',
+                'maid'
+            );
 
-        $this->retreiveTransaction->method('byRequestId')->with($this->config, 'rid', 'maid');
+        $this->retreiveTransaction->method('byRequestId')
+            ->with($this->config, 'rid', 'maid');
         $this->updater->fetchNotify($this->transaction);
     }
 
     public function testFetchNotifyWithoutMethodName()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            null,
-            null,
-            'rid',
-            'tid',
-            'ttype',
-            'maid'
-        );
-        $this->retreiveTransaction->expects($this->never())->method('byRequestId');
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                null,
+                null,
+                'rid',
+                'tid',
+                'ttype',
+                'maid'
+            );
+        $this->retreiveTransaction->expects($this->never())
+            ->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
     }
 
     public function testFetchNotifyWithoutRequestId()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            'creditcard',
-            null,
-            'tid',
-            'ttype',
-            'maid'
-        );
-        $this->retreiveTransaction->expects($this->never())->method('byRequestId');
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                'creditcard',
+                null,
+                'tid',
+                'ttype',
+                'maid'
+            );
+        $this->retreiveTransaction->expects($this->never())
+            ->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
     }
 
     public function testFetchNotifyWithoutTransactionId()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            'creditcard',
-            'rid',
-            null,
-            'ttype',
-            'maid'
-        );
-        $this->retreiveTransaction->expects($this->never())->method('byRequestId');
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                'creditcard',
+                'rid',
+                null,
+                'ttype',
+                'maid'
+            );
+        $this->retreiveTransaction->expects($this->never())
+            ->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
     }
 
     public function testFetchNotifyWithoutTransactionType()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            'creditcard',
-            'rid',
-            'tid',
-            null,
-            'maid'
-        );
-        $this->retreiveTransaction->expects($this->never())->method('byRequestId');
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                'creditcard',
+                'rid',
+                'tid',
+                null,
+                'maid'
+            );
+        $this->retreiveTransaction->expects($this->never())
+            ->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
     }
 
     public function testFetchNotifyWithoutMaid()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            'creditcard',
-            'rid',
-            'tid',
-            'ttype',
-            null
-        );
-        $this->retreiveTransaction->expects($this->never())->method('byRequestId');
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                'creditcard',
+                'rid',
+                'tid',
+                'ttype',
+                null
+            );
+        $this->retreiveTransaction->expects($this->never())
+            ->method('byRequestId');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
     }
@@ -308,80 +365,105 @@ class TransactionUpdaterUTest extends PHPUnit_Framework_TestCase
                 "merchant-account-id"    => "maid"
             ]
         ];
-        $this->transaction->method('getData')->willReturn(json_encode($rawData));
-        $this->nestedObject->method('get')->willReturnCallback(function ($object, $param) {
-            return $object->$param;
-        });
+        $this->transaction->method('getData')
+            ->willReturn(json_encode($rawData));
+        $this->nestedObject->method('get')
+            ->willReturnCallback(function ($object, $param) {
+                return $object->$param;
+            });
 
-        $this->retreiveTransaction->method('byRequestId')->willReturn(null);
+        $this->retreiveTransaction->method('byRequestId')
+            ->willReturn(null);
 
         $this->retreiveTransaction->method('byTransactionId')
             ->with($this->config, "tid", "ttype", "maid")
             ->willReturn('<xml/>');
-        $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
-        $this->notify->method('fromXmlResponse')->with('<xml/>')->willReturn($response);
+        $response = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->notify->method('fromXmlResponse')
+            ->with('<xml/>')
+            ->willReturn($response);
         $this->updater->fetchNotify($this->transaction);
     }
 
     public function testFetchNotifyNothingFound()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            'creditcard',
-            'rid',
-            'tid',
-            'ttype',
-            'maid'
-        );
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                'creditcard',
+                'rid',
+                'tid',
+                'ttype',
+                'maid'
+            );
 
-        $this->retreiveTransaction->method('byRequestId')->willReturn(null);
-        $this->retreiveTransaction->method('byTransactionId')->willReturn(null);
+        $this->retreiveTransaction->method('byRequestId')
+            ->willReturn(null);
+        $this->retreiveTransaction->method('byTransactionId')
+            ->willReturn(null);
 
-        $this->logger->method('debug')->with('WirecardTransactionUpdater::transaction: order: no notify found');
+        $this->logger->method('debug')
+            ->with('WirecardTransactionUpdater::transaction: order: no notify found');
         $ret = $this->updater->fetchNotify($this->transaction);
         $this->assertNull($ret);
     }
 
     public function testFetchNotifyAlipay()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            AlipayCrossborderTransaction::NAME,
-            'rid-get-url',
-            'tid',
-            'ttype',
-            'maid'
-        );
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                AlipayCrossborderTransaction::NAME,
+                'rid-get-url',
+                'tid',
+                'ttype',
+                'maid'
+            );
         $this->retreiveTransaction->method('byRequestId')
             ->with($this->config, "rid", "maid")
             ->willReturn('<xml/>');
 
-        $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
-        $this->notify->method('fromXmlResponse')->with('<xml/>')->willReturn($response);
+        $response = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->notify->method('fromXmlResponse')
+            ->with('<xml/>')
+            ->willReturn($response);
         $this->updater->fetchNotify($this->transaction);
     }
 
     public function testFetchNotifyRatepayInvoice()
     {
-        $this->transaction->method('getData')->willReturn('{}');
-        $this->nestedObject->method('get')->willReturnOnConsecutiveCalls(
-            new stdClass(),
-            'ratepay-invoice',
-            'rid',
-            'tid',
-            'ttype',
-            'maid'
-        );
+        $this->transaction->method('getData')
+            ->willReturn('{}');
+        $this->nestedObject->method('get')
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                'ratepay-invoice',
+                'rid',
+                'tid',
+                'ttype',
+                'maid'
+            );
         $this->retreiveTransaction->method('byRequestId')
             ->with($this->config, "rid", "maid")
             ->willReturn('<xml/>');
 
-        $this->transactionServiceFactory->method('create')->with(RatepayInvoiceTransaction::NAME);
+        $this->transactionServiceFactory->method('create')
+            ->with(RatepayInvoiceTransaction::NAME);
 
-        $response = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
-        $this->notify->method('fromXmlResponse')->with('<xml/>')->willReturn($response);
+        $response = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->notify->method('fromXmlResponse')
+            ->with('<xml/>')
+            ->willReturn($response);
         $this->updater->fetchNotify($this->transaction);
     }
 }

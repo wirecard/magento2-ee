@@ -73,10 +73,15 @@ class NotifyTest extends PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
-        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
-        $this->request->method('getContent')->willReturn('<xml>');
-        $this->notify->method('fromXmlResponse')->willReturn($successResponse);
-        $this->notify->expects($this->once())->method('process');
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->request->method('getContent')
+            ->willReturn('<xml>');
+        $this->notify->method('fromXmlResponse')
+            ->willReturn($successResponse);
+        $this->notify->expects($this->once())
+            ->method('process');
         $this->controller->execute();
     }
 }

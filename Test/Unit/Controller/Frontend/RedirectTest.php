@@ -136,39 +136,64 @@ class RedirectTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $context->method('getResultFactory')->willReturn($this->resultFactory);
-        $context->method('getUrl')->willReturn($this->urlBuilder);
+        $context->method('getResultFactory')
+            ->willReturn($this->resultFactory);
+        $context->method('getUrl')
+            ->willReturn($this->urlBuilder);
 
-        $this->messageManager = $this->getMockBuilder(ManagerInterface::class)->getMock();
-        $context->method('getMessageManager')->willReturn($this->messageManager);
+        $this->messageManager = $this->getMockBuilder(ManagerInterface::class)
+            ->getMock();
+        $context->method('getMessageManager')
+            ->willReturn($this->messageManager);
 
-        $this->request = $this->getMockBuilder(Http::class)->disableOriginalConstructor()->getMock();
-        $this->request->method('getParams')->willReturn(['request_id' => '1234']);
-        $this->request->method('getParam')->willReturn('creditcard');
-        $this->request->method('getContent')->willReturn('<xmlContent></xmlContent>');
+        $this->request = $this->getMockBuilder(Http::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->request->method('getParams')
+            ->willReturn(['request_id' => '1234']);
+        $this->request->method('getParam')
+            ->willReturn('creditcard');
+        $this->request->method('getContent')
+            ->willReturn('<xmlContent></xmlContent>');
 
-        $context->method('getRequest')->willReturn($this->request);
+        $context->method('getRequest')
+            ->willReturn($this->request);
 
         $this->session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->transactionService = $this->getMockBuilder(TransactionService::class)->disableOriginalConstructor()->getMock();
+        $this->transactionService = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         /**
          * @var $transactionServiceFactory TransactionServiceFactory|PHPUnit_Framework_MockObject_MockObject
          */
-        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)->disableOriginalConstructor()->getMock();
-        $transactionServiceFactory->method('create')->willReturn($this->transactionService);
+        $transactionServiceFactory = $this->getMockBuilder(TransactionServiceFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $transactionServiceFactory->method('create')
+            ->willReturn($this->transactionService);
 
-        $this->paymentHelper = $this->getMockBuilder(\Wirecard\ElasticEngine\Gateway\Helper\Payment::class)->disableOriginalConstructor()->getMock();
+        $this->paymentHelper = $this->getMockBuilder(\Wirecard\ElasticEngine\Gateway\Helper\Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->paymentRepository = $this->getMockBuilder(PaymentRepository::class)->disableOriginalConstructor()->getMock();
+        $this->paymentRepository = $this->getMockBuilder(PaymentRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
-        $this->order   = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
-        $this->order->method('getPayment')->willReturn($this->payment);
+        $this->payment = $this->getMockBuilder(Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->order   = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->order->method('getPayment')
+            ->willReturn($this->payment);
 
-        $this->session->method('getLastRealOrder')->willReturn($this->order);
+        $this->session->method('getLastRealOrder')
+            ->willReturn($this->order);
 
         $this->controller = new RedirectController(
             $context,
@@ -182,23 +207,36 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     {
         $this->setIsPost(false);
 
-        $this->urlBuilder->method('getRedirectUrl')->willReturn('checkout/cart');
-        $this->resultFactory->expects($this->once())->method('create')->willReturn($this->resultJson);
-        $this->session->expects($this->once())->method('restoreQuote');
-        $this->resultJson->expects($this->once())->method('setData')->with(['redirect-url' => 'checkout/cart']);
+        $this->urlBuilder->method('getRedirectUrl')
+            ->willReturn('checkout/cart');
+        $this->resultFactory->expects($this->once())
+            ->method('create')
+            ->willReturn($this->resultJson);
+        $this->session->expects($this->once())
+            ->method('restoreQuote');
+        $this->resultJson->expects($this->once())
+            ->method('setData')
+            ->with(['redirect-url' => 'checkout/cart']);
         $this->controller->execute();
     }
 
     public function testExecuteNonThreeDSuccessResponse()
     {
         $this->setNonThreeDParams();
-        $this->urlBuilder->method('getRedirectUrl')->willReturn('onepage/success');
+        $this->urlBuilder->method('getRedirectUrl')
+            ->willReturn('onepage/success');
 
-        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
-        $this->transactionService->method('processJsResponse')->willReturn($successResponse);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transactionService->method('processJsResponse')
+            ->willReturn($successResponse);
 
-        $this->resultFactory->expects($this->at(0))->method('create')->willReturn($this->resultJson);
-        $this->resultJson->expects($this->once())->method('setData')->with(['redirect-url' => 'onepage/success']);
+        $this->resultFactory->expects($this->at(0))->method('create')
+            ->willReturn($this->resultJson);
+        $this->resultJson->expects($this->once())
+            ->method('setData')
+            ->with(['redirect-url' => 'onepage/success']);
 
         $this->controller->execute();
     }
@@ -206,16 +244,26 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     public function testExecuteNonThreeDFailureResponse()
     {
         $this->setNonThreeDParams();
-        $this->urlBuilder->method('getRedirectUrl')->willReturn('checkout/cart');
+        $this->urlBuilder->method('getRedirectUrl')
+            ->willReturn('checkout/cart');
 
-        $failureResponse = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
-        $this->transactionService->method('processJsResponse')->willReturn($failureResponse);
+        $failureResponse = $this->getMockBuilder(FailureResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transactionService->method('processJsResponse')
+            ->willReturn($failureResponse);
 
-        $this->resultFactory->expects($this->at(0))->method('create')->willReturn($this->resultJson);
+        $this->resultFactory->expects($this->at(0))->method('create')
+            ->willReturn($this->resultJson);
 
-        $this->session->expects($this->once())->method('restoreQuote');
-        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('order_error'));
-        $this->resultJson->expects($this->once())->method('setData')->with(['redirect-url' => 'checkout/cart']);
+        $this->session->expects($this->once())
+            ->method('restoreQuote');
+        $this->messageManager->expects($this->once())
+            ->method(self::ADD_NOTICE_MESSAGE)
+            ->with($this->equalTo('order_error'));
+        $this->resultJson->expects($this->once())
+            ->method('setData')
+            ->with(['redirect-url' => 'checkout/cart']);
         $this->controller->execute();
     }
 
@@ -223,21 +271,37 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     {
         $this->setIsPost(true);
 
-        $order   = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
-        $payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
-        $order->method('getPayment')->willReturn($payment);
+        $order   = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $payment = $this->getMockBuilder(Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $order->method('getPayment')
+            ->willReturn($payment);
 
-        $postParams = $this->getMockBuilder(ParametersInterface::class)->getMock();
-        $postParams->method('toArray')->willReturn(['merchant-account-id' => '1234']);
-        $this->request->method('getParam')->willReturn('creditcard');
-        $this->request->method('getPost')->willReturn($postParams);
-        $this->urlBuilder->method('getRedirectUrl')->willReturn(self::CHECKOUT_ONEPAGE_SUCCESS);
+        $postParams = $this->getMockBuilder(ParametersInterface::class)
+            ->getMock();
+        $postParams->method('toArray')
+            ->willReturn(['merchant-account-id' => '1234']);
+        $this->request->method('getParam')
+            ->willReturn('creditcard');
+        $this->request->method('getPost')
+            ->willReturn($postParams);
+        $this->urlBuilder->method('getRedirectUrl')
+            ->willReturn(self::CHECKOUT_ONEPAGE_SUCCESS);
 
-        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
-        $this->transactionService->method('handleResponse')->willReturn($successResponse);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transactionService->method('handleResponse')
+            ->willReturn($successResponse);
 
-        $this->resultFactory->expects($this->once())->method('create')->willReturn($this->redirectResult);
-        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
+        $this->resultFactory->expects($this->once())->method('create')
+            ->willReturn($this->redirectResult);
+        $this->redirectResult->expects($this->once())
+            ->method(self::SET_PATH)
+            ->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
 
         $this->controller->execute();
     }
@@ -246,25 +310,46 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     {
         $this->setIsPost(true);
 
-        $order   = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
-        $payment = $this->getMockBuilder(Payment::class)->disableOriginalConstructor()->getMock();
-        $order->method('getPayment')->willReturn($payment);
+        $order   = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $payment = $this->getMockBuilder(Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $order->method('getPayment')
+            ->willReturn($payment);
 
-        $postParams = $this->getMockBuilder(ParametersInterface::class)->getMock();
-        $postParams->method('toArray')->willReturn(['merchant-account-id' => '1234']);
-        $this->request->method('getParam')->willReturn('creditcard');
-        $this->request->method('getPost')->willReturn($postParams);
-        $this->urlBuilder->method('getRedirectUrl')->willReturn(self::CHECKOUT_ONEPAGE_SUCCESS);
+        $postParams = $this->getMockBuilder(ParametersInterface::class)
+            ->getMock();
+        $postParams->method('toArray')
+            ->willReturn(['merchant-account-id' => '1234']);
+        $this->request->method('getParam')
+            ->willReturn('creditcard');
+        $this->request->method('getPost')
+            ->willReturn($postParams);
+        $this->urlBuilder->method('getRedirectUrl')
+            ->willReturn(self::CHECKOUT_ONEPAGE_SUCCESS);
 
-        $successResponse = $this->getMockBuilder(SuccessResponse::class)->disableOriginalConstructor()->getMock();
-        $customFields = $this->getMockBuilder(CustomFieldCollection::class)->getMock();
-        $customFields->method('get')->with('orderId')->willReturn('12345');
-        $successResponse->method('getCustomFields')->willReturn($customFields);
+        $successResponse = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $customFields = $this->getMockBuilder(CustomFieldCollection::class)
+            ->getMock();
+        $customFields->method('get')
+            ->with('orderId')
+            ->willReturn('12345');
+        $successResponse->method('getCustomFields')
+            ->willReturn($customFields);
 
-        $this->transactionService->method('handleResponse')->willReturn($successResponse);
+        $this->transactionService->method('handleResponse')
+            ->willReturn($successResponse);
 
-        $this->resultFactory->expects($this->once())->method('create')->willReturn($this->redirectResult);
-        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
+        $this->resultFactory->expects($this->once())
+            ->method('create')
+            ->willReturn($this->redirectResult);
+        $this->redirectResult->expects($this->once())
+            ->method(self::SET_PATH)
+            ->with($this->equalTo(self::CHECKOUT_ONEPAGE_SUCCESS), $this->isSecure());
 
         $this->controller->execute();
     }
@@ -272,29 +357,47 @@ class RedirectTest extends PHPUnit_Framework_TestCase
     public function testExecuteThreeDFailureResponse()
     {
         $this->setIsPost(true);
-        $postParams = $this->getMockBuilder(ParametersInterface::class)->getMock();
-        $postParams->method('toArray')->willReturn(['merchant-account-id' => '1234']);
-        $this->request->method('getParam')->willReturn('creditcard');
-        $this->request->method('getPost')->willReturn($postParams);
-        $this->urlBuilder->method('getRedirectUrl')->willReturn('checkout/cart');
+        $postParams = $this->getMockBuilder(ParametersInterface::class)
+            ->getMock();
+        $postParams->method('toArray')
+            ->willReturn(['merchant-account-id' => '1234']);
+        $this->request->method('getParam')
+            ->willReturn('creditcard');
+        $this->request->method('getPost')
+            ->willReturn($postParams);
+        $this->urlBuilder->method('getRedirectUrl')
+            ->willReturn('checkout/cart');
 
-        $failureResponse = $this->getMockBuilder(FailureResponse::class)->disableOriginalConstructor()->getMock();
-        $this->transactionService->method('handleResponse')->willReturn($failureResponse);
-        $this->resultFactory->expects($this->once())->method('create')->willReturn($this->redirectResult);
+        $failureResponse = $this->getMockBuilder(FailureResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->transactionService->method('handleResponse')
+            ->willReturn($failureResponse);
+        $this->resultFactory->expects($this->once())
+            ->method('create')
+            ->willReturn($this->redirectResult);
 
-        $this->session->expects($this->once())->method('restoreQuote');
-        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)->with($this->equalTo('order_error'));
-        $this->redirectResult->expects($this->once())->method(self::SET_PATH)->with($this->equalTo('checkout/cart'), $this->isSecure());
+        $this->session->expects($this->once())
+            ->method('restoreQuote');
+        $this->messageManager->expects($this->once())->method(self::ADD_NOTICE_MESSAGE)
+            ->with($this->equalTo('order_error'));
+        $this->redirectResult->expects($this->once())
+            ->method(self::SET_PATH)
+            ->with($this->equalTo('checkout/cart'), $this->isSecure());
         $this->controller->execute();
     }
 
     private function setNonThreeDParams()
     {
         $this->setIsPost(true);
-        $postParams = $this->getMockBuilder(ParametersInterface::class)->getMock();
-        $postParams->method('toArray')->willReturn(['data' => ['merchant-account-id' => '1234']]);
-        $this->request->method('getParam')->willReturn('creditcard');
-        $this->request->method('getPost')->willReturn($postParams);
+        $postParams = $this->getMockBuilder(ParametersInterface::class)
+            ->getMock();
+        $postParams->method('toArray')
+            ->willReturn(['data' => ['merchant-account-id' => '1234']]);
+        $this->request->method('getParam')
+            ->willReturn('creditcard');
+        $this->request->method('getPost')
+            ->willReturn($postParams);
     }
 
     /**
@@ -302,7 +405,8 @@ class RedirectTest extends PHPUnit_Framework_TestCase
      */
     private function setIsPost($value)
     {
-        $this->request->method('isPost')->willReturn($value);
+        $this->request->method('isPost')
+            ->willReturn($value);
     }
 
     /**

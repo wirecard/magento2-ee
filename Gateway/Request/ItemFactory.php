@@ -17,8 +17,7 @@ use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Exception\MandatoryFieldMissingException;
 
 /**
- * Class ItemFactory
- * @package Wirecard\ElasticEngine\Gateway\Request
+ * Class used for creating an order item
  */
 class ItemFactory
 {

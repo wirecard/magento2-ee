@@ -9,7 +9,9 @@
 
 namespace Wirecard\ElasticEngine\Model;
 
-class TranslationFallback extends \Magento\Framework\Phrase\Renderer\Translate
+use Magento\Framework\Phrase\Renderer\Translate;
+
+class TranslationFallback extends Translate
 {
     /**
      * @var string
@@ -31,14 +33,14 @@ class TranslationFallback extends \Magento\Framework\Phrase\Renderer\Translate
      * This method gets a translation and if there is no entry in the set locale, it gets the translation from the
      * defined fallback locale.
      *
-     * @param \Magento\Framework\Phrase\Renderer\Translate $subject
+     * @param Translate $subject
      * @param callable $proceed
      * @param array $source
      * @param array $arguments
      * @return mixed
      * @throws \Exception
      */
-    public function aroundRender(\Magento\Framework\Phrase\Renderer\Translate $subject, callable $proceed, array $source, array $arguments)
+    public function aroundRender(Translate $subject, callable $proceed, array $source, array $arguments)
     {
         if (!$this->fallbackTranslations && !$this->fallbackTranslationsLoading) {
             $this->fallbackTranslationsLoading = true;

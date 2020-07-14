@@ -12,6 +12,9 @@ namespace Wirecard\ElasticEngine\Block\Adminhtml\Support;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Backend\Block\Widget\Form\Container;
 
+/**
+ * Class used for sending merchant contact form
+ */
 class Contact extends Container
 {
     /**

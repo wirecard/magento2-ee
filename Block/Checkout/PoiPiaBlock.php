@@ -14,6 +14,9 @@ use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Gateway\ConfigInterface;
 
+/**
+ * Class for POI/PIA checkout
+ */
 class PoiPiaBlock extends Template
 {
 
@@ -48,8 +51,8 @@ class PoiPiaBlock extends Template
         Template\Context $context,
         Session $session,
         Data $pricingHelper,
-        array $data = [],
-        ConfigInterface $methodConfig
+        ConfigInterface $methodConfig,
+        array $data = []
     ) {
         parent::__construct($context, $data);
         $this->context = $context;

@@ -26,9 +26,7 @@ use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
- * Class ResponseHandler
- *
- * @package Wirecard\ElasticEngine\Gateway\Response
+ * Class used for handling response
  */
 class ResponseHandler implements HandlerInterface
 {
@@ -131,7 +129,9 @@ class ResponseHandler implements HandlerInterface
         } elseif ($sdkResponse instanceof FailureResponse) {
             foreach ($sdkResponse->getStatusCollection() as $status) {
                 /** @var Status $status */
-                $this->logger->error(sprintf('Error occurred: %s (%s).', $status->getDescription(), $status->getCode()));
+                $this->logger->error(
+                    sprintf('Error occurred: %s (%s).', $status->getDescription(), $status->getCode())
+                );
             }
         } else {
             $this->logger->warning(sprintf('Unexpected result object for notifications.'));

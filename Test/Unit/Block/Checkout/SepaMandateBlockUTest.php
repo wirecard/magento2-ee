@@ -28,35 +28,45 @@ class SepaMandateBlockUTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $context = $this->getMockBuilder(Context::class)->disableOriginalConstructor()->getMock();
-        $this->sepaConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
+        $context = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->sepaConfig = $this->getMockBuilder(ConfigInterface::class)
+            ->getMock();
 
-        $session = $this->getMockBuilder(Session::class)->disableOriginalConstructor()->getMock();
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->block = new SepaMandateBlock($context, $this->sepaConfig, $session, []);
     }
 
     public function testGetCreditorId()
     {
-        $this->sepaConfig->method('getValue')->with('creditor_id')->willReturn('CREDITOR ID');
+        $this->sepaConfig->method('getValue')
+            ->with('creditor_id')
+            ->willReturn('CREDITOR ID');
         $this->assertEquals('CREDITOR ID', $this->block->getCreditorId());
     }
 
     public function testGetCreditorName()
     {
-        $this->sepaConfig->method('getValue')->with('creditor_name')->willReturn('CREDITOR NAME');
+        $this->sepaConfig->method('getValue')->with('creditor_name')
+            ->willReturn('CREDITOR NAME');
         $this->assertEquals('CREDITOR NAME', $this->block->getCreditorName());
     }
 
     public function testGetStoreCity()
     {
-        $this->sepaConfig->method('getValue')->with('creditor_city')->willReturn('CREDITOR CITY');
+        $this->sepaConfig->method('getValue')->with('creditor_city')
+            ->willReturn('CREDITOR CITY');
         $this->assertEquals('CREDITOR CITY', $this->block->getStoreCity());
     }
 
     public function testGetEnabledBic()
     {
-        $this->sepaConfig->method('getValue')->with('enable_bic')->willReturn('ENABLED BIC');
+        $this->sepaConfig->method('getValue')->with('enable_bic')
+            ->willReturn('ENABLED BIC');
         $this->assertEquals('ENABLED BIC', $this->block->getBankBicEnabled());
     }
 

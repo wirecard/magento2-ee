@@ -1,0 +1,106 @@
+amount,Částka,: classes/includes/class-wc-gateway-wirecard-poipia.php:263
+bank_label,Banka
+bic,BIC,": classes/includes/class-wc-gateway-wirecard-eps.php:183, : classes/includes/class-wc-gateway-wirecard-poipia.php:265, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:273"
+birthdate_input,Datum narození,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:424
+canceled_payment_process,Stornovali jste platební proces.,: classes/includes/class-wc-wirecard-payment-gateway.php:201
+capture_invoice_comment,Stržená částka %1 online. Identifikační kód transakce: %2.
+config_additional_info,Poslat doplňující informace,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:163, : classes/includes/class-wc-gateway-wirecard-creditcard.php:281, : classes/includes/class-wc-gateway-wirecard-eps.php:161, : classes/includes/class-wc-gateway-wirecard-giropay.php:162, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:215, : classes/includes/class-wc-gateway-wirecard-ideal.php:167, : classes/includes/class-wc-gateway-wirecard-paypal.php:183, : classes/includes/class-wc-gateway-wirecard-poipia.php:172, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:206, : classes/includes/class-wc-gateway-wirecard-sofort.php:159"
+config_base_url,Adresa serveru Wirecard (URL),": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:124, : classes/includes/class-wc-gateway-wirecard-creditcard.php:157, : classes/includes/class-wc-gateway-wirecard-eps.php:128, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:133, : classes/includes/class-wc-gateway-wirecard-ideal.php:128, : classes/includes/class-wc-gateway-wirecard-paypal.php:126, : classes/includes/class-wc-gateway-wirecard-poipia.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:123, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:127, : classes/includes/class-wc-gateway-wirecard-sofort.php:126, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
+config_base_url_desc,Adresa serveru Wirecard (URL) (např. https://api.wirecard.com).,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:126, : classes/includes/class-wc-gateway-wirecard-creditcard.php:159, : classes/includes/class-wc-gateway-wirecard-eps.php:130, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:135, : classes/includes/class-wc-gateway-wirecard-ideal.php:130, : classes/includes/class-wc-gateway-wirecard-paypal.php:128, : classes/includes/class-wc-gateway-wirecard-poipia.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:125, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:129, : classes/includes/class-wc-gateway-wirecard-sofort.php:128, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
+config_basket_max,Maximální částka,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:201
+config_basket_min,Minimální částka,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:196
+config_billing_shipping,Stejná fakturační/zasílací adresa,: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:165
+config_challenge_challenge_threed,Kontrolní otázka požadována,: classes/includes/class-wc-gateway-wirecard-creditcard.php:306
+config_challenge_indicator,Indikátor kontrolní otázky,: classes/includes/class-wc-gateway-wirecard-creditcard.php:271
+config_challenge_no_challenge,Kontrolní otázka není požadována,: classes/includes/class-wc-gateway-wirecard-creditcard.php:305
+config_challenge_no_preference,Žádná preference,: classes/includes/class-wc-gateway-wirecard-creditcard.php:304
+config_creditor_city,Město příjemce,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:168
+config_creditor_city_desc,SEPA Direct Debit vyžaduje město příjemce pro stránku mandátu k SEPA Direct Debit.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:170
+config_creditor_id,Identifikační kód příjemce,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:156
+config_creditor_name,Jméno příjemce,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:162
+config_creditor_name_desc,SEPA Direct Debit vyžaduje jméno příjemce pro stránku mandátu k SEPA Direct Debit.,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:164
+config_email,Vaše e-mailová adresa,: classes/admin/class-wirecard-settings.php:226
+config_enable_bic,BIC aktivován,: classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:213
+config_http_password,Heslo,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:136, : classes/includes/class-wc-gateway-wirecard-creditcard.php:234, : classes/includes/class-wc-gateway-wirecard-eps.php:134, : classes/includes/class-wc-gateway-wirecard-giropay.php:135, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:144, : classes/includes/class-wc-gateway-wirecard-ideal.php:140, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:136, : classes/includes/class-wc-gateway-wirecard-paypal.php:138, : classes/includes/class-wc-gateway-wirecard-poipia.php:134, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:135, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:139, : classes/includes/class-wc-gateway-wirecard-sofort.php:138"
+config_http_user,Uživatelské jméno,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:130, : classes/includes/class-wc-gateway-wirecard-creditcard.php:228, : classes/includes/class-wc-gateway-wirecard-eps.php:128, : classes/includes/class-wc-gateway-wirecard-giropay.php:129, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:138, : classes/includes/class-wc-gateway-wirecard-ideal.php:134, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:130, : classes/includes/class-wc-gateway-wirecard-paypal.php:132, : classes/includes/class-wc-gateway-wirecard-poipia.php:128, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:129, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:133, : classes/includes/class-wc-gateway-wirecard-sofort.php:132"
+config_limit_desc,Částka ve výchozí měně obchodu,": classes/includes/class-wc-gateway-wirecard-creditcard.php:142, : classes/includes/class-wc-gateway-wirecard-creditcard.php:148"
+config_merchant_account_id,Identifikační kód účtu obchodníka (MAID),": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:107, : classes/includes/class-wc-gateway-wirecard-creditcard.php:175, : classes/includes/class-wc-gateway-wirecard-eps.php:105, : classes/includes/class-wc-gateway-wirecard-giropay.php:106, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:115, : classes/includes/class-wc-gateway-wirecard-ideal.php:111, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:107, : classes/includes/class-wc-gateway-wirecard-paypal.php:109, : classes/includes/class-wc-gateway-wirecard-poipia.php:105, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:106, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:110, : classes/includes/class-wc-gateway-wirecard-sofort.php:109"
+config_merchant_public,Veřejný klíč
+config_merchant_secret,Tajný klíč,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:113, : classes/includes/class-wc-gateway-wirecard-creditcard.php:181, : classes/includes/class-wc-gateway-wirecard-eps.php:111, : classes/includes/class-wc-gateway-wirecard-giropay.php:112, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:121, : classes/includes/class-wc-gateway-wirecard-ideal.php:117, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:113, : classes/includes/class-wc-gateway-wirecard-paypal.php:115, : classes/includes/class-wc-gateway-wirecard-poipia.php:111, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:112, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:116, : classes/includes/class-wc-gateway-wirecard-sofort.php:115"
+config_message,Vaše zpráva,: classes/admin/class-wirecard-settings.php:234
+config_payment_action,Platební akce,": classes/includes/class-wc-gateway-wirecard-creditcard.php:251, : classes/includes/class-wc-gateway-wirecard-creditcard.php:255, : classes/includes/class-wc-gateway-wirecard-paypal.php:155, : classes/includes/class-wc-gateway-wirecard-paypal.php:159, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:185, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:189"
+config_PSD2_information,PSD 2
+config_PSD2_information_desc_magento2,"With regard to PSD 2 requirements, you should request certain personal information from your consumers during <a target=""_blank"" href='https://github.com/wirecard/magento2-ee/wiki/Magento-2-Checkout'>checkout</a> to reduce the risk of transactions being rejected."
+config_shopping_basket,Nákupní košík,: classes/includes/class-wc-gateway-wirecard-paypal.php:169
+config_sort_order,Seřadit pořadí
+config_ssl_max_limit,Max. limit pro platby bez 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:140
+config_three_d_merchant_account_id,3-D Secure MAID,: classes/includes/class-wc-gateway-wirecard-creditcard.php:128
+config_three_d_merchant_secret,Tajný klíč 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:134
+config_three_d_min_limit,Min. limit pro 3-D Secure,: classes/includes/class-wc-gateway-wirecard-creditcard.php:146
+config_title,Název,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:101, : classes/includes/class-wc-gateway-wirecard-creditcard.php:169, : classes/includes/class-wc-gateway-wirecard-eps.php:99, : classes/includes/class-wc-gateway-wirecard-giropay.php:100, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:109, : classes/includes/class-wc-gateway-wirecard-ideal.php:105, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:101, : classes/includes/class-wc-gateway-wirecard-paypal.php:103, : classes/includes/class-wc-gateway-wirecard-poipia.php:99, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:100, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:104, : classes/includes/class-wc-gateway-wirecard-sofort.php:103"
+config_vault_with_title,Wirecard One-Click Checkout,Vault configuration name with company prefix
+config_wpp_url,Adresa Wirecard Payment Page v2 (URL WPP v2),": classes/includes/class-wc-gateway-wirecard-creditcard.php:219, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:126"
+config_wpp_url_desc,Adresa Wirecard Payment Page v2 (URL WPP v2) (např. https://wpp.wirecard.com).,": classes/includes/class-wc-gateway-wirecard-creditcard.php:221, : classes/includes/class-wc-gateway-wirecard-unionpay-international.php:128"
+config_zapp_merchant_return_string,Návrat na URL obchodníka,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:155
+config_zapp_merchant_return_string_desc,Volba Návrat na URL obchodníka je určena pro přesměrování spotřebitelů z aplikace mobilního bankovnictví do vašeho obchodu.,: classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:157
+creditor,Příjemce,: classes/helper/sepa-template.php:38
+creditor_id_input,Identifikační kód příjemce,: classes/helper/sepa-template.php:40
+creditor_mandate_id,Identifikační kód mandátu
+credit_card_form_loading_error,Při zavádění formuláře kreditní karty došlo k chybě. Laskavě to zkuste znovu.
+credit_card_form_submitting_error,Při odesílání formuláře kreditní karty došlo k chybě.
+debtor,Plátce,: classes/helper/sepa-template.php:52
+debtor_acc_owner,Majitel účtu,: classes/helper/sepa-template.php:53
+default_currency,Výchozí měna
+enter_valid_email_error,"Zadejte platnou e-mailovou adresu, prosím."
+error_credentials,"Test selhal, laskavě zkontrolujte přihlašovací údaje.",: classes/includes/class-wc-wirecard-payment-gateway.php:682
+first_name_input,Jméno
+heading_title_alipay_crossborder,Wirecard Alipay Cross-border,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:60, : classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:104"
+heading_title_creditcard,Wirecard Credit Card,": classes/includes/class-wc-gateway-wirecard-creditcard.php:61, : classes/includes/class-wc-gateway-wirecard-creditcard.php:113"
+heading_title_giropay,Wirecard giropay,": classes/includes/class-wc-gateway-wirecard-giropay.php:65, : classes/includes/class-wc-gateway-wirecard-giropay.php:108"
+heading_title_ideal,Wirecard iDEAL,": classes/includes/class-wc-gateway-wirecard-ideal.php:63, : classes/includes/class-wc-gateway-wirecard-ideal.php:108"
+heading_title_paybybankapp,Wirecard Pay by Bank app,": classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:60, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:106"
+heading_title_paypal,Wirecard PayPal,": classes/includes/class-wc-gateway-wirecard-paypal.php:61, : classes/includes/class-wc-gateway-wirecard-paypal.php:106"
+heading_title_poi_pia,Platba na fakturu / Platba předem Wirecard,": classes/includes/class-wc-gateway-wirecard-poipia.php:61, : classes/includes/class-wc-gateway-wirecard-poipia.php:103"
+heading_title_ratepayinvoice,Zaručená faktura Wirecard společnosti Wirecard,": classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:63, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:113"
+heading_title_sepact,Wirecard SEPA Credit Transfer,": classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:60, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:103"
+heading_title_sepadd,Wirecard SEPA Direct Debit,": classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:59, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:107"
+heading_title_sofortbanking,Wirecard Sofort.,": classes/includes/class-wc-gateway-wirecard-sofort.php:62, : classes/includes/class-wc-gateway-wirecard-sofort.php:106"
+heading_title_support,Wirecard Support,": woocommerce-wirecard-payment-gateway.php:316, : woocommerce-wirecard-payment-gateway.php:317, : woocommerce-wirecard-payment-gateway.php:324, : woocommerce-wirecard-payment-gateway.php:325"
+iban,IBAN,": classes/includes/class-wc-gateway-wirecard-poipia.php:264, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:266"
+ideal_legend,Vyberte svou banku
+last_name_input,Příjmení
+module_display_name,Platební brána Wirecard
+no_such_order_error,Tato objednávka neexistuje.
+order_error,"V průběhu platebního procesu došlo k chybě. Zkuste to znovu, prosím.",": classes/includes/class-wc-wirecard-payment-gateway.php:212, : classes/includes/class-wc-wirecard-payment-gateway.php:228, : classes/includes/class-wc-wirecard-payment-gateway.php:340"
+payment_from_applicable_countries,Platby ze zúčastněných zemí
+payment_from_specific_countries,Platba z konkrétních zemí
+place_order,Odeslat objednávku
+ptrid,Referenční identifikační kód poskytovatele transakce,: classes/includes/class-wc-gateway-wirecard-poipia.php:266
+public_certificate_desc,"Pokud je k dispozici veřejný certifikát, bude použit pinning certifikátu SSL pro oznámení zasílaná servery Wirecard."
+send_email,Odeslat
+sepa_mandate,Mandát k SEPA
+sepa_text_1,Zmocňuji příjemce,: classes/helper/sepa-template.php:69
+sepa_text_2,"k tomu, aby vydal pokyn mé bance k provedení jednorázového inkasa z mého účtu. Současně vydávám pokyn své bance, aby zatížila můj účet v souladu s pokyny příjemce",: classes/helper/sepa-template.php:71
+sepa_text_2b,.,: classes/helper/sepa-template.php:72
+sepa_text_3,Poznámka: Na základě mých práv mám právo na refundování podle podmínek smlouvy s mojí bankou. Nárok na refundování musí být uplatněn do osmi týdnů od data zatížení mého účtu.,: classes/helper/sepa-template.php:78
+sepa_text_4,"Dávám neodvolatelný souhlas k tomu, aby v případě, že nebude provedeno inkaso nebo bude vznesena námitka proti inkasu, moje banka sdělila příjemci",: classes/helper/sepa-template.php:84
+sepa_text_5,"mé celé jméno, adresu a datum narození.",: classes/helper/sepa-template.php:86
+sepa_text_6,Přečetl jsem si informace o mandátu k SEPA Direct Debit a souhlasím s nimi.,: classes/helper/sepa-template.php:104
+success_credentials,Konfigurace obchodníka byla s úspěchem otestována.,: classes/includes/class-wc-wirecard-payment-gateway.php:680
+success_email,E-mail úspěšně odeslán.,: classes/admin/class-wirecard-settings.php:299
+support_email_title,Poslat žádost o podporu
+terms_of_use,Podmínky používání
+test_credentials,Testovat přihlašovací údaje,": classes/includes/class-wc-gateway-wirecard-alipay-crossborder.php:145, : classes/includes/class-wc-gateway-wirecard-creditcard.php:243, : classes/includes/class-wc-gateway-wirecard-eps.php:143, : classes/includes/class-wc-gateway-wirecard-giropay.php:144, : classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:153, : classes/includes/class-wc-gateway-wirecard-ideal.php:149, : classes/includes/class-wc-gateway-wirecard-pay-by-bank-app.php:145, : classes/includes/class-wc-gateway-wirecard-paypal.php:152, : classes/includes/class-wc-gateway-wirecard-poipia.php:143, : classes/includes/class-wc-gateway-wirecard-sepa-credit-transfer.php:144, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:148, : classes/includes/class-wc-gateway-wirecard-sofort.php:147, : woocommerce-wirecard-payment-gateway.php:355"
+text_enabled,Aktivováno
+text_min_age_notice,"Musí vám být nejméně 18 let, abyste mohli používat tento způsob platby."
+text_need_same_address_notice,Zasílací a fakturační adresa musí být shodné.
+text_payment_action_pay,Nákup,": classes/includes/class-wc-gateway-wirecard-creditcard.php:258, : classes/includes/class-wc-gateway-wirecard-paypal.php:162, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:192"
+text_payment_action_reserve,Autorizace,": classes/includes/class-wc-gateway-wirecard-creditcard.php:257, : classes/includes/class-wc-gateway-wirecard-paypal.php:161, : classes/includes/class-wc-gateway-wirecard-sepa-direct-debit.php:191"
+text_payment_type_pia,Platba předem,: classes/includes/class-wc-gateway-wirecard-poipia.php:159
+text_payment_type_poi,Platba na fakturu,: classes/includes/class-wc-gateway-wirecard-poipia.php:158
+text_settings,Nastavení
+text_support,Podpora,: classes/admin/class-wirecard-settings.php:98
+text_terms_accept,"Tímto potvrzuji, že jsem si přečetl<a href=""https://www.wirecardbank.de/privacy-documents/datenschutzhinweis-fur-die-wirecard-zahlarten/"" target=""_blank"">prohlášení o ochraně osobních údajů</a> a <a target=""_blank"" href=""https://www.wirecardbank.de/privacy-documents/zusatzliche-geschaftsbedingungen-fur-wirecard-zahlarten/"">doplňující podmínky</a> pro druhy plateb Wirecard a souhlasím s nimi.",: classes/includes/class-wc-gateway-wirecard-guaranteed-invoice-ratepay.php:436
+transfer_notice,Laskavě převeďte částku s využitím následujících dat:,: classes/includes/class-wc-gateway-wirecard-poipia.php:261
+vault_save_text,Uložit pro pozdější použití.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:349
+warning_credit_card_url_mismatch,Pozor: Laskavě zkontrolujte své přihlašovací údaje v poli nastavení URL. Možná jste zkonfigurovali/zkombinovali produktivní účet s testovacím účtem.,: classes/includes/class-wc-gateway-wirecard-creditcard.php:777

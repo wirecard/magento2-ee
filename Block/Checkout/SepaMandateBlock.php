@@ -13,6 +13,9 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Gateway\ConfigInterface;
 
+/**
+ * Class for SEPA mandate
+ */
 class SepaMandateBlock extends Template
 {
     /**

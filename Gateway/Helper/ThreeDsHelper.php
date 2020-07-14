@@ -20,8 +20,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Class ThreeDsHelper
- * @package Wirecard\ElasticEngine\Gateway\Helper
+ * Helper for creating 3D Secure Transaction
  */
 class ThreeDsHelper
 {
