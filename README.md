@@ -10,14 +10,14 @@
 Before you proceed, please read our [General Information](https://github.com/wirecard/magento2-ee/wiki/Wirecard-Shop-Extensions-General-Information) for more details on Wirecard Shop Extension functionality and features.
 
 ***
-## Additional Credit Card Configuration Field
-With the new major release of the Wirecard Magento 2 Extension comes an updated Credit Card configuration form. **Wirecard Payment Page v2 Address (WPP v2 URL)** has been added as an additional configuration field. **WPP v2 URL** is pre-configured with test data. If you update to the new product version, the Credit Card configuration will adjust automatically. However, we still recommend checking your settings. If you need to change your Credit Card configuration, a tooltip will provide additional information. For further details, or if you have any questions, contact [Wirecard Support](https://github.com/wirecard/magento2-ee/wiki/Contact-Information).
+## Additional Card Payments Configuration Field
+With the new major release of the Wirecard Magento 2 Extension comes an updated Card Payments configuration form. **Wirecard Payment Page v2 Address (WPP v2 URL)** has been added as an additional configuration field. **WPP v2 URL** is preconfigured with test data. If you update to the new product version, the Card Payments configuration will adjust automatically. However, we still recommend checking your settings. If you need to change your Card Payments configuration, a tooltip will provide additional information. For further details, or if you have any questions, contact [Wirecard Support](https://github.com/wirecard/magento2-ee/wiki/Contact-Information).
 
 ***
-## Payment Services Directive 2 (PSD2) Compliance 
-The Wirecard Magento 2 Extension is **[PSD2](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_PSD2) compliant.**  
+## Payment Services Directive 2 (PSD 2) Compliance 
+The Wirecard Magento 2 Extension is **[PSD 2](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_PSD2) compliant.**  
 
-The [**P**ayment **S**ervices **D**irective 2 (PSD2)](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_PSD2) aims to reduce fraud in the European e-commerce sector. Most card fraud in Europe happens in card-not-present transactions. For this reason, PSD2 makes [**S**trong **C**ustomer **A**uthentication (SCA)](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_PSD2_SCA) mandatory for consumer-initiated online payments. The new standard authentication method for credit card transactions is [**3DS2**](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_3DS2). It follows the strict SCA requirements. 
+The [**P**ayment **S**ervices **D**irective 2 (PSD 2)](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_PSD2) aims to reduce fraud in the European e-commerce sector. Most card fraud in Europe happens in card-not-present transactions. For this reason, PSD 2 makes [**S**trong **C**ustomer **A**uthentication (SCA)](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_PSD2_SCA) mandatory for consumer-initiated online payments. The new standard authentication method for credit card transactions is [**3DS2**](https://doc.wirecard.com/CreditCard_3DS2.html#CreditCard_3DS2). It follows the strict SCA requirements. 
 
 ***
 ## Documentation
