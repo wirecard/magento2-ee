@@ -5,7 +5,7 @@
   "minimum-stability": "beta",
   "prefer-stable": true,
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.1",
     "ext-json": "*",
     "magento/module-payment": ">=100.1.0",
     "magento/module-checkout": ">=100.1.0",
