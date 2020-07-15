@@ -10,7 +10,6 @@
     "magento/module-payment": ">=100.1.0",
     "magento/module-checkout": ">=100.1.0",
     "magento/module-sales": ">=100.0.0",
-    "magento/module-vault": ">=100.0.0",
     "magento/module-cron": ">=100.0.0",
     "guzzlehttp/psr7": "1.4.2 || >= 1.5.2",
     "php-http/guzzle6-adapter": ">=1.1.1",
@@ -22,7 +21,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7",
-    "magento/community-edition": ">=2.1.0",
+    "magento/community-edition": ">=2.3.4",
     "friendsofphp/php-cs-fixer": "^2.2",
     "codacy/coverage": "1.4.3",
     "symfony/yaml": "^4",
