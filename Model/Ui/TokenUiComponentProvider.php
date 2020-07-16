@@ -87,7 +87,7 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
             return $expirationDate->format('m/Y');
         } catch (\Exception $exception) {
             $message = $exception->getMessage();
-            $this->logger->debug('Could not format expiration date to m/Y', compact('message', 'debug'));
+            $this->logger->debug('Could not format expiration date to m/Y', compact('message'));
         }
         return $jsonDetails['expirationDate'];
     }
