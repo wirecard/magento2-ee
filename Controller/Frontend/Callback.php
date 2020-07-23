@@ -185,6 +185,10 @@ class Callback extends Action
             'status' => 'OK',
             'data' => $formData
         ]);
+        /** @var Layout $layout */
+        /*$layout = $this->resultFactory->create(ResultFactory::TYPE_LAYOUT);
+        $form = $layout->getLayout()->getBlock();
+        $form->setResponse();*/
 
         return $result;
     }

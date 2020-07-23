@@ -27,7 +27,9 @@ define(
                 return this.config.logo_url;
             },
             afterPlaceOrder: function () {
+                console.log("im a default payment method");
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (result) {
+                    console.log(result);
                     if (result.data["form-url"]) {
                         var form = $("<form />", {action: result.data["form-url"], method: result.data["form-method"]});
 
