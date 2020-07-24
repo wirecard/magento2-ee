@@ -37,7 +37,7 @@ $mandateId = $block->getMandateId();
                         <i><?= $block->escapeHtml(__('debtor')) ?></i><br />
                         <?= $block->escapeHtml(__('debtor_acc_owner')) ?> %firstname% %lastname%<br />
                         <?= $block->escapeHtml(__('iban')) ?> %bankAccountIban% <br />
-                        <?php if ($block->getBankBicEnabled()) {
+                        <?php if ($block->isBankBicEnabled()) {
                             echo $block->escapeHtml(__('bic')) ?> %bankBic% <br /><?php
                         }
                         ?>
