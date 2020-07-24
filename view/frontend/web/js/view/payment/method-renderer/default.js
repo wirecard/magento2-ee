@@ -28,7 +28,7 @@ define(
             },
             afterPlaceOrder: function () {
                 $.get(url.build("wirecard_elasticengine/frontend/callback"), function (result) {
-                    if (typeof result == 'object' && result.data.hasOwnProperty("redirect-url")) {
+                    if (typeof result === "object" && result.data.hasOwnProperty("redirect-url")) {
                         window.location.replace(result.data["redirect-url"]);
                     } else {
                         let formJquery = $(result);
