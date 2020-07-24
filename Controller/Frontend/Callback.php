@@ -12,12 +12,12 @@ namespace Wirecard\ElasticEngine\Controller\Frontend;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\Layout;
 use Psr\Log\LoggerInterface;
+use Wirecard\ElasticEngine\Block\Checkout\FormFields;
 use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Service\TransactionServiceFactory;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
@@ -111,14 +111,15 @@ class Callback extends Action
         }
 
         if ($this->session->hasFormUrl()) {
-            $data['form-url'] = $this->session->getFormUrl();
-            $data['form-method'] = $this->session->getFormMethod();
-            $data['form-fields'] = $this->session->getFormFields();
+            $result = $this->createForm(
+                $this->session->getFormMethod(),
+                $this->session->getFormUrl(),
+                array_column($this->session->getFormFields(), 'value', 'key')
+            );
 
             $this->session->unsFormUrl();
             $this->session->unsFormMethod();
             $this->session->unsFormFields();
-            $result = $this->createRedirectResult($data);
         }
 
         return $result;
@@ -149,13 +150,7 @@ class Callback extends Action
         $order = $this->session->getLastRealOrder();
         $this->paymentHelper->addTransaction($order->getPayment(), $response, true);
 
-        /** @var Layout $page */
-        $page = $this->resultFactory->create(ResultFactory::TYPE_LAYOUT);
-        $block = $page->getLayout()->getBlock('frontend.creditcardthreedform');
-        $block->setResponse($response);
-        $page->setHttpResponseCode('200');
-
-        return $page;
+        return $this->createForm($response->getMethod(), $response->getUrl(), $response->getFormFields());
     }
 
     /**
@@ -185,11 +180,28 @@ class Callback extends Action
             'status' => 'OK',
             'data' => $formData
         ]);
-        /** @var Layout $layout */
-        /*$layout = $this->resultFactory->create(ResultFactory::TYPE_LAYOUT);
-        $form = $layout->getLayout()->getBlock();
-        $form->setResponse();*/
 
         return $result;
+    }
+
+    /**
+     * @param string $method
+     * @param string $action
+     * @param array $formFields
+     * @return Layout
+     * @since 3.1.5
+     */
+    private function createForm($method, $action, $formFields)
+    {
+        /** @var Layout $page */
+        $page = $this->resultFactory->create(ResultFactory::TYPE_LAYOUT);
+        /** @var FormFields $block */
+        $block = $page->getLayout()->getBlock('frontend.formfields');
+        $block->setMethod($method);
+        $block->setAction($action);
+        $block->setFormFields($formFields);
+        $page->setHttpResponseCode('200');
+
+        return $page;
     }
 }
