@@ -27,7 +27,7 @@ jobs:
       run: composer install --dry-run
 
     - name: Install php-coveralls
-      run: composer require --dev --no-interaction php-coveralls/php-coveralls:^1.0
+      run: composer require --dev --no-interaction php-coveralls/php-coveralls:^2.2.0
 
     - name: Run Style Check
       run: composer cs-check
