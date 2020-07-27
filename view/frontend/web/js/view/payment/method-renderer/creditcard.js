@@ -148,7 +148,7 @@ define(
              * Constructs the ui initialization data object
              * return {Object}
              */
-            getUiInitData() {
+            getUiInitData: function() {
                 let payload = {
                     txtype: SeamlessCreditCardConstants.data.wppTxType,
                     billingAddress: JSON.stringify(this.newBillingAddress)
