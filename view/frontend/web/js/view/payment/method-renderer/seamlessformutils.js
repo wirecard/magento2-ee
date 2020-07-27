@@ -122,7 +122,7 @@ define(
                 if (responseKey.startsWith(SeamlessCreditCardConstants.wpp.errorPrefix)) {
                     hasMessages = true;
                     messageList.addErrorMessage({
-                        message: response[`${responseKey}`]
+                        message: response[responseKey]
                     });
                 }
             });
