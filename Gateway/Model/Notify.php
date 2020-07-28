@@ -19,6 +19,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Block\Order\Invoice;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
@@ -26,6 +27,7 @@ use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\PaymentToken;
 use Magento\Vault\Model\ResourceModel\PaymentToken as PaymentTokenResourceModel;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Psr\Log\LoggerInterface;
 use Wirecard\ElasticEngine\Gateway\Helper;
 use Wirecard\ElasticEngine\Gateway\Helper\TransactionTypeMapper;
@@ -137,6 +139,12 @@ class Notify
     private $transactionTypeMapper;
 
     /**
+     * @var InvoiceSender
+     * @since 3.1.5
+     */
+    private $invoiceSender;
+
+    /**
      * Notify constructor.
      *
      * @param TransactionServiceFactory $transactionServiceFactory
@@ -151,9 +159,11 @@ class Notify
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
      * @param EncryptorInterface $encryptor
      * @param TransactionTypeMapper $transactionTypeMapper
+     * @param InvoiceSender $invoiceSender
      *
      * @since 2.0.1 Add PaymentTokenResourceModel
      * @since 2.2.2 Add TransactionTypeMapper
+     * @since 3.1.5 Add InvoiceSender
      */
     public function __construct(
         TransactionServiceFactory $transactionServiceFactory,
@@ -167,7 +177,8 @@ class Notify
         PaymentTokenManagementInterface $paymentTokenManagement,
         PaymentTokenResourceModel $paymentTokenResourceModel,
         EncryptorInterface $encryptor,
-        TransactionTypeMapper $transactionTypeMapper
+        TransactionTypeMapper $transactionTypeMapper,
+        InvoiceSender $invoiceSender
     ) {
         $this->transactionServiceFactory = $transactionServiceFactory;
         $this->orderRepository = $orderRepository;
@@ -182,6 +193,7 @@ class Notify
         $this->paymentTokenResourceModel = $paymentTokenResourceModel;
         $this->encryptor = $encryptor;
         $this->transactionTypeMapper = $transactionTypeMapper;
+        $this->invoiceSender = $invoiceSender;
     }
 
     /**
@@ -341,12 +353,20 @@ class Notify
      * @param SuccessResponse $response
      *
      * @throws LocalizedException
+     * @since 3.1.5 Added email sending
      */
     private function captureInvoice($order, $response)
     {
         $invoice = $this->invoiceService->prepareInvoice($order);
         $invoice->register();
         $invoice->pay();
+
+        try {
+            $this->invoiceSender->send($invoice);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+
         //add transactionid for invoice
         $invoice->setTransactionId($response->getTransactionId());
         $order->addRelatedObject($invoice);
