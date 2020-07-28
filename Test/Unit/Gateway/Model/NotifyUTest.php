@@ -50,6 +50,7 @@ use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 
 class NotifyUTest extends \PHPUnit_Framework_TestCase
 {
@@ -157,6 +158,11 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
      * @var TransactionTypeMapper
      */
     private $transactionTypeMapper;
+
+    /**
+     * @var InvoiceSender
+     */
+    private $invoiceSender;
 
     public function setUp()
     {
@@ -311,6 +317,10 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
         $this->transactionTypeMapper->method('getMappedTransactionType')
             ->willReturn(null);
 
+        $this->invoiceSender = $this->getMockBuilder(Order\Email\Sender\InvoiceSender::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->notify = new \Wirecard\ElasticEngine\Test\Unit\Gateway\Model\MyNotify(
             $transactionServiceFactory,
             $this->orderRepository,
@@ -323,7 +333,8 @@ class NotifyUTest extends \PHPUnit_Framework_TestCase
             $this->paymentTokenManagement,
             $this->paymentTokenResourceModel,
             $this->encryptor,
-            $this->transactionTypeMapper
+            $this->transactionTypeMapper,
+            $this->invoiceSender
         );
     }
 
