@@ -109,12 +109,7 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
         $filterBuilder->method('create')
             ->willReturn($filter);
 
-        $objectManager = $this->getMockBuilder(ObjectManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->canCaptureHandler = new CanCaptureHandler(
-            $objectManager,
             $transactionRepository,
             $searchCriteriaBuilder,
             $filterBuilder
@@ -133,7 +128,6 @@ class CanCaptureHandlerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($invalidTransactionList);
 
         $this->canNotCaptureHandler = new CanCaptureHandler(
-            $objectManager,
             $transactionRepository,
             $searchCriteriaBuilder,
             $filterBuilder

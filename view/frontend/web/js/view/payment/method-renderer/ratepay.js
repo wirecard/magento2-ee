@@ -12,9 +12,8 @@ define(
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/default",
         "Wirecard_ElasticEngine/js/validator/min-age-validator",
         "mage/translate",
-        "mage/url"
     ],
-    function ($, Component, minAgeValidator, $t, url) {
+    function ($, Component, minAgeValidator, $t) {
         "use strict";
         return Component.extend({
             termsChecked: false,
@@ -67,27 +66,6 @@ define(
                 }
                 let form = $("#" + this.getCode() + "-form");
                 return $(form).validation() && $(form).validation("isValid");
-            },
-            afterPlaceOrder: function () {
-                $.get(url.build("wirecard_elasticengine/frontend/callback"), function (result) {
-                    if (result.data["form-url"]) {
-                        let form = $("<form />", {action: result.data["form-url"], method: result.data["form-method"]});
-                        let formFields = result.data["form-fields"];
-
-                        for (var i = 0; i < formFields.length; i++) {
-                            let fieldName = formFields[i]["key"];
-                            let fieldValue = formFields[i]["value"];
-                            form.append($("<input />", {
-                                type: "hidden",
-                                name: fieldName,
-                                value: fieldValue
-                            }));
-                        }
-                        form.appendTo("body").submit();
-                    } else {
-                        window.location.replace(result.data["redirect-url"]);
-                    }
-                });
             }
         });
     }

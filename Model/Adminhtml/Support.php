@@ -270,7 +270,7 @@ class Support
         $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
         $mine = [];
-        foreach ($payments as $paymentCode => $paymentModel) {
+        foreach (array_keys($payments) as $paymentCode) {
             $method = [
                 'value' => $paymentCode,
                 'config' => []
