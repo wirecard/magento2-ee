@@ -122,6 +122,7 @@ define(
                 if (responseKey.startsWith(SeamlessCreditCardConstants.wpp.errorPrefix)) {
                     hasMessages = true;
                     messageList.addErrorMessage({
+                        /* eslint-disable-next-line no-return-assign, no-param-reassign */
                         message: response[responseKey]
                     });
                 }
