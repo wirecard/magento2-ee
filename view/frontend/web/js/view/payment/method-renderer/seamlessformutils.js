@@ -117,11 +117,13 @@ define(
             window.scrollTo(0,0);
             disableButtonById.call(this);
             let hasMessages = false;
-            Object.entries(response).forEach(([responseKey, value]) => {
+            let responseKeys = Object.keys(response);
+            responseKeys.forEach(function(responseKey) {
                 if (responseKey.startsWith(SeamlessCreditCardConstants.wpp.errorPrefix)) {
                     hasMessages = true;
                     messageList.addErrorMessage({
-                        message: value
+                        // eslint-disable-next-line  security/detect-object-injection
+                        message: response[responseKey]
                     });
                 }
             });
