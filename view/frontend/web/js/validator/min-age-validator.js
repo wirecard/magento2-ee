@@ -7,15 +7,13 @@
  */
 
 /*jshint browser:true jquery:true*/
-/*global alert*/
 define(
     [
-        'jquery',
-        'mage/validation'
+        "jquery",
+        "mage/validation"
     ],
     function ($) {
-        'use strict';
-
+        "use strict";
         return {
             /**
              * Validate checkout agreements

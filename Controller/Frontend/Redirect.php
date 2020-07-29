@@ -13,7 +13,6 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
-use Magento\Framework\App\Request\Http;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\Redirect as RedirectResult;
@@ -42,11 +41,6 @@ class Redirect extends Action implements CsrfAwareActionInterface
      * @var Session
      */
     private $checkoutSession;
-
-    /**
-     * @var TransactionServiceFactory
-     */
-    private $transactionServiceFactory;
 
     /**
      * @var Context

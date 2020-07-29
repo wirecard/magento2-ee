@@ -88,7 +88,7 @@ class SepaMandateBlock extends Template
     /**
      * @return boolean
      */
-    public function getBankBicEnabled()
+    public function isBankBicEnabled()
     {
         return $this->sepaConfig->getValue('enable_bic');
     }

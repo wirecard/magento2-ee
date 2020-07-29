@@ -67,7 +67,7 @@ class SepaMandateBlockUTest extends \PHPUnit_Framework_TestCase
     {
         $this->sepaConfig->method('getValue')->with('enable_bic')
             ->willReturn('ENABLED BIC');
-        $this->assertEquals('ENABLED BIC', $this->block->getBankBicEnabled());
+        $this->assertEquals('ENABLED BIC', $this->block->isBankBicEnabled());
     }
 
     public function testGetMandateId()

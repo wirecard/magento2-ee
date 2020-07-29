@@ -42,7 +42,7 @@ define([
          * Constructs the ui initialization data object
          * return {Object}
          */
-        getUiInitData() {
+        getUiInitData: function() {
             return {
                 txtype: SeamlessCreditCardConstants.data.wppTxType,
                 token: this.getToken(),
@@ -83,7 +83,7 @@ define([
                 type: SeamlessCreditCardConstants.method.get,
                 dataType: SeamlessCreditCardConstants.dataType.json,
                 async: false,
-                success: (data) => {
+                success: function (data) {
                     result = data;
                 }
             });

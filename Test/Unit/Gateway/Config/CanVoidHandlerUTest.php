@@ -108,12 +108,7 @@ class CanVoidHandlerUTest extends \PHPUnit_Framework_TestCase
         $filterBuilder->method('create')
             ->willReturn($filter);
 
-        $objectManager = $this->getMockBuilder(ObjectManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->canVoidHandler = new CanVoidHandler(
-            $objectManager,
             $transactionRepository,
             $searchCriteriaBuilder,
             $filterBuilder
@@ -132,7 +127,6 @@ class CanVoidHandlerUTest extends \PHPUnit_Framework_TestCase
             ->willReturn($invalidTransactionList);
 
         $this->canNotVoidHandler = new CanVoidHandler(
-            $objectManager,
             $transactionRepository,
             $searchCriteriaBuilder,
             $filterBuilder

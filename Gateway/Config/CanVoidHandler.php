@@ -11,7 +11,6 @@ namespace Wirecard\ElasticEngine\Gateway\Config;
 
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
-use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Model\Order\Payment;
@@ -19,12 +18,22 @@ use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
 
 class CanVoidHandler implements ValueHandlerInterface
 {
+    /**
+     * @var FilterBuilder
+     */
     private $filterBuilder;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
     private $searchCriteriaBuilder;
+
+    /**
+     * @var Payment\Transaction\Repository
+     */
     private $transactionRepository;
 
     public function __construct(
-        ObjectManager $objectManager,
         Payment\Transaction\Repository $transactionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder
