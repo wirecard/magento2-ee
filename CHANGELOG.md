@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.1.5
+ 
+*   Add IE 11 compatibility
+*   Send invoice Emails on purchase or debit transaction state
+*   Improve form building
+*   Update php-http/discovery to 1.6.1
+*   Add version number to composer.json
+
+|  Overview | Magento version | PHP 7.1 | PHP 7.2 | PHP 7.3 |    
+|---|---|:---:|:---:|:---:|    
+| **Tested version(s)** | Magento Community Edition 2.3.4 | :x: | :x: | &#9989; |    
+| **Compatibility** | Magento Community Edition 2.2.0 - 2.3.4 | &#9989; | &#9989; | &#9989; | 
+
 ## v3.1.4
  
 *   Update SDK version
