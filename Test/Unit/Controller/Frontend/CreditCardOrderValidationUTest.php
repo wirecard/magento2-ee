@@ -62,7 +62,6 @@ class CreditCardOrderValidationUTest extends \PHPUnit_Framework_TestCase
             ->method('setData')
             ->with($this->equalTo($expectedResultData));
 
-
         $result = $this->controller->execute();
         $this->assertInstanceOf(Json::class, $result);
     }
