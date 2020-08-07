@@ -275,7 +275,7 @@ define(
                    url: url.build(SeamlessCreditCardConstants.routes.creditCardValidationController),
                    type: SeamlessCreditCardConstants.method.post,
                    data: {
-                       "rendered-form-amount": totals.totals()['base_grand_total']
+                       "rendered-form-amount": totals.totals()["base_grand_total"]
                    },
                 }).done(function (response) {
                     if (response.sessionValid) {
@@ -285,7 +285,7 @@ define(
                             onError: seamlessFormSubmitErrorHandler.bind(self)
                         });
                     } else {
-                        window.location.replace(url.build('checkout/cart'));
+                        window.location.replace(url.build("checkout/cart"));
                     }
                 });
             },

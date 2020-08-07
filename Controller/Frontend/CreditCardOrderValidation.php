@@ -17,8 +17,8 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total;
 
 /**
+ * This class is responsible of validating the rendered amount with the session amount in checkout
  * Class CreditCardOrderValidation
- * @package Wirecard\ElasticEngine\Controller\Frontend
  * @since 3.1.6
  */
 class CreditCardOrderValidation extends Action
