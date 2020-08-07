@@ -13,9 +13,10 @@ define(
         "mage/translate",
         "Magento_Ui/js/model/messageList",
         "Wirecard_ElasticEngine/js/view/payment/method-renderer/constants",
+        "Magento_Checkout/js/model/totals"
     ],
 
-    function ($, url, $t, messageList, SeamlessCreditCardConstants) {
+    function ($, url, $t, messageList, SeamlessCreditCardConstants, totals) {
 
         /**
          * Show loading spinner
@@ -269,10 +270,23 @@ define(
                 if (event) {
                     event.preventDefault();
                 }
-                WPP.seamlessSubmit({
-                    wrappingDivId: creditcardFormId,
-                    onSuccess: seamlessFormSubmitSuccessHandler.bind(this),
-                    onError: seamlessFormSubmitErrorHandler.bind(this)
+                let self = this;
+                $.ajax({
+                   url: url.build(SeamlessCreditCardConstants.routes.creditCardValidationController),
+                   type: SeamlessCreditCardConstants.method.post,
+                   data: {
+                       "rendered-form-amount": totals.totals()["base_grand_total"]
+                   },
+                }).done(function (response) {
+                    if (response.sessionValid) {
+                        WPP.seamlessSubmit({
+                            wrappingDivId: creditcardFormId,
+                            onSuccess: seamlessFormSubmitSuccessHandler.bind(self),
+                            onError: seamlessFormSubmitErrorHandler.bind(self)
+                        });
+                    } else {
+                        window.location.replace(url.build("checkout/cart"));
+                    }
                 });
             },
 
