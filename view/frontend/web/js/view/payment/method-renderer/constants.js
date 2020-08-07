@@ -47,7 +47,8 @@ define(
                 callbackController: "wirecard_elasticengine/frontend/callback",
                 creditCardController: "wirecard_elasticengine/frontend/creditcard",
                 redirectController: "wirecard_elasticengine/frontend/redirect",
-                vaultController: "wirecard_elasticengine/frontend/vault?hash="
+                vaultController: "wirecard_elasticengine/frontend/vault?hash=",
+                creditCardValidationController: "wirecard_elasticengine/frontend/creditcardordervalidation"
             },
             spinner: {
                 start: "processStart",
