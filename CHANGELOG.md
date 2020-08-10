@@ -1,7 +1,17 @@
 # Changelog
 
-## v3.1.5
- 
+## v3.1.6
+
+*   Fix cart handling for Card Payments
+*   Add Compatibility: Magento 2.3.5
+
+|  Overview | Magento version | PHP 7.1 | PHP 7.2 | PHP 7.3 |    
+|---|---|:---:|:---:|:---:|  
+| **Tested version(s)** | Magento Community Edition 2.3.5 | :x: | :x: | &#9989; |    
+| **Compatibility** | Magento Community Edition 2.2.0 - 2.3.5 | &#9989; | &#9989; | &#9989; | 
+
+ ## v3.1.5
+
 *   Add IE 11 compatibility
 *   Send invoice Emails on purchase or debit transaction state
 *   Improve form building
