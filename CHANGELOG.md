@@ -6,10 +6,10 @@
 *   Add Compatibility PHP 7.4
 *   Remove Compatibility PHP 7.1 and PHP 7.2 [(See Magento software maintenance policy here)](https://magento.com/sites/default/files/magento-open-source-software-maintenance-policy.pdf)
 
-|  Overview | Magento version | PHP 7.3 | PHP 7.4 |    
-|---|---|:---:|:---:|  
-| **Tested version(s)** | Magento Community Edition 2.4.0 | :x: | &#9989; |    
-| **Compatibility** | Magento Community Edition 2.2.0 - 2.4.0 | &#9989; | &#9989; | 
+|  Overview             | Magento version                         | PHP 7.3 | PHP 7.4 |    
+|-----------------------|-----------------------------------------|:-------:|:-------:|  
+| **Tested version(s)** | Magento Community Edition 2.4.0         | :x:     | &#9989; |    
+| **Compatibility**     | Magento Community Edition 2.2.0 - 2.4.0 | &#9989; | &#9989; | 
 
 
 ## v3.1.6
