@@ -20,6 +20,9 @@ use Wirecard\ElasticEngine\Model\Adminhtml\Support;
 
 class SupportUtest extends \PHPUnit_Framework_TestCase
 {
+    const WIRECARD_EE_MODULE_NAME = 'Wirecard_ElasticEngine';
+    const WIRECARD_EE_VERSION = '2.2.0';
+
     /**
      * @var Support $support
      */
@@ -101,8 +104,10 @@ class SupportUtest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->moduleListInterface = $this->getMockBuilder(ModuleListInterface::class)
-            ->disableOriginalConstructor()
             ->getMock();
+        $this->moduleListInterface->method('getOne')
+            ->with(self::WIRECARD_EE_MODULE_NAME)
+            ->willReturn(['setup_version' => self::WIRECARD_EE_VERSION]);
 
         $this->productMetadata = $this->getMockBuilder(ProductMetadata::class)
             ->disableOriginalConstructor()
