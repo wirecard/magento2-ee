@@ -20,6 +20,9 @@ use Wirecard\ElasticEngine\Model\Adminhtml\Support;
 
 class SupportUtest extends \PHPUnit_Framework_TestCase
 {
+    const WIRECARD_EE_MODULE_NAME = 'Wirecard_ElasticEngine';
+    const WIRECARD_EE_VERSION = '2.2.0';
+
     /**
      * @var Support $support
      */
